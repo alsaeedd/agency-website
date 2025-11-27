@@ -23,12 +23,6 @@ export default function Footer() {
                   saeedalsaeedbusiness@gmail.com
                 </a>
               </div>
-              {/* <div className="footer-location-caption">Main office</div>
-              <div className="footer-location-address">
-                901 N Pitt Street
-                <br />
-                Alexandria VA, 22314
-              </div> */}
             </address>
             <address className="footer-location">
               <div className="footer-location-action">
@@ -40,21 +34,28 @@ export default function Footer() {
                   +973 3384 3915
                 </a>
               </div>
-              {/* <div className="footer-location-caption">Second office</div>
-              <div className="footer-location-address">
-                Na Perstyne
-                <br />
-                342/1, 11000 Prague
-              </div> */}
             </address>
           </div>
-          {/* <nav className="footer-nav">
-            {footerLinks.map((link) => (
-              <a key={link.text} href={link.href}>
-                {link.text}
-              </a>
-            ))}
-          </nav> */}
+          <div className="footer-disclaimer">
+            <span className="disclaimer-trigger">
+              Disclaimer
+              <div className="disclaimer-tooltip">
+                <div className="disclaimer-tooltip-content">
+                  The design of this website is not original whatsoever. It is
+                  completely the innovation and artwork of the Cuberto Design
+                  Agency. All credits for the entire design go to them. Please
+                  visit them here:{" "}
+                  <a
+                    href="https://cuberto.com"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    cuberto.com
+                  </a>
+                </div>
+              </div>
+            </span>
+          </div>
         </div>
         <div className="footer-bottom">
           <div className="footer-copy">
