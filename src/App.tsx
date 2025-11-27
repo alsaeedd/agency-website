@@ -59,7 +59,7 @@ function App() {
         <About />
         {/* <Featured /> */}
         <Services />
-        <CTA />
+        <CTA onContactClick={() => setIsContactOpen(true)} />
       </main>
       <Footer />
       <Contact isOpen={isContactOpen} onClose={() => setIsContactOpen(false)} />

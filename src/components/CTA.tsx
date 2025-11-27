@@ -5,9 +5,13 @@ import AnimatedText from "./AnimatedText";
 
 gsap.registerPlugin(ScrollTrigger);
 
-export default function CTA() {
+interface CTAProps {
+  onContactClick: () => void;
+}
+
+export default function CTA({ onContactClick }: CTAProps) {
   const sectionRef = useRef<HTMLElement>(null);
-  const buttonRef = useRef<HTMLAnchorElement>(null);
+  const buttonRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     if (!buttonRef.current) return;
@@ -42,14 +46,14 @@ export default function CTA() {
           >
             Have a project?
           </AnimatedText>
-          <a
-            href="#"
+          <button
             className="btn-cta-large"
             ref={buttonRef}
+            onClick={onContactClick}
             data-cursor="hover"
           >
             <span>TELL US</span>
-          </a>
+          </button>
         </div>
       </div>
     </section>
