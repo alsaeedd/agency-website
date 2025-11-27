@@ -53,7 +53,7 @@ function App() {
   return (
     <>
       <ContactCircle onClick={() => setIsContactOpen(true)} />
-      <Navbar />
+      <Navbar onContactClick={() => setIsContactOpen(true)} />
       <main>
         <Hero />
         <About />

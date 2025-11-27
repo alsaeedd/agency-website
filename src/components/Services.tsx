@@ -9,23 +9,22 @@ const services = [
   {
     id: 1,
     title: "Custom development",
-    description:
-      "Frontend + backend + AI integrations — built for performance and scalability.",
-    image: "https://cuberto.com/assets/services/development/cover.png",
+    description: "Frontend + backend + AI integrations — built to suit you.",
+    image: "/assets/Gemini_Generated_Image_yvsug5yvsug5yvsu.png",
   },
   {
     id: 2,
     title: "AI-powered automation",
     description:
       "Automations that either save you time or make you money, or both.",
-    image: "https://cuberto.com/assets/services/design/cover.png",
+    image: "/assets/Gemini_Generated_Image_vbxmtevbxmtevbxm.png",
   },
   {
     id: 3,
     title: "Cloud deployment",
     description:
       "Initial infrastructure-as-code setup with a consistent deployment strategy.",
-    image: "https://cuberto.com/assets/services/development/cover.png",
+    image: "/assets/Gemini_Generated_Image_woph3xwoph3xwoph.png",
   },
 ];
 
@@ -73,7 +72,7 @@ export default function Services() {
         </div>
         <div className="services-intro">
           <AnimatedText as="p" triggerOnScroll stagger={0.02}>
-            From AWS deployments to robust n8n automations — we design and build
+            From AWS deployments to robust AI automations — we design and build
             exactly what you need.
           </AnimatedText>
         </div>
@@ -88,11 +87,11 @@ export default function Services() {
             </div>
           ))}
         </div>
-        <div className="section-action">
+        {/* <div className="section-action">
           <a href="#" className="btn-cta" data-cursor="hover">
             <span>View all services</span>
           </a>
-        </div>
+        </div> */}
       </div>
     </section>
   );

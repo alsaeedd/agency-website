@@ -13,8 +13,15 @@ export default function ContactCircle({ onClick }: ContactCircleProps) {
 
     gsap.fromTo(
       circleRef.current,
-      { scale: 0, opacity: 0 },
-      { scale: 1, opacity: 1, duration: 1, delay: 1.5, ease: 'expo.out' }
+      { scale: 0.5, opacity: 0 },
+      {
+        scale: 1,
+        opacity: 1,
+        duration: 1.2,
+        delay: 0.8,
+        ease: 'back.out(1.2)',
+        clearProps: 'scale' // Clear inline scale so CSS hover works
+      }
     )
   }, [])
 
@@ -27,7 +34,8 @@ export default function ContactCircle({ onClick }: ContactCircleProps) {
     >
       <div className="contact-circle-inner">
         <video autoPlay muted loop playsInline>
-          <source src="https://cuberto.com/assets/intouch/2.mp4" type="video/mp4" />
+          <source src="/assets/EmojiMovie785913280-offline.MOV" type="video/quicktime" />
+          <source src="/assets/EmojiMovie785913280-offline.MOV" type="video/mp4" />
         </video>
         <div className="contact-circle-text">
           <svg viewBox="0 0 150 150" fill="none" xmlns="http://www.w3.org/2000/svg">
