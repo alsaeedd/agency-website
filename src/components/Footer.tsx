@@ -15,64 +15,74 @@ export default function Footer() {
   return (
     <footer className="footer">
       <div className="container">
-        <div className="footer-grid">
-          <div className="footer-locations">
-            <address className="footer-location">
-              <div className="footer-location-action">
-                <a href="mailto:info@ral-website.com">
-                  saeedalsaeedbusiness@gmail.com
-                </a>
-              </div>
-            </address>
-            <address className="footer-location">
-              <div className="footer-location-action">
-                <a
-                  href="https://wa.me/97333843915"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  +973 3384 3915
-                </a>
-              </div>
-            </address>
+        <div className="footer-content">
+          <div className="footer-section footer-brand">
+            <h3 className="footer-brand-name">Revenue Automation Lab</h3>
+            <p className="footer-brand-desc">
+              We are a forward-thinking digital agency specializing in custom
+              software development and intelligent AI automation workflows. We
+              transform businesses through cutting-edge technology and
+              innovative solutions tailored to your unique needs.
+            </p>
           </div>
-          <div className="footer-disclaimer">
-            <span className="disclaimer-trigger">
-              Disclaimer
-              <div className="disclaimer-tooltip">
-                <div className="disclaimer-tooltip-content">
-                  The design of this website is not original whatsoever. It is
-                  completely the innovation and artwork of the Cuberto Design
-                  Agency. All credits for the entire design go to them. Please
-                  visit them here:{" "}
-                  <a
-                    href="https://cuberto.com"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    cuberto.com
-                  </a>
-                </div>
-              </div>
-            </span>
+
+          <div className="footer-section footer-contact">
+            <h4 className="footer-section-title">Get in Touch</h4>
+            <div className="footer-contact-items">
+              <a
+                href="mailto:info@revenueautomationlab.com"
+                className="footer-contact-link"
+              >
+                <span className="footer-contact-label">Email</span>
+                info@revenueautomationlab.com
+              </a>
+              <a
+                href="https://wa.me/97333843915"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="footer-contact-link"
+              >
+                <span className="footer-contact-label">WhatsApp</span>
+                +973 3384 3915
+              </a>
+            </div>
+          </div>
+
+          <div className="footer-section footer-links">
+            <h4 className="footer-section-title">Quick Links</h4>
+            <ul className="footer-nav-list">
+              <li>
+                <a href="#services">Services</a>
+              </li>
+              <li>
+                <a href="#about">About</a>
+              </li>
+              <li>
+                <button
+                  onClick={(e) => {
+                    e.preventDefault();
+                    const contactCircle = document.querySelector(
+                      ".contact-circle",
+                    ) as HTMLElement;
+                    if (contactCircle) contactCircle.click();
+                  }}
+                  className="footer-nav-button"
+                >
+                  Contact
+                </button>
+              </li>
+            </ul>
           </div>
         </div>
+
+        <div className="footer-divider"></div>
+
         <div className="footer-bottom">
           <div className="footer-copy">
-            <span>2025, Revenue Automation Lab</span>
+            <span>
+              &copy; 2026 Revenue Automation Lab. All rights reserved.
+            </span>
           </div>
-          {/* <div className="footer-socials">
-            {socialLinks.map((social) => (
-              <a
-                key={social.icon}
-                href={social.href}
-                className="footer-social"
-                aria-label={social.label}
-              >
-                <SocialIcon name={social.icon} />
-              </a>
-            ))}
-          </div> */}
         </div>
       </div>
     </footer>
