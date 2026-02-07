@@ -27,7 +27,7 @@ export default function Navbar({ onContactClick }: NavbarProps) {
       gsap.fromTo(
         mobileMenuRef.current,
         { opacity: 0, y: -20 },
-        { opacity: 1, y: 0, duration: 0.3, ease: "expo.out" }
+        { opacity: 1, y: 0, duration: 0.3, ease: "expo.out" },
       );
     }
   }, [mobileMenuOpen]);
@@ -63,21 +63,20 @@ export default function Navbar({ onContactClick }: NavbarProps) {
             </button>
           </nav>
 
-          <button 
-            className={`navbar-hamburger ${mobileMenuOpen ? 'active' : ''}`}
+          <button
+            className={`navbar-hamburger ${mobileMenuOpen ? "active" : ""}`}
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             aria-label="Toggle menu"
             aria-expanded={mobileMenuOpen}
-          >
-          </button>
+          ></button>
         </div>
 
         {mobileMenuOpen && (
           <div className="navbar-mobile-menu" ref={mobileMenuRef}>
             <nav className="navbar-mobile-nav">
               {navLinks.map((link) => (
-                <a 
-                  key={link.href} 
+                <a
+                  key={link.href}
                   href={link.href}
                   className="navbar-mobile-link"
                   onClick={closeMobileMenu}
@@ -85,7 +84,7 @@ export default function Navbar({ onContactClick }: NavbarProps) {
                   {link.text}
                 </a>
               ))}
-              <button 
+              <button
                 onClick={handleMobileContactClick}
                 className="navbar-mobile-contact-btn"
               >
