@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
 
+// Mobile-first navbar component with smooth animations and hamburger menu support
 const navLinks = [{ href: "#services", text: "Services" }];
 
 interface NavbarProps {
