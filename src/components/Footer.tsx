@@ -59,7 +59,7 @@ export default function Footer() {
         </div>
         <div className="footer-bottom">
           <div className="footer-copy">
-            <span>2025, Revenue Automation Lab</span>
+            <span>2026, Revenue Automation Lab</span>
           </div>
           {/* <div className="footer-socials">
             {socialLinks.map((social) => (

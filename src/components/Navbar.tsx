@@ -3,6 +3,7 @@ import { gsap } from "gsap";
 
 const navLinks = [
   { href: "#services", text: "Services" },
+  { href: "#portfolio", text: "Portfolio" },
 ];
 
 interface NavbarProps {
