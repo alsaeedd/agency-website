@@ -25,7 +25,7 @@ export default function About() {
           start: "top 70%",
           once: true,
         },
-      }
+      },
     );
 
     gsap.fromTo(
@@ -42,7 +42,7 @@ export default function About() {
           start: "top 80%",
           once: true,
         },
-      }
+      },
     );
   }, []);
 
@@ -51,12 +51,7 @@ export default function About() {
       <div className="container">
         <div className="about-grid">
           <div className="about-visual" ref={visualRef}>
-            <video autoPlay muted loop playsInline>
-              <source
-                src="/assets/Animated_Flame_Like_Hair_Video.mp4"
-                type="video/mp4"
-              />
-            </video>
+            <img src="/assets/logo_main.png" alt="Logo" />
           </div>
           <div className="about-content" ref={contentRef}>
             <div className="about-text">

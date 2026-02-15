@@ -505,8 +505,8 @@ video {
     transform 1s var(--ease-out-expo),
     opacity 1s var(--ease-out-expo);
   flex-shrink: 0;
-  width: 360px;
-  height: 400px;
+  width: 450px;
+  height: 450px;
 }
 
 .about-visual.revealed {
