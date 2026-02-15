@@ -7,6 +7,7 @@ import Hero from './components/Hero'
 import About from './components/About'
 // import Featured from './components/Featured'
 import Services from './components/Services'
+import Portfolio from './components/Portfolio'
 import CTA from './components/CTA'
 import Footer from './components/Footer'
 import ContactCircle from './components/ContactCircle'
@@ -59,6 +60,7 @@ function App() {
         <About />
         {/* <Featured /> */}
         <Services />
+        <Portfolio />
         <CTA onContactClick={() => setIsContactOpen(true)} />
       </main>
       <Footer />
