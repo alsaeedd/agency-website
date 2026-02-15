@@ -2,9 +2,9 @@
 
 :root {
   --color-bg: #fff;
-  --color-text: #003057;
-  --color-text-secondary: #b3a369;
-  --color-primary: #1a1a1a;
+  --color-text: #000000;
+  --color-text-secondary: #666666;
+  --color-primary: #000000;
   --color-inverse: #fff;
   --font-family:
     "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
@@ -115,7 +115,7 @@ video {
 .logo-text {
   font-size: 1.4rem;
   font-weight: 800;
-  color: #003057;
+  color: #000000;
   letter-spacing: -0.02em;
 }
 
@@ -127,7 +127,7 @@ video {
 .navbar-nav a {
   font-size: 1rem;
   font-weight: 600;
-  color: #003057;
+  color: #000000;
   position: relative;
   overflow: hidden;
 }
@@ -156,7 +156,7 @@ video {
 .navbar-contact-btn {
   font-size: 1rem;
   font-weight: 600;
-  color: #003057;
+  color: #000000;
   background: none;
   border: none;
   cursor: pointer;
@@ -242,7 +242,7 @@ video {
   right: 0;
   background: rgba(255, 255, 255, 0.98);
   backdrop-filter: blur(10px);
-  border-bottom: 1px solid rgba(0, 48, 87, 0.1);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
   padding: 2rem 1.5rem;
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
 }
@@ -265,15 +265,15 @@ video {
   transition: all 0.3s ease;
   display: block;
   text-align: center;
-  box-shadow: 0 4px 12px rgba(0, 48, 87, 0.15);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
 .navbar-mobile-link:hover {
   border-color: var(--color-text);
-  background: var(--color-primary);
+  background: #1a1a1a;
   color: #fff;
   transform: translateY(-4px);
-  box-shadow: 0 8px 25px rgba(0, 48, 87, 0.25);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.25);
 }
 
 .navbar-mobile-link:active {
@@ -292,14 +292,14 @@ video {
   transition: all 0.3s ease;
   font-family: inherit;
   text-align: center;
-  box-shadow: 0 4px 12px rgba(0, 48, 87, 0.15);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
 .navbar-mobile-contact-btn:hover {
-  background: var(--color-primary);
-  border-color: var(--color-primary);
+  background: #1a1a1a;
+  border-color: #1a1a1a;
   transform: translateY(-4px);
-  box-shadow: 0 8px 25px rgba(0, 48, 87, 0.25);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.25);
 }
 
 .navbar-mobile-contact-btn:active {
@@ -382,7 +382,7 @@ video {
   opacity: 0;
   transform: translateY(20px);
   animation: slideInUp 0.8s var(--ease-out-expo) forwards;
-  box-shadow: 0 4px 20px rgba(0, 48, 87, 0.1);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
 }
 
 @keyframes slideInUp {
@@ -406,7 +406,7 @@ video {
 .hero-cta-btn:hover {
   color: var(--color-inverse);
   border-color: var(--color-text);
-  box-shadow: 0 12px 40px rgba(0, 48, 87, 0.25);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.25);
   transform: translateY(-3px);
 }
 
@@ -466,7 +466,7 @@ video {
   justify-content: center;
   padding: 6rem 2rem;
   box-sizing: border-box;
-  background: var(--color-primary);
+  background: #1a1a1a;
   color: var(--color-inverse);
 }
 
@@ -528,7 +528,7 @@ video {
 .about-text {
   font-size: 1.125rem;
   line-height: 1.8;
-  color: var(--color-text-secondary);
+  color: var(--color-text-inverse);
   margin-bottom: 2rem;
 }
 
@@ -580,7 +580,7 @@ video {
 
 /* ===== Featured Projects Section ===== */
 .featured {
-  background: var(--color-primary);
+  background: #1a1a1a;
   color: var(--color-inverse);
   padding: 8rem 0;
   position: relative;
@@ -593,7 +593,7 @@ video {
   left: 0;
   right: 0;
   height: 200px;
-  background: var(--color-primary);
+  background: #1a1a1a;
   clip-path: ellipse(70% 100% at 50% 100%);
 }
 
@@ -960,7 +960,7 @@ video {
 }
 
 .portfolio-card-client-name::before {
-  content: '\2014\00a0';
+  content: "\2014\00a0";
 }
 
 .portfolio-card-title {
@@ -993,7 +993,9 @@ video {
   justify-content: center;
   background: var(--color-bg);
   cursor: pointer;
-  transition: background 0.3s ease, border-color 0.3s ease;
+  transition:
+    background 0.3s ease,
+    border-color 0.3s ease;
 }
 
 .project-overlay-close:hover {
@@ -1110,7 +1112,7 @@ video {
 }
 
 .project-section-list li::before {
-  content: '';
+  content: "";
   position: absolute;
   left: 0;
   top: 0.7em;
@@ -1172,7 +1174,7 @@ video {
 
 /* ===== CTA Section ===== */
 .cta {
-  background: var(--color-primary);
+  background: #1a1a1a;
   color: var(--color-inverse);
   padding: 10rem 0;
   position: relative;
@@ -1262,7 +1264,7 @@ video {
 
 /* ===== Footer ===== */
 .footer {
-  background: var(--color-primary);
+  background: #1a1a1a;
   color: var(--color-inverse);
   padding: 5rem 0 2rem;
   border-top: 1px solid rgba(255, 255, 255, 0.1);
@@ -1328,7 +1330,7 @@ video {
   display: block;
   padding: 0.875rem 1rem;
   border-radius: 8px;
-  border: 1px solid rgba(179, 163, 105, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.3);
   transition: all 0.3s ease;
   color: #fff;
   font-size: 0.9rem;
@@ -1337,9 +1339,9 @@ video {
 }
 
 .footer-contact-link:hover {
-  background: rgba(179, 163, 105, 0.1);
-  border-color: rgba(179, 163, 105, 0.6);
-  box-shadow: 0 4px 12px rgba(179, 163, 105, 0.15);
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.6);
+  box-shadow: 0 4px 12px rgba(255, 255, 255, 0.15);
   transform: translateY(-2px);
 }
 
@@ -1698,6 +1700,7 @@ video {
 .contact-circle-text svg {
   width: 100%;
   height: 100%;
+  color: #ffffff;
 }
 
 @media (max-width: 768px) {
