@@ -6,7 +6,7 @@ import logoMain from "../../assets/logo_main.png";
 const navLinks = [
   { href: "#services", text: "Services" },
   { href: "#about", text: "About" },
-  { href: "#portfolio", text: "Portfolio" },
+  { href: "#clients", text: "Clients" },
 ];
 
 interface NavbarProps {

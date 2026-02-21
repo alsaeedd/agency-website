@@ -787,17 +787,21 @@ video {
 
 /* ===== Clients ===== */
 .clients {
-  padding: 4rem 0 5rem;
+  padding: 5rem 0;
+  scroll-margin-top: 72px;
   overflow: hidden;
+  background: var(--color-bg);
 }
 
 .clients-header {
   text-align: center;
-  margin-bottom: 3rem;
+  margin-bottom: 3.5rem;
 }
 
 .clients-marquee {
   overflow: hidden;
+  display: flex;
+  justify-content: center;
   mask-image: linear-gradient(to right, transparent, black 12%, black 88%, transparent);
   -webkit-mask-image: linear-gradient(to right, transparent, black 12%, black 88%, transparent);
 }
@@ -805,9 +809,10 @@ video {
 .clients-track {
   display: flex;
   align-items: center;
-  gap: 5rem;
+  justify-content: center;
+  gap: 8rem;
   width: max-content;
-  animation: clientsScroll 14s linear infinite;
+  animation: clientsScroll 18s linear infinite;
 }
 
 @keyframes clientsScroll {
@@ -823,16 +828,16 @@ video {
 }
 
 .client-logo img {
-  height: 38px;
+  height: 56px;
   width: auto;
   object-fit: contain;
   filter: brightness(0) invert(1);
-  opacity: 0.45;
+  opacity: 0.5;
   transition: opacity 0.3s ease;
 }
 
 .client-logo img:hover {
-  opacity: 0.9;
+  opacity: 1;
 }
 
 /* ===== Portfolio ===== */

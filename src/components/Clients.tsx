@@ -17,7 +17,7 @@ const track = [...logos, ...logos, ...logos, ...logos];
 
 export default function Clients() {
   return (
-    <section className="clients">
+    <section className="clients" id="clients">
       <div className="container">
         <div className="clients-header">
           <AnimatedText as="h2" className="section-title" triggerOnScroll stagger={0.1}>

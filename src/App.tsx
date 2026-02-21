@@ -5,6 +5,7 @@ import Lenis from "lenis";
 import Navbar from "./components/Navbar";
 import Hero from "./components/Hero";
 import About from "./components/About";
+import Clients from "./components/Clients";
 // import Featured from './components/Featured'
 import Services from "./components/Services";
 import Portfolio from "./components/Portfolio";
@@ -59,6 +60,7 @@ function App() {
         <Hero />
         <Services />
         <About />
+        <Clients />
         {/* <Featured /> */}
         <Portfolio />
         <CTA onContactClick={() => setIsContactOpen(true)} />

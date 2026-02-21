@@ -53,7 +53,7 @@ export default function Footer() {
             <ul className="footer-nav-list">
               <li><a href="#services">Services</a></li>
               <li><a href="#about">About</a></li>
-              <li><a href="#portfolio">Portfolio</a></li>
+              <li><a href="#clients">Clients</a></li>
               <li>
                 <button
                   onClick={(e) => {
