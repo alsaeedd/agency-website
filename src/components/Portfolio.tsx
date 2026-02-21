@@ -173,18 +173,19 @@ export default function Portfolio() {
     cards.forEach((card, index) => {
       gsap.fromTo(
         card,
-        { y: 60, opacity: 0 },
+        { y: 40, opacity: 0, filter: 'blur(8px)' },
         {
           y: 0,
           opacity: 1,
+          filter: 'blur(0px)',
           duration: 1,
           ease: 'expo.out',
           scrollTrigger: {
             trigger: card,
-            start: 'top 85%',
+            start: 'top 88%',
             once: true,
           },
-          delay: index * 0.15,
+          delay: index * 0.12,
         }
       )
     })

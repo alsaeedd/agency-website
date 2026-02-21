@@ -1,8 +1,13 @@
 import { useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
+import logoMain from "../../assets/logo_main.png";
 
 // Mobile-first navbar component with smooth animations and hamburger menu support
-const navLinks = [{ href: "#services", text: "Services" }, { href: "#portfolio", text: "Portfolio" }];
+const navLinks = [
+  { href: "#services", text: "Services" },
+  { href: "#about", text: "About" },
+  { href: "#portfolio", text: "Portfolio" },
+];
 
 interface NavbarProps {
   onContactClick: () => void;
@@ -47,6 +52,7 @@ export default function Navbar({ onContactClick }: NavbarProps) {
       <div className="container">
         <div className="navbar-inner">
           <a href="/" className="navbar-logo" aria-label="Home">
+            <img src={logoMain} alt="" className="navbar-logo-icon" />
             <span className="logo-text">Revenue Automation Lab</span>
           </a>
           <nav className="navbar-nav">

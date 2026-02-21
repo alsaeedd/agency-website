@@ -11,6 +11,10 @@ export default function Hero() {
   return (
     <section className="hero">
       <div className="hero-content">
+        <div className="hero-badge">
+          <span className="hero-badge-dot" />
+          Bahrain-based digital agency
+        </div>
         <AnimatedText as="h1" className="hero-title" delay={0.3} stagger={0.08}>
           Digital agency specialized in custom development and AI automations
         </AnimatedText>

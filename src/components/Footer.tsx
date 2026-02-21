@@ -51,19 +51,14 @@ export default function Footer() {
           <div className="footer-section footer-links">
             <h4 className="footer-section-title">Quick Links</h4>
             <ul className="footer-nav-list">
-              <li>
-                <a href="#services">Services</a>
-              </li>
-              <li>
-                <a href="#about">About</a>
-              </li>
+              <li><a href="#services">Services</a></li>
+              <li><a href="#about">About</a></li>
+              <li><a href="#portfolio">Portfolio</a></li>
               <li>
                 <button
                   onClick={(e) => {
                     e.preventDefault();
-                    const contactCircle = document.querySelector(
-                      ".contact-circle",
-                    ) as HTMLElement;
+                    const contactCircle = document.querySelector(".contact-circle") as HTMLElement;
                     if (contactCircle) contactCircle.click();
                   }}
                   className="footer-nav-button"

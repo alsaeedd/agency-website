@@ -1,6 +1,7 @@
 import { useEffect, useRef } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import AnimatedText from "./AnimatedText";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -14,15 +15,16 @@ export default function About() {
 
     gsap.fromTo(
       visualRef.current,
-      { scale: 0.85, opacity: 0 },
+      { scale: 0.92, opacity: 0, filter: "blur(10px)" },
       {
         scale: 1,
         opacity: 1,
+        filter: "blur(0px)",
         duration: 1.2,
         ease: "expo.out",
         scrollTrigger: {
           trigger: sectionRef.current,
-          start: "top 70%",
+          start: "top 72%",
           once: true,
         },
       },
@@ -30,16 +32,17 @@ export default function About() {
 
     gsap.fromTo(
       contentRef.current.children,
-      { y: 40, opacity: 0 },
+      { y: 28, opacity: 0, filter: "blur(6px)" },
       {
         y: 0,
         opacity: 1,
-        duration: 1,
-        stagger: 0.15,
+        filter: "blur(0px)",
+        duration: 0.9,
+        stagger: 0.12,
         ease: "expo.out",
         scrollTrigger: {
           trigger: contentRef.current,
-          start: "top 80%",
+          start: "top 82%",
           once: true,
         },
       },
@@ -54,6 +57,9 @@ export default function About() {
             <img src="/assets/logo_main.png" alt="Logo" />
           </div>
           <div className="about-content" ref={contentRef}>
+            <AnimatedText as="h2" className="section-title" triggerOnScroll stagger={0.1}>
+              About us
+            </AnimatedText>
             <div className="about-text">
               <p>
                 Launched in 2025, we began our journey because we saw the vendor

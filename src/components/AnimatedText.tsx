@@ -34,15 +34,16 @@ export default function AnimatedText({
     if (triggerOnScroll) {
       gsap.fromTo(
         wordElements,
-        { yPercent: 100 },
+        { yPercent: 105, opacity: 0 },
         {
           yPercent: 0,
-          duration: 1,
+          opacity: 1,
+          duration: 0.9,
           ease: 'expo.out',
           stagger: stagger,
           scrollTrigger: {
             trigger: containerRef.current,
-            start: 'top 85%',
+            start: 'top 88%',
             once: true,
           },
         }
@@ -50,10 +51,11 @@ export default function AnimatedText({
     } else {
       gsap.fromTo(
         wordElements,
-        { yPercent: 100 },
+        { yPercent: 105, opacity: 0 },
         {
           yPercent: 0,
-          duration: 1.2,
+          opacity: 1,
+          duration: 1.1,
           ease: 'expo.out',
           stagger: stagger,
           delay: delay,

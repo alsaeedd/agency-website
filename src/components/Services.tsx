@@ -8,25 +8,97 @@ gsap.registerPlugin(ScrollTrigger);
 const services = [
   {
     id: 1,
-    title: "Custom development",
-    description: "Frontend + backend + AI integrations — built to suit you.",
-    image: "/assets/Gemini_Generated_Image_yvsug5yvsug5yvsu.png",
+    title: "Websites",
+    description:
+      "Clean, fast, and built to convert. From landing pages to full web experiences.",
+    icon: (
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      >
+        <circle cx="12" cy="12" r="10" />
+        <line x1="2" y1="12" x2="22" y2="12" />
+        <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
+      </svg>
+    ),
   },
   {
     id: 2,
-    title: "AI-powered automation",
+    title: "Systems",
     description:
-      "Automations that either save you time or make you money, or both.",
-    image: "/assets/Gemini_Generated_Image_vbxmtevbxmtevbxm.png",
+      "Backend infrastructure, APIs, and databases engineered to scale with your business.",
+    icon: (
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      >
+        <rect x="2" y="2" width="20" height="8" rx="2" ry="2" />
+        <rect x="2" y="14" width="20" height="8" rx="2" ry="2" />
+        <line x1="6" y1="6" x2="6.01" y2="6" />
+        <line x1="6" y1="18" x2="6.01" y2="18" />
+      </svg>
+    ),
   },
   {
     id: 3,
-    title: "Cloud deployment",
+    title: "Apps",
     description:
-      "Initial infrastructure-as-code setup with a consistent deployment strategy.",
-    image: "/assets/Gemini_Generated_Image_woph3xwoph3xwoph.png",
+      "Web and mobile applications, designed with care and shipped with confidence.",
+    icon: (
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      >
+        <rect x="5" y="2" width="14" height="20" rx="2" ry="2" />
+        <line x1="12" y1="18" x2="12.01" y2="18" />
+      </svg>
+    ),
+  },
+  {
+    id: 4,
+    title: "AI",
+    description:
+      "Automations and AI agents that save time, cut costs, and generate revenue.",
+    icon: (
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      >
+        <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
+      </svg>
+    ),
   },
 ];
+
+const ArrowIcon = () => (
+  <svg
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="1.5"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
+    <line x1="7" y1="17" x2="17" y2="7" />
+    <polyline points="7 7 17 7 17 17" />
+  </svg>
+);
 
 export default function Services() {
   const sectionRef = useRef<HTMLElement>(null);
@@ -40,19 +112,20 @@ export default function Services() {
     cards.forEach((card, index) => {
       gsap.fromTo(
         card,
-        { y: 40, opacity: 0 },
+        { y: 24, opacity: 0, filter: "blur(6px)" },
         {
           y: 0,
           opacity: 1,
-          duration: 0.8,
+          filter: "blur(0px)",
+          duration: 0.85,
           ease: "expo.out",
           scrollTrigger: {
             trigger: card,
-            start: "top 90%",
+            start: "top 92%",
             once: true,
           },
-          delay: index * 0.1,
-        }
+          delay: index * 0.08,
+        },
       );
     });
   }, []);
@@ -60,38 +133,38 @@ export default function Services() {
   return (
     <section className="services" id="services" ref={sectionRef}>
       <div className="container">
-        <div className="section-header">
-          <AnimatedText
-            as="h2"
-            className="section-title"
-            triggerOnScroll
-            stagger={0.1}
-          >
-            Our services
-          </AnimatedText>
-        </div>
-        <div className="services-intro">
-          <AnimatedText as="p" triggerOnScroll stagger={0.02}>
-            From AWS deployments to robust AI automations — we design and build
-            exactly what you need.
-          </AnimatedText>
+        <div className="services-top">
+          <div className="section-header">
+            <AnimatedText
+              as="h2"
+              className="section-title"
+              triggerOnScroll
+              stagger={0.1}
+            >
+              Some of our services
+            </AnimatedText>
+          </div>
+          <div className="services-intro">
+            <AnimatedText as="p" triggerOnScroll stagger={0.02}>
+              From simple websites to robust AI automations, we design and build exactly what you need.
+            </AnimatedText>
+          </div>
         </div>
         <div className="services-grid" ref={cardsRef}>
           {services.map((service) => (
             <div key={service.id} className="service-card">
-              <div className="service-card-preview">
-                <img src={service.image} alt={service.title} loading="lazy" />
+              <div className="service-card-header">
+                <span className="service-card-num">0{service.id}</span>
+                <div className="service-card-icon">{service.icon}</div>
               </div>
               <h3 className="service-card-title">{service.title}</h3>
               <p className="service-card-text">{service.description}</p>
+              <div className="service-card-arrow">
+                <ArrowIcon />
+              </div>
             </div>
           ))}
         </div>
-        {/* <div className="section-action">
-          <a href="#" className="btn-cta" data-cursor="hover">
-            <span>View all services</span>
-          </a>
-        </div> */}
       </div>
     </section>
   );
