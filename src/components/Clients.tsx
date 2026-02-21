@@ -31,7 +31,12 @@ export default function Clients() {
     <section className="clients" id="clients">
       <div className="container">
         <div className="clients-header">
-          <AnimatedText as="h2" className="section-title" triggerOnScroll stagger={0.1}>
+          <AnimatedText
+            as="h2"
+            className="section-title"
+            triggerOnScroll
+            stagger={0.1}
+          >
             Our clients
           </AnimatedText>
         </div>

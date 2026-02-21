@@ -10,7 +10,8 @@
   --color-text-secondary: #b0b0b0;
   --color-primary: #e8e8e8;
   --color-inverse: #080808;
-  --font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-family:
+    "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   --ease-out-expo: cubic-bezier(0.19, 1, 0.22, 1);
   --ease-out-quad: cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
@@ -184,7 +185,9 @@ video {
   border-radius: 100px;
   font-family: inherit;
   letter-spacing: 0.01em;
-  transition: opacity 0.3s ease, box-shadow 0.3s ease;
+  transition:
+    opacity 0.3s ease,
+    box-shadow 0.3s ease;
 }
 
 .navbar-contact-btn:hover {
@@ -268,7 +271,9 @@ video {
   background: var(--color-surface);
   border: 1px solid var(--color-border);
   border-radius: 8px;
-  transition: border-color 0.3s ease, background 0.3s ease;
+  transition:
+    border-color 0.3s ease,
+    background 0.3s ease;
   display: block;
   text-align: center;
 }
@@ -316,11 +321,23 @@ video {
   content: "";
   position: absolute;
   inset: 0;
-  background-image: radial-gradient(circle, rgba(255, 255, 255, 0.13) 1px, transparent 1px);
+  background-image: radial-gradient(
+    circle,
+    rgba(255, 255, 255, 0.13) 1px,
+    transparent 1px
+  );
   background-size: 32px 32px;
   pointer-events: none;
-  mask-image: radial-gradient(ellipse 75% 75% at 50% 50%, black 10%, transparent 100%);
-  -webkit-mask-image: radial-gradient(ellipse 75% 75% at 50% 50%, black 10%, transparent 100%);
+  mask-image: radial-gradient(
+    ellipse 75% 75% at 50% 50%,
+    black 10%,
+    transparent 100%
+  );
+  -webkit-mask-image: radial-gradient(
+    ellipse 75% 75% at 50% 50%,
+    black 10%,
+    transparent 100%
+  );
   z-index: 0;
 }
 
@@ -331,7 +348,11 @@ video {
   width: 55vw;
   height: 55vh;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(255, 255, 255, 0.04) 0%, transparent 70%);
+  background: radial-gradient(
+    circle,
+    rgba(255, 255, 255, 0.04) 0%,
+    transparent 70%
+  );
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
@@ -424,7 +445,10 @@ video {
   background: var(--color-text);
   color: var(--color-inverse);
   cursor: pointer;
-  transition: transform 0.4s var(--ease-out-expo), box-shadow 0.4s ease, background 0.3s ease;
+  transition:
+    transform 0.4s var(--ease-out-expo),
+    box-shadow 0.4s ease,
+    background 0.3s ease;
   position: relative;
   opacity: 0;
   transform: translateY(16px);
@@ -441,7 +465,9 @@ video {
 
 .hero-cta-btn:hover {
   transform: translateY(-4px) scale(1.03);
-  box-shadow: 0 0 60px rgba(232, 232, 232, 0.25), 0 20px 50px rgba(0, 0, 0, 0.5);
+  box-shadow:
+    0 0 60px rgba(232, 232, 232, 0.25),
+    0 20px 50px rgba(0, 0, 0, 0.5);
   background: #ffffff;
 }
 
@@ -457,7 +483,9 @@ video {
   cursor: pointer;
   transform: scale(0.95);
   opacity: 0;
-  transition: transform 1s var(--ease-out-expo), opacity 1s var(--ease-out-expo);
+  transition:
+    transform 1s var(--ease-out-expo),
+    opacity 1s var(--ease-out-expo);
 }
 
 .showreel-preview.revealed {
@@ -704,7 +732,12 @@ video {
   left: 0;
   right: 0;
   height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.25), transparent);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.25),
+    transparent
+  );
   transform: scaleX(0);
   transition: transform 0.5s var(--ease-out-expo);
 }
@@ -737,7 +770,9 @@ video {
   width: 22px;
   height: 22px;
   color: var(--color-text-secondary);
-  transition: color 0.35s ease, transform 0.35s var(--ease-out-expo);
+  transition:
+    color 0.35s ease,
+    transform 0.35s var(--ease-out-expo);
 }
 
 .service-card:hover .service-card-icon {
@@ -772,7 +807,9 @@ video {
   height: 18px;
   color: var(--color-text-secondary);
   align-self: flex-end;
-  transition: color 0.3s ease, transform 0.35s var(--ease-out-expo);
+  transition:
+    color 0.3s ease,
+    transform 0.35s var(--ease-out-expo);
 }
 
 .service-card:hover .service-card-arrow {
@@ -802,8 +839,20 @@ video {
   overflow: hidden;
   display: flex;
   justify-content: center;
-  mask-image: linear-gradient(to right, transparent, black 12%, black 88%, transparent);
-  -webkit-mask-image: linear-gradient(to right, transparent, black 12%, black 88%, transparent);
+  mask-image: linear-gradient(
+    to right,
+    transparent,
+    black 12%,
+    black 88%,
+    transparent
+  );
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent,
+    black 12%,
+    black 88%,
+    transparent
+  );
 }
 
 .clients-track {
@@ -816,8 +865,12 @@ video {
 }
 
 @keyframes clientsScroll {
-  from { transform: translateX(0); }
-  to { transform: translateX(-50%); }
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
 }
 
 .client-logo {
@@ -882,7 +935,9 @@ video {
   overflow: hidden;
   aspect-ratio: 3 / 2;
   margin-bottom: 1rem;
-  transition: transform 0.55s var(--ease-out-expo), box-shadow 0.55s var(--ease-out-expo);
+  transition:
+    transform 0.55s var(--ease-out-expo),
+    box-shadow 0.55s var(--ease-out-expo);
   border: 1px solid var(--color-border);
 }
 
@@ -1000,7 +1055,9 @@ video {
   justify-content: center;
   background: var(--color-surface);
   cursor: pointer;
-  transition: background 0.3s ease, border-color 0.3s ease;
+  transition:
+    background 0.3s ease,
+    border-color 0.3s ease;
 }
 
 .project-overlay-close:hover {
@@ -1240,7 +1297,10 @@ video {
   color: var(--color-text);
   position: relative;
   overflow: hidden;
-  transition: color 0.4s var(--ease-out-expo), border-color 0.4s var(--ease-out-expo), box-shadow 0.4s ease;
+  transition:
+    color 0.4s var(--ease-out-expo),
+    border-color 0.4s var(--ease-out-expo),
+    box-shadow 0.4s ease;
 }
 
 .btn-cta-large span {
@@ -1338,7 +1398,10 @@ video {
   padding: 0.75rem 0.875rem;
   border-radius: 6px;
   border: 1px solid var(--color-border);
-  transition: border-color 0.3s ease, background 0.3s ease, color 0.3s ease;
+  transition:
+    border-color 0.3s ease,
+    background 0.3s ease,
+    color 0.3s ease;
   color: var(--color-text-secondary);
   font-size: 0.8125rem;
   line-height: 1.5;
@@ -1428,7 +1491,9 @@ video {
   z-index: 9999;
   mix-blend-mode: difference;
   transform: translate(-50%, -50%);
-  transition: width 0.3s var(--ease-out-expo), height 0.3s var(--ease-out-expo);
+  transition:
+    width 0.3s var(--ease-out-expo),
+    height 0.3s var(--ease-out-expo);
 }
 
 .cursor.hover {
@@ -1556,7 +1621,9 @@ video {
   justify-content: center;
   background: var(--color-surface);
   cursor: pointer;
-  transition: background 0.3s ease, border-color 0.3s ease;
+  transition:
+    background 0.3s ease,
+    border-color 0.3s ease;
 }
 
 .contact-close:hover {
@@ -1657,10 +1724,15 @@ video {
   inset: 0;
   border: 1px solid var(--color-border);
   border-radius: 100px;
-  transition: border-color 0.3s ease, background 0.3s ease;
+  transition:
+    border-color 0.3s ease,
+    background 0.3s ease;
 }
 
-.contact-checkbox input:checked + .contact-checkbox-box .contact-checkbox-border {
+.contact-checkbox
+  input:checked
+  + .contact-checkbox-box
+  .contact-checkbox-border {
   border-color: var(--color-text);
   background: var(--color-text);
 }
@@ -1840,13 +1912,72 @@ video {
 }
 
 /* Legacy extras */
-.footer-socials { display: flex; gap: 0.625rem; }
-.footer-social { width: 34px; height: 34px; border-radius: 50%; border: 1px solid var(--color-border); display: flex; align-items: center; justify-content: center; color: var(--color-text-secondary); transition: background 0.3s ease, border-color 0.3s ease, color 0.3s ease; }
-.footer-social:hover { background: var(--color-surface-2); border-color: var(--color-border-active); color: var(--color-text); }
-.footer-social svg { width: 15px; height: 15px; }
-.footer-disclaimer { display: flex; justify-content: flex-end; align-items: flex-start; }
-.disclaimer-trigger { position: relative; font-size: 0.8rem; color: var(--color-text-secondary); cursor: pointer; transition: color 0.3s ease; }
-.disclaimer-trigger:hover { color: var(--color-text); }
-.disclaimer-tooltip { position: absolute; bottom: calc(100% + 12px); right: 0; width: 280px; padding: 1rem; background: var(--color-surface-2); color: var(--color-text); border-radius: 8px; border: 1px solid var(--color-border); box-shadow: 0 8px 32px rgba(0,0,0,0.5); opacity: 0; visibility: hidden; transform: translateY(8px); transition: all 0.3s ease; z-index: 100; }
-.disclaimer-trigger:hover .disclaimer-tooltip { opacity: 1; visibility: visible; transform: translateY(0); }
-.disclaimer-tooltip-content { font-size: 0.75rem; line-height: 1.6; color: var(--color-text-secondary); }
+.footer-socials {
+  display: flex;
+  gap: 0.625rem;
+}
+.footer-social {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: 1px solid var(--color-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-text-secondary);
+  transition:
+    background 0.3s ease,
+    border-color 0.3s ease,
+    color 0.3s ease;
+}
+.footer-social:hover {
+  background: var(--color-surface-2);
+  border-color: var(--color-border-active);
+  color: var(--color-text);
+}
+.footer-social svg {
+  width: 15px;
+  height: 15px;
+}
+.footer-disclaimer {
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-start;
+}
+.disclaimer-trigger {
+  position: relative;
+  font-size: 0.8rem;
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+.disclaimer-trigger:hover {
+  color: var(--color-text);
+}
+.disclaimer-tooltip {
+  position: absolute;
+  bottom: calc(100% + 12px);
+  right: 0;
+  width: 280px;
+  padding: 1rem;
+  background: var(--color-surface-2);
+  color: var(--color-text);
+  border-radius: 8px;
+  border: 1px solid var(--color-border);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(8px);
+  transition: all 0.3s ease;
+  z-index: 100;
+}
+.disclaimer-trigger:hover .disclaimer-tooltip {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+.disclaimer-tooltip-content {
+  font-size: 0.75rem;
+  line-height: 1.6;
+  color: var(--color-text-secondary);
+}
