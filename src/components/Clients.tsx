@@ -1,5 +1,4 @@
 import AnimatedText from "./AnimatedText";
-import logoMain from "../../assets/logo_main.png";
 
 const logos = [
   {
@@ -7,8 +6,20 @@ const logos = [
     src: "/assets/Screenshot_2024-06-04_at_1.53.17_PM-removebg-preview-2-e1719916646965.png",
   },
   {
-    name: "Revenue Automation Lab",
-    src: logoMain,
+    name: "Calo",
+    src: "/assets/calo.png",
+  },
+  {
+    name: "Citibank",
+    src: "/assets/citibank.png",
+  },
+  {
+    name: "Credimax",
+    src: "/assets/credimax.png",
+  },
+  {
+    name: "EarningSync",
+    src: "/assets/earningsync.png",
   },
 ];
 

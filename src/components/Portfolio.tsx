@@ -259,6 +259,7 @@ export default function Portfolio() {
                       />
                     ) : (
                       <div className="portfolio-card-preview-metric">
+                        <img src="/assets/linkedin.png" alt="LinkedIn" className="portfolio-card-preview-metric-logo" />
                         <span className="portfolio-card-preview-number">
                           1,000+
                         </span>

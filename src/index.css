@@ -825,11 +825,13 @@ video {
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
+  width: 120px;
+  height: 120px;
 }
 
 .client-logo img {
-  height: 56px;
-  width: auto;
+  height: 100%;
+  width: 100%;
   object-fit: contain;
   opacity: 0.65;
   transition: opacity 0.3s ease;
@@ -928,6 +930,13 @@ video {
   font-weight: 400;
   color: rgba(255, 255, 255, 0.4);
   letter-spacing: 0.03em;
+}
+
+.portfolio-card-preview-metric-logo {
+  height: 40px;
+  width: auto;
+  object-fit: contain;
+  margin-bottom: 0.5rem;
 }
 
 .portfolio-card-info {
