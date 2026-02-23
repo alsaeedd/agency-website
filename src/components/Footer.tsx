@@ -1,8 +1,10 @@
-import logoSecondary from "../../assets/logo_secondary.png";
+import logoMain from "../../assets/logo_main.png";
 
 export default function Footer() {
   const handleContactClick = () => {
-    const contactCircle = document.querySelector(".contact-circle") as HTMLElement;
+    const contactCircle = document.querySelector(
+      ".contact-circle",
+    ) as HTMLElement;
     if (contactCircle) contactCircle.click();
   };
 
@@ -10,7 +12,6 @@ export default function Footer() {
     <footer className="footer">
       <div className="footer-top-glow" />
       <div className="container">
-
         {/* Main 3-col body */}
         <div className="footer-body">
           <p className="footer-brand-desc">
@@ -29,9 +30,17 @@ export default function Footer() {
               >
                 <span className="footer-contact-text">
                   <span className="footer-contact-type">Email</span>
-                  <span className="footer-contact-val">info@revenueautomationlab.com</span>
+                  <span className="footer-contact-val">
+                    info@revenueautomationlab.com
+                  </span>
                 </span>
-                <svg className="footer-arrow" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5">
+                <svg
+                  className="footer-arrow"
+                  viewBox="0 0 16 16"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="1.5"
+                >
                   <path d="M3 13L13 3M13 3H5M13 3V11" />
                 </svg>
               </a>
@@ -45,7 +54,13 @@ export default function Footer() {
                   <span className="footer-contact-type">WhatsApp</span>
                   <span className="footer-contact-val">+973 3777 1096</span>
                 </span>
-                <svg className="footer-arrow" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5">
+                <svg
+                  className="footer-arrow"
+                  viewBox="0 0 16 16"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="1.5"
+                >
                   <path d="M3 13L13 3M13 3H5M13 3V11" />
                 </svg>
               </a>
@@ -55,22 +70,32 @@ export default function Footer() {
           <div className="footer-col">
             <span className="footer-col-label">Navigation</span>
             <nav className="footer-nav">
-              <a href="#services" className="footer-nav-item">Services</a>
-              <a href="#about" className="footer-nav-item">About</a>
-              <a href="#clients" className="footer-nav-item">Clients</a>
-              <button onClick={handleContactClick} className="footer-nav-item footer-nav-btn">Contact</button>
+              <a href="#services" className="footer-nav-item">
+                Services
+              </a>
+              <a href="#about" className="footer-nav-item">
+                About
+              </a>
+              <a href="#clients" className="footer-nav-item">
+                Clients
+              </a>
+              <button
+                onClick={handleContactClick}
+                className="footer-nav-item footer-nav-btn"
+              >
+                Contact
+              </button>
             </nav>
           </div>
         </div>
 
         {/* Bottom bar */}
         <div className="footer-bar">
-          <img src={logoSecondary} className="footer-bar-logo" alt="RAL" />
+          <img src={logoMain} className="footer-bar-logo" alt="RAL" />
           <span className="footer-copy">
             &copy; 2026 Revenue Automation Lab. All rights reserved.
           </span>
         </div>
-
       </div>
     </footer>
   );

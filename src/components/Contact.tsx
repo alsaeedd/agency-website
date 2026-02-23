@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { gsap } from "gsap";
 import AnimatedText from "./AnimatedText";
-import logoSecondary from "../../assets/logo_secondary.png";
+import logoMain from "../../assets/logo_main.png";
 
 const services = [
   { id: "site-scratch", label: "Site from scratch" },
@@ -271,7 +271,7 @@ export default function Contact({ isOpen, onClose }: ContactProps) {
         <aside className="contact-sidebar" ref={sidebarRef}>
           <div className="contact-sidebar-glow" />
           <img
-            src={logoSecondary}
+            src={logoMain}
             className="contact-sidebar-logo contact-sidebar-anim"
             alt="RAL"
           />

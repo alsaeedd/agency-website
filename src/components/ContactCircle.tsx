@@ -1,15 +1,15 @@
-import { useEffect, useRef } from 'react'
-import { gsap } from 'gsap'
+import { useEffect, useRef } from "react";
+import { gsap } from "gsap";
 
 interface ContactCircleProps {
-  onClick: () => void
+  onClick: () => void;
 }
 
 export default function ContactCircle({ onClick }: ContactCircleProps) {
-  const circleRef = useRef<HTMLButtonElement>(null)
+  const circleRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
-    if (!circleRef.current) return
+    if (!circleRef.current) return;
 
     gsap.fromTo(
       circleRef.current,
@@ -19,11 +19,11 @@ export default function ContactCircle({ onClick }: ContactCircleProps) {
         opacity: 1,
         duration: 1.2,
         delay: 0.8,
-        ease: 'back.out(1.2)',
-        clearProps: 'scale' // Clear inline scale so CSS hover works
-      }
-    )
-  }, [])
+        ease: "back.out(1.2)",
+        clearProps: "scale", // Clear inline scale so CSS hover works
+      },
+    );
+  }, []);
 
   return (
     <button
@@ -34,11 +34,15 @@ export default function ContactCircle({ onClick }: ContactCircleProps) {
     >
       <div className="contact-circle-inner">
         <video autoPlay muted loop playsInline>
-          <source src="/assets/EmojiMovie785913280-offline.MOV" type="video/quicktime" />
-          <source src="/assets/EmojiMovie785913280-offline.MOV" type="video/mp4" />
+          <source src="/assets/gutra_guy.mov" type="video/mp4" />
+          <source src="/assets/gutra_guy.mov" type="video/quicktime" />
         </video>
         <div className="contact-circle-text">
-          <svg viewBox="0 0 150 150" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <svg
+            viewBox="0 0 150 150"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
             <path
               id="textPath"
               d="M75,75 m-60,0 a60,60 0 1,1 120,0 a60,60 0 1,1 -120,0"
@@ -53,5 +57,5 @@ export default function ContactCircle({ onClick }: ContactCircleProps) {
         </div>
       </div>
     </button>
-  )
+  );
 }
