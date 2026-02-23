@@ -62,7 +62,12 @@ export default function Contact({ isOpen, onClose }: ContactProps) {
   }, [isOpen, isVisible]);
 
   useEffect(() => {
-    if (isVisible && overlayRef.current && contentRef.current && closeButtonRef.current) {
+    if (
+      isVisible &&
+      overlayRef.current &&
+      contentRef.current &&
+      closeButtonRef.current
+    ) {
       setIsAnimating(true);
       document.body.style.overflow = "hidden";
 
@@ -77,38 +82,78 @@ export default function Contact({ isOpen, onClose }: ContactProps) {
 
       // Sidebar elements
       if (sidebarRef.current) {
-        const sidebarEls = sidebarRef.current.querySelectorAll(".contact-sidebar-anim");
+        const sidebarEls = sidebarRef.current.querySelectorAll(
+          ".contact-sidebar-anim",
+        );
         gsap.set(sidebarEls, { x: -30, opacity: 0 });
       }
 
       const tl = gsap.timeline({ onComplete: () => setIsAnimating(false) });
 
-      tl.to(overlayRef.current, { opacity: 1, duration: 0.5, ease: "power3.out" })
-        .to(contentRef.current, { y: 0, opacity: 1, duration: 0.6, ease: "power3.out" }, "-=0.3")
-        .to(closeButtonRef.current, { scale: 1, opacity: 1, duration: 0.4, ease: "back.out(1.7)" }, "-=0.4");
+      tl.to(overlayRef.current, {
+        opacity: 1,
+        duration: 0.5,
+        ease: "power3.out",
+      })
+        .to(
+          contentRef.current,
+          { y: 0, opacity: 1, duration: 0.6, ease: "power3.out" },
+          "-=0.3",
+        )
+        .to(
+          closeButtonRef.current,
+          { scale: 1, opacity: 1, duration: 0.4, ease: "back.out(1.7)" },
+          "-=0.4",
+        );
 
       // Animate subtitle after title
       if (subtitleRef.current) {
-        tl.to(subtitleRef.current, {
-          y: 0, opacity: 1, duration: 0.5, ease: "power3.out",
-        }, "-=0.15");
+        tl.to(
+          subtitleRef.current,
+          {
+            y: 0,
+            opacity: 1,
+            duration: 0.5,
+            ease: "power3.out",
+          },
+          "-=0.15",
+        );
       }
 
       // Animate sidebar elements
       if (sidebarRef.current) {
-        const sidebarEls = sidebarRef.current.querySelectorAll(".contact-sidebar-anim");
-        tl.to(sidebarEls, {
-          x: 0, opacity: 1, duration: 0.6, ease: "power3.out", stagger: 0.08,
-        }, "-=0.5");
+        const sidebarEls = sidebarRef.current.querySelectorAll(
+          ".contact-sidebar-anim",
+        );
+        tl.to(
+          sidebarEls,
+          {
+            x: 0,
+            opacity: 1,
+            duration: 0.6,
+            ease: "power3.out",
+            stagger: 0.08,
+          },
+          "-=0.5",
+        );
       }
 
       // Stagger form sections
       if (formGroupsRef.current) {
-        const sections = formGroupsRef.current.querySelectorAll(".contact-section");
+        const sections =
+          formGroupsRef.current.querySelectorAll(".contact-section");
         gsap.set(sections, { y: 30, opacity: 0 });
-        tl.to(sections, {
-          y: 0, opacity: 1, duration: 0.55, ease: "power3.out", stagger: 0.12,
-        }, "-=0.3");
+        tl.to(
+          sections,
+          {
+            y: 0,
+            opacity: 1,
+            duration: 0.55,
+            ease: "power3.out",
+            stagger: 0.12,
+          },
+          "-=0.3",
+        );
       }
     }
   }, [isVisible]);
@@ -126,16 +171,29 @@ export default function Contact({ isOpen, onClose }: ContactProps) {
       },
     });
 
-    tl.to(closeButtonRef.current, { scale: 0, opacity: 0, duration: 0.3, ease: "power3.in" })
-      .to(contentRef.current, { y: 60, opacity: 0, duration: 0.5, ease: "power3.in" }, "-=0.2")
-      .to(overlayRef.current, { opacity: 0, duration: 0.4, ease: "power3.in" }, "-=0.3");
+    tl.to(closeButtonRef.current, {
+      scale: 0,
+      opacity: 0,
+      duration: 0.3,
+      ease: "power3.in",
+    })
+      .to(
+        contentRef.current,
+        { y: 60, opacity: 0, duration: 0.5, ease: "power3.in" },
+        "-=0.2",
+      )
+      .to(
+        overlayRef.current,
+        { opacity: 0, duration: 0.4, ease: "power3.in" },
+        "-=0.3",
+      );
   }, [isAnimating, onClose]);
 
   const handleServiceToggle = (serviceId: string) => {
     setSelectedServices((prev) =>
       prev.includes(serviceId)
         ? prev.filter((id) => id !== serviceId)
-        : [...prev, serviceId]
+        : [...prev, serviceId],
     );
   };
 
@@ -148,7 +206,8 @@ export default function Contact({ isOpen, onClose }: ContactProps) {
       .filter(Boolean)
       .join(", ");
 
-    const selectedBudgetLabel = budgets.find((b) => b.id === selectedBudget)?.label || "";
+    const selectedBudgetLabel =
+      budgets.find((b) => b.id === selectedBudget)?.label || "";
 
     try {
       await fetch("/", {
@@ -195,37 +254,70 @@ export default function Contact({ isOpen, onClose }: ContactProps) {
         ref={closeButtonRef}
         aria-label="Close"
       >
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round">
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.75"
+          strokeLinecap="round"
+        >
           <line x1="18" y1="6" x2="6" y2="18" />
           <line x1="6" y1="6" x2="18" y2="18" />
         </svg>
       </button>
 
       <div className="contact-layout">
-
         {/* ── Sidebar ── */}
         <aside className="contact-sidebar" ref={sidebarRef}>
           <div className="contact-sidebar-glow" />
-          <img src={logoSecondary} className="contact-sidebar-logo contact-sidebar-anim" alt="RAL" />
+          <img
+            src={logoSecondary}
+            className="contact-sidebar-logo contact-sidebar-anim"
+            alt="RAL"
+          />
           <div className="contact-sidebar-body">
-            <h2 className="contact-sidebar-heading contact-sidebar-anim">Let's build something great.</h2>
+            <h2 className="contact-sidebar-heading contact-sidebar-anim">
+              Let's build something great.
+            </h2>
             <p className="contact-sidebar-desc contact-sidebar-anim">
               Tell us what you're working on and we'll get back to you shortly.
             </p>
           </div>
           <div className="contact-sidebar-links contact-sidebar-anim">
-            <a href="mailto:info@revenueautomationlab.com" className="contact-sidebar-link">
-              <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+            <a
+              href="mailto:info@revenueautomationlab.com"
+              className="contact-sidebar-link"
+            >
+              <svg
+                viewBox="0 0 20 20"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
                 <rect x="2" y="4" width="16" height="12" rx="2" />
                 <path d="M2 7l8 5 8-5" />
               </svg>
               info@revenueautomationlab.com
             </a>
-            <a href="https://wa.me/97333843915" target="_blank" rel="noopener noreferrer" className="contact-sidebar-link">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+            <a
+              href="https://wa.me/97337771096"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="contact-sidebar-link"
+            >
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
                 <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" />
               </svg>
-              +973 3384 3915
+              +973 3777 1096
             </a>
           </div>
         </aside>
@@ -236,7 +328,14 @@ export default function Contact({ isOpen, onClose }: ContactProps) {
             {showSuccess ? (
               <div className="contact-success">
                 <div className="contact-success-icon">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
                     <polyline points="20 6 9 17 4 12" />
                   </svg>
                 </div>
@@ -246,10 +345,17 @@ export default function Contact({ isOpen, onClose }: ContactProps) {
             ) : (
               <>
                 <div className="contact-header">
-                  <AnimatedText as="h1" className="contact-title" delay={0.2} stagger={0.1}>
+                  <AnimatedText
+                    as="h1"
+                    className="contact-title"
+                    delay={0.2}
+                    stagger={0.1}
+                  >
                     So, what're we cooking?
                   </AnimatedText>
-                  <p className="contact-subtitle" ref={subtitleRef}>Fill in what you can. We'll figure out the rest together.</p>
+                  <p className="contact-subtitle" ref={subtitleRef}>
+                    Fill in what you can. We'll figure out the rest together.
+                  </p>
                 </div>
 
                 <form
@@ -278,7 +384,9 @@ export default function Contact({ isOpen, onClose }: ContactProps) {
                           />
                           <span className="contact-checkbox-box">
                             <span className="contact-checkbox-border" />
-                            <span className="contact-checkbox-label">{service.label}</span>
+                            <span className="contact-checkbox-label">
+                              {service.label}
+                            </span>
                           </span>
                         </label>
                       ))}
@@ -343,7 +451,9 @@ export default function Contact({ isOpen, onClose }: ContactProps) {
                   <div className="contact-section">
                     <div className="contact-section-head">
                       <span className="contact-step-num">04</span>
-                      <span className="contact-label">Project budget (BHD)</span>
+                      <span className="contact-label">
+                        Project budget (BHD)
+                      </span>
                     </div>
                     <div className="contact-checkboxes">
                       {budgets.map((budget) => (
@@ -356,7 +466,9 @@ export default function Contact({ isOpen, onClose }: ContactProps) {
                           />
                           <span className="contact-checkbox-box">
                             <span className="contact-checkbox-border" />
-                            <span className="contact-checkbox-label">{budget.label}</span>
+                            <span className="contact-checkbox-label">
+                              {budget.label}
+                            </span>
                           </span>
                         </label>
                       ))}
@@ -369,13 +481,22 @@ export default function Contact({ isOpen, onClose }: ContactProps) {
                       <input
                         type="file"
                         name="attachment"
-                        onChange={(e) => setAttachment(e.target.files?.[0] || null)}
+                        onChange={(e) =>
+                          setAttachment(e.target.files?.[0] || null)
+                        }
                       />
                       <span className="contact-attachment-btn">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                        <svg
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2"
+                        >
                           <path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48" />
                         </svg>
-                        <span>{attachment ? attachment.name : "Attach a file"}</span>
+                        <span>
+                          {attachment ? attachment.name : "Attach a file"}
+                        </span>
                       </span>
                     </label>
 
@@ -385,22 +506,29 @@ export default function Contact({ isOpen, onClose }: ContactProps) {
                         className="btn-cta-submit"
                         disabled={!isFormValid || isSubmitting}
                       >
-                        <span>{isSubmitting ? "Sending..." : "Send request"}</span>
+                        <span>
+                          {isSubmitting ? "Sending..." : "Send request"}
+                        </span>
                         {!isSubmitting && (
-                          <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
+                          <svg
+                            viewBox="0 0 20 20"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="1.75"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                          >
                             <path d="M4 10h12M10 4l6 6-6 6" />
                           </svg>
                         )}
                       </button>
                     </div>
                   </div>
-
                 </form>
               </>
             )}
           </div>
         </div>
-
       </div>
     </div>
   );

@@ -43,7 +43,7 @@ export default function Footer() {
               >
                 <span className="footer-contact-text">
                   <span className="footer-contact-type">WhatsApp</span>
-                  <span className="footer-contact-val">+973 3384 3915</span>
+                  <span className="footer-contact-val">+973 3777 1096</span>
                 </span>
                 <svg className="footer-arrow" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5">
                   <path d="M3 13L13 3M13 3H5M13 3V11" />
