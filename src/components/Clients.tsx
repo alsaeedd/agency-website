@@ -4,22 +4,27 @@ const logos = [
   {
     name: "Jerar",
     src: "/assets/Screenshot_2024-06-04_at_1.53.17_PM-removebg-preview-2-e1719916646965.png",
+    className: "",
   },
   {
     name: "Calo",
     src: "/assets/calo.png",
+    className: "",
   },
   {
     name: "Citibank",
     src: "/assets/citibank.png",
+    className: "logo-citibank",
   },
   {
     name: "Credimax",
     src: "/assets/credimax.png",
+    className: "logo-credimax",
   },
   {
     name: "EarningSync",
     src: "/assets/earningsync.png",
+    className: "logo-earningsync",
   },
 ];
 
@@ -45,7 +50,7 @@ export default function Clients() {
       <div className="clients-marquee">
         <div className="clients-track">
           {track.map((logo, i) => (
-            <div key={i} className="client-logo">
+            <div key={i} className={`client-logo ${logo.className}`}>
               <img src={logo.src} alt={logo.name} />
             </div>
           ))}
