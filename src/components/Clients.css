@@ -1,0 +1,83 @@
+/* ===== Clients ===== */
+.clients {
+  padding: 5rem 0;
+  scroll-margin-top: 72px;
+  overflow: hidden;
+  background: var(--color-bg);
+}
+
+.clients-header {
+  text-align: center;
+  margin-bottom: 3.5rem;
+}
+
+.clients-marquee {
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  mask-image: linear-gradient(
+    to right,
+    transparent,
+    black 12%,
+    black 88%,
+    transparent
+  );
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent,
+    black 12%,
+    black 88%,
+    transparent
+  );
+}
+
+.clients-track {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8rem;
+  width: max-content;
+  animation: clientsScroll 18s linear infinite;
+}
+
+@keyframes clientsScroll {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.client-logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 120px;
+  height: 120px;
+}
+
+.client-logo img {
+  height: 100%;
+  width: 100%;
+  object-fit: contain;
+  opacity: 0.65;
+  transition: opacity 0.3s ease;
+}
+
+.client-logo img:hover {
+  opacity: 1;
+}
+
+.logo-citibank img {
+  transform: scale(1.4);
+}
+
+.logo-credimax img {
+  transform: scale(1.3);
+}
+
+.logo-earningsync img {
+  transform: scale(0.78);
+}

@@ -1,9 +1,7 @@
 import { useEffect, useRef } from "react";
 import { gsap } from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
 import AnimatedText from "./AnimatedText";
-
-gsap.registerPlugin(ScrollTrigger);
+import "./Services.css";
 
 const services = [
   {
@@ -107,27 +105,31 @@ export default function Services() {
   useEffect(() => {
     if (!cardsRef.current) return;
 
-    const cards = cardsRef.current.querySelectorAll(".service-card");
+    const ctx = gsap.context(() => {
+      const cards = cardsRef.current!.querySelectorAll(".service-card");
 
-    cards.forEach((card, index) => {
-      gsap.fromTo(
-        card,
-        { y: 24, opacity: 0, filter: "blur(6px)" },
-        {
-          y: 0,
-          opacity: 1,
-          filter: "blur(0px)",
-          duration: 0.85,
-          ease: "expo.out",
-          scrollTrigger: {
-            trigger: card,
-            start: "top 92%",
-            once: true,
+      cards.forEach((card, index) => {
+        gsap.fromTo(
+          card,
+          { y: 24, opacity: 0, filter: "blur(6px)" },
+          {
+            y: 0,
+            opacity: 1,
+            filter: "blur(0px)",
+            duration: 0.85,
+            ease: "expo.out",
+            scrollTrigger: {
+              trigger: card,
+              start: "top 92%",
+              once: true,
+            },
+            delay: index * 0.08,
           },
-          delay: index * 0.08,
-        },
-      );
-    });
+        );
+      });
+    }, sectionRef);
+
+    return () => ctx.revert();
   }, []);
 
   return (
@@ -154,7 +156,9 @@ export default function Services() {
           {services.map((service) => (
             <div key={service.id} className="service-card">
               <div className="service-card-header">
-                <span className="service-card-num">0{service.id}</span>
+                <span className="service-card-num">
+                  {String(service.id).padStart(2, "0")}
+                </span>
                 <div className="service-card-icon">{service.icon}</div>
               </div>
               <h3 className="service-card-title">{service.title}</h3>

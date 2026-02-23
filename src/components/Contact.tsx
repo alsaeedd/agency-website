@@ -2,6 +2,7 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import { gsap } from "gsap";
 import AnimatedText from "./AnimatedText";
 import logoMain from "../../assets/logo_main.png";
+import "./Contact.css";
 
 const services = [
   { id: "site-scratch", label: "Site from scratch" },
@@ -13,11 +14,11 @@ const services = [
 
 const budgets = [
   { id: "under-500", label: "< 500 BHD" },
-  { id: "500-1k", label: "500 – 1k BHD" },
-  { id: "1k-2k", label: "1k – 2k BHD" },
-  { id: "2k-5k", label: "2k – 5k BHD" },
-  { id: "5k-10k", label: "5k – 10k BHD" },
-  { id: "10k-20k", label: "10k – 20k BHD" },
+  { id: "500-1k", label: "500 \u2013 1k BHD" },
+  { id: "1k-2k", label: "1k \u2013 2k BHD" },
+  { id: "2k-5k", label: "2k \u2013 5k BHD" },
+  { id: "5k-10k", label: "5k \u2013 10k BHD" },
+  { id: "10k-20k", label: "10k \u2013 20k BHD" },
   { id: "more-20k", label: "> 20k BHD" },
 ];
 
@@ -54,6 +55,7 @@ export default function Contact({ isOpen, onClose }: ContactProps) {
   const sidebarRef = useRef<HTMLElement>(null);
   const formGroupsRef = useRef<HTMLFormElement>(null);
   const subtitleRef = useRef<HTMLParagraphElement>(null);
+  const successTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
     if (isOpen && !isVisible) {
@@ -75,12 +77,10 @@ export default function Contact({ isOpen, onClose }: ContactProps) {
       gsap.set(contentRef.current, { y: 80, opacity: 0 });
       gsap.set(closeButtonRef.current, { scale: 0, opacity: 0 });
 
-      // Subtitle
       if (subtitleRef.current) {
         gsap.set(subtitleRef.current, { y: 15, opacity: 0 });
       }
 
-      // Sidebar elements
       if (sidebarRef.current) {
         const sidebarEls = sidebarRef.current.querySelectorAll(
           ".contact-sidebar-anim",
@@ -106,7 +106,6 @@ export default function Contact({ isOpen, onClose }: ContactProps) {
           "-=0.4",
         );
 
-      // Animate subtitle after title
       if (subtitleRef.current) {
         tl.to(
           subtitleRef.current,
@@ -120,7 +119,6 @@ export default function Contact({ isOpen, onClose }: ContactProps) {
         );
       }
 
-      // Animate sidebar elements
       if (sidebarRef.current) {
         const sidebarEls = sidebarRef.current.querySelectorAll(
           ".contact-sidebar-anim",
@@ -138,7 +136,6 @@ export default function Contact({ isOpen, onClose }: ContactProps) {
         );
       }
 
-      // Stagger form sections
       if (formGroupsRef.current) {
         const sections =
           formGroupsRef.current.querySelectorAll(".contact-section");
@@ -155,6 +152,10 @@ export default function Contact({ isOpen, onClose }: ContactProps) {
           "-=0.3",
         );
       }
+
+      return () => {
+        tl.kill();
+      };
     }
   }, [isVisible]);
 
@@ -189,12 +190,41 @@ export default function Contact({ isOpen, onClose }: ContactProps) {
       );
   }, [isAnimating, onClose]);
 
+  useEffect(() => {
+    if (!isVisible) return;
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") handleClose();
+    };
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, [isVisible, handleClose]);
+
+  // Cleanup overflow on unmount
+  useEffect(() => {
+    return () => {
+      document.body.style.overflow = "";
+      if (successTimerRef.current) {
+        clearTimeout(successTimerRef.current);
+      }
+    };
+  }, []);
+
   const handleServiceToggle = (serviceId: string) => {
     setSelectedServices((prev) =>
       prev.includes(serviceId)
         ? prev.filter((id) => id !== serviceId)
         : [...prev, serviceId],
     );
+  };
+
+  const resetForm = () => {
+    setSelectedServices([]);
+    setSelectedBudget("");
+    setName("");
+    setEmail("");
+    setMessage("");
+    setAttachment(null);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -210,7 +240,7 @@ export default function Contact({ isOpen, onClose }: ContactProps) {
       budgets.find((b) => b.id === selectedBudget)?.label || "";
 
     try {
-      await fetch("/", {
+      const response = await fetch("/", {
         method: "POST",
         body: encode({
           "form-name": "contact",
@@ -223,16 +253,15 @@ export default function Contact({ isOpen, onClose }: ContactProps) {
         }),
       });
 
+      if (!response.ok) {
+        throw new Error(`Server error: ${response.status}`);
+      }
+
       setShowSuccess(true);
-      setTimeout(() => {
+      successTimerRef.current = setTimeout(() => {
         setShowSuccess(false);
         onClose();
-        setSelectedServices([]);
-        setSelectedBudget("");
-        setName("");
-        setEmail("");
-        setMessage("");
-        setAttachment(null);
+        resetForm();
       }, 3000);
     } catch (error) {
       console.error("Form submission error:", error);
@@ -247,7 +276,7 @@ export default function Contact({ isOpen, onClose }: ContactProps) {
   if (!isVisible) return null;
 
   return (
-    <div className="contact-overlay" ref={overlayRef}>
+    <div className="contact-overlay" ref={overlayRef} role="dialog" aria-modal="true" aria-label="Contact form">
       <button
         className="contact-close"
         onClick={handleClose}
@@ -267,7 +296,6 @@ export default function Contact({ isOpen, onClose }: ContactProps) {
       </button>
 
       <div className="contact-layout">
-        {/* ── Sidebar ── */}
         <aside className="contact-sidebar" ref={sidebarRef}>
           <div className="contact-sidebar-glow" />
           <img
@@ -322,7 +350,6 @@ export default function Contact({ isOpen, onClose }: ContactProps) {
           </div>
         </aside>
 
-        {/* ── Form ── */}
         <div className="contact-scroll" data-lenis-prevent>
           <div className="contact-container" ref={contentRef}>
             {showSuccess ? (
@@ -368,7 +395,6 @@ export default function Contact({ isOpen, onClose }: ContactProps) {
                 >
                   <input type="hidden" name="form-name" value="contact" />
 
-                  {/* ── Step 1: Services ── */}
                   <div className="contact-section">
                     <div className="contact-section-head">
                       <span className="contact-step-num">01</span>
@@ -393,7 +419,6 @@ export default function Contact({ isOpen, onClose }: ContactProps) {
                     </div>
                   </div>
 
-                  {/* ── Step 2: Your details ── */}
                   <div className="contact-section">
                     <div className="contact-section-head">
                       <span className="contact-step-num">02</span>
@@ -425,7 +450,6 @@ export default function Contact({ isOpen, onClose }: ContactProps) {
                     </div>
                   </div>
 
-                  {/* ── Step 3: Project ── */}
                   <div className="contact-section">
                     <div className="contact-section-head">
                       <span className="contact-step-num">03</span>
@@ -447,7 +471,6 @@ export default function Contact({ isOpen, onClose }: ContactProps) {
                     </div>
                   </div>
 
-                  {/* ── Step 4: Budget ── */}
                   <div className="contact-section">
                     <div className="contact-section-head">
                       <span className="contact-step-num">04</span>
@@ -475,7 +498,6 @@ export default function Contact({ isOpen, onClose }: ContactProps) {
                     </div>
                   </div>
 
-                  {/* ── Attachment + Submit ── */}
                   <div className="contact-section contact-bottom-row">
                     <label className="contact-attachment">
                       <input

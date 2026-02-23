@@ -1,4 +1,5 @@
 import AnimatedText from "./AnimatedText";
+import "./Clients.css";
 
 const logos = [
   {

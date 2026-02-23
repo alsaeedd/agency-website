@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
 import logoMain from "../../assets/logo_main.png";
+import "./Navbar.css";
 
 // Mobile-first navbar component with smooth animations and hamburger menu support
 const navLinks = [

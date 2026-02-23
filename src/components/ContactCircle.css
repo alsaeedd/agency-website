@@ -1,0 +1,71 @@
+/* ===== Contact Circle ===== */
+.contact-circle {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  width: 108px;
+  height: 108px;
+  z-index: 90;
+  cursor: pointer;
+  transition: transform 0.4s var(--ease-out-expo);
+  padding: 0;
+  margin: 0;
+  border: none;
+  background: transparent;
+}
+
+.contact-circle:hover {
+  transform: scale(1.08);
+}
+
+.contact-circle-inner {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  overflow: hidden;
+  position: relative;
+  display: block;
+}
+
+.contact-circle video {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+  display: block;
+  z-index: 1;
+}
+
+.contact-circle-text {
+  position: absolute;
+  inset: 0;
+  animation: contactCircleRotate 10s linear infinite;
+  z-index: 2;
+}
+
+@keyframes contactCircleRotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.contact-circle-text svg {
+  width: 100%;
+  height: 100%;
+  color: #ffffff;
+}
+
+@media (max-width: 768px) {
+  .contact-circle {
+    width: 72px;
+    height: 72px;
+    bottom: 1rem;
+    right: 1rem;
+  }
+}

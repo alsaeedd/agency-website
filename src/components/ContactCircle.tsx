@@ -1,5 +1,6 @@
 import { useEffect, useRef } from "react";
 import { gsap } from "gsap";
+import "./ContactCircle.css";
 
 interface ContactCircleProps {
   onClick: () => void;
