@@ -37,7 +37,7 @@ export default function Clients() {
             triggerOnScroll
             stagger={0.1}
           >
-            Our clients
+            Our team has built for
           </AnimatedText>
         </div>
       </div>
