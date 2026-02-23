@@ -62,6 +62,19 @@ const projects: Project[] = [
   },
 ];
 
+const featureIcons = [
+  // Search
+  <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="8.5" cy="8.5" r="5.5"/><path d="M17 17l-4-4"/></svg>,
+  // Filter/check
+  <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M3 5h14M6 10h8M9 15h2"/></svg>,
+  // Sparkle/AI
+  <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M10 2v2M10 16v2M2 10h2M16 10h2M4.93 4.93l1.41 1.41M13.66 13.66l1.41 1.41M4.93 15.07l1.41-1.41M13.66 6.34l1.41-1.41"/><circle cx="10" cy="10" r="3"/></svg>,
+  // Link/connect
+  <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M8.5 11.5a4.5 4.5 0 006.36 0l2-2a4.5 4.5 0 00-6.36-6.36L9.1 4.54"/><path d="M11.5 8.5a4.5 4.5 0 00-6.36 0l-2 2a4.5 4.5 0 006.36 6.36l1.38-1.38"/></svg>,
+  // Bolt/rocket
+  <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M13 2L4.5 11H10l-3 7 8.5-9H10l3-7z"/></svg>,
+];
+
 function ProjectDetail({
   project,
   onClose,
@@ -81,22 +94,14 @@ function ProjectDetail({
     document.body.style.overflow = "hidden";
 
     gsap.set(overlayRef.current, { opacity: 0 });
-    gsap.set(contentRef.current, { y: 80, opacity: 0 });
+    gsap.set(contentRef.current, { y: 60, opacity: 0 });
     gsap.set(closeRef.current, { scale: 0, opacity: 0 });
 
     const tl = gsap.timeline({ onComplete: () => setIsAnimating(false) });
 
-    tl.to(overlayRef.current, { opacity: 1, duration: 0.5, ease: "power3.out" })
-      .to(
-        contentRef.current,
-        { y: 0, opacity: 1, duration: 0.6, ease: "power3.out" },
-        "-=0.3",
-      )
-      .to(
-        closeRef.current,
-        { scale: 1, opacity: 1, duration: 0.4, ease: "back.out(1.7)" },
-        "-=0.4",
-      );
+    tl.to(overlayRef.current, { opacity: 1, duration: 0.45, ease: "power3.out" })
+      .to(contentRef.current, { y: 0, opacity: 1, duration: 0.6, ease: "power3.out" }, "-=0.25")
+      .to(closeRef.current, { scale: 1, opacity: 1, duration: 0.4, ease: "back.out(1.7)" }, "-=0.4");
   }, []);
 
   const handleClose = useCallback(() => {
@@ -111,22 +116,9 @@ function ProjectDetail({
       },
     });
 
-    tl.to(closeRef.current, {
-      scale: 0,
-      opacity: 0,
-      duration: 0.3,
-      ease: "power3.in",
-    })
-      .to(
-        contentRef.current,
-        { y: 60, opacity: 0, duration: 0.5, ease: "power3.in" },
-        "-=0.2",
-      )
-      .to(
-        overlayRef.current,
-        { opacity: 0, duration: 0.4, ease: "power3.in" },
-        "-=0.3",
-      );
+    tl.to(closeRef.current, { scale: 0, opacity: 0, duration: 0.3, ease: "power3.in" })
+      .to(contentRef.current, { y: 50, opacity: 0, duration: 0.45, ease: "power3.in" }, "-=0.2")
+      .to(overlayRef.current, { opacity: 0, duration: 0.35, ease: "power3.in" }, "-=0.3");
   }, [isAnimating, onClose]);
 
   return (
@@ -137,12 +129,7 @@ function ProjectDetail({
         ref={closeRef}
         aria-label="Close"
       >
-        <svg
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-        >
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round">
           <line x1="18" y1="6" x2="6" y2="18" />
           <line x1="6" y1="6" x2="18" y2="18" />
         </svg>
@@ -150,54 +137,79 @@ function ProjectDetail({
 
       <div className="project-overlay-scroll" data-lenis-prevent>
         <div className="project-overlay-content" ref={contentRef}>
-          {/* Hero */}
-          <div className="project-hero">
-            <div className="project-hero-inner">
-              <span className="project-hero-tag">{project.tag}</span>
-              {project.client && (
-                <img
-                  src={project.client.logo}
-                  alt={project.client.name}
-                  className="project-hero-logo"
-                />
-              )}
-              <h1 className="project-hero-title">{project.title}</h1>
-              <p className="project-hero-subtitle">{project.subtitle}</p>
-            </div>
-          </div>
 
-          {/* Details */}
-          <div className="project-details">
-            <div className="project-details-inner">
-              <div className="project-section">
-                <span className="project-section-label">What we built</span>
-                <ul className="project-section-list">
-                  {project.highlights.map((point, i) => (
-                    <li key={i}>{point}</li>
-                  ))}
-                </ul>
+          {/* ── Hero ── */}
+          <div className="pd-hero">
+            <div className="pd-hero-inner">
+              <div className="pd-hero-left">
+                <span className="pd-tag">{project.tag}</span>
+                <h1 className="pd-title">{project.title}</h1>
+                <p className="pd-subtitle">{project.subtitle}</p>
               </div>
-
-              <div className="project-section">
-                <span className="project-section-label">The result</span>
-                <p className="project-section-outcome">{project.outcome}</p>
-              </div>
-
-              <div className="project-section">
-                <span className="project-section-label">Client</span>
+              <div className="pd-hero-right">
                 {project.client ? (
-                  <div className="project-section-client">
-                    <img src={project.client.logo} alt={project.client.name} />
-                    <span>{project.client.name}</span>
+                  <div className="pd-visual-box">
+                    <img
+                      src={project.client.logo}
+                      alt={project.client.name}
+                      className="pd-visual-client-logo"
+                    />
                   </div>
-                ) : project.clientNote ? (
-                  <p className="project-section-client-note">
-                    {project.clientNote}
-                  </p>
-                ) : null}
+                ) : (
+                  <div className="pd-visual-box pd-visual-metric">
+                    <img src="/assets/linkedin.png" alt="LinkedIn" className="pd-metric-platform" />
+                    <span className="pd-metric-number">1,000+</span>
+                    <span className="pd-metric-label">candidates per batch</span>
+                  </div>
+                )}
               </div>
             </div>
           </div>
+
+          {/* ── Body ── */}
+          <div className="pd-body">
+            <div className="pd-inner">
+
+              {/* What we built */}
+              <div className="pd-section">
+                <span className="pd-section-label">What we built</span>
+                <div className="pd-features-grid">
+                  {project.highlights.map((h, i) => (
+                    <div className="pd-feature-card" key={i}>
+                      <div className="pd-feature-top">
+                        <span className="pd-feature-num">0{i + 1}</span>
+                        <span className="pd-feature-icon">{featureIcons[i % featureIcons.length]}</span>
+                      </div>
+                      <p className="pd-feature-text">{h}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* The result */}
+              <div className="pd-section">
+                <span className="pd-section-label">The result</span>
+                <p className="pd-outcome">{project.outcome}</p>
+              </div>
+
+              {/* Client */}
+              <div className="pd-section pd-section-last">
+                <span className="pd-section-label">Client</span>
+                {project.client ? (
+                  <div className="pd-client-row">
+                    <div className="pd-client-logo-wrap">
+                      <img src={project.client.logo} alt={project.client.name} />
+                    </div>
+                    <span className="pd-client-name">{project.client.name}</span>
+                  </div>
+                ) : (
+                  <p className="pd-client-note">{project.clientNote}</p>
+                )}
+              </div>
+
+            </div>
+          </div>
+
         </div>
       </div>
     </div>
@@ -264,12 +276,8 @@ export default function Portfolio() {
                           alt="LinkedIn"
                           className="portfolio-card-preview-metric-logo"
                         />
-                        <span className="portfolio-card-preview-number">
-                          1,000+
-                        </span>
-                        <span className="portfolio-card-preview-label">
-                          candidates per batch
-                        </span>
+                        <span className="portfolio-card-preview-number">1,000+</span>
+                        <span className="portfolio-card-preview-label">candidates per batch</span>
                       </div>
                     )}
                   </div>
@@ -278,9 +286,7 @@ export default function Portfolio() {
                   <div className="portfolio-card-meta">
                     <span className="portfolio-card-tag">{project.tag}</span>
                     {project.client && (
-                      <span className="portfolio-card-client-name">
-                        {project.client.name}
-                      </span>
+                      <span className="portfolio-card-client-name">{project.client.name}</span>
                     )}
                   </div>
                   <h3 className="portfolio-card-title">{project.title}</h3>
