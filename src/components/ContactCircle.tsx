@@ -33,11 +33,28 @@ export default function ContactCircle({ onClick }: ContactCircleProps) {
       aria-label="Get in touch"
     >
       <div className="contact-circle-inner">
-        <video autoPlay muted loop playsInline>
-          <source src="/assets/gutra_guy.mov" type="video/mp4" />
-          <source src="/assets/gutra_guy.mov" type="video/quicktime" />
+        <video
+          autoPlay
+          muted
+          loop
+          playsInline
+          style={{
+            position: "absolute",
+            top: 0,
+            left: 0,
+            width: "100%",
+            height: "100%",
+            objectFit: "cover",
+            borderRadius: "50%",
+            zIndex: 1,
+          }}
+        >
+          <source src="/assets/gutra_guy.mp4" type="video/mp4" />
         </video>
-        <div className="contact-circle-text">
+        <div
+          className="contact-circle-text"
+          style={{ position: "absolute", zIndex: 2 }}
+        >
           <svg
             viewBox="0 0 150 150"
             fill="none"
