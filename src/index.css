@@ -308,6 +308,13 @@ video {
   overflow: hidden;
 }
 
+@media (max-width: 768px) {
+  .hero {
+    padding-top: 80px;
+    height: calc(100vh - 80px);
+  }
+}
+
 /* Dot grid */
 .hero::before {
   content: "";
