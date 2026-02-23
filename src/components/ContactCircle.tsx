@@ -50,7 +50,7 @@ export default function ContactCircle({ onClick }: ContactCircleProps) {
             />
             <text fill="white" fontSize="11" fontWeight="500" letterSpacing="1">
               <textPath href="#textPath">
-                contact - contact - contact - contact -
+                contact - contact - contact - contact - contact
               </textPath>
             </text>
           </svg>
