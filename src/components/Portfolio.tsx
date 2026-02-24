@@ -21,7 +21,7 @@ const projects: Project[] = [
     title: "LinkedIn Recruitment at Scale",
     subtitle:
       "1,000 candidates sourced, filtered, and personally messaged \u2014 in one automated run.",
-    color: "#1a1a1a",
+    color: "#2B1B3D",
     client: null,
     clientNote:
       "Built for a senior executive at one of Bahrain\u2019s leading technology firms in the financial services space. Name withheld at the client\u2019s request.",
@@ -41,7 +41,7 @@ const projects: Project[] = [
     title: "Pre-Orders, Shipping & Automation",
     subtitle:
       "A complete pre-order system, shipping integration, and workflow automation for a growing e-commerce brand.",
-    color: "#f5f0eb",
+    color: "#2B1B3D",
     client: {
       name: "Jerar",
       logo: "/assets/Screenshot_2024-06-04_at_1.53.17_PM-removebg-preview-2-e1719916646965.png",
@@ -56,6 +56,28 @@ const projects: Project[] = [
     ],
     outcome:
       "We\u2019re grateful this turned into a lasting partnership \u2014 the client continues to trust us with new projects as we grow together.",
+  },
+  {
+    id: 3,
+    tag: "FinTech",
+    title: "Smart Copy Trading Platform",
+    subtitle:
+      "A custom-designed and developed website for a smart copy trading platform in the financial space.",
+    color: "#2B1B3D",
+    client: {
+      name: "EarningSync",
+      logo: "/assets/earningsync.png",
+    },
+    clientNote: null,
+    highlights: [
+      "Designed and built a polished, conversion-focused marketing site from scratch \u2014 fully tailored to the client\u2019s brand.",
+      "Responsive across all devices with smooth animations and micro-interactions for a premium feel.",
+      "Clear feature breakdowns and pricing sections structured to drive sign-ups and reduce bounce.",
+      "Optimized for performance and SEO \u2014 fast load times, clean markup, and proper meta configuration.",
+      "Deployed and configured on cloud infrastructure with CI/CD for seamless updates.",
+    ],
+    outcome:
+      "A clean, high-converting website that gives EarningSync a professional presence and clearly communicates their platform to potential users.",
   },
 ];
 

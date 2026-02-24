@@ -150,6 +150,7 @@
   background: var(--color-text);
   color: var(--color-inverse);
   cursor: pointer;
+  white-space: nowrap;
   transition:
     transform 0.4s var(--ease-out-expo),
     box-shadow 0.4s ease,
@@ -174,4 +175,11 @@
     0 0 60px rgba(209, 196, 233, 0.3),
     0 20px 50px rgba(0, 0, 0, 0.5);
   background: #ffffff;
+}
+
+@media (max-width: 480px) {
+  .hero-cta-btn {
+    padding: 1.1rem 2rem;
+    font-size: 0.9rem;
+  }
 }
