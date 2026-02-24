@@ -2,6 +2,7 @@ import { useEffect, useRef } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import AnimatedText from "./AnimatedText";
+import logoSecondary from "../../assets/logo_secondary.png";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -54,10 +55,15 @@ export default function About() {
       <div className="container">
         <div className="about-grid">
           <div className="about-visual" ref={visualRef}>
-            <img src="/assets/logo_main.png" alt="Logo" />
+            <img src={logoSecondary} alt="RAL Logo" />
           </div>
           <div className="about-content" ref={contentRef}>
-            <AnimatedText as="h2" className="section-title" triggerOnScroll stagger={0.1}>
+            <AnimatedText
+              as="h2"
+              className="section-title"
+              triggerOnScroll
+              stagger={0.1}
+            >
               About us
             </AnimatedText>
             <div className="about-text">
