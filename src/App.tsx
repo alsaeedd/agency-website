@@ -1,72 +1,71 @@
-import { useEffect, useRef, useState } from 'react'
-import { gsap } from 'gsap'
-import { ScrollTrigger } from 'gsap/ScrollTrigger'
-import Lenis from 'lenis'
-import Navbar from './components/Navbar'
-import Hero from './components/Hero'
-import About from './components/About'
-// import Featured from './components/Featured'
-import Services from './components/Services'
-import Portfolio from './components/Portfolio'
-import CTA from './components/CTA'
-import Footer from './components/Footer'
-import ContactCircle from './components/ContactCircle'
-import Contact from './components/Contact'
-
-gsap.registerPlugin(ScrollTrigger)
+import { useEffect, useRef, useState } from "react";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import Lenis from "lenis";
+import "./App.css";
+import Navbar from "./components/Navbar";
+import Hero from "./components/Hero";
+import About from "./components/About";
+import Clients from "./components/Clients";
+import Services from "./components/Services";
+import Portfolio from "./components/Portfolio";
+import CTA from "./components/CTA";
+import Footer from "./components/Footer";
+import ContactCircle from "./components/ContactCircle";
+import Contact from "./components/Contact";
 
 function App() {
-  const lenisRef = useRef<Lenis | null>(null)
-  const [isContactOpen, setIsContactOpen] = useState(false)
+  const lenisRef = useRef<Lenis | null>(null);
+  const [isContactOpen, setIsContactOpen] = useState(false);
+
+  const openContact = () => setIsContactOpen(true);
 
   useEffect(() => {
-    // Initialize Lenis smooth scroll
     const lenis = new Lenis({
       duration: 1.2,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-      orientation: 'vertical',
+      orientation: "vertical",
       smoothWheel: true,
-    })
+    });
 
-    lenisRef.current = lenis
+    lenisRef.current = lenis;
 
-    function raf(time: number) {
-      lenis.raf(time)
-      requestAnimationFrame(raf)
-    }
+    lenis.on("scroll", ScrollTrigger.update);
 
-    requestAnimationFrame(raf)
+    const tickerCallback = (time: number) => {
+      lenis.raf(time * 1000);
+    };
 
-    // Connect Lenis to GSAP ScrollTrigger
-    lenis.on('scroll', ScrollTrigger.update)
-
-    gsap.ticker.add((time) => {
-      lenis.raf(time * 1000)
-    })
-
-    gsap.ticker.lagSmoothing(0)
+    gsap.ticker.add(tickerCallback);
+    gsap.ticker.lagSmoothing(0);
 
     return () => {
-      lenis.destroy()
-    }
-  }, [])
+      gsap.ticker.remove(tickerCallback);
+      lenis.destroy();
+    };
+  }, []);
 
   return (
     <>
-      <ContactCircle onClick={() => setIsContactOpen(true)} />
-      <Navbar onContactClick={() => setIsContactOpen(true)} />
+      <div className="bg-blobs" aria-hidden="true">
+        <div className="bg-blob bg-blob-1" />
+        <div className="bg-blob bg-blob-2" />
+        <div className="bg-blob bg-blob-3" />
+      </div>
+      <ContactCircle onClick={openContact} />
+      <Navbar onContactClick={openContact} />
       <main>
-        <Hero />
-        <About />
-        {/* <Featured /> */}
+        <Hero onContactClick={openContact} />
         <Services />
+        <About />
+        <Clients />
         <Portfolio />
-        <CTA onContactClick={() => setIsContactOpen(true)} />
+        <CTA onContactClick={openContact} />
       </main>
-      <Footer />
+      <Footer onContactClick={openContact} />
       <Contact isOpen={isContactOpen} onClose={() => setIsContactOpen(false)} />
     </>
-  )
+  );
 }
 
-export default App
+export default App;

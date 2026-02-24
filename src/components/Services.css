@@ -1,0 +1,178 @@
+/* ===== Services ===== */
+.services {
+  padding: 5rem 0;
+  scroll-margin-top: 72px;
+  position: relative;
+  background: var(--color-bg);
+  color: var(--color-text);
+}
+
+.services > .container {
+  margin: 0 auto;
+}
+
+.services-top {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 3rem;
+  text-align: center;
+}
+
+.services .section-header {
+  text-align: center;
+  margin-bottom: 0;
+}
+
+.services-intro {
+  font-size: clamp(0.875rem, 1.4vw, 1rem);
+  line-height: 1.75;
+  color: var(--color-text-secondary);
+  max-width: 440px;
+  margin: 0;
+}
+
+.services-intro .word {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: top;
+  margin: -0.2em;
+}
+
+.services-intro .word-inner {
+  display: inline-block;
+  padding: 0.2em;
+}
+
+/* Grid separator trick */
+.services-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1px;
+  background: var(--color-border);
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+@media (max-width: 968px) {
+  .services-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 480px) {
+  .services-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.service-card {
+  opacity: 0;
+  padding: 2.5rem 2.25rem;
+  background: var(--color-surface);
+  transition: background 0.35s ease;
+  cursor: default;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+}
+
+.service-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(209, 196, 233, 0.35),
+    transparent
+  );
+  transform: scaleX(0);
+  transition: transform 0.5s var(--ease-out-expo);
+}
+
+.service-card:hover::before {
+  transform: scaleX(1);
+}
+
+.service-card:hover {
+  background: var(--color-surface-2);
+}
+
+.service-card-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 2.25rem;
+}
+
+.service-card-num {
+  font-size: 0.625rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  color: var(--color-text-secondary);
+  opacity: 0.6;
+  font-variant-numeric: tabular-nums;
+}
+
+.service-card-icon {
+  width: 22px;
+  height: 22px;
+  color: var(--color-text-secondary);
+  transition:
+    color 0.35s ease,
+    transform 0.35s var(--ease-out-expo);
+}
+
+.service-card:hover .service-card-icon {
+  color: var(--color-text);
+  transform: scale(1.15);
+}
+
+.service-card-icon svg {
+  width: 100%;
+  height: 100%;
+}
+
+.service-card-title {
+  font-size: clamp(1.6rem, 2.2vw, 2rem);
+  font-weight: 500;
+  letter-spacing: -0.03em;
+  line-height: 1.05;
+  color: var(--color-text);
+  margin-bottom: 0.875rem;
+}
+
+.service-card-text {
+  font-size: 0.8125rem;
+  color: var(--color-text-secondary);
+  line-height: 1.75;
+  flex: 1;
+}
+
+.service-card-arrow {
+  margin-top: 2rem;
+  width: 18px;
+  height: 18px;
+  color: var(--color-text-secondary);
+  align-self: flex-end;
+  transition:
+    color 0.3s ease,
+    transform 0.35s var(--ease-out-expo);
+}
+
+.service-card:hover .service-card-arrow {
+  color: var(--color-text);
+  transform: translate(4px, -4px);
+}
+
+.service-card-arrow svg {
+  width: 100%;
+  height: 100%;
+}

@@ -1,0 +1,210 @@
+/* ===== Navbar ===== */
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  padding: 1.125rem 0;
+  background: rgba(12, 7, 21, 0.85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.navbar-inner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1400px;
+  margin: 0 auto;
+  width: 100%;
+  padding: 0 4rem;
+  box-sizing: border-box;
+}
+
+@media (max-width: 768px) {
+  .navbar-inner {
+    padding: 0 1.5rem;
+  }
+}
+
+.navbar-logo {
+  display: flex;
+  align-items: center;
+}
+
+.navbar-logo-icon {
+  width: 65px;
+  height: 65px;
+  object-fit: contain;
+  border-radius: 6px;
+}
+
+.navbar-nav {
+  display: flex;
+  gap: 2rem;
+  align-items: center;
+}
+
+.navbar-nav a {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--color-text-secondary);
+  position: relative;
+  overflow: hidden;
+  transition: color 0.3s ease;
+}
+
+.navbar-nav a:hover {
+  color: var(--color-text);
+}
+
+.navbar-nav a span {
+  display: block;
+  transition: transform 0.4s var(--ease-out-expo);
+}
+
+.navbar-nav a::after {
+  content: attr(data-text);
+  position: absolute;
+  top: 100%;
+  left: 0;
+  color: var(--color-text);
+  transition: transform 0.4s var(--ease-out-expo);
+}
+
+.navbar-nav a:hover span {
+  transform: translateY(-100%);
+}
+
+.navbar-nav a:hover::after {
+  transform: translateY(-100%);
+}
+
+.navbar-contact-btn {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--color-inverse);
+  background: var(--color-text);
+  border: none;
+  cursor: pointer;
+  padding: 0.5rem 1.25rem;
+  border-radius: 100px;
+  font-family: inherit;
+  letter-spacing: 0.01em;
+  transition:
+    opacity 0.3s ease,
+    box-shadow 0.3s ease;
+}
+
+.navbar-contact-btn:hover {
+  opacity: 0.85;
+  box-shadow: 0 0 24px rgba(209, 196, 233, 0.2);
+}
+
+@media (max-width: 768px) {
+  .navbar-nav {
+    display: none;
+  }
+}
+
+/* ===== Mobile Hamburger ===== */
+.navbar-hamburger {
+  display: none;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  z-index: 101;
+  margin-left: auto;
+  width: 40px;
+  height: 40px;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s var(--ease-out-expo);
+  line-height: 1;
+  color: var(--color-text);
+  overflow: hidden;
+  font-weight: bold;
+}
+
+.navbar-hamburger::before {
+  content: "\2261";
+  transition: all 0.3s var(--ease-out-expo);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  font-size: 2.2rem;
+}
+
+@media (max-width: 768px) {
+  .navbar-hamburger {
+    display: flex;
+  }
+}
+
+.navbar-hamburger.active::before {
+  content: "\2715";
+  font-size: 1.8rem;
+}
+
+/* ===== Mobile Menu ===== */
+.navbar-mobile-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: rgba(12, 7, 21, 0.98);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--color-border);
+  padding: 1.25rem 1.5rem;
+}
+
+.navbar-mobile-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 0.625rem;
+  padding: 0;
+}
+
+.navbar-mobile-link {
+  padding: 0.875rem 1.25rem;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--color-text);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  transition:
+    border-color 0.3s ease,
+    background 0.3s ease;
+  display: block;
+  text-align: center;
+}
+
+.navbar-mobile-link:hover {
+  border-color: var(--color-border-active);
+  background: var(--color-surface-2);
+}
+
+.navbar-mobile-contact-btn {
+  padding: 0.875rem 1.25rem;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--color-inverse);
+  background: var(--color-text);
+  border: 1px solid var(--color-text);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: opacity 0.3s ease;
+  font-family: inherit;
+  text-align: center;
+}
+
+.navbar-mobile-contact-btn:hover {
+  opacity: 0.85;
+}
