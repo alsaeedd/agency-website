@@ -1,13 +1,11 @@
 import AnimatedText from "./AnimatedText";
+import "./Hero.css";
 
-export default function Hero() {
-  const handleContactClick = () => {
-    const contactCircle = document.querySelector(
-      ".contact-circle",
-    ) as HTMLElement;
-    if (contactCircle) contactCircle.click();
-  };
+interface HeroProps {
+  onContactClick: () => void;
+}
 
+export default function Hero({ onContactClick }: HeroProps) {
   return (
     <section className="hero">
       <div className="hero-content">
@@ -29,7 +27,7 @@ export default function Hero() {
           automation workflows.
         </AnimatedText>
         <button
-          onClick={handleContactClick}
+          onClick={onContactClick}
           className="hero-cta-btn"
           style={{ animationDelay: "1.3s" }}
         >

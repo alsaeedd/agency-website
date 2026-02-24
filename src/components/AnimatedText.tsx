@@ -1,8 +1,5 @@
 import { useEffect, useRef } from 'react'
 import { gsap } from 'gsap'
-import { ScrollTrigger } from 'gsap/ScrollTrigger'
-
-gsap.registerPlugin(ScrollTrigger)
 
 interface AnimatedTextProps {
   children: string
@@ -24,46 +21,47 @@ export default function AnimatedText({
   splitBy = 'words',
 }: AnimatedTextProps) {
   const containerRef = useRef<HTMLElement>(null)
-  const hasAnimated = useRef(false)
 
   useEffect(() => {
-    if (!containerRef.current || hasAnimated.current) return
+    if (!containerRef.current) return
 
     const wordElements = containerRef.current.querySelectorAll('.word-inner')
 
-    if (triggerOnScroll) {
-      gsap.fromTo(
-        wordElements,
-        { yPercent: 105, opacity: 0 },
-        {
-          yPercent: 0,
-          opacity: 1,
-          duration: 0.9,
-          ease: 'expo.out',
-          stagger: stagger,
-          scrollTrigger: {
-            trigger: containerRef.current,
-            start: 'top 88%',
-            once: true,
-          },
-        }
-      )
-    } else {
-      gsap.fromTo(
-        wordElements,
-        { yPercent: 105, opacity: 0 },
-        {
-          yPercent: 0,
-          opacity: 1,
-          duration: 1.1,
-          ease: 'expo.out',
-          stagger: stagger,
-          delay: delay,
-        }
-      )
-    }
+    const ctx = gsap.context(() => {
+      if (triggerOnScroll) {
+        gsap.fromTo(
+          wordElements,
+          { yPercent: 105, opacity: 0 },
+          {
+            yPercent: 0,
+            opacity: 1,
+            duration: 0.9,
+            ease: 'expo.out',
+            stagger: stagger,
+            scrollTrigger: {
+              trigger: containerRef.current,
+              start: 'top 88%',
+              once: true,
+            },
+          }
+        )
+      } else {
+        gsap.fromTo(
+          wordElements,
+          { yPercent: 105, opacity: 0 },
+          {
+            yPercent: 0,
+            opacity: 1,
+            duration: 1.1,
+            ease: 'expo.out',
+            stagger: stagger,
+            delay: delay,
+          }
+        )
+      }
+    }, containerRef)
 
-    hasAnimated.current = true
+    return () => ctx.revert()
   }, [delay, stagger, triggerOnScroll])
 
   const renderContent = () => {

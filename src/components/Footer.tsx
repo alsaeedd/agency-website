@@ -1,18 +1,15 @@
 import logoMain from "../../assets/logo_main.png";
+import "./Footer.css";
 
-export default function Footer() {
-  const handleContactClick = () => {
-    const contactCircle = document.querySelector(
-      ".contact-circle",
-    ) as HTMLElement;
-    if (contactCircle) contactCircle.click();
-  };
+interface FooterProps {
+  onContactClick: () => void;
+}
 
+export default function Footer({ onContactClick }: FooterProps) {
   return (
     <footer className="footer">
       <div className="footer-top-glow" />
       <div className="container">
-        {/* Main 3-col body */}
         <div className="footer-body">
           <p className="footer-brand-desc">
             We are a forward-thinking digital agency specializing in custom
@@ -45,7 +42,7 @@ export default function Footer() {
                 </svg>
               </a>
               <a
-                href="https://wa.me/97333843915"
+                href="https://wa.me/97337771096"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="footer-contact-row"
@@ -80,7 +77,7 @@ export default function Footer() {
                 Clients
               </a>
               <button
-                onClick={handleContactClick}
+                onClick={onContactClick}
                 className="footer-nav-item footer-nav-btn"
               >
                 Contact
@@ -89,7 +86,6 @@ export default function Footer() {
           </div>
         </div>
 
-        {/* Bottom bar */}
         <div className="footer-bar">
           <img src={logoMain} className="footer-bar-logo" alt="RAL" />
           <span className="footer-copy">

@@ -1,10 +1,7 @@
 import { useEffect, useRef } from "react";
 import { gsap } from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
 import AnimatedText from "./AnimatedText";
-import logoSecondary from "../../assets/logo_secondary.png";
-
-gsap.registerPlugin(ScrollTrigger);
+import "./About.css";
 
 export default function About() {
   const sectionRef = useRef<HTMLElement>(null);
@@ -14,40 +11,44 @@ export default function About() {
   useEffect(() => {
     if (!visualRef.current || !contentRef.current) return;
 
-    gsap.fromTo(
-      visualRef.current,
-      { scale: 0.92, opacity: 0, filter: "blur(10px)" },
-      {
-        scale: 1,
-        opacity: 1,
-        filter: "blur(0px)",
-        duration: 1.2,
-        ease: "expo.out",
-        scrollTrigger: {
-          trigger: sectionRef.current,
-          start: "top 72%",
-          once: true,
+    const ctx = gsap.context(() => {
+      gsap.fromTo(
+        visualRef.current,
+        { scale: 0.92, opacity: 0, filter: "blur(10px)" },
+        {
+          scale: 1,
+          opacity: 1,
+          filter: "blur(0px)",
+          duration: 1.2,
+          ease: "expo.out",
+          scrollTrigger: {
+            trigger: sectionRef.current,
+            start: "top 72%",
+            once: true,
+          },
         },
-      },
-    );
+      );
 
-    gsap.fromTo(
-      contentRef.current.children,
-      { y: 28, opacity: 0, filter: "blur(6px)" },
-      {
-        y: 0,
-        opacity: 1,
-        filter: "blur(0px)",
-        duration: 0.9,
-        stagger: 0.12,
-        ease: "expo.out",
-        scrollTrigger: {
-          trigger: contentRef.current,
-          start: "top 82%",
-          once: true,
+      gsap.fromTo(
+        contentRef.current!.children,
+        { y: 28, opacity: 0, filter: "blur(6px)" },
+        {
+          y: 0,
+          opacity: 1,
+          filter: "blur(0px)",
+          duration: 0.9,
+          stagger: 0.12,
+          ease: "expo.out",
+          scrollTrigger: {
+            trigger: contentRef.current,
+            start: "top 82%",
+            once: true,
+          },
         },
-      },
-    );
+      );
+    }, sectionRef);
+
+    return () => ctx.revert();
   }, []);
 
   return (
@@ -55,7 +56,7 @@ export default function About() {
       <div className="container">
         <div className="about-grid">
           <div className="about-visual" ref={visualRef}>
-            <img src={logoSecondary} alt="RAL Logo" />
+            <img src="/assets/logo_main.png" alt="RAL logo" loading="lazy" />
           </div>
           <div className="about-content" ref={contentRef}>
             <AnimatedText
@@ -77,9 +78,6 @@ export default function About() {
               </p>
               <p>We build your solution as if we literally owned it.</p>
             </div>
-            {/* <a href="#services" className="btn-cta" data-cursor="hover">
-              <span>What we do</span>
-            </a> */}
           </div>
         </div>
       </div>

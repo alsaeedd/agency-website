@@ -1,4 +1,6 @@
+import { useEffect, useRef, useState } from "react";
 import AnimatedText from "./AnimatedText";
+import "./Clients.css";
 
 const logos = [
   {
@@ -28,10 +30,42 @@ const logos = [
   },
 ];
 
-// Duplicate enough times to fill the track for a seamless loop
+// 4x duplication for seamless loop with translateX(-50%)
 const track = [...logos, ...logos, ...logos, ...logos];
 
 export default function Clients() {
+  const trackRef = useRef<HTMLDivElement>(null);
+  const [ready, setReady] = useState(false);
+
+  useEffect(() => {
+    if (!trackRef.current) return;
+
+    const images = trackRef.current.querySelectorAll("img");
+    let loaded = 0;
+    const total = images.length;
+
+    const checkReady = () => {
+      loaded++;
+      if (loaded >= total) setReady(true);
+    };
+
+    images.forEach((img) => {
+      if (img.complete) {
+        checkReady();
+      } else {
+        img.addEventListener("load", checkReady, { once: true });
+        img.addEventListener("error", checkReady, { once: true });
+      }
+    });
+
+    return () => {
+      images.forEach((img) => {
+        img.removeEventListener("load", checkReady);
+        img.removeEventListener("error", checkReady);
+      });
+    };
+  }, []);
+
   return (
     <section className="clients" id="clients">
       <div className="container">
@@ -48,7 +82,10 @@ export default function Clients() {
       </div>
 
       <div className="clients-marquee">
-        <div className="clients-track">
+        <div
+          className={`clients-track${ready ? " ready" : ""}`}
+          ref={trackRef}
+        >
           {track.map((logo, i) => (
             <div key={i} className={`client-logo ${logo.className}`}>
               <img src={logo.src} alt={logo.name} />

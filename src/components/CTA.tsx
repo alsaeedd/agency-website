@@ -1,9 +1,7 @@
 import { useEffect, useRef } from "react";
 import { gsap } from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
 import AnimatedText from "./AnimatedText";
-
-gsap.registerPlugin(ScrollTrigger);
+import "./CTA.css";
 
 interface CTAProps {
   onContactClick: () => void;
@@ -16,22 +14,26 @@ export default function CTA({ onContactClick }: CTAProps) {
   useEffect(() => {
     if (!buttonRef.current) return;
 
-    gsap.fromTo(
-      buttonRef.current,
-      { scale: 0.8, opacity: 0 },
-      {
-        scale: 1,
-        opacity: 1,
-        duration: 1,
-        ease: "expo.out",
-        scrollTrigger: {
-          trigger: sectionRef.current,
-          start: "top 60%",
-          once: true,
-        },
-        delay: 0.3,
-      }
-    );
+    const ctx = gsap.context(() => {
+      gsap.fromTo(
+        buttonRef.current,
+        { scale: 0.8, opacity: 0 },
+        {
+          scale: 1,
+          opacity: 1,
+          duration: 1,
+          ease: "expo.out",
+          scrollTrigger: {
+            trigger: sectionRef.current,
+            start: "top 60%",
+            once: true,
+          },
+          delay: 0.3,
+        }
+      );
+    }, sectionRef);
+
+    return () => ctx.revert();
   }, []);
 
   return (
@@ -50,7 +52,6 @@ export default function CTA({ onContactClick }: CTAProps) {
             className="btn-cta-large"
             ref={buttonRef}
             onClick={onContactClick}
-            data-cursor="hover"
           >
             <span>TELL US</span>
           </button>
