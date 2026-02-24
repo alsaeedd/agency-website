@@ -285,6 +285,10 @@
   color: var(--color-text);
 }
 
+.contact-checkbox input:checked + .contact-checkbox-box .contact-checkbox-label {
+  color: var(--color-inverse);
+}
+
 .contact-checkbox:hover .contact-checkbox-border {
   border-color: var(--color-border-active);
 }
