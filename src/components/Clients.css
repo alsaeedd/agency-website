@@ -13,8 +13,6 @@
 
 .clients-marquee {
   overflow: hidden;
-  display: flex;
-  justify-content: center;
   mask-image: linear-gradient(
     to right,
     transparent,
@@ -34,10 +32,16 @@
 .clients-track {
   display: flex;
   align-items: center;
-  justify-content: center;
   gap: 8rem;
   width: max-content;
+  will-change: transform;
   animation: clientsScroll 18s linear infinite;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+.clients-track.ready {
+  opacity: 1;
 }
 
 @keyframes clientsScroll {

@@ -48,7 +48,6 @@ export default function Contact({ isOpen, onClose }: ContactProps) {
   const [showSuccess, setShowSuccess] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
-  const [isAnimating, setIsAnimating] = useState(false);
   const overlayRef = useRef<HTMLDivElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
@@ -56,6 +55,8 @@ export default function Contact({ isOpen, onClose }: ContactProps) {
   const formGroupsRef = useRef<HTMLFormElement>(null);
   const subtitleRef = useRef<HTMLParagraphElement>(null);
   const successTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const openTimelineRef = useRef<gsap.core.Timeline | null>(null);
+  const isClosingRef = useRef(false);
 
   useEffect(() => {
     if (isOpen && !isVisible) {
@@ -70,7 +71,7 @@ export default function Contact({ isOpen, onClose }: ContactProps) {
       contentRef.current &&
       closeButtonRef.current
     ) {
-      setIsAnimating(true);
+      isClosingRef.current = false;
       document.body.style.overflow = "hidden";
 
       gsap.set(overlayRef.current, { opacity: 0 });
@@ -88,7 +89,8 @@ export default function Contact({ isOpen, onClose }: ContactProps) {
         gsap.set(sidebarEls, { x: -30, opacity: 0 });
       }
 
-      const tl = gsap.timeline({ onComplete: () => setIsAnimating(false) });
+      const tl = gsap.timeline();
+      openTimelineRef.current = tl;
 
       tl.to(overlayRef.current, {
         opacity: 1,
@@ -155,18 +157,25 @@ export default function Contact({ isOpen, onClose }: ContactProps) {
 
       return () => {
         tl.kill();
+        openTimelineRef.current = null;
       };
     }
   }, [isVisible]);
 
   const handleClose = useCallback(() => {
-    if (isAnimating) return;
-    setIsAnimating(true);
+    if (isClosingRef.current) return;
+    isClosingRef.current = true;
+
+    // Kill any in-progress open animation
+    if (openTimelineRef.current) {
+      openTimelineRef.current.kill();
+      openTimelineRef.current = null;
+    }
 
     const tl = gsap.timeline({
       onComplete: () => {
         setIsVisible(false);
-        setIsAnimating(false);
+        isClosingRef.current = false;
         document.body.style.overflow = "";
         onClose();
       },
@@ -188,7 +197,7 @@ export default function Contact({ isOpen, onClose }: ContactProps) {
         { opacity: 0, duration: 0.4, ease: "power3.in" },
         "-=0.3",
       );
-  }, [isAnimating, onClose]);
+  }, [onClose]);
 
   useEffect(() => {
     if (!isVisible) return;

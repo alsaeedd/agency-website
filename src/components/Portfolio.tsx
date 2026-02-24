@@ -77,19 +77,21 @@ function ProjectDetail({
   const overlayRef = useRef<HTMLDivElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
   const closeRef = useRef<HTMLButtonElement>(null);
-  const [isAnimating, setIsAnimating] = useState(false);
+  const openTimelineRef = useRef<gsap.core.Timeline | null>(null);
+  const isClosingRef = useRef(false);
 
   useEffect(() => {
     if (!overlayRef.current || !contentRef.current || !closeRef.current) return;
 
-    setIsAnimating(true);
+    isClosingRef.current = false;
     document.body.style.overflow = "hidden";
 
     gsap.set(overlayRef.current, { opacity: 0 });
     gsap.set(contentRef.current, { y: 60, opacity: 0 });
     gsap.set(closeRef.current, { scale: 0, opacity: 0 });
 
-    const tl = gsap.timeline({ onComplete: () => setIsAnimating(false) });
+    const tl = gsap.timeline();
+    openTimelineRef.current = tl;
 
     tl.to(overlayRef.current, { opacity: 1, duration: 0.45, ease: "power3.out" })
       .to(contentRef.current, { y: 0, opacity: 1, duration: 0.6, ease: "power3.out" }, "-=0.25")
@@ -97,18 +99,25 @@ function ProjectDetail({
 
     return () => {
       tl.kill();
+      openTimelineRef.current = null;
       document.body.style.overflow = "";
     };
   }, []);
 
   const handleClose = useCallback(() => {
-    if (isAnimating) return;
-    setIsAnimating(true);
+    if (isClosingRef.current) return;
+    isClosingRef.current = true;
+
+    // Kill any in-progress open animation
+    if (openTimelineRef.current) {
+      openTimelineRef.current.kill();
+      openTimelineRef.current = null;
+    }
 
     const tl = gsap.timeline({
       onComplete: () => {
         document.body.style.overflow = "";
-        setIsAnimating(false);
+        isClosingRef.current = false;
         onClose();
       },
     });
@@ -116,7 +125,7 @@ function ProjectDetail({
     tl.to(closeRef.current, { scale: 0, opacity: 0, duration: 0.3, ease: "power3.in" })
       .to(contentRef.current, { y: 50, opacity: 0, duration: 0.45, ease: "power3.in" }, "-=0.2")
       .to(overlayRef.current, { opacity: 0, duration: 0.35, ease: "power3.in" }, "-=0.3");
-  }, [isAnimating, onClose]);
+  }, [onClose]);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
