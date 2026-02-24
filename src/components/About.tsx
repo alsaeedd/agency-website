@@ -1,6 +1,7 @@
 import { useEffect, useRef } from "react";
 import { gsap } from "gsap";
 import AnimatedText from "./AnimatedText";
+import logoMain from "../../assets/logo_main.png";
 import "./About.css";
 
 export default function About() {
@@ -56,10 +57,15 @@ export default function About() {
       <div className="container">
         <div className="about-grid">
           <div className="about-visual" ref={visualRef}>
-            <img src="/assets/logo_main.png" alt="RAL logo" loading="lazy" />
+            <img src={logoMain} alt="RAL logo" loading="lazy" />
           </div>
           <div className="about-content" ref={contentRef}>
-            <AnimatedText as="h2" className="section-title" triggerOnScroll stagger={0.1}>
+            <AnimatedText
+              as="h2"
+              className="section-title"
+              triggerOnScroll
+              stagger={0.1}
+            >
               About us
             </AnimatedText>
             <div className="about-text">
