@@ -22,11 +22,23 @@ export default function Navbar({ onContactClick }: NavbarProps) {
   useEffect(() => {
     if (!navRef.current) return;
 
-    gsap.fromTo(
-      navRef.current,
-      { opacity: 0, y: -20 },
-      { opacity: 1, y: 0, duration: 1, delay: 0.5, ease: "expo.out" },
-    );
+    // Start hidden — only appears when user scrolls
+    gsap.set(navRef.current, { yPercent: -100, opacity: 0 });
+
+    let visible = false;
+
+    const onScroll = () => {
+      if (window.scrollY > 60 && !visible) {
+        visible = true;
+        gsap.to(navRef.current, { yPercent: 0, opacity: 1, duration: 0.7, ease: "expo.out" });
+      } else if (window.scrollY <= 60 && visible) {
+        visible = false;
+        gsap.to(navRef.current, { yPercent: -100, opacity: 0, duration: 0.4, ease: "power3.in" });
+      }
+    };
+
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
   useEffect(() => {
