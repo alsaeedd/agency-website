@@ -38,11 +38,12 @@ export default function Hero({ onContactClick, isContactOpen }: HeroProps) {
 
   const [loaded, setLoaded] = useState(false);
 
-  // Evaluated inside the component so it always reads the real viewport on mount,
-  // not a stale module-level value from a previous HMR/dev-tools session.
-  const [sceneUrl] = useState(() =>
-    window.innerWidth <= 768 ? SCENE_URL_MOBILE : SCENE_URL_DESKTOP
-  );
+  // Portrait phone → dedicated 375×812 scene.
+  // Landscape phone / desktop / thin window → desktop scene (wider aspect ratio).
+  const [sceneUrl] = useState(() => {
+    const isPortraitMobile = window.innerWidth <= 768 && window.innerHeight > window.innerWidth;
+    return isPortraitMobile ? SCENE_URL_MOBILE : SCENE_URL_DESKTOP;
+  });
 
   function onLoad(spline: Application) {
     splineAppRef.current       = spline;
@@ -122,12 +123,15 @@ export default function Hero({ onContactClick, isContactOpen }: HeroProps) {
         scrollTrigger: {
           trigger: sectionRef.current,
           start:   "top top",
-          end:     () => window.innerWidth <= 480 ? "+=110%"
-                       : window.innerWidth <= 768 ? "+=150%"
+          end:     () => window.innerWidth <= 480  ? "+=110%"
+                       : window.innerWidth <= 768  ? "+=150%"
+                       : window.innerHeight <= 500 ? "+=130%"  // landscape phone / thin window
                        : "+=250%",
           invalidateOnRefresh: true,
           pin:     true,
-          scrub:   window.innerWidth <= 768 ? 1 : 2,
+          scrub:   window.innerWidth <= 768  ? 1
+                 : window.innerHeight <= 500 ? 1.5
+                 : 2,
           onLeave: () => {
             splineActiveRef.current = false;
             splineAppRef.current?.stop?.();
@@ -187,8 +191,9 @@ export default function Hero({ onContactClick, isContactOpen }: HeroProps) {
         0.15
       );
 
-      const yOffset = window.innerWidth <= 480 ? 28
-                    : window.innerWidth <= 768 ? 36
+      const yOffset = window.innerWidth <= 480  ? 28
+                    : window.innerWidth <= 768  ? 36
+                    : window.innerHeight <= 500 ? 32   // landscape phone / thin window
                     : 55;
 
       tl.fromTo(headlineRef.current,
