@@ -1,0 +1,163 @@
+/* ===== Rotate Overlay ===== */
+.ro-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 999999;
+  background: #030308;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5rem;
+  /* Start invisible — JS adds .ro-visible to fade in, removes it to fade out */
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.55s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.ro-overlay.ro-visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* Purple radial glow */
+.ro-glow {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    ellipse 80% 80% at 50% 50%,
+    rgba(110, 30, 220, 0.22) 0%,
+    rgba(60, 10, 140, 0.12) 45%,
+    transparent 70%
+  );
+  pointer-events: none;
+  animation: ro-glow-pulse 3s ease-in-out infinite alternate;
+}
+
+@keyframes ro-glow-pulse {
+  from { opacity: 0.6; }
+  to   { opacity: 1; }
+}
+
+/* ── Rings ── */
+.ro-rings-wrap {
+  position: relative;
+  width: 200px;
+  height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ro-ring {
+  position: absolute;
+  border-radius: 50%;
+  border: 1.5px solid transparent;
+}
+
+/* Outer ring — blue, slow clockwise */
+.ro-ring-1 {
+  width: 190px;
+  height: 190px;
+  border-top-color: rgba(100, 190, 255, 0.85);
+  border-right-color: rgba(100, 190, 255, 0.25);
+  box-shadow: 0 0 18px rgba(100, 190, 255, 0.35);
+  animation: ro-spin 3.2s linear infinite;
+}
+
+/* Middle ring — purple, faster counter-clockwise */
+.ro-ring-2 {
+  width: 148px;
+  height: 148px;
+  border-bottom-color: rgba(180, 80, 255, 0.9);
+  border-left-color: rgba(180, 80, 255, 0.3);
+  box-shadow: 0 0 18px rgba(180, 80, 255, 0.4);
+  animation: ro-spin 2s linear infinite reverse;
+}
+
+/* Inner ring — teal, fast clockwise */
+.ro-ring-3 {
+  width: 106px;
+  height: 106px;
+  border-top-color: rgba(74, 245, 192, 0.7);
+  border-right-color: rgba(74, 245, 192, 0.2);
+  box-shadow: 0 0 12px rgba(74, 245, 192, 0.3);
+  animation: ro-spin 1.4s linear infinite;
+}
+
+@keyframes ro-spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ── Phone icon ── */
+.ro-phone-wrap {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: ro-phone-rock 1.8s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+
+/* Sweeps: landscape-right → portrait → landscape-left → portrait → repeat */
+/* Shows the user that either rotation direction works                       */
+@keyframes ro-phone-rock {
+  0%   { transform: rotate(90deg);  }   /* landscape right  */
+  22%  { transform: rotate(0deg);   }   /* portrait         */
+  35%  { transform: rotate(0deg);   }   /* hold             */
+  57%  { transform: rotate(-90deg); }   /* landscape left   */
+  70%  { transform: rotate(0deg);   }   /* portrait         */
+  83%  { transform: rotate(0deg);   }   /* hold             */
+  100% { transform: rotate(90deg);  }   /* back to start    */
+}
+
+.ro-phone-svg {
+  width: 30px;
+  height: 50px;
+  color: #ffffff;
+  filter: drop-shadow(0 0 8px rgba(100, 190, 255, 0.7))
+          drop-shadow(0 0 20px rgba(180, 80, 255, 0.4));
+}
+
+.ro-arrow-svg {
+  position: absolute;
+  bottom: -18px;
+  right: -18px;
+  width: 36px;
+  height: 36px;
+  color: rgba(100, 190, 255, 0.85);
+  filter: drop-shadow(0 0 6px rgba(100, 190, 255, 0.6));
+  animation: ro-arrow-pulse 1.8s ease-in-out infinite;
+}
+
+@keyframes ro-arrow-pulse {
+  0%, 100% { opacity: 0.5; transform: scale(0.9); }
+  40%, 60%  { opacity: 1;   transform: scale(1.1); }
+}
+
+/* ── Text ── */
+.ro-title {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: #ffffff;
+  text-shadow:
+    0 0 12px rgba(100, 190, 255, 0.9),
+    0 0 30px rgba(100, 190, 255, 0.5);
+  animation: ro-text-flash 2s ease-in-out infinite alternate;
+  will-change: opacity;
+}
+
+.ro-sub {
+  font-size: 0.6rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.45);
+  margin-top: -0.75rem;
+}
+
+@keyframes ro-text-flash {
+  from { opacity: 0.7; }
+  to   { opacity: 1; }
+}
