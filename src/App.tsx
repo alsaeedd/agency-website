@@ -55,7 +55,7 @@ function App() {
       <ContactCircle onClick={openContact} />
       <Navbar onContactClick={openContact} />
       <main>
-        <Hero onContactClick={openContact} />
+        <Hero onContactClick={openContact} isContactOpen={isContactOpen} />
         <Services />
         <About />
         <Clients />

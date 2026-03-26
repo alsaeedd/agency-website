@@ -12,18 +12,37 @@ export default function ContactCircle({ onClick }: ContactCircleProps) {
   useEffect(() => {
     if (!circleRef.current) return;
 
-    gsap.fromTo(
-      circleRef.current,
-      { scale: 0.5, opacity: 0 },
-      {
-        scale: 1,
-        opacity: 1,
-        duration: 1.2,
-        delay: 0.8,
-        ease: "back.out(1.2)",
-        clearProps: "scale", // Clear inline scale so CSS hover works
-      },
-    );
+    // Start hidden — appears when corner labels pop up (progress ~0.15 of the hero timeline)
+    // Timeline spans 2.5×vh, so labels appear at ~0.375×vh scroll
+    gsap.set(circleRef.current, { scale: 0.5, opacity: 0 });
+
+    let visible = false;
+
+    const onScroll = () => {
+      const threshold = window.innerHeight * 0.4;
+
+      if (window.scrollY > threshold && !visible) {
+        visible = true;
+        gsap.to(circleRef.current, {
+          scale: 1,
+          opacity: 1,
+          duration: 1.0,
+          ease: "back.out(1.2)",
+          clearProps: "scale",
+        });
+      } else if (window.scrollY <= threshold && visible) {
+        visible = false;
+        gsap.to(circleRef.current, {
+          scale: 0.5,
+          opacity: 0,
+          duration: 0.4,
+          ease: "power3.in",
+        });
+      }
+    };
+
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
   return (
