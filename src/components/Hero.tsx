@@ -53,9 +53,16 @@ export default function Hero({ onContactClick, isContactOpen }: HeroProps) {
 
     const app = spline as any;
 
-    // Halve GPU work on retina screens
+    // Cap pixel ratio — saves GPU on retina without visible quality loss
     const renderer = app._renderer || app.renderer || app.webgl?.renderer || app._context?.renderer;
-    if (renderer?.setPixelRatio) renderer.setPixelRatio(1);
+    if (renderer?.setPixelRatio) renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+    // Force renderer to match container size on load
+    const wrap = document.querySelector(".hero-spline-wrap");
+    if (wrap && renderer?.setSize) {
+      const { clientWidth: w, clientHeight: h } = wrap as HTMLElement;
+      renderer.setSize(w, h, false);
+    }
 
     splineActiveRef.current = true;
     setLoaded(true);
@@ -86,6 +93,25 @@ export default function Hero({ onContactClick, isContactOpen }: HeroProps) {
       if (splineActiveRef.current) splineAppRef.current.play?.();
     }
   }, [isContactOpen]);
+
+  // Keep Spline renderer size in sync with container on resize / orientation change
+  useEffect(() => {
+    if (!loaded) return;
+    const wrap = document.querySelector(".hero-spline-wrap") as HTMLElement | null;
+    if (!wrap) return;
+
+    const syncSize = () => {
+      const app = splineAppRef.current as any;
+      const renderer = app?._renderer || app?.renderer || app?.webgl?.renderer || app?._context?.renderer;
+      if (renderer?.setSize) {
+        renderer.setSize(wrap.clientWidth, wrap.clientHeight, false);
+      }
+    };
+
+    const ro = new ResizeObserver(syncSize);
+    ro.observe(wrap);
+    return () => ro.disconnect();
+  }, [loaded]);
 
   // Block right-click drag, keep native context menu
   useEffect(() => {
