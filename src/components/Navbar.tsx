@@ -12,9 +12,10 @@ const navLinks = [
 
 interface NavbarProps {
   onContactClick: () => void;
+  scrollToSection: (selector: string) => void;
 }
 
-export default function Navbar({ onContactClick }: NavbarProps) {
+export default function Navbar({ onContactClick, scrollToSection }: NavbarProps) {
   const navRef = useRef<HTMLElement>(null);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const mobileMenuRef = useRef<HTMLDivElement>(null);
@@ -69,7 +70,12 @@ export default function Navbar({ onContactClick }: NavbarProps) {
           </a>
           <nav className="navbar-nav">
             {navLinks.map((link) => (
-              <a key={link.href} href={link.href} data-text={link.text}>
+              <a
+                key={link.href}
+                href={link.href}
+                data-text={link.text}
+                onClick={(e) => { e.preventDefault(); scrollToSection(link.href); }}
+              >
                 <span>{link.text}</span>
               </a>
             ))}
@@ -98,7 +104,7 @@ export default function Navbar({ onContactClick }: NavbarProps) {
                   key={link.href}
                   href={link.href}
                   className="navbar-mobile-link"
-                  onClick={closeMobileMenu}
+                  onClick={(e) => { e.preventDefault(); closeMobileMenu(); scrollToSection(link.href); }}
                 >
                   {link.text}
                 </a>

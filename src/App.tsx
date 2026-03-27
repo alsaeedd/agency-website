@@ -21,6 +21,13 @@ function App() {
 
   const openContact = () => setIsContactOpen(true);
 
+  const scrollToSection = (selector: string) => {
+    const el = document.querySelector(selector) as HTMLElement | null;
+    if (el && lenisRef.current) {
+      lenisRef.current.scrollTo(el, { offset: -80, immediate: false });
+    }
+  };
+
   useEffect(() => {
     const lenis = new Lenis({
       duration: 1.2,
@@ -54,7 +61,7 @@ function App() {
         <div className="bg-blob bg-blob-3" />
       </div>
       <ContactCircle onClick={openContact} />
-      <Navbar onContactClick={openContact} />
+      <Navbar onContactClick={openContact} scrollToSection={scrollToSection} />
       <main>
         <Hero onContactClick={openContact} isContactOpen={isContactOpen} />
         <Services />

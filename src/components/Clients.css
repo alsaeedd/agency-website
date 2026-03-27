@@ -35,22 +35,12 @@
   gap: 8rem;
   width: max-content;
   will-change: transform;
-  animation: clientsScroll 18s linear infinite;
   opacity: 0;
   transition: opacity 0.4s ease;
 }
 
 .clients-track.ready {
   opacity: 1;
-}
-
-@keyframes clientsScroll {
-  from {
-    transform: translateX(0);
-  }
-  to {
-    transform: translateX(-50%);
-  }
 }
 
 .client-logo {
@@ -84,4 +74,21 @@
 
 .logo-earningsync img {
   transform: scale(0.78);
+}
+
+.logo-babydetails img {
+  transform: scale(0.9);
+}
+
+.logo-goldentouch img {
+  transform: scale(0.85);
+}
+
+.logo-kaakbsemsom img {
+  transform: scale(0.82);
+}
+
+.logo-palmnplate img {
+  transform: scale(1.1);
+  filter: grayscale(1) brightness(0.35);
 }

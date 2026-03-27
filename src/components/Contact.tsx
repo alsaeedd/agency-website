@@ -359,6 +359,12 @@ export default function Contact({ isOpen, onClose }: ContactProps) {
           </div>
         </aside>
 
+        {/* Mobile brand bar — shown only when sidebar is hidden */}
+        <div className="contact-mobile-brand">
+          <img src={logoMain} alt="RAL" className="contact-mobile-logo" />
+          <span className="contact-mobile-brand-name">Revenue Automation Lab</span>
+        </div>
+
         <div className="contact-scroll" data-lenis-prevent>
           <div className="contact-container" ref={contentRef}>
             {showSuccess ? (

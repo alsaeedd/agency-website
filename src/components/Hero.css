@@ -490,7 +490,7 @@
   }
 
   /* CTA */
-  .hero-bottom-content { bottom: 13%; }
+  .hero-bottom-content { bottom: 17%; }
   .hero-brain-cta      { padding: 1rem 2.75rem; font-size: 1rem; }
 
   /* Scroll hint — raised + circles sized to contain SCROLL text + chevrons */
@@ -510,7 +510,7 @@
   }
 
   /* CTA */
-  .hero-bottom-content { bottom: 12%; }
+  .hero-bottom-content { bottom: 16%; }
   .hero-brain-cta {
     padding: 0.9rem 2rem;
     font-size: 0.9rem;
@@ -565,6 +565,7 @@
     font-size: clamp(1rem, 6.5vw, 1.3rem);
     max-width: 92vw;
   }
+  .hero-bottom-content { bottom: 16%; }
   .hero-brain-cta { padding: 0.78rem 1.5rem; font-size: 0.82rem; }
   .label-tl, .label-tr, .label-bl { font-size: 0.41rem; }
   .label-pulse { width: 4px; height: 4px; }
