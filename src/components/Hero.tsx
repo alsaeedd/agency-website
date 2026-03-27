@@ -33,8 +33,9 @@ export default function Hero({ onContactClick, isContactOpen }: HeroProps) {
   const splineParticlesRef = useRef<SPEObject | null>(null);
   const splineBrainRef     = useRef<SPEObject | null>(null);
 
-  const splineActiveRef = useRef(false);
-  const hintVisibleRef  = useRef(false);
+  const splineActiveRef    = useRef(false);
+  const hintVisibleRef     = useRef(false);
+  const isContactOpenRef   = useRef(isContactOpen);
 
   const [loaded, setLoaded] = useState(false);
 
@@ -84,6 +85,11 @@ export default function Hero({ onContactClick, isContactOpen }: HeroProps) {
     (window as any).__splineObserver = observer;
   }
 
+  // Keep contact ref in sync so scroll callbacks always have current value
+  useEffect(() => {
+    isContactOpenRef.current = isContactOpen;
+  }, [isContactOpen]);
+
   // Pause Spline while contact modal is open
   useEffect(() => {
     if (!splineAppRef.current) return;
@@ -93,6 +99,26 @@ export default function Hero({ onContactClick, isContactOpen }: HeroProps) {
       if (splineActiveRef.current) splineAppRef.current.play?.();
     }
   }, [isContactOpen]);
+
+  // Freeze Spline when hero is nearly off-screen, resume when it's back
+  useEffect(() => {
+    if (!loaded) return;
+    const section = sectionRef.current;
+    if (!section) return;
+
+    const observer = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting) {
+        splineActiveRef.current = true;
+        if (!isContactOpenRef.current) splineAppRef.current?.play?.();
+      } else {
+        splineActiveRef.current = false;
+        splineAppRef.current?.stop?.();
+      }
+    }, { threshold: 0.15 });
+
+    observer.observe(section);
+    return () => observer.disconnect();
+  }, [loaded]);
 
   // Keep Spline renderer size in sync with container on resize / orientation change
   useEffect(() => {
@@ -158,14 +184,6 @@ export default function Hero({ onContactClick, isContactOpen }: HeroProps) {
           scrub:   window.innerWidth <= 768  ? 1
                  : window.innerHeight <= 500 ? 1.5
                  : 2,
-          onLeave: () => {
-            splineActiveRef.current = false;
-            splineAppRef.current?.stop?.();
-          },
-          onEnterBack: () => {
-            splineActiveRef.current = true;
-            splineAppRef.current?.play?.();
-          },
           onUpdate: (self) => {
             const p = self.progress;
 
