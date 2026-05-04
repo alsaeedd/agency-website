@@ -76,39 +76,29 @@ export default function Services() {
     const ctx = gsap.context(() => {
       const rows = rowsRef.current.filter((r): r is HTMLDivElement => r !== null);
 
-      // Header drops in as section enters view — before pin locks
-      gsap.fromTo(
-        headerRef.current,
-        { y: -40, opacity: 0, filter: "blur(5px)" },
-        {
-          y: 0, opacity: 1, filter: "blur(0px)",
-          duration: 0.9, ease: "expo.out",
-          scrollTrigger: {
-            trigger: sectionRef.current,
-            start: "top 80%",
-            once: true,
-          },
-        }
-      );
-
-      gsap.set(rows, { y: -80, opacity: 0, filter: "blur(6px)" });
-
-      const isMobile = window.innerWidth <= 768;
-
-      const tl = gsap.timeline({
+      // Header drops in as section enters view
+      gsap.from(headerRef.current, {
+        y: -32, opacity: 0,
+        duration: 0.9, ease: "expo.out",
         scrollTrigger: {
           trigger: sectionRef.current,
-          start: isMobile ? "top 108px" : "top top",
-          end: isMobile ? "+=160%" : "+=200%",
-          pin: true,
-          scrub: 1.2,
-          invalidateOnRefresh: true,
+          start: "top 80%",
+          once: true,
         },
       });
 
-      rows.forEach((row, i) => {
-        tl.to(row, { y: 0, opacity: 1, filter: "blur(0px)", duration: 0.16 }, i * 0.21);
-      });
+      // Rows stagger in once when the list crosses into view
+      if (rows.length > 0) {
+        gsap.from(rows, {
+          y: 28, opacity: 0,
+          duration: 0.85, ease: "expo.out", stagger: 0.12,
+          scrollTrigger: {
+            trigger: rows[0],
+            start: "top 88%",
+            once: true,
+          },
+        });
+      }
 
     }, sectionRef);
 

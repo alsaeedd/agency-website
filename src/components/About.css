@@ -1,9 +1,9 @@
 /* ===== About ===== */
 .about {
-  min-height: 100svh;
   display: flex;
   align-items: center;
   justify-content: center;
+  padding: 6rem 0 6.5rem;
   scroll-margin-top: 72px;
   position: relative;
   background: var(--color-surface);
@@ -80,32 +80,15 @@
 
 /* ── Heading ── */
 .about-heading {
-  font-size: clamp(4rem, 14vw, 9rem);
-  font-weight: 700;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
+  font-size: clamp(2.5rem, 6vw, 4.5rem);
+  font-weight: 500;
+  letter-spacing: -0.03em;
   color: var(--color-text);
   line-height: 1.05;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.05em;
   margin: 0;
   text-shadow:
     0 0 40px rgba(180, 80, 255, 0.15),
     0 0 80px rgba(100, 30, 200, 0.08);
-}
-
-.ab-word {
-  display: block;
-  white-space: nowrap;
-  text-align: center;
-}
-
-.ab-letter {
-  display: inline-block;
-  will-change: transform, opacity, filter;
-  transform-origin: center bottom;
 }
 
 /* ── Body paragraphs ── */
@@ -126,13 +109,13 @@
 /* ── Mobile ── */
 @media (max-width: 768px) {
   .about {
-    min-height: unset;
     align-items: flex-start;
+    padding: 4rem 0 4.5rem;
   }
 
   .about-inner {
-    padding-top: 2rem;
-    padding-bottom: 3rem;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
     gap: 1.75rem;
   }
 
@@ -142,7 +125,7 @@
   }
 
   .about-heading {
-    letter-spacing: 0.12em;
+    letter-spacing: -0.02em;
   }
 
   .about-body {
@@ -166,8 +149,8 @@
   }
 
   .about-heading {
-    font-size: clamp(3rem, 14vw, 4.5rem);
-    letter-spacing: 0.1em;
+    font-size: clamp(1.8rem, 8vw, 2.75rem);
+    letter-spacing: -0.02em;
   }
 
   .about-para {

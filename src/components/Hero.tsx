@@ -21,12 +21,9 @@ export default function Hero({ onContactClick, isContactOpen }: HeroProps) {
   const darkOverlayRef = useRef<HTMLDivElement>(null);
   const glowOverlayRef = useRef<HTMLDivElement>(null);
   const goldOverlayRef = useRef<HTMLDivElement>(null);
-  const labelTLRef     = useRef<HTMLDivElement>(null);
   const labelTRRef     = useRef<HTMLDivElement>(null);
-  const labelBLRef     = useRef<HTMLDivElement>(null);
   const headlineRef    = useRef<HTMLHeadingElement>(null);
   const ctaRef         = useRef<HTMLButtonElement>(null);
-  const scrollHintRef  = useRef<HTMLDivElement>(null);
 
   const splineAppRef       = useRef<Application | null>(null);
   const splineLightRef     = useRef<SPEObject | null>(null);
@@ -34,7 +31,6 @@ export default function Hero({ onContactClick, isContactOpen }: HeroProps) {
   const splineBrainRef     = useRef<SPEObject | null>(null);
 
   const splineActiveRef    = useRef(false);
-  const hintVisibleRef     = useRef(false);
   const isContactOpenRef   = useRef(isContactOpen);
 
   const [loaded, setLoaded] = useState(false);
@@ -154,31 +150,19 @@ export default function Hero({ onContactClick, isContactOpen }: HeroProps) {
     };
   }, [loaded]);
 
-  // Scroll-hint entrance
-  useEffect(() => {
-    if (!loaded) return;
-    gsap.fromTo(scrollHintRef.current,
-      { opacity: 0, y: 8 },
-      { opacity: 0.45, y: 0, duration: 1.2, delay: 0.8, ease: "expo.out" }
-    );
-    hintVisibleRef.current = true;
-  }, [loaded]);
-
   // Main scroll animation
   useEffect(() => {
     if (!sectionRef.current) return;
 
     const ctx = gsap.context(() => {
-      const labels = [labelTLRef.current, labelTRRef.current, labelBLRef.current];
-
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: sectionRef.current,
           start:   "top top",
-          end:     () => window.innerWidth <= 480  ? "+=110%"
-                       : window.innerWidth <= 768  ? "+=150%"
-                       : window.innerHeight <= 500 ? "+=130%"  // landscape phone / thin window
-                       : "+=250%",
+          end:     () => window.innerWidth <= 480  ? "+=80%"
+                       : window.innerWidth <= 768  ? "+=100%"
+                       : window.innerHeight <= 500 ? "+=100%"  // landscape phone / thin window
+                       : "+=150%",
           invalidateOnRefresh: true,
           pin:     true,
           scrub:   window.innerWidth <= 768  ? 1
@@ -186,15 +170,6 @@ export default function Hero({ onContactClick, isContactOpen }: HeroProps) {
                  : 2,
           onUpdate: (self) => {
             const p = self.progress;
-
-            // Scroll hint
-            if (p < 0.03 && !hintVisibleRef.current) {
-              hintVisibleRef.current = true;
-              gsap.to(scrollHintRef.current, { opacity: 0.45, duration: 0.5, overwrite: true });
-            } else if (p >= 0.03 && hintVisibleRef.current) {
-              hintVisibleRef.current = false;
-              gsap.to(scrollHintRef.current, { opacity: 0, duration: 0.2, overwrite: true });
-            }
 
             // Brain emissive glow
             const brain = splineBrainRef.current;
@@ -229,9 +204,9 @@ export default function Hero({ onContactClick, isContactOpen }: HeroProps) {
       tl.to(goldOverlayRef.current, { opacity: 0.6, duration: 0.35 }, 0.45);
       tl.to(goldOverlayRef.current, { opacity: 1,   duration: 0.3  }, 0.72);
 
-      tl.fromTo(labels,
+      tl.fromTo(labelTRRef.current,
         { opacity: 0, scale: 1, textShadow: "none" },
-        { opacity: 1, scale: 1.28, textShadow: "0 0 10px rgba(255,255,255,0.9), 0 0 28px rgba(180,100,255,0.9), 0 0 55px rgba(150,80,255,0.7)", duration: 0.4, stagger: 0.04 },
+        { opacity: 1, scale: 1.28, textShadow: "0 0 10px rgba(255,255,255,0.9), 0 0 28px rgba(180,100,255,0.9), 0 0 55px rgba(150,80,255,0.7)", duration: 0.4 },
         0.15
       );
 
@@ -274,16 +249,9 @@ export default function Hero({ onContactClick, isContactOpen }: HeroProps) {
       <div className="hero-gold-overlay" ref={goldOverlayRef} />
       <div className="hero-vignette" />
 
-      <div className="hero-label label-tl" ref={labelTLRef}>
-        <span className="label-pulse" />
-        Revenue Automation Lab
-      </div>
       <div className="hero-label label-tr" ref={labelTRRef}>
         <img src={bhFlag} alt="Bahrain" className="label-flag" />
         Bahrain · 2025
-      </div>
-      <div className="hero-label label-bl" ref={labelBLRef}>
-        Custom Dev · AI Automations
       </div>
 
       <div className="hero-top-content">
@@ -298,15 +266,6 @@ export default function Hero({ onContactClick, isContactOpen }: HeroProps) {
           Build Your Dream Project
           <span className="cta-arrow">→</span>
         </button>
-      </div>
-
-      <div className="hero-scroll-hint" ref={scrollHintRef}>
-        <span className="scroll-label">Scroll</span>
-        <div className="scroll-chevrons">
-          <span className="scroll-chev">⌄</span>
-          <span className="scroll-chev">⌄</span>
-          <span className="scroll-chev">⌄</span>
-        </div>
       </div>
     </section>
   );

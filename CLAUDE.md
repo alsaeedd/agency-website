@@ -33,6 +33,17 @@ npm install -g uipro-cli && uipro init --ai claude
 claude plugin install frontend-design@claude-plugins-official
 ```
 
+## Design Context
+
+The full design intent — users, brand personality, aesthetic direction, principles — lives in [`.impeccable.md`](./.impeccable.md). Read it before any design or frontend work. Quick summary:
+
+- **Audience**: GCC founders/SMBs **and** enterprise procurement, equally weighted. Warmth + clarity is the baseline; depth is optional.
+- **Voice**: confident, founder-led, technically serious. First-person, conversational. Avoid corporate passive voice and hype words.
+- **Aesthetic**: dark-only, purple/violet atmosphere with Spline 3D centerpiece. Visual density is at ceiling — new work should add personality (copy, micro-interactions), not more polish (glows, gradients, scroll-pins).
+- **Lean warm**: when pulled between elite-futuristic and warm-founder-led, lean warm.
+- **Anti-aesthetics to kill**: generic dev-shop templates, AI-slop landing pages, corporate consulting sterility, crypto/web3 hype.
+- **Accessibility**: not currently addressed; explicitly deprioritized for now.
+
 ## Frontend Work Rules
 - **Always use GSAP** for entrance animations (ScrollTrigger, `once: true`, start `top 70-90%`)
 - **Use Spline** for any 3D elements or visual flair
@@ -42,10 +53,27 @@ claude plugin install frontend-design@claude-plugins-official
 - Easing: `expo.out` primary, `power3.out` fast
 
 ## Design Tokens
-- BG: `#fff` (light) / `#1a1a1a` (dark: About, CTA, Footer)
-- Text: `#000` primary / `#666666` secondary
-- Font: Inter, weights 300–700
-- All styles live in `src/index.css` (~2000+ lines) — use CSS vars, no inline styles
+CSS variables defined in `src/index.css` (`:root`). Per-component styles live in their own `.css` files (e.g. `Hero.css`, `Contact.css`) — `index.css` is just tokens + base resets.
+
+**Core palette** (dark only — no light mode):
+- `--color-bg: #0c0715` (near-black with violet cast)
+- `--color-surface: #160e27` (used for About, CTA, Footer, Contact sidebar)
+- `--color-surface-2: #2b1b3d`
+- `--color-text: #f8f8f8` / `--color-text-secondary: #d1c4e9` (lavender)
+- `--color-border: rgba(209, 196, 233, 0.1)` / `--color-border-active: rgba(209, 196, 233, 0.22)`
+
+**Accents** (used inline, not tokenized):
+- `#a78bfa` — lavender purple, focus rings / active states
+- `rgba(180, 80, 255, …)` — vivid purple glows (radial gradients, text-shadow halos)
+- `#4af5c0` — mint, reserved for "live" pulses (`.label-pulse` only)
+
+**Type**:
+- Font: Inter, weights 300–700, fluid `clamp()` sizing
+- Letter-spacing: tight on display (-0.02 to -0.04em), loose on eyebrows (0.1 to 0.28em)
+
+**Easing**:
+- `--ease-out-expo: cubic-bezier(0.19, 1, 0.22, 1)` (primary)
+- `--ease-out-quad: cubic-bezier(0.25, 0.46, 0.45, 0.94)`
 
 ## Architecture
 - State: `useState` only. `isContactOpen` lifted to App level, passed as props
@@ -61,6 +89,6 @@ Navbar → Hero → About (dark) → Services → Portfolio → CTA (dark) → F
 
 ## Business Details
 - Email: info@revenueautomationlab.com
-- WhatsApp: +973 3384 3915
+- WhatsApp: +973 6638 6602
 - Budget currency: BHD
 - Copyright: © 2026

@@ -147,24 +147,7 @@
   flex-shrink: 0;
 }
 
-.label-pulse {
-  width: 5px;
-  height: 5px;
-  border-radius: 50%;
-  background: #4af5c0;
-  box-shadow: 0 0 8px rgba(74, 245, 192, 0.9), 0 0 18px rgba(74, 245, 192, 0.5);
-  flex-shrink: 0;
-  animation: labelPulse 2.8s ease-in-out infinite;
-}
-
-@keyframes labelPulse {
-  0%, 100% { opacity: 0.5; transform: scale(1); }
-  50% { opacity: 1; transform: scale(1.4); }
-}
-
-.label-tl { top: 7rem; left: 2.5rem; transform-origin: left center; }
 .label-tr { top: 7rem; right: 2.5rem; transform-origin: right center; }
-.label-bl { bottom: 3rem; left: 2.5rem; transform-origin: left center; }
 
 /* ===== Headline — above brain ===== */
 .hero-top-content {
@@ -276,152 +259,18 @@
   transform: translateX(7px);
 }
 
-/* ===== Scroll Hint ===== */
-.hero-scroll-hint {
-  position: absolute;
-  bottom: 2rem;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 10;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.4rem;
-  opacity: 0;
-  white-space: nowrap;
-  animation: scrollBeaconFloat 2.5s ease-in-out infinite;
-  will-change: opacity, transform;
-}
-
-@keyframes scrollBeaconFloat {
-  0%, 100% { transform: translateX(-50%) translateY(0px); }
-  50%       { transform: translateX(-50%) translateY(-8px); }
-}
-
-/* Inner halo — static box-shadow, opacity pulse only (no repaint) */
-.hero-scroll-hint::before {
-  content: "";
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 110px;
-  height: 110px;
-  border-radius: 50%;
-  border: 1px solid rgba(100, 200, 255, 0.55);
-  box-shadow:
-    0 0 22px rgba(100, 200, 255, 0.55),
-    0 0 55px rgba(100, 200, 255, 0.25),
-    inset 0 0 16px rgba(100, 200, 255, 0.12);
-  animation: haloBreath 1.6s ease-in-out infinite alternate;
-  pointer-events: none;
-  will-change: opacity;
-}
-
-/* Outer halo — static border, opacity pulse only */
-.hero-scroll-hint::after {
-  content: "";
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 150px;
-  height: 150px;
-  border-radius: 50%;
-  border: 1px solid rgba(100, 200, 255, 0.22);
-  box-shadow: 0 0 12px rgba(100, 200, 255, 0.18);
-  animation: haloBreath 1.6s ease-in-out infinite alternate 0.3s;
-  pointer-events: none;
-  will-change: opacity;
-}
-
-/* Opacity only — GPU composited, zero repaint */
-@keyframes haloBreath {
-  0%   { opacity: 0.28; }
-  100% { opacity: 1; }
-}
-
-.scroll-label {
-  font-size: 0.65rem;
-  font-weight: 700;
-  letter-spacing: 0.45em;
-  text-transform: uppercase;
-  color: #fff;
-  position: relative;
-  z-index: 1;
-  /* Static glow — no animated shadow */
-  text-shadow:
-    0 0 6px rgba(255, 255, 255, 0.95),
-    0 0 18px rgba(100, 200, 255, 1),
-    0 0 40px rgba(100, 200, 255, 0.6);
-  animation: scrollLabelFlash 1.4s ease-in-out infinite alternate;
-  will-change: opacity;
-}
-
-/* Opacity only — no color/text-shadow changes */
-@keyframes scrollLabelFlash {
-  0%   { opacity: 0.55; }
-  100% { opacity: 1; }
-}
-
-.scroll-chevrons {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0;
-  margin-top: 0.15rem;
-  position: relative;
-  z-index: 1;
-}
-
-.scroll-chev {
-  display: block;
-  font-size: 1.3rem;
-  line-height: 0.65;
-  /* Static glow color — no animated text-shadow */
-  color: rgba(100, 210, 255, 0.95);
-  text-shadow: 0 0 10px rgba(100, 200, 255, 1), 0 0 28px rgba(100, 200, 255, 0.6);
-  opacity: 0;
-  animation: chevCascade 1.1s ease-in-out infinite;
-  will-change: opacity, transform;
-}
-
-.scroll-chev:nth-child(1) { animation-delay: 0s; }
-.scroll-chev:nth-child(2) { animation-delay: 0.2s; }
-.scroll-chev:nth-child(3) { animation-delay: 0.4s; }
-
-/* Opacity + transform only — compositor layer, zero repaint */
-@keyframes chevCascade {
-  0%   { opacity: 0;   transform: translateY(-8px); }
-  30%  { opacity: 1;   transform: translateY(0px); }
-  65%  { opacity: 0.9; transform: translateY(5px); }
-  100% { opacity: 0;   transform: translateY(12px); }
-}
-
 /* ─── LANDSCAPE PHONE / THIN WINDOW (height ≤ 500px) ───────────────────── */
 /* Applies to rotated phones AND narrow desktop windows.                      */
 /* Desktop scene is used here (see Hero.tsx), so layout mirrors desktop but   */
 /* compressed vertically.                                                      */
 @media (orientation: landscape) and (max-height: 500px) {
-  /* Labels — back to corners, compact spacing */
-  .label-tl {
-    top: 3.5rem; left: 1.5rem;
-    right: auto; width: auto; margin-inline: 0;
-    font-size: 0.5rem; letter-spacing: 0.2em;
-    transform-origin: left center;
-  }
+  /* Label — top-right corner, compact spacing */
   .label-tr {
     top: 3.5rem; right: 1.5rem;
     left: auto; width: auto; margin-inline: 0;
     font-size: 0.5rem; letter-spacing: 0.2em;
     transform-origin: right center;
     display: flex !important;
-  }
-  .label-bl {
-    bottom: 2rem; left: 1.5rem;
-    right: auto; width: auto; margin-inline: 0;
-    font-size: 0.5rem;
-    transform-origin: left center;
   }
 
   /* Headline — compact top for short viewport */
@@ -434,21 +283,14 @@
   /* CTA */
   .hero-bottom-content { bottom: 9%; }
   .hero-brain-cta { padding: 0.72rem 2rem; font-size: 0.88rem; }
-
-  /* Scroll hint — very compact */
-  .hero-scroll-hint { bottom: 1.5rem; gap: 0.15rem; }
-  .hero-scroll-hint::before { width: 50px; height: 50px; }
-  .hero-scroll-hint::after  { width: 70px; height: 70px; }
-  .scroll-label { font-size: 0.44rem; letter-spacing: 0.25em; }
-  .scroll-chev  { font-size: 0.8rem; }
 }
 
 /* ─── RESPONSIVE LAYOUT ────────────────────────────────────────────────── */
 
 /* Tablet / large phone ≤768px */
 @media (max-width: 768px) {
-  /* Top labels — stacked + centered below headline, mobile only */
-  .label-tl {
+  /* Top label — centered below headline, mobile only */
+  .label-tr {
     top: 23%;
     left: 0;
     right: 0;
@@ -456,25 +298,6 @@
     margin-inline: auto;
     font-size: 0.53rem;
     letter-spacing: 0.2em;
-    transform-origin: center center;
-  }
-  .label-tr {
-    top: calc(23% + 1.3rem);
-    left: 0;
-    right: 0;
-    width: fit-content;
-    margin-inline: auto;
-    font-size: 0.53rem;
-    letter-spacing: 0.2em;
-    transform-origin: center center;
-  }
-  .label-bl {
-    bottom: 5rem;
-    left: 0;
-    right: 0;
-    width: fit-content;
-    margin-inline: auto;
-    font-size: 0.53rem;
     transform-origin: center center;
   }
 
@@ -492,11 +315,6 @@
   /* CTA */
   .hero-bottom-content { bottom: 17%; }
   .hero-brain-cta      { padding: 1rem 2.75rem; font-size: 1rem; }
-
-  /* Scroll hint — raised + circles sized to contain SCROLL text + chevrons */
-  .hero-scroll-hint { bottom: 5.5rem; }
-  .hero-scroll-hint::before { width: 90px;  height: 90px; }
-  .hero-scroll-hint::after  { width: 124px; height: 124px; }
 }
 
 /* Portrait phones ≤480px */
@@ -517,19 +335,9 @@
     gap: 0.55rem;
   }
 
-  /* Top labels — stacked + centered below headline, mobile only */
-  .label-tl {
-    top: 24%;
-    left: 0;
-    right: 0;
-    width: fit-content;
-    margin-inline: auto;
-    font-size: 0.48rem;
-    letter-spacing: 0.18em;
-    transform-origin: center center;
-  }
+  /* Top label — centered below headline, mobile only */
   .label-tr {
-    top: calc(24% + 1.3rem);
+    top: 24%;
     left: 0;
     right: 0;
     width: fit-content;
@@ -539,23 +347,7 @@
     display: flex !important;
     transform-origin: center center;
   }
-  .label-bl {
-    bottom: 4.5rem;
-    left: 0;
-    right: 0;
-    width: fit-content;
-    margin-inline: auto;
-    font-size: 0.48rem;
-    transform-origin: center center;
-  }
   .label-flag { width: 14px; height: 9px; }
-
-  /* Scroll hint — raised + circles sized to contain SCROLL text + chevrons */
-  .hero-scroll-hint { bottom: 5rem; gap: 0.2rem; }
-  .hero-scroll-hint::before { width: 80px;  height: 80px; }
-  .hero-scroll-hint::after  { width: 112px; height: 112px; }
-  .scroll-label { font-size: 0.5rem; letter-spacing: 0.28em; }
-  .scroll-chev  { font-size: 0.95rem; }
 }
 
 /* Small phones ≤375px */
@@ -567,6 +359,5 @@
   }
   .hero-bottom-content { bottom: 16%; }
   .hero-brain-cta { padding: 0.78rem 1.5rem; font-size: 0.82rem; }
-  .label-tl, .label-tr, .label-bl { font-size: 0.41rem; }
-  .label-pulse { width: 4px; height: 4px; }
+  .label-tr { font-size: 0.41rem; }
 }
