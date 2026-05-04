@@ -34,6 +34,15 @@
   object-position: center center !important;
 }
 
+/* Suspense placeholder while Spline lazy-chunk loads — same dark backdrop as
+   the hero so there's no flash. No animation/blur; just a solid layer. */
+.hero-spline-fallback {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse at 50% 60%, #1a1233 0%, #050516 70%, #030308 100%);
+}
+
 /* Kill Spline watermark — anchor links only, scoped to container */
 .hero-spline-wrap a[href*="spline.design"] {
   display: none !important;

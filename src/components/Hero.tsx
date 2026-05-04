@@ -1,10 +1,14 @@
-import { useEffect, useRef, useState } from "react";
-import Spline from "@splinetool/react-spline";
+import { useEffect, useRef, useState, lazy, Suspense } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import type { Application, SPEObject } from "@splinetool/runtime";
 import bhFlag from "../../assets/bh.png";
 import "./Hero.css";
+
+// Spline is ~2 MB of JS + a remote scene fetch — lazy-load it so the rest of the
+// page can hydrate before this blocks. The placeholder fills the same space so
+// no layout shift when the canvas mounts.
+const Spline = lazy(() => import("@splinetool/react-spline"));
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -241,7 +245,9 @@ export default function Hero({ onContactClick, isContactOpen }: HeroProps) {
   return (
     <section className="hero-brain" ref={sectionRef}>
       <div className="hero-spline-wrap">
-        <Spline scene={sceneUrl} onLoad={onLoad} />
+        <Suspense fallback={<div className="hero-spline-fallback" aria-hidden="true" />}>
+          <Spline scene={sceneUrl} onLoad={onLoad} />
+        </Suspense>
       </div>
 
       <div className="hero-dark-overlay" ref={darkOverlayRef} />

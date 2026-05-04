@@ -86,18 +86,24 @@
 }
 
 /* ===== Lava Lamp Background Blobs ===== */
+/* Soft edges baked into the radial-gradient stops instead of `filter: blur(...)`,
+   so the browser composites a static layer and only animates `translate3d`.
+   No `scale()` either — scaling a filtered/gradient layer forces re-rasterization. */
 .bg-blobs {
   position: fixed;
   inset: 0;
   z-index: -1;
   pointer-events: none;
   overflow: hidden;
+  contain: strict;
 }
 
 .bg-blob {
   position: absolute;
   border-radius: 50%;
   will-change: transform;
+  transform: translateZ(0);
+  backface-visibility: hidden;
 }
 
 .bg-blob-1 {
@@ -107,13 +113,14 @@
   max-height: 950px;
   background: radial-gradient(
     circle at center,
-    rgba(75, 40, 115, 0.55) 0%,
-    transparent 65%
+    rgba(75, 40, 115, 0.42) 0%,
+    rgba(75, 40, 115, 0.22) 25%,
+    rgba(75, 40, 115, 0.08) 55%,
+    transparent 80%
   );
-  filter: blur(90px);
   top: -25%;
   left: -18%;
-  animation: blobFloat1 26s ease-in-out infinite;
+  animation: blobFloat1 32s ease-in-out infinite;
 }
 
 .bg-blob-2 {
@@ -123,13 +130,14 @@
   max-height: 820px;
   background: radial-gradient(
     circle at center,
-    rgba(55, 20, 75, 0.6) 0%,
-    transparent 65%
+    rgba(55, 20, 75, 0.45) 0%,
+    rgba(55, 20, 75, 0.22) 30%,
+    rgba(55, 20, 75, 0.06) 60%,
+    transparent 82%
   );
-  filter: blur(110px);
   bottom: -22%;
   right: -14%;
-  animation: blobFloat2 32s ease-in-out infinite;
+  animation: blobFloat2 38s ease-in-out infinite;
 }
 
 .bg-blob-3 {
@@ -139,56 +147,41 @@
   max-height: 660px;
   background: radial-gradient(
     circle at center,
-    rgba(100, 55, 155, 0.38) 0%,
-    transparent 65%
+    rgba(100, 55, 155, 0.3) 0%,
+    rgba(100, 55, 155, 0.14) 30%,
+    rgba(100, 55, 155, 0.04) 60%,
+    transparent 82%
   );
-  filter: blur(100px);
   top: 38%;
   left: 38%;
-  animation: blobFloat3 40s ease-in-out infinite;
+  animation: blobFloat3 46s ease-in-out infinite;
 }
 
+/* Translate-only animations — no scale, no filter, GPU-cheap */
 @keyframes blobFloat1 {
-  0%,
-  100% {
-    transform: translate(0, 0) scale(1);
-  }
-  20% {
-    transform: translate(5vw, -7vh) scale(1.07);
-  }
-  50% {
-    transform: translate(2vw, 6vh) scale(0.95);
-  }
-  80% {
-    transform: translate(-4vw, -3vh) scale(1.04);
-  }
+  0%, 100% { transform: translate3d(0, 0, 0); }
+  33%      { transform: translate3d(4vw, -5vh, 0); }
+  66%      { transform: translate3d(-3vw, 3vh, 0); }
 }
 
 @keyframes blobFloat2 {
-  0%,
-  100% {
-    transform: translate(0, 0) scale(1);
-  }
-  25% {
-    transform: translate(-5vw, 6vh) scale(0.93);
-  }
-  60% {
-    transform: translate(4vw, -7vh) scale(1.07);
-  }
-  85% {
-    transform: translate(-2vw, 3vh) scale(0.98);
-  }
+  0%, 100% { transform: translate3d(0, 0, 0); }
+  33%      { transform: translate3d(-4vw, 4vh, 0); }
+  66%      { transform: translate3d(3vw, -5vh, 0); }
 }
 
 @keyframes blobFloat3 {
-  0%,
-  100% {
-    transform: translate(0, 0) scale(1);
-  }
-  33% {
-    transform: translate(-5vw, -6vh) scale(1.1);
-  }
-  66% {
-    transform: translate(5vw, 5vh) scale(0.91);
-  }
+  0%, 100% { transform: translate3d(0, 0, 0); }
+  50%      { transform: translate3d(-3vw, -4vh, 0); }
+}
+
+/* Disable the blob animation entirely on lower-power devices and when the user
+   prefers reduced motion. Layer is still painted, just static — saves ~all of
+   the per-frame cost for these huge fixed-position elements. */
+@media (prefers-reduced-motion: reduce) {
+  .bg-blob { animation: none; }
+}
+
+@media (max-width: 768px) {
+  .bg-blob { animation: none; }
 }

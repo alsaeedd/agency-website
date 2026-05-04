@@ -8,7 +8,7 @@ gsap.registerPlugin(ScrollTrigger);
 
 const paragraphs = [
   "Launched in 2025, we began our journey because we saw the vendor struggle first-hand.",
-  "So now, we build products and solutions exactly as you need them — full transparency and communication as our priority.",
+  "So now, we build products and solutions exactly as you need them, with full transparency and communication as our priority.",
   "We build your solution as if we literally owned it.",
 ];
 

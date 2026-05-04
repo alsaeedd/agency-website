@@ -8,8 +8,10 @@ interface Project {
   title: string;
   subtitle: string;
   color: string;
-  client: { name: string; logo: string } | null;
-  clientNote: string | null;
+  accent: string;
+  cardClass: string;
+  client: { name: string; logo: string };
+  liveUrl: string;
   highlights: string[];
   outcome: string;
 }
@@ -17,67 +19,66 @@ interface Project {
 const projects: Project[] = [
   {
     id: 1,
-    tag: "Talent Acquisition",
-    title: "LinkedIn Recruitment at Scale",
+    tag: "Hospitality · Membership",
+    title: "Members-Only Dining Platform",
     subtitle:
-      "1,000 candidates sourced, filtered, and personally messaged \u2014 in one automated run.",
-    color: "#2B1B3D",
-    client: null,
-    clientNote:
-      "Built for a senior executive at one of Bahrain\u2019s leading technology firms in the financial services space. Name withheld at the client\u2019s request.",
+      "A complete membership experience — tiered access, event registrations, and a polished member portal — built end-to-end on a custom monorepo.",
+    color: "#A8302E",
+    accent: "#F5E8D5",
+    cardClass: "card-palmnplate",
+    client: { name: "Palm & Plate", logo: "/assets/palmnplate-red.png" },
+    liveUrl: "https://www.palmandplate.com",
     highlights: [
-      "Enter a keyword and location \u2014 receive a curated pipeline of candidates from LinkedIn.",
-      "Automatic deduplication against existing records. No duplicates, no wasted outreach.",
-      "AI-generated messages tailored to each profile \u2014 a Java developer hears about Java, a cloud engineer hears about cloud.",
-      "Every message ties the candidate\u2019s experience directly to the company\u2019s work. Relevant, not templated.",
-      "Automated delivery at scale \u2014 1,000 candidates reached in the time it used to take to find 10.",
+      "Tiered membership system with passwordless email-OTP auth and JWT refresh rotation.",
+      "Event registration & venue booking flows with real-time availability and BHD pricing.",
+      "Custom member portal — TanStack Router/Query + shadcn/ui — for tickets, profile, and renewals.",
+      "Admin & API services on NestJS + Prisma + PostgreSQL, deployed via GitHub Actions to a managed VPS with PM2.",
+      "Mobile-first, warm and editorial — the brand's hospitality identity carried into every micro-interaction.",
     ],
     outcome:
-      "1,000 candidates sourced and messaged per batch \u2014 replacing roughly 80+ hours of manual recruiting with a single automated workflow.",
+      "A production-grade membership platform that turned a hospitality concept into a working business — used by members across Bahrain.",
   },
   {
     id: 2,
-    tag: "E-Commerce",
-    title: "Pre-Orders, Shipping & Automation",
+    tag: "Capital · Partnerships",
+    title: "Boutique Advisory — Web Presence",
     subtitle:
-      "A complete pre-order system, shipping integration, and workflow automation for a growing e-commerce brand.",
-    color: "#2B1B3D",
-    client: {
-      name: "Jerar",
-      logo: "/assets/Screenshot_2024-06-04_at_1.53.17_PM-removebg-preview-2-e1719916646965.png",
-    },
-    clientNote: null,
+      "A premium marketing site for a Bahrain-based capital and partnerships advisory firm — positioning, leadership, and contact in one polished surface.",
+    color: "#0B2545",
+    accent: "#C9A24A",
+    cardClass: "card-knightsgate",
+    client: { name: "Knights Gate Advisers", logo: "/assets/knightsgate.png" },
+    liveUrl: "https://www.knightsgateadvisers.com",
     highlights: [
-      "Custom pre-order system with a tailored checkout, payment, and email flow.",
-      "Mixed carts handled cleanly \u2014 pre-order and in-stock items in one basket, zero shipping conflicts.",
-      "Shipping calculations with real-time duty and customs fees across the GCC.",
-      "Automated pickup scheduling with the shipping provider \u2014 no manual intervention.",
-      "End-to-end built with custom code and workflow automation.",
+      "Cinematic hero with custom motion treatment, paired with a refined editorial type system.",
+      "Modular sections — services, leadership, why KGA, closing CTA — easy to extend as the firm grows.",
+      "Editorial leadership profiles with on-brand photography and tasteful entrance choreography.",
+      "Built for credibility — fast, accessible, SEO-clean, and fully indexable from day one.",
+      "Knights Gate's deep navy + gold palette carried through every component and hover state.",
     ],
     outcome:
-      "We\u2019re grateful this turned into a lasting partnership \u2014 the client continues to trust us with new projects as we grow together.",
+      "A boutique advisory presence that signals trust before the first conversation — and converts visitors into qualified inbound calls.",
   },
   {
     id: 3,
-    tag: "FinTech",
-    title: "Smart Copy Trading Platform",
+    tag: "Restaurant · F&B",
+    title: "Bilingual Landing Page — Cinematic Motion",
     subtitle:
-      "A custom-designed and developed website for a smart copy trading platform in the financial space.",
-    color: "#2B1B3D",
-    client: {
-      name: "EarningSync",
-      logo: "/assets/earningsync.png",
-    },
-    clientNote: null,
+      "A bilingual (Arabic + English) landing site with award-caliber motion design — built to make customers say “wow” the moment the page loads.",
+    color: "#0D4D2B",
+    accent: "#C9942A",
+    cardClass: "card-kaakbsemsom",
+    client: { name: "Kaak Bsemsom", logo: "/assets/kaakbsemsom-green.jpeg" },
+    liveUrl: "https://www.kaakbsemsom.com",
     highlights: [
-      "Designed and built a polished, conversion-focused marketing site from scratch \u2014 fully tailored to the client\u2019s brand.",
-      "Responsive across all devices with smooth animations and micro-interactions for a premium feel.",
-      "Clear feature breakdowns and pricing sections structured to drive sign-ups and reduce bounce.",
-      "Optimized for performance and SEO \u2014 fast load times, clean markup, and proper meta configuration.",
-      "Deployed and configured on cloud infrastructure with CI/CD for seamless updates.",
+      "Bilingual EN/AR experience with full RTL support and a smooth language toggle.",
+      "GSAP ScrollTrigger + Framer Motion choreography — parallax, pinned sections, scrubbed timelines.",
+      "Lenis-powered smooth scrolling at 120 fps, tuned to feel buttery on mobile too.",
+      "Brand-true green & gold palette — typography, gradients, and micro-interactions all on-brand.",
+      "Static export deployed to shared hosting — zero infra cost, zero downtime, instant TTFB.",
     ],
     outcome:
-      "A clean, high-converting website that gives EarningSync a professional presence and clearly communicates their platform to potential users.",
+      "A landing page that feels less like a website and more like a brand experience — exactly what the founders asked for.",
   },
 ];
 
@@ -88,6 +89,13 @@ const featureIcons = [
   <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M8.5 11.5a4.5 4.5 0 006.36 0l2-2a4.5 4.5 0 00-6.36-6.36L9.1 4.54"/><path d="M11.5 8.5a4.5 4.5 0 00-6.36 0l-2 2a4.5 4.5 0 006.36 6.36l1.38-1.38"/></svg>,
   <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M13 2L4.5 11H10l-3 7 8.5-9H10l3-7z"/></svg>,
 ];
+
+const ArrowUpRight = () => (
+  <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+    <path d="M5 11l6-6" />
+    <path d="M6.5 5h4.5v4.5" />
+  </svg>
+);
 
 function ProjectDetail({
   project,
@@ -130,7 +138,6 @@ function ProjectDetail({
     if (isClosingRef.current) return;
     isClosingRef.current = true;
 
-    // Kill any in-progress open animation
     if (openTimelineRef.current) {
       openTimelineRef.current.kill();
       openTimelineRef.current = null;
@@ -157,8 +164,20 @@ function ProjectDetail({
     return () => document.removeEventListener("keydown", handleKeyDown);
   }, [handleClose]);
 
+  const heroStyle = {
+    "--pd-brand": project.color,
+    "--pd-accent": project.accent,
+  } as React.CSSProperties;
+
   return (
-    <div className="project-overlay" ref={overlayRef} role="dialog" aria-modal="true" aria-label={project.title}>
+    <div
+      className="project-overlay"
+      ref={overlayRef}
+      role="dialog"
+      aria-modal="true"
+      aria-label={project.title}
+      style={heroStyle}
+    >
       <button
         className="project-overlay-close"
         onClick={handleClose}
@@ -175,28 +194,50 @@ function ProjectDetail({
         <div className="project-overlay-content" ref={contentRef}>
 
           <div className="pd-hero">
+            <div className="pd-hero-glow" aria-hidden="true" />
             <div className="pd-hero-inner">
               <div className="pd-hero-left">
                 <span className="pd-tag">{project.tag}</span>
                 <h1 className="pd-title">{project.title}</h1>
                 <p className="pd-subtitle">{project.subtitle}</p>
+
+                <div className="pd-cta-row">
+                  <a
+                    className="pd-cta-primary"
+                    href={project.liveUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <span>Visit live site</span>
+                    <ArrowUpRight />
+                  </a>
+                  <a
+                    className="pd-cta-secondary"
+                    href={project.liveUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    {new URL(project.liveUrl).hostname.replace(/^www\./, "")}
+                  </a>
+                </div>
               </div>
               <div className="pd-hero-right">
-                {project.client ? (
-                  <div className="pd-visual-box">
-                    <img
-                      src={project.client.logo}
-                      alt={project.client.name}
-                      className="pd-visual-client-logo"
-                    />
-                  </div>
-                ) : (
-                  <div className="pd-visual-box pd-visual-metric">
-                    <img src="/assets/linkedin.png" alt="LinkedIn" className="pd-metric-platform" />
-                    <span className="pd-metric-number">1,000+</span>
-                    <span className="pd-metric-label">candidates per batch</span>
-                  </div>
-                )}
+                <a
+                  className="pd-visual-box pd-visual-link"
+                  href={project.liveUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={`Open ${project.client.name} live site`}
+                >
+                  <img
+                    src={project.client.logo}
+                    alt={project.client.name}
+                    className="pd-visual-client-logo"
+                  />
+                  <span className="pd-visual-corner" aria-hidden="true">
+                    <ArrowUpRight />
+                  </span>
+                </a>
               </div>
             </div>
           </div>
@@ -228,16 +269,23 @@ function ProjectDetail({
 
               <div className="pd-section pd-section-last">
                 <span className="pd-section-label">Client</span>
-                {project.client ? (
-                  <div className="pd-client-row">
-                    <div className="pd-client-logo-wrap">
-                      <img src={project.client.logo} alt={project.client.name} />
-                    </div>
-                    <span className="pd-client-name">{project.client.name}</span>
+                <div className="pd-client-row">
+                  <div className="pd-client-logo-wrap">
+                    <img src={project.client.logo} alt={project.client.name} />
                   </div>
-                ) : (
-                  <p className="pd-client-note">{project.clientNote}</p>
-                )}
+                  <div className="pd-client-meta">
+                    <span className="pd-client-name">{project.client.name}</span>
+                    <a
+                      className="pd-client-link"
+                      href={project.liveUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <span>{new URL(project.liveUrl).hostname.replace(/^www\./, "")}</span>
+                      <ArrowUpRight />
+                    </a>
+                  </div>
+                </div>
               </div>
 
             </div>
@@ -297,49 +345,54 @@ export default function Portfolio() {
         <div className="container">
           <div className="portfolio-grid" ref={cardsRef}>
             {projects.map((project) => (
-              <div
+              <article
                 key={project.id}
-                className="portfolio-card"
+                className={`portfolio-card ${project.cardClass}`}
                 onClick={() => setActiveProject(project)}
                 onKeyDown={(e) => handleCardKeyDown(e, project)}
                 role="button"
                 tabIndex={0}
-                aria-label={`View project: ${project.title}`}
+                aria-label={`View case study: ${project.title}`}
+                style={{
+                  ["--card-brand" as string]: project.color,
+                  ["--card-accent" as string]: project.accent,
+                }}
               >
-                <div
-                  className="portfolio-card-preview"
-                  style={{ background: project.color }}
-                >
+                <div className="portfolio-card-preview">
                   <div className="portfolio-card-preview-inner">
-                    {project.client ? (
-                      <img
-                        src={project.client.logo}
-                        alt={project.client.name}
-                        className="portfolio-card-preview-logo"
-                      />
-                    ) : (
-                      <div className="portfolio-card-preview-metric">
-                        <img
-                          src="/assets/linkedin.png"
-                          alt="LinkedIn"
-                          className="portfolio-card-preview-metric-logo"
-                        />
-                        <span className="portfolio-card-preview-number">1,000+</span>
-                        <span className="portfolio-card-preview-label">candidates per batch</span>
-                      </div>
-                    )}
+                    <img
+                      src={project.client.logo}
+                      alt={project.client.name}
+                      className="portfolio-card-preview-logo"
+                      loading="lazy"
+                    />
                   </div>
+                  <span className="portfolio-card-cue" aria-hidden="true">
+                    <span className="portfolio-card-cue-text">View case study</span>
+                    <span className="portfolio-card-cue-icon">
+                      <ArrowUpRight />
+                    </span>
+                  </span>
                 </div>
                 <div className="portfolio-card-info">
                   <div className="portfolio-card-meta">
                     <span className="portfolio-card-tag">{project.tag}</span>
-                    {project.client && (
-                      <span className="portfolio-card-client-name">{project.client.name}</span>
-                    )}
+                    <span className="portfolio-card-client-name">{project.client.name}</span>
                   </div>
                   <h3 className="portfolio-card-title">{project.title}</h3>
+                  <a
+                    className="portfolio-card-live"
+                    href={project.liveUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={(e) => e.stopPropagation()}
+                    aria-label={`Open ${project.client.name} live site in a new tab`}
+                  >
+                    <span>{new URL(project.liveUrl).hostname.replace(/^www\./, "")}</span>
+                    <ArrowUpRight />
+                  </a>
                 </div>
-              </div>
+              </article>
             ))}
           </div>
         </div>

@@ -32,7 +32,7 @@
 .clients-track {
   display: flex;
   align-items: center;
-  gap: 8rem;
+  gap: 7rem;
   width: max-content;
   will-change: transform;
   opacity: 0;
@@ -44,51 +44,143 @@
 }
 
 .client-logo {
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
   width: 120px;
   height: 120px;
+  text-decoration: none;
+  color: inherit;
+  isolation: isolate;
 }
 
 .client-logo img {
   height: 100%;
   width: 100%;
   object-fit: contain;
-  opacity: 0.65;
-  transition: opacity 0.3s ease;
+  opacity: 0.82;
+  transition:
+    opacity 0.45s ease,
+    transform 0.55s var(--ease-out-expo),
+    filter 0.45s ease;
 }
 
-.client-logo img:hover {
+/* Non-linked logos still react softly to hover */
+.client-logo:hover img {
   opacity: 1;
 }
 
-.logo-citibank img {
-  transform: scale(1.4);
+/* ── Linked (clickable) logos ── */
+.client-logo.is-linked {
+  cursor: pointer;
+  border-radius: 14px;
+  transition:
+    transform 0.45s var(--ease-out-expo),
+    background 0.4s ease;
 }
 
-.logo-credimax img {
-  transform: scale(1.3);
+.client-logo.is-linked::before {
+  content: "";
+  position: absolute;
+  inset: -8px -14px;
+  border-radius: 16px;
+  background: radial-gradient(
+    ellipse at center,
+    rgba(0, 0, 0, 0.04) 0%,
+    transparent 70%
+  );
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  z-index: -1;
 }
 
-.logo-earningsync img {
-  transform: scale(0.78);
+.client-logo.is-linked:hover::before,
+.client-logo.is-linked:focus-visible::before {
+  opacity: 1;
 }
 
-.logo-babydetails img {
-  transform: scale(0.9);
+.client-logo.is-linked:hover img,
+.client-logo.is-linked:focus-visible img {
+  opacity: 1;
+  transform: translateY(-2px) scale(1.04);
 }
 
-.logo-goldentouch img {
-  transform: scale(0.85);
+.client-logo.is-linked:active img {
+  transform: translateY(-1px) scale(1.01);
 }
 
-.logo-kaakbsemsom img {
-  transform: scale(0.82);
+.client-logo.is-linked:focus-visible {
+  outline: none;
 }
 
-.logo-palmnplate img {
-  transform: scale(1.1);
-  filter: grayscale(1) brightness(0.35);
+.client-logo.is-linked:focus-visible::before {
+  box-shadow: 0 0 0 1.5px rgba(0, 0, 0, 0.18);
+}
+
+/* Tiny "↗" launch cue that pops in on hover */
+.client-logo-link-cue {
+  position: absolute;
+  top: -2px;
+  right: -2px;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: #000;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transform: scale(0.6) translate(-4px, 4px);
+  transition:
+    opacity 0.35s ease,
+    transform 0.45s var(--ease-out-expo);
+  pointer-events: none;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.18);
+}
+
+.client-logo-link-cue svg {
+  width: 11px;
+  height: 11px;
+}
+
+.client-logo.is-linked:hover .client-logo-link-cue,
+.client-logo.is-linked:focus-visible .client-logo-link-cue {
+  opacity: 1;
+  transform: scale(1) translate(0, 0);
+}
+
+/* ── Per-logo scale/treatment ── */
+.logo-citibank img       { transform: scale(1.4); }
+.logo-credimax img       { transform: scale(1.3); }
+.logo-earningsync img    { transform: scale(0.78); }
+.logo-babydetails img    { transform: scale(0.9); }
+.logo-goldentouch img    { transform: scale(0.85); }
+.logo-kaakbsemsom img    { transform: scale(0.82); }
+.logo-palmnplate img     { transform: scale(1.1); filter: grayscale(1) brightness(0.35); }
+.logo-knightsgate img    { transform: scale(0.95); }
+.logo-yellowsports img   { transform: scale(0.92); border-radius: 10px; }
+.logo-custompc img       { transform: scale(0.95); }
+
+/* When linked & hovered, neutralize the grayscale on Palm & Plate so brand color flashes in */
+.logo-palmnplate.is-linked:hover img,
+.logo-palmnplate.is-linked:focus-visible img {
+  filter: grayscale(0) brightness(1);
+  transform: translateY(-2px) scale(1.18);
+}
+
+/* Hover transforms for scaled logos — preserve their base scale */
+.logo-citibank.is-linked:hover img      { transform: translateY(-2px) scale(1.46); }
+.logo-credimax.is-linked:hover img      { transform: translateY(-2px) scale(1.36); }
+.logo-kaakbsemsom.is-linked:hover img   { transform: translateY(-2px) scale(0.88); }
+.logo-knightsgate.is-linked:hover img   { transform: translateY(-2px) scale(1.0);  }
+.logo-yellowsports.is-linked:hover img  { transform: translateY(-2px) scale(0.96); }
+
+@media (max-width: 640px) {
+  .clients-track { gap: 4.5rem; }
+  .client-logo   { width: 96px; height: 96px; }
+  .client-logo-link-cue { width: 18px; height: 18px; }
+  .client-logo-link-cue svg { width: 9px; height: 9px; }
 }
