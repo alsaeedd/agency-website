@@ -15,7 +15,7 @@ const logos: Logo[] = [
   { name: "Baby Details",    src: "/assets/babydetails.png",                                                           className: "logo-babydetails" },
   { name: "Credimax",        src: "/assets/credimax.png",                                                              className: "logo-credimax" },
   { name: "Kaak Bsemsom",    src: "/assets/kaakbsemsom.png",                                                           className: "logo-kaakbsemsom",   href: "https://www.kaakbsemsom.com" },
-  { name: "Knights Gate",    src: "/assets/knightsgate-mark.png",                                                      className: "logo-knightsgate",   href: "https://www.knightsgateadvisers.com" },
+  { name: "Knights Gate",    src: "/assets/knightsgate-mark.png",                                                      className: "logo-knightsgate",   href: "https://www.kgadvisers.com" },
   { name: "Yellow Sports",   src: "/assets/yellowsports.jpeg",                                                         className: "logo-yellowsports",  href: "https://www.yellowsportsbh.com" },
   { name: "Jerar",           src: "/assets/Screenshot_2024-06-04_at_1.53.17_PM-removebg-preview-2-e1719916646965.png", className: "" },
   { name: "Golden Touch",    src: "/assets/goldentouch.png",                                                           className: "logo-goldentouch" },

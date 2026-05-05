@@ -48,7 +48,7 @@ const projects: Project[] = [
     accent: "#C9A24A",
     cardClass: "card-knightsgate",
     client: { name: "Knights Gate Advisers", logo: "/assets/knightsgate.png" },
-    liveUrl: "https://www.knightsgateadvisers.com",
+    liveUrl: "https://www.kgadvisers.com",
     highlights: [
       "Cinematic hero with custom motion treatment, paired with a refined editorial type system.",
       "Modular sections — services, leadership, why KGA, closing CTA — easy to extend as the firm grows.",
