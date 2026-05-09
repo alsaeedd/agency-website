@@ -1,15 +1,15 @@
 # RAL Agency Website — CLAUDE.md
 
 ## Project Overview
-Premium portfolio SPA for **Revenue Automation Lab (RAL)**, Bahrain-based digital agency.
-Single page app with anchor navigation, deployed on Netlify.
+Premium portfolio SPA for **RAL Technologies** (formerly Revenue Automation Lab), Bahrain-based digital agency.
+Single page app with anchor navigation, deployed on Netlify. Live domain: **raltech.dev**.
 
 ## Tech Stack
 - React 18 + TypeScript + Vite
 - GSAP + ScrollTrigger (primary animations)
 - Lenis (smooth scroll)
 - Pure vanilla CSS + CSS variables (no Tailwind/framework)
-- Netlify forms (built-in form handling, no backend)
+- Contact submits via WhatsApp deep link (`wa.me`) — no backend, no Netlify forms
 
 ## Installed Frontend Design Tools
 All of the following are installed and should be used for any frontend work:
@@ -88,7 +88,9 @@ Navbar → Hero → About (dark) → Services → Portfolio → CTA (dark) → F
 - `<Featured />` and `<Showreel />` in App.tsx (components exist, not rendered)
 
 ## Business Details
-- Email: info@revenueautomationlab.com
+- Email: info@raltech.dev
 - WhatsApp: +973 6638 6602
+- Domain: raltech.dev
+- Socials: Instagram @raltechh, TikTok @raltechh, LinkedIn /company/raltechh
 - Budget currency: BHD
 - Copyright: © 2026

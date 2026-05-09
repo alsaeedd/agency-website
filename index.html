@@ -8,25 +8,78 @@
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <link rel="manifest" href="/site.webmanifest" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Revenue Automation Lab</title>
+    <meta name="theme-color" content="#0c0715" />
+    <title>RAL Technologies - Elite Software</title>
+    <meta
+      name="description"
+      content="RAL Technologies builds custom software and AI automations that scale revenue for GCC founders, SMBs, and enterprises. Bahrain-based, founder-led."
+    />
+    <link rel="canonical" href="https://raltech.dev/" />
+    <meta name="robots" content="index, follow" />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="RAL Technologies" />
+    <meta property="og:title" content="RAL Technologies - Elite Software" />
+    <meta
+      property="og:description"
+      content="Custom software and AI automations that scale revenue. Bahrain-based, founder-led, built for GCC founders and enterprises alike."
+    />
+    <meta property="og:url" content="https://raltech.dev/" />
+    <meta property="og:image" content="https://raltech.dev/apple-touch-icon.png" />
+    <meta property="og:locale" content="en_US" />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="RAL Technologies - Elite Software" />
+    <meta
+      name="twitter:description"
+      content="Custom software and AI automations that scale revenue. Bahrain-based, founder-led."
+    />
+    <meta name="twitter:image" content="https://raltech.dev/apple-touch-icon.png" />
+
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
       rel="stylesheet"
     />
+
+    <!-- Structured data: Organization -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "name": "RAL Technologies",
+        "alternateName": "Revenue Automation Lab",
+        "url": "https://raltech.dev/",
+        "logo": "https://raltech.dev/apple-touch-icon.png",
+        "email": "info@raltech.dev",
+        "telephone": "+973-6638-6602",
+        "description": "RAL Technologies builds custom software and AI automations that scale revenue for GCC founders, SMBs, and enterprises.",
+        "address": {
+          "@type": "PostalAddress",
+          "addressCountry": "BH"
+        },
+        "sameAs": [
+          "https://instagram.com/raltechh",
+          "https://www.tiktok.com/@raltechh",
+          "https://www.linkedin.com/company/raltechh/"
+        ]
+      }
+    </script>
+
+    <!-- Structured data: WebSite -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": "RAL Technologies",
+        "url": "https://raltech.dev/"
+      }
+    </script>
   </head>
   <body>
-    <!-- Hidden form for Netlify to detect at build time - now enabled-->
-    <form name="contact" netlify netlify-honeypot="bot-field" hidden>
-      <input type="text" name="name" />
-      <input type="email" name="email" />
-      <input type="text" name="services" />
-      <textarea name="message"></textarea>
-      <input type="text" name="budget" />
-      <input type="file" name="attachment" />
-    </form>
-
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>

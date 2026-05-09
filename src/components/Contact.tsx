@@ -12,41 +12,19 @@ const services = [
   { id: "other", label: "Something else" },
 ];
 
-const budgets = [
-  { id: "under-500", label: "< 500 BHD" },
-  { id: "500-1k", label: "500 \u2013 1k BHD" },
-  { id: "1k-2k", label: "1k \u2013 2k BHD" },
-  { id: "2k-5k", label: "2k \u2013 5k BHD" },
-  { id: "5k-10k", label: "5k \u2013 10k BHD" },
-  { id: "10k-20k", label: "10k \u2013 20k BHD" },
-  { id: "more-20k", label: "> 20k BHD" },
-];
+const WHATSAPP_NUMBER = "97366386602";
 
 interface ContactProps {
   isOpen: boolean;
   onClose: () => void;
 }
 
-const encode = (data: Record<string, string | File | null>) => {
-  const formData = new FormData();
-  for (const key of Object.keys(data)) {
-    const value = data[key];
-    if (value !== null) {
-      formData.append(key, value);
-    }
-  }
-  return formData;
-};
-
 export default function Contact({ isOpen, onClose }: ContactProps) {
   const [selectedServices, setSelectedServices] = useState<string[]>([]);
-  const [selectedBudget, setSelectedBudget] = useState<string>("");
   const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
-  const [attachment, setAttachment] = useState<File | null>(null);
   const [showSuccess, setShowSuccess] = useState(false);
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [waUrl, setWaUrl] = useState("");
   const [isVisible, setIsVisible] = useState(false);
   const overlayRef = useRef<HTMLDivElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
@@ -166,7 +144,6 @@ export default function Contact({ isOpen, onClose }: ContactProps) {
     if (isClosingRef.current) return;
     isClosingRef.current = true;
 
-    // Kill any in-progress open animation
     if (openTimelineRef.current) {
       openTimelineRef.current.kill();
       openTimelineRef.current = null;
@@ -209,7 +186,6 @@ export default function Contact({ isOpen, onClose }: ContactProps) {
     return () => document.removeEventListener("keydown", handleKeyDown);
   }, [isVisible, handleClose]);
 
-  // Cleanup overflow on unmount
   useEffect(() => {
     return () => {
       document.body.style.overflow = "";
@@ -229,63 +205,55 @@ export default function Contact({ isOpen, onClose }: ContactProps) {
 
   const resetForm = () => {
     setSelectedServices([]);
-    setSelectedBudget("");
     setName("");
-    setEmail("");
     setMessage("");
-    setAttachment(null);
+    setWaUrl("");
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-
-    const selectedServiceLabels = selectedServices
+  const buildWhatsAppUrl = () => {
+    const interestedIn = selectedServices
       .map((id) => services.find((s) => s.id === id)?.label)
       .filter(Boolean)
       .join(", ");
 
-    const selectedBudgetLabel =
-      budgets.find((b) => b.id === selectedBudget)?.label || "";
+    const lines: string[] = [
+      "Hi RAL Technologies, I'd like to chat about a project.",
+      "",
+      `Name: ${name.trim()}`,
+    ];
 
-    try {
-      const response = await fetch("/", {
-        method: "POST",
-        body: encode({
-          "form-name": "contact",
-          name,
-          email,
-          services: selectedServiceLabels,
-          message,
-          budget: selectedBudgetLabel,
-          attachment,
-        }),
-      });
-
-      if (!response.ok) {
-        throw new Error(`Server error: ${response.status}`);
-      }
-
-      setShowSuccess(true);
-      successTimerRef.current = setTimeout(() => {
-        setShowSuccess(false);
-        onClose();
-        resetForm();
-      }, 3000);
-    } catch (error) {
-      console.error("Form submission error:", error);
-      alert("Something went wrong. Please try again.");
-    } finally {
-      setIsSubmitting(false);
+    if (interestedIn) {
+      lines.push(`Looking for: ${interestedIn}`);
     }
+
+    lines.push("", "Project notes:", message.trim(), "", "Sent from raltech.dev");
+
+    const text = lines.join("\n");
+    return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(text)}`;
   };
 
-  const isFormValid = name.trim() !== "" && email.trim() !== "";
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!isFormValid) return;
+
+    const url = buildWhatsAppUrl();
+    setWaUrl(url);
+    window.open(url, "_blank", "noopener,noreferrer");
+
+    setShowSuccess(true);
+    successTimerRef.current = setTimeout(() => {
+      setShowSuccess(false);
+      onClose();
+      resetForm();
+    }, 6000);
+  };
+
+  const isFormValid = name.trim() !== "" && message.trim() !== "";
 
   if (!isVisible) return null;
 
   return (
-    <div className="contact-overlay" ref={overlayRef} role="dialog" aria-modal="true" aria-label="Contact form">
+    <div className="contact-overlay" ref={overlayRef} role="dialog" aria-modal="true" aria-label="Contact RAL Technologies">
       <button
         className="contact-close"
         onClick={handleClose}
@@ -310,19 +278,19 @@ export default function Contact({ isOpen, onClose }: ContactProps) {
           <img
             src={logoMain}
             className="contact-sidebar-logo contact-sidebar-anim"
-            alt="RAL"
+            alt="RAL Technologies"
           />
           <div className="contact-sidebar-body">
             <h2 className="contact-sidebar-heading contact-sidebar-anim">
               Let's build something great.
             </h2>
             <p className="contact-sidebar-desc contact-sidebar-anim">
-              Tell us what you're working on and we'll get back to you shortly.
+              Two quick details and we'll pick this up on WhatsApp.
             </p>
           </div>
           <div className="contact-sidebar-links contact-sidebar-anim">
             <a
-              href="mailto:info@revenueautomationlab.com"
+              href="mailto:info@raltech.dev"
               className="contact-sidebar-link"
             >
               <svg
@@ -336,7 +304,7 @@ export default function Contact({ isOpen, onClose }: ContactProps) {
                 <rect x="2" y="4" width="16" height="12" rx="2" />
                 <path d="M2 7l8 5 8-5" />
               </svg>
-              info@revenueautomationlab.com
+              info@raltech.dev
             </a>
             <a
               href="https://wa.me/97366386602"
@@ -356,33 +324,91 @@ export default function Contact({ isOpen, onClose }: ContactProps) {
               </svg>
               +973 6638 6602
             </a>
+
+            <div className="contact-sidebar-social" aria-label="RAL Technologies on social media">
+              <a
+                href="https://instagram.com/raltechh"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Instagram"
+                className="contact-sidebar-social-link"
+              >
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+                  <rect x="3" y="3" width="18" height="18" rx="5" />
+                  <circle cx="12" cy="12" r="4" />
+                  <circle cx="17.5" cy="6.5" r="0.6" fill="currentColor" stroke="none" />
+                </svg>
+              </a>
+              <a
+                href="https://www.tiktok.com/@raltechh"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="TikTok"
+                className="contact-sidebar-social-link"
+              >
+                <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                  <path d="M19.32 5.56a5.13 5.13 0 0 1-3.78-4.25V1H12.4v13.13a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64c.31 0 .61.05.89.13V8.07a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5.8 19.97a6.34 6.34 0 0 0 10.86-4.43V8.5a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-2.11-1.06z" />
+                </svg>
+              </a>
+              <a
+                href="https://www.linkedin.com/company/raltechh/"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="LinkedIn"
+                className="contact-sidebar-social-link"
+              >
+                <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                  <path d="M20.45 20.45h-3.55v-5.57c0-1.33-.02-3.04-1.85-3.04-1.85 0-2.13 1.45-2.13 2.94v5.67H9.36V9h3.41v1.56h.05c.47-.9 1.63-1.85 3.36-1.85 3.6 0 4.27 2.37 4.27 5.45v6.29zM5.34 7.43a2.06 2.06 0 1 1 0-4.12 2.06 2.06 0 0 1 0 4.12zM7.12 20.45H3.56V9h3.56v11.45zM22.23 0H1.77C.79 0 0 .77 0 1.72v20.56C0 23.23.79 24 1.77 24h20.46c.98 0 1.77-.77 1.77-1.72V1.72C24 .77 23.21 0 22.22 0z" />
+                </svg>
+              </a>
+              <a
+                href="https://wa.me/97366386602"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="WhatsApp"
+                className="contact-sidebar-social-link"
+              >
+                <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                  <path d="M.057 24l1.687-6.163a11.867 11.867 0 0 1-1.587-5.946C.16 5.335 5.495 0 12.05 0a11.817 11.817 0 0 1 8.413 3.488 11.824 11.824 0 0 1 3.48 8.414c-.003 6.557-5.338 11.892-11.893 11.892a11.9 11.9 0 0 1-5.688-1.448L.057 24zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z" />
+                </svg>
+              </a>
+            </div>
           </div>
         </aside>
 
-        {/* Mobile brand bar — shown only when sidebar is hidden */}
+        {/* Mobile brand bar, shown only when sidebar is hidden */}
         <div className="contact-mobile-brand">
-          <img src={logoMain} alt="RAL" className="contact-mobile-logo" />
-          <span className="contact-mobile-brand-name">Revenue Automation Lab</span>
+          <img src={logoMain} alt="RAL Technologies" className="contact-mobile-logo" />
+          <span className="contact-mobile-brand-name">RAL Technologies</span>
         </div>
 
         <div className="contact-scroll" data-lenis-prevent>
           <div className="contact-container" ref={contentRef}>
             {showSuccess ? (
               <div className="contact-success">
-                <div className="contact-success-icon">
-                  <svg
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  >
-                    <polyline points="20 6 9 17 4 12" />
+                <div className="contact-success-icon contact-success-icon-wa">
+                  <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                    <path d="M.057 24l1.687-6.163a11.867 11.867 0 0 1-1.587-5.946C.16 5.335 5.495 0 12.05 0a11.817 11.817 0 0 1 8.413 3.488 11.824 11.824 0 0 1 3.48 8.414c-.003 6.557-5.338 11.892-11.893 11.892a11.9 11.9 0 0 1-5.688-1.448L.057 24zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z" />
                   </svg>
                 </div>
-                <div className="contact-success-header">Thank you!</div>
-                <p>We'll be in touch with you shortly.</p>
+                <div className="contact-success-header">Off to WhatsApp.</div>
+                <p>
+                  Your message is prefilled. Just hit send on the chat that
+                  opened. If WhatsApp didn't pop up, use the button below.
+                </p>
+                {waUrl && (
+                  <a
+                    href={waUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="contact-wa-retry"
+                  >
+                    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                      <path d="M.057 24l1.687-6.163a11.867 11.867 0 0 1-1.587-5.946C.16 5.335 5.495 0 12.05 0a11.817 11.817 0 0 1 8.413 3.488 11.824 11.824 0 0 1 3.48 8.414c-.003 6.557-5.338 11.892-11.893 11.892a11.9 11.9 0 0 1-5.688-1.448L.057 24zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z" />
+                    </svg>
+                    <span>Open WhatsApp manually</span>
+                  </a>
+                )}
               </div>
             ) : (
               <>
@@ -396,25 +422,17 @@ export default function Contact({ isOpen, onClose }: ContactProps) {
                     So, what're we cooking?
                   </AnimatedText>
                   <p className="contact-subtitle" ref={subtitleRef}>
-                    Fill in what you can. We'll figure out the rest together.
+                    Three lines, then we move to WhatsApp.
                   </p>
                 </div>
 
                 <form
                   className="contact-form"
-                  name="contact"
-                  method="POST"
-                  data-netlify="true"
                   onSubmit={handleSubmit}
                   ref={formGroupsRef}
                 >
-                  <input type="hidden" name="form-name" value="contact" />
-
                   <div className="contact-section">
-                    <div className="contact-section-head">
-                      <span className="contact-step-num">01</span>
-                      <span className="contact-label">I'm interested in</span>
-                    </div>
+                    <span className="contact-eyebrow">I'm interested in</span>
                     <div className="contact-checkboxes">
                       {services.map((service) => (
                         <label key={service.id} className="contact-checkbox">
@@ -435,131 +453,53 @@ export default function Contact({ isOpen, onClose }: ContactProps) {
                   </div>
 
                   <div className="contact-section">
-                    <div className="contact-section-head">
-                      <span className="contact-step-num">02</span>
-                      <span className="contact-label">Your details</span>
-                    </div>
-                    <div className="contact-row-2">
-                      <div className="contact-input">
-                        <input
-                          type="text"
-                          name="name"
-                          placeholder="Your name"
-                          value={name}
-                          onChange={(e) => setName(e.target.value)}
-                          required
-                        />
-                        <div className="contact-input-line" />
-                      </div>
-                      <div className="contact-input">
-                        <input
-                          type="email"
-                          name="email"
-                          placeholder="Email address"
-                          value={email}
-                          onChange={(e) => setEmail(e.target.value)}
-                          required
-                        />
-                        <div className="contact-input-line" />
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="contact-section">
-                    <div className="contact-section-head">
-                      <span className="contact-step-num">03</span>
-                      <span className="contact-label">Tell us more</span>
-                    </div>
+                    <span className="contact-eyebrow">Your name</span>
                     <div className="contact-input">
-                      <textarea
-                        name="message"
-                        placeholder="Tell us about your project"
-                        value={message}
-                        onChange={(e) => {
-                          setMessage(e.target.value);
-                          e.target.style.height = "auto";
-                          e.target.style.height = e.target.scrollHeight + "px";
-                        }}
-                        rows={1}
+                      <input
+                        type="text"
+                        name="name"
+                        placeholder="What should we call you?"
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
+                        autoComplete="name"
+                        required
                       />
                       <div className="contact-input-line" />
                     </div>
                   </div>
 
                   <div className="contact-section">
-                    <div className="contact-section-head">
-                      <span className="contact-step-num">04</span>
-                      <span className="contact-label">
-                        Project budget (BHD)
-                      </span>
-                    </div>
-                    <div className="contact-checkboxes">
-                      {budgets.map((budget) => (
-                        <label key={budget.id} className="contact-checkbox">
-                          <input
-                            type="radio"
-                            name="budget"
-                            checked={selectedBudget === budget.id}
-                            onChange={() => setSelectedBudget(budget.id)}
-                          />
-                          <span className="contact-checkbox-box">
-                            <span className="contact-checkbox-border" />
-                            <span className="contact-checkbox-label">
-                              {budget.label}
-                            </span>
-                          </span>
-                        </label>
-                      ))}
+                    <span className="contact-eyebrow">Project notes</span>
+                    <div className="contact-input">
+                      <textarea
+                        name="message"
+                        placeholder="A few lines on what you're building, the goal, or anything you have in mind..."
+                        value={message}
+                        onChange={(e) => {
+                          setMessage(e.target.value);
+                          e.target.style.height = "auto";
+                          e.target.style.height = e.target.scrollHeight + "px";
+                        }}
+                        required
+                      />
+                      <div className="contact-input-line" />
                     </div>
                   </div>
 
-                  <div className="contact-section contact-bottom-row">
-                    <label className="contact-attachment">
-                      <input
-                        type="file"
-                        name="attachment"
-                        onChange={(e) =>
-                          setAttachment(e.target.files?.[0] || null)
-                        }
-                      />
-                      <span className="contact-attachment-btn">
-                        <svg
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth="2"
-                        >
-                          <path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48" />
-                        </svg>
-                        <span>
-                          {attachment ? attachment.name : "Attach a file"}
-                        </span>
-                      </span>
-                    </label>
-
-                    <div className="contact-submit">
-                      <button
-                        type="submit"
-                        className="btn-cta-submit"
-                        disabled={!isFormValid || isSubmitting}
-                      >
-                        <span>
-                          {isSubmitting ? "Sending..." : "Send request"}
-                        </span>
-                        {!isSubmitting && (
-                          <svg
-                            viewBox="0 0 20 20"
-                            fill="none"
-                            stroke="currentColor"
-                            strokeWidth="1.75"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                          >
-                            <path d="M4 10h12M10 4l6 6-6 6" />
-                          </svg>
-                        )}
-                      </button>
-                    </div>
+                  <div className="contact-submit-section">
+                    <button
+                      type="submit"
+                      className="btn-cta-submit btn-cta-whatsapp"
+                      disabled={!isFormValid}
+                    >
+                      <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                        <path d="M.057 24l1.687-6.163a11.867 11.867 0 0 1-1.587-5.946C.16 5.335 5.495 0 12.05 0a11.817 11.817 0 0 1 8.413 3.488 11.824 11.824 0 0 1 3.48 8.414c-.003 6.557-5.338 11.892-11.893 11.892a11.9 11.9 0 0 1-5.688-1.448L.057 24zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z" />
+                      </svg>
+                      <span>Continue on WhatsApp</span>
+                    </button>
+                    <p className="contact-handoff-note">
+                      WhatsApp opens with your message prefilled. Just hit send on your end.
+                    </p>
                   </div>
                 </form>
               </>

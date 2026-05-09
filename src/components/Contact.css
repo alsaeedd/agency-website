@@ -205,6 +205,51 @@
   filter: drop-shadow(0 0 6px rgba(167, 139, 250, 0.55));
 }
 
+/* Social icon row */
+.contact-sidebar-social {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+  padding-top: 1rem;
+  border-top: 1px dashed rgba(209, 196, 233, 0.08);
+}
+
+.contact-sidebar-social-link {
+  width: 32px;
+  height: 32px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  border: 1px solid var(--color-border);
+  color: var(--color-text-secondary);
+  opacity: 0.7;
+  transition:
+    color 0.3s ease,
+    opacity 0.3s ease,
+    border-color 0.3s ease,
+    background 0.3s ease,
+    transform 0.35s var(--ease-out-expo),
+    box-shadow 0.35s ease;
+}
+
+.contact-sidebar-social-link svg {
+  width: 14px;
+  height: 14px;
+}
+
+.contact-sidebar-social-link:hover {
+  opacity: 1;
+  color: var(--color-text);
+  border-color: rgba(167, 139, 250, 0.5);
+  background: rgba(120, 55, 200, 0.12);
+  transform: translateY(-2px);
+  box-shadow:
+    0 0 16px rgba(120, 55, 200, 0.22),
+    0 0 0 4px rgba(120, 55, 200, 0.05);
+}
+
 /* ── Mobile brand header (desktop: hidden) ── */
 .contact-mobile-brand {
   display: none;
@@ -243,15 +288,14 @@
 /* ── Header ── */
 .contact-header {
   margin-bottom: 0;
-  padding-bottom: 2rem;
-  border-bottom: 1px solid var(--color-border);
+  padding-bottom: 1.4rem;
 }
 
 .contact-title {
-  font-size: clamp(2rem, 4.5vw, 3.25rem);
+  font-size: clamp(2.25rem, 5vw, 3.5rem);
   font-weight: 500;
-  line-height: 1.05;
-  letter-spacing: -0.035em;
+  line-height: 1.04;
+  letter-spacing: -0.038em;
   color: var(--color-text);
 }
 
@@ -268,11 +312,12 @@
 }
 
 .contact-subtitle {
-  margin-top: 1rem;
+  margin-top: 1.1rem;
   font-size: 0.9375rem;
   color: var(--color-text-secondary);
   line-height: 1.65;
-  opacity: 0.65;
+  opacity: 0.7;
+  letter-spacing: 0.005em;
 }
 
 /* ── Form ── */
@@ -282,47 +327,32 @@
   gap: 0;
 }
 
-/* ── Section blocks ── */
+/* ── Section blocks (no dividers, whitespace-only separation) ── */
 .contact-section {
-  padding: 1.75rem 0;
-  border-bottom: 1px solid var(--color-border);
+  padding: 1.4rem 0;
 }
 
-.contact-section:first-of-type {
-  padding-top: 0.5rem;
-}
-
-.contact-section:last-of-type {
-  border-bottom: none;
-}
-
-.contact-section-head {
-  display: flex;
+/* Eyebrow label with lavender dot */
+.contact-eyebrow {
+  display: inline-flex;
   align-items: center;
-  gap: 0.75rem;
-  margin-bottom: 1.25rem;
-}
-
-/* Step number badge */
-.contact-step-num {
-  font-size: 0.5rem;
-  font-weight: 700;
-  color: rgba(167, 139, 250, 0.9);
-  letter-spacing: 0.12em;
-  font-variant-numeric: tabular-nums;
-  background: rgba(120, 55, 200, 0.15);
-  border: 1px solid rgba(167, 139, 250, 0.2);
-  padding: 0.2rem 0.5rem;
-  border-radius: 4px;
-  line-height: 1.5;
-}
-
-.contact-label {
-  font-size: 0.6875rem;
+  gap: 0.55rem;
+  font-size: 0.65rem;
+  font-weight: 600;
   color: var(--color-text-secondary);
   text-transform: uppercase;
-  letter-spacing: 0.1em;
-  opacity: 0.65;
+  letter-spacing: 0.18em;
+  opacity: 0.75;
+  margin-bottom: 1.1rem;
+}
+
+.contact-eyebrow::before {
+  content: "";
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: rgba(167, 139, 250, 0.7);
+  box-shadow: 0 0 8px rgba(167, 139, 250, 0.55);
 }
 
 /* ── Pills (service checkboxes + budget radios) ── */
@@ -345,11 +375,13 @@
 .contact-checkbox-box {
   display: inline-flex;
   align-items: center;
-  padding: 0.5rem 1.125rem;
+  padding: 0.55rem 1.2rem;
   border-radius: 100px;
   position: relative;
   overflow: hidden;
-  transition: color 0.3s ease;
+  transition:
+    color 0.3s ease,
+    transform 0.35s var(--ease-out-expo);
 }
 
 .contact-checkbox-border {
@@ -364,24 +396,28 @@
 }
 
 /* Hover (unchecked) */
-.contact-checkbox:hover .contact-checkbox-border {
-  border-color: rgba(167, 139, 250, 0.32);
-  background: rgba(120, 55, 200, 0.07);
+.contact-checkbox:hover .contact-checkbox-box {
+  transform: translateY(-1px);
 }
 
-/* Checked — purple glow tint, not solid fill */
+.contact-checkbox:hover .contact-checkbox-border {
+  border-color: rgba(167, 139, 250, 0.34);
+  background: rgba(120, 55, 200, 0.08);
+}
+
+/* Checked: purple glow tint, not solid fill */
 .contact-checkbox
   input:checked
   + .contact-checkbox-box
   .contact-checkbox-border {
-  border-color: rgba(167, 139, 250, 0.65);
-  background: rgba(110, 45, 195, 0.2);
+  border-color: rgba(167, 139, 250, 0.7);
+  background: rgba(110, 45, 195, 0.22);
   box-shadow:
-    0 0 18px rgba(120, 55, 200, 0.2),
-    inset 0 0 14px rgba(120, 55, 200, 0.08);
+    0 0 22px rgba(120, 55, 200, 0.28),
+    inset 0 0 14px rgba(120, 55, 200, 0.1);
 }
 
-/* No text inversion on checked — text stays near-white */
+/* No text inversion on checked: text stays near-white */
 .contact-checkbox input:checked + .contact-checkbox-box {
   color: inherit;
 }
@@ -399,18 +435,12 @@
   color: var(--color-text);
 }
 
-/* Checked label — light purple tint */
+/* Checked label: light purple tint */
 .contact-checkbox input:checked + .contact-checkbox-box .contact-checkbox-label {
   color: #c4b5fd;
 }
 
 /* ── Inputs ── */
-.contact-row-2 {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1.5rem;
-}
-
 .contact-input {
   position: relative;
 }
@@ -418,8 +448,8 @@
 .contact-input input,
 .contact-input textarea {
   width: 100%;
-  padding: 0.875rem 0 0.375rem 0;
-  font-size: 0.9375rem;
+  padding: 0.95rem 0 0.55rem 0;
+  font-size: 1rem;
   font-family: inherit;
   border: none;
   border-radius: 0;
@@ -427,6 +457,14 @@
   outline: none;
   resize: none;
   color: var(--color-text);
+  caret-color: #a78bfa;
+  line-height: 1.5;
+}
+
+.contact-input textarea {
+  min-height: 96px;
+  overflow: hidden;
+  display: block;
 }
 
 .contact-input input::placeholder,
@@ -466,56 +504,13 @@
   box-shadow: 0 3px 18px rgba(167, 139, 250, 0.07);
 }
 
-/* ── Bottom row (attachment + submit) ── */
-.contact-bottom-row {
+/* ── Submit section (hero stack: button on top, fine print below) ── */
+.contact-submit-section {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
+  flex-direction: column;
+  align-items: flex-start;
   gap: 1rem;
-  flex-wrap: wrap;
   padding: 2rem 0 0.5rem;
-  margin-top: 0;
-  border: none;
-  border-top: 1px solid var(--color-border);
-  background: transparent;
-  border-radius: 0;
-}
-
-.contact-attachment {
-  cursor: pointer;
-}
-
-.contact-attachment input {
-  position: absolute;
-  opacity: 0;
-  pointer-events: none;
-}
-
-.contact-attachment-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  font-size: 0.8125rem;
-  color: var(--color-text-secondary);
-  opacity: 0.55;
-  transition:
-    color 0.3s ease,
-    opacity 0.3s ease;
-}
-
-.contact-attachment-btn svg {
-  width: 15px;
-  height: 15px;
-}
-
-.contact-attachment:hover .contact-attachment-btn {
-  color: var(--color-text);
-  opacity: 1;
-}
-
-/* ── Submit button ── */
-.contact-submit {
-  flex-shrink: 0;
 }
 
 @keyframes btn-shimmer {
@@ -535,9 +530,10 @@
 .btn-cta-submit {
   display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
-  padding: 0.875rem 2rem;
-  font-size: 0.875rem;
+  justify-content: center;
+  gap: 0.6rem;
+  padding: 1rem 2.25rem;
+  font-size: 0.9375rem;
   font-weight: 600;
   font-family: inherit;
   border: 1px solid rgba(248, 248, 248, 0.88);
@@ -549,8 +545,13 @@
   overflow: hidden;
   transition:
     box-shadow 0.35s ease,
-    border-color 0.35s ease;
+    border-color 0.35s ease,
+    transform 0.35s var(--ease-out-expo);
   letter-spacing: 0.02em;
+}
+
+.btn-cta-submit:not(:disabled):hover {
+  transform: translateY(-1px);
 }
 
 .btn-cta-submit:disabled {
@@ -601,6 +602,41 @@
 
 .btn-cta-submit:not(:disabled):hover svg {
   transform: translateX(4px);
+}
+
+/* WhatsApp variant: hero size, green hover signal */
+.btn-cta-whatsapp {
+  min-width: 280px;
+  padding: 1.1rem 2.4rem;
+  font-size: 0.95rem;
+}
+
+.btn-cta-whatsapp svg {
+  width: 18px;
+  height: 18px;
+}
+
+.btn-cta-whatsapp:not(:disabled):hover {
+  border-color: rgba(37, 211, 102, 0.55);
+  box-shadow:
+    0 0 32px rgba(37, 211, 102, 0.3),
+    0 0 0 5px rgba(37, 211, 102, 0.07),
+    0 8px 28px rgba(0, 0, 0, 0.28);
+}
+
+.btn-cta-whatsapp:not(:disabled):hover svg {
+  transform: scale(1.08);
+}
+
+/* Handoff note below submit */
+.contact-handoff-note {
+  font-size: 0.7625rem;
+  color: var(--color-text-secondary);
+  opacity: 0.5;
+  line-height: 1.6;
+  max-width: 360px;
+  margin: 0;
+  letter-spacing: 0.005em;
 }
 
 /* ── Success state ── */
@@ -682,6 +718,44 @@
   font-size: 1rem;
   color: var(--color-text-secondary);
   opacity: 0.7;
+  max-width: 440px;
+}
+
+/* Retry / manual-open WhatsApp link on success */
+.contact-wa-retry {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  margin-top: 1.75rem;
+  padding: 0.7rem 1.5rem;
+  border-radius: 100px;
+  border: 1px solid rgba(37, 211, 102, 0.4);
+  background: rgba(37, 211, 102, 0.06);
+  color: var(--color-text);
+  text-decoration: none;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  transition:
+    border-color 0.3s ease,
+    background 0.3s ease,
+    box-shadow 0.35s ease,
+    transform 0.35s var(--ease-out-expo);
+}
+
+.contact-wa-retry svg {
+  width: 14px;
+  height: 14px;
+  color: rgba(37, 211, 102, 0.95);
+}
+
+.contact-wa-retry:hover {
+  border-color: rgba(37, 211, 102, 0.7);
+  background: rgba(37, 211, 102, 0.12);
+  transform: translateY(-1px);
+  box-shadow:
+    0 0 18px rgba(37, 211, 102, 0.22),
+    0 0 0 4px rgba(37, 211, 102, 0.05);
 }
 
 /* ── Responsive ── */
@@ -701,75 +775,96 @@
     display: none;
   }
 
-  /* Mobile brand bar */
+  /* Mobile brand bar with safe-area handling */
   .contact-mobile-brand {
     display: flex;
     align-items: center;
-    gap: 0.625rem;
+    gap: 0.7rem;
     position: fixed;
     top: 0;
     left: 0;
     right: 0;
-    padding: 1.125rem 1.25rem 1rem;
-    background: rgba(12, 7, 21, 0.96);
-    backdrop-filter: blur(14px);
-    -webkit-backdrop-filter: blur(14px);
+    padding: calc(1rem + env(safe-area-inset-top)) 1.5rem 0.95rem;
+    background: rgba(12, 7, 21, 0.94);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
     border-bottom: 1px solid var(--color-border);
     z-index: 1002;
   }
 
   .contact-mobile-logo {
-    width: 28px;
+    width: 30px;
     height: auto;
     object-fit: contain;
-    filter: drop-shadow(0 0 8px rgba(167, 139, 250, 0.22));
+    filter: drop-shadow(0 0 10px rgba(167, 139, 250, 0.28));
   }
 
   .contact-mobile-brand-name {
-    font-size: 0.75rem;
-    color: var(--color-text-secondary);
-    letter-spacing: 0.04em;
-    opacity: 0.65;
+    font-size: 0.78rem;
+    color: var(--color-text);
+    letter-spacing: 0.05em;
+    opacity: 0.85;
+    font-weight: 500;
   }
 
-  /* Push close button above mobile brand */
+  /* Push close button above mobile brand, respect notch */
   .contact-close {
-    top: 0.85rem;
+    top: calc(0.65rem + env(safe-area-inset-top));
     right: 1.25rem;
     z-index: 1003;
   }
 
   .contact-scroll {
-    padding: 5.25rem 1.25rem 4rem;
+    padding:
+      calc(5.5rem + env(safe-area-inset-top))
+      1.5rem
+      calc(3.5rem + env(safe-area-inset-bottom));
   }
 
   .contact-section {
-    padding: 1.5rem 0;
+    padding: 1.6rem 0;
   }
 
-  .contact-row-2 {
-    grid-template-columns: 1fr;
+  /* Submit area on mobile: full-width button, ample touch target */
+  .contact-submit-section {
+    align-items: stretch;
+    padding-top: 1.75rem;
+    gap: 1rem;
   }
 
-  .contact-bottom-row {
-    flex-direction: column;
-    align-items: flex-start;
-    padding-top: 1.5rem;
-    gap: 1.25rem;
+  .contact-submit-section .btn-cta-whatsapp {
+    width: 100%;
+    min-width: 0;
+    padding: 1.15rem 1.5rem;
+  }
+
+  .contact-handoff-note {
+    text-align: center;
+    max-width: none;
   }
 }
 
 @media (max-width: 480px) {
   .contact-title {
-    font-size: clamp(1.75rem, 8vw, 2.5rem);
+    font-size: clamp(2rem, 9vw, 2.75rem);
+    letter-spacing: -0.04em;
   }
 
   .contact-subtitle {
-    font-size: 0.875rem;
+    font-size: 0.9rem;
+    margin-top: 0.875rem;
   }
 
-  .btn-cta-submit {
-    width: 100%;
-    justify-content: center;
+  .contact-eyebrow {
+    font-size: 0.6rem;
+    letter-spacing: 0.2em;
+  }
+
+  .contact-checkboxes {
+    gap: 0.45rem;
+  }
+
+  .contact-checkbox-box {
+    padding: 0.6rem 1.1rem;
   }
 }
