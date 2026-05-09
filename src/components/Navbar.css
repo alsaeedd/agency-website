@@ -91,7 +91,7 @@
   cursor: pointer;
   padding: 0.5rem 1.25rem;
   border-radius: 100px;
-  font-family: inherit;
+  font-family: var(--font-cta);
   letter-spacing: 0.01em;
   transition:
     opacity 0.3s ease,
@@ -201,7 +201,7 @@
   border-radius: 8px;
   cursor: pointer;
   transition: opacity 0.3s ease;
-  font-family: inherit;
+  font-family: var(--font-cta);
   text-align: center;
 }
 

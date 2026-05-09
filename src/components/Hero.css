@@ -210,7 +210,7 @@
   color: #ffffff;
   font-size: 1.1rem;
   font-weight: 600;
-  font-family: inherit;
+  font-family: var(--font-cta);
   cursor: pointer;
   opacity: 0;
   overflow: hidden;
