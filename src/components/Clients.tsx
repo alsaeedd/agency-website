@@ -21,7 +21,7 @@ const logos: Logo[] = [
   { name: "Golden Touch",    src: "/assets/goldentouch.png",                                                           className: "logo-goldentouch" },
   { name: "Palm & Plate",    src: "/assets/palmnplate.png",                                                            className: "logo-palmnplate",    href: "https://www.palmandplate.com" },
   { name: "EarningSync",     src: "/assets/earningsync.png",                                                           className: "logo-earningsync",   href: "https://www.earningsync.com" },
-  { name: "CustomPC",        src: "/assets/custompc.png",                                                              className: "logo-custompc" },
+  { name: "CustomPC",        src: "/assets/custompc.png",                                                              className: "logo-custompc",      href: "https://www.custompcbh.com" },
 ];
 
 const track = [...logos, ...logos];
@@ -30,7 +30,7 @@ export default function Clients() {
   const trackRef = useRef<HTMLDivElement>(null);
   const [ready, setReady] = useState(false);
 
-  // Wait for all images to load before measuring — with a safety timeout so a
+  // Wait for all images to load before measuring - with a safety timeout so a
   // single slow/blocked asset (or a never-firing lazy-load) can't strand the
   // track at opacity: 0 forever.
   useEffect(() => {

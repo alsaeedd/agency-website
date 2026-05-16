@@ -2,7 +2,7 @@
 .hero-brain {
   position: relative;
   width: 100%;
-  /* 100svh = "small viewport height" — stable height even when the mobile
+  /* 100svh = "small viewport height" - stable height even when the mobile
      address bar is visible. Older browsers fall back to 100vh (declared first). */
   height: 100vh;
   height: 100svh;
@@ -10,7 +10,7 @@
   overflow: hidden;
 }
 
-/* Spline scene — full bleed, cover entire section on every device */
+/* Spline scene - full bleed, cover entire section on every device */
 .hero-spline-wrap {
   position: absolute;
   inset: 0;
@@ -34,7 +34,7 @@
   object-position: center center !important;
 }
 
-/* Suspense placeholder while Spline lazy-chunk loads — same dark backdrop as
+/* Suspense placeholder while Spline lazy-chunk loads - same dark backdrop as
    the hero so there's no flash. No animation/blur; just a solid layer. */
 .hero-spline-fallback {
   position: absolute;
@@ -43,7 +43,7 @@
     radial-gradient(ellipse at 50% 60%, #1a1233 0%, #050516 70%, #030308 100%);
 }
 
-/* Kill Spline watermark — anchor links only, scoped to container */
+/* Kill Spline watermark - anchor links only, scoped to container */
 .hero-spline-wrap a[href*="spline.design"] {
   display: none !important;
   opacity: 0 !important;
@@ -51,7 +51,7 @@
   pointer-events: none !important;
 }
 
-/* Corner cover — solid block over watermark position */
+/* Corner cover - solid block over watermark position */
 .hero-spline-wrap::after {
   content: "";
   position: absolute;
@@ -69,7 +69,7 @@
   pointer-events: none;
 }
 
-/* Dark overlay — fades on scroll (GPU opacity, not filter) */
+/* Dark overlay - fades on scroll (GPU opacity, not filter) */
 .hero-dark-overlay {
   position: absolute;
   inset: 0;
@@ -79,7 +79,7 @@
   will-change: opacity;
 }
 
-/* Glow overlay — intensifies on scroll */
+/* Glow overlay - intensifies on scroll */
 .hero-glow-overlay {
   position: absolute;
   inset: 0;
@@ -96,7 +96,7 @@
   will-change: opacity;
 }
 
-/* Purple overlay — ignites in second half of scroll */
+/* Purple overlay - ignites in second half of scroll */
 .hero-gold-overlay {
   position: absolute;
   inset: 0;
@@ -158,7 +158,7 @@
 
 .label-tr { top: 7rem; right: 2.5rem; transform-origin: right center; }
 
-/* ===== Headline — above brain ===== */
+/* ===== Headline - above brain ===== */
 .hero-top-content {
   position: absolute;
   top: 17%;
@@ -186,7 +186,7 @@
   will-change: transform, opacity;
 }
 
-/* ===== CTA — below brain ===== */
+/* ===== CTA - below brain ===== */
 .hero-bottom-content {
   position: absolute;
   bottom: 13%;
@@ -273,7 +273,7 @@
 /* Desktop scene is used here (see Hero.tsx), so layout mirrors desktop but   */
 /* compressed vertically.                                                      */
 @media (orientation: landscape) and (max-height: 500px) {
-  /* Label — top-right corner, compact spacing */
+  /* Label - top-right corner, compact spacing */
   .label-tr {
     top: 3.5rem; right: 1.5rem;
     left: auto; width: auto; margin-inline: 0;
@@ -282,7 +282,7 @@
     display: flex !important;
   }
 
-  /* Headline — compact top for short viewport */
+  /* Headline - compact top for short viewport */
   .hero-top-content { top: 17%; padding: 0 3rem; }
   .hero-brain-title {
     font-size: clamp(1.1rem, 3vw, 1.65rem);
@@ -298,7 +298,7 @@
 
 /* Tablet / large phone ≤768px */
 @media (max-width: 768px) {
-  /* Top label — centered below headline, mobile only */
+  /* Top label - centered below headline, mobile only */
   .label-tr {
     top: 23%;
     left: 0;
@@ -310,7 +310,7 @@
     transform-origin: center center;
   }
 
-  /* Headline — top: 14% clears navbar on all phones incl. y:-36 scroll offset */
+  /* Headline - top: 14% clears navbar on all phones incl. y:-36 scroll offset */
   .hero-top-content { top: 14%; padding: 0 1.75rem; }
   .hero-brain-title {
     font-size: clamp(1.35rem, 5vw, 2rem);
@@ -344,7 +344,7 @@
     gap: 0.55rem;
   }
 
-  /* Top label — centered below headline, mobile only */
+  /* Top label - centered below headline, mobile only */
   .label-tr {
     top: 24%;
     left: 0;

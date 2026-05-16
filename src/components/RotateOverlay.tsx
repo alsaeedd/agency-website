@@ -58,7 +58,7 @@ export default function RotateOverlay() {
             <rect x="8" y="5" width="8" height="1.5" rx="0.75" fill="currentColor" />
             <circle cx="12" cy="34.5" r="1.5" fill="currentColor" />
           </svg>
-          {/* Circular rotation arrows — direction-agnostic */}
+          {/* Circular rotation arrows - direction-agnostic */}
           <svg className="ro-arrow-svg" viewBox="0 0 24 24" fill="none">
             <path d="M12 2a10 10 0 1 0 10 10" stroke="currentColor"
               strokeWidth="2" strokeLinecap="round"/>

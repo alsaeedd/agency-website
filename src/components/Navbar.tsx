@@ -23,7 +23,7 @@ export default function Navbar({ onContactClick, scrollToSection }: NavbarProps)
   useEffect(() => {
     if (!navRef.current) return;
 
-    // Start hidden — only appears when user scrolls
+    // Start hidden - only appears when user scrolls
     gsap.set(navRef.current, { yPercent: -100, opacity: 0 });
 
     let visible = false;

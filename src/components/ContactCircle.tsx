@@ -12,7 +12,7 @@ export default function ContactCircle({ onClick }: ContactCircleProps) {
   useEffect(() => {
     if (!circleRef.current) return;
 
-    // Start hidden — appears when corner labels pop up (progress ~0.15 of the hero timeline)
+    // Start hidden - appears when corner labels pop up (progress ~0.15 of the hero timeline)
     // Timeline spans 2.5×vh, so labels appear at ~0.375×vh scroll
     gsap.set(circleRef.current, { scale: 0.5, opacity: 0 });
 

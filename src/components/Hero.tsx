@@ -5,7 +5,7 @@ import type { Application, SPEObject } from "@splinetool/runtime";
 import bhFlag from "../../assets/bh.png";
 import "./Hero.css";
 
-// Spline is ~2 MB of JS + a remote scene fetch — lazy-load it so the rest of the
+// Spline is ~2 MB of JS + a remote scene fetch - lazy-load it so the rest of the
 // page can hydrate before this blocks. The placeholder fills the same space so
 // no layout shift when the canvas mounts.
 const Spline = lazy(() => import("@splinetool/react-spline"));
@@ -54,7 +54,7 @@ export default function Hero({ onContactClick, isContactOpen }: HeroProps) {
 
     const app = spline as any;
 
-    // Cap pixel ratio — saves GPU on retina without visible quality loss
+    // Cap pixel ratio - saves GPU on retina without visible quality loss
     const renderer = app._renderer || app.renderer || app.webgl?.renderer || app._context?.renderer;
     if (renderer?.setPixelRatio) renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 

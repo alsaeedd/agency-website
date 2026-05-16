@@ -88,7 +88,7 @@
 /* ===== Lava Lamp Background Blobs ===== */
 /* Soft edges baked into the radial-gradient stops instead of `filter: blur(...)`,
    so the browser composites a static layer and only animates `translate3d`.
-   No `scale()` either — scaling a filtered/gradient layer forces re-rasterization. */
+   No `scale()` either - scaling a filtered/gradient layer forces re-rasterization. */
 .bg-blobs {
   position: fixed;
   inset: 0;
@@ -157,7 +157,7 @@
   animation: blobFloat3 46s ease-in-out infinite;
 }
 
-/* Translate-only animations — no scale, no filter, GPU-cheap */
+/* Translate-only animations - no scale, no filter, GPU-cheap */
 @keyframes blobFloat1 {
   0%, 100% { transform: translate3d(0, 0, 0); }
   33%      { transform: translate3d(4vw, -5vh, 0); }
@@ -176,7 +176,7 @@
 }
 
 /* Disable the blob animation entirely on lower-power devices and when the user
-   prefers reduced motion. Layer is still painted, just static — saves ~all of
+   prefers reduced motion. Layer is still painted, just static - saves ~all of
    the per-frame cost for these huge fixed-position elements. */
 @media (prefers-reduced-motion: reduce) {
   .bg-blob { animation: none; }

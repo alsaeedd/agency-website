@@ -171,12 +171,13 @@
   transform: translateY(-2px) scale(1.18);
 }
 
-/* Hover transforms for scaled logos — preserve their base scale */
+/* Hover transforms for scaled logos - preserve their base scale */
 .logo-citibank.is-linked:hover img      { transform: translateY(-2px) scale(1.46); }
 .logo-credimax.is-linked:hover img      { transform: translateY(-2px) scale(1.36); }
 .logo-kaakbsemsom.is-linked:hover img   { transform: translateY(-2px) scale(0.88); }
 .logo-knightsgate.is-linked:hover img   { transform: translateY(-2px) scale(1.0);  }
 .logo-yellowsports.is-linked:hover img  { transform: translateY(-2px) scale(0.96); }
+.logo-custompc.is-linked:hover img      { transform: translateY(-2px) scale(1.0);  }
 
 @media (max-width: 640px) {
   .clients-track { gap: 4.5rem; }

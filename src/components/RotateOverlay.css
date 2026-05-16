@@ -9,7 +9,7 @@
   align-items: center;
   justify-content: center;
   gap: 1.5rem;
-  /* Start invisible — JS adds .ro-visible to fade in, removes it to fade out */
+  /* Start invisible - JS adds .ro-visible to fade in, removes it to fade out */
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.55s cubic-bezier(0.4, 0, 0.2, 1);
@@ -55,7 +55,7 @@
   border: 1.5px solid transparent;
 }
 
-/* Outer ring — blue, slow clockwise */
+/* Outer ring - blue, slow clockwise */
 .ro-ring-1 {
   width: 190px;
   height: 190px;
@@ -65,7 +65,7 @@
   animation: ro-spin 3.2s linear infinite;
 }
 
-/* Middle ring — purple, faster counter-clockwise */
+/* Middle ring - purple, faster counter-clockwise */
 .ro-ring-2 {
   width: 148px;
   height: 148px;
@@ -75,7 +75,7 @@
   animation: ro-spin 2s linear infinite reverse;
 }
 
-/* Inner ring — teal, fast clockwise */
+/* Inner ring - teal, fast clockwise */
 .ro-ring-3 {
   width: 106px;
   height: 106px;

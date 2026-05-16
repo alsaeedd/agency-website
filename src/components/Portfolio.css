@@ -18,7 +18,7 @@
 
 .portfolio-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(2, 1fr);
   gap: 1.75rem;
 }
 
@@ -66,7 +66,7 @@
   will-change: transform;
 }
 
-/* Static highlight — single linear gradient, no cursor tracking, no color-mix */
+/* Static highlight - single linear gradient, no cursor tracking, no color-mix */
 .portfolio-card-preview::before {
   content: "";
   position: absolute;
@@ -112,6 +112,7 @@
   padding: 0.75rem 1rem;
   border-radius: 12px;
 }
+.card-custompc      .portfolio-card-preview-logo { max-height: 140px; }
 
 /* ── "View case study" cue badge ── */
 .portfolio-card-cue {
@@ -291,7 +292,7 @@
   min-height: 100%;
 }
 
-/* ── Hero — solid brand background, no color-mix, no blurred glow ── */
+/* ── Hero - solid brand background, no color-mix, no blurred glow ── */
 .pd-hero {
   padding: 5.5rem 4rem 4.5rem;
   background: var(--pd-brand, #2B1B3D);
@@ -708,4 +709,5 @@
   .card-palmnplate    .portfolio-card-preview-logo { max-height: 110px; }
   .card-knightsgate   .portfolio-card-preview-logo { max-height: 100px; }
   .card-kaakbsemsom   .portfolio-card-preview-logo { max-height: 84px; }
+  .card-custompc      .portfolio-card-preview-logo { max-height: 118px; }
 }

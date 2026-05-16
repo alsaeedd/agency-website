@@ -22,28 +22,27 @@ const projects: Project[] = [
     tag: "Hospitality · Membership",
     title: "Members-Only Dining Platform",
     subtitle:
-      "A complete membership experience — tiered access, event registrations, and a polished member portal — built end-to-end on a custom monorepo.",
+      "A members-only dining platform with tiered access, event registrations, and a portal that feels like the brand it serves.",
     color: "#A8302E",
     accent: "#F5E8D5",
     cardClass: "card-palmnplate",
     client: { name: "Palm & Plate", logo: "/assets/palmnplate-red.png" },
     liveUrl: "https://www.palmandplate.com",
     highlights: [
-      "Tiered membership system with passwordless email-OTP auth and JWT refresh rotation.",
-      "Event registration & venue booking flows with real-time availability and BHD pricing.",
-      "Custom member portal — TanStack Router/Query + shadcn/ui — for tickets, profile, and renewals.",
-      "Admin & API services on NestJS + Prisma + PostgreSQL, deployed via GitHub Actions to a managed VPS with PM2.",
-      "Mobile-first, warm and editorial — the brand's hospitality identity carried into every micro-interaction.",
+      "A complete membership platform - from a hospitality concept on paper to a working business that members across Bahrain actually use.",
+      "Tiered memberships with a frictionless join flow - no passwords to remember, no clunky forms in the way.",
+      "Live event registration with real-time availability - book a seat in seconds, ticket lands in your inbox.",
+      "A warm, editorial member portal where everyone manages their profile, tickets, and renewals from one home.",
     ],
     outcome:
-      "A production-grade membership platform that turned a hospitality concept into a working business — used by members across Bahrain.",
+      "A live membership business running quietly in the background while members enjoy the warm hospitality experience up front.",
   },
   {
     id: 2,
     tag: "Capital · Partnerships",
-    title: "Boutique Advisory — Web Presence",
+    title: "Boutique Advisory - Web Presence",
     subtitle:
-      "A premium marketing site for a Bahrain-based capital and partnerships advisory firm — positioning, leadership, and contact in one polished surface.",
+      "A premium marketing site for a Bahrain-based capital and partnerships advisory firm - positioning, leadership, and contact in one polished surface.",
     color: "#0B2545",
     accent: "#C9A24A",
     cardClass: "card-knightsgate",
@@ -51,20 +50,20 @@ const projects: Project[] = [
     liveUrl: "https://www.kgadvisers.com",
     highlights: [
       "Cinematic hero with custom motion treatment, paired with a refined editorial type system.",
-      "Modular sections — services, leadership, why KGA, closing CTA — easy to extend as the firm grows.",
+      "Modular sections - services, leadership, why KGA, closing CTA - easy to extend as the firm grows.",
       "Editorial leadership profiles with on-brand photography and tasteful entrance choreography.",
-      "Built for credibility — fast, accessible, SEO-clean, and fully indexable from day one.",
+      "Built for credibility - fast, accessible, SEO-clean, and fully indexable from day one.",
       "Knights Gate's deep navy + gold palette carried through every component and hover state.",
     ],
     outcome:
-      "A boutique advisory presence that signals trust before the first conversation — and converts visitors into qualified inbound calls.",
+      "A boutique advisory presence that signals trust before the first conversation - and converts visitors into qualified inbound calls.",
   },
   {
     id: 3,
     tag: "Restaurant · F&B",
-    title: "Bilingual Landing Page — Cinematic Motion",
+    title: "Bilingual Landing Page - Cinematic Motion",
     subtitle:
-      "A bilingual (Arabic + English) landing site with award-caliber motion design — built to make customers say “wow” the moment the page loads.",
+      "A bilingual (Arabic + English) landing site with award-caliber motion design - built to make customers say “wow” the moment the page loads.",
     color: "#0D4D2B",
     accent: "#C9942A",
     cardClass: "card-kaakbsemsom",
@@ -72,13 +71,33 @@ const projects: Project[] = [
     liveUrl: "https://www.kaakbsemsom.com",
     highlights: [
       "Bilingual EN/AR experience with full RTL support and a smooth language toggle.",
-      "GSAP ScrollTrigger + Framer Motion choreography — parallax, pinned sections, scrubbed timelines.",
+      "GSAP ScrollTrigger + Framer Motion choreography - parallax, pinned sections, scrubbed timelines.",
       "Lenis-powered smooth scrolling at 120 fps, tuned to feel buttery on mobile too.",
-      "Brand-true green & gold palette — typography, gradients, and micro-interactions all on-brand.",
-      "Static export deployed to shared hosting — zero infra cost, zero downtime, instant TTFB.",
+      "Brand-true green & gold palette - typography, gradients, and micro-interactions all on-brand.",
+      "Static export deployed to shared hosting - zero infra cost, zero downtime, instant TTFB.",
     ],
     outcome:
-      "A landing page that feels less like a website and more like a brand experience — exactly what the founders asked for.",
+      "A landing page that feels less like a website and more like a brand experience - exactly what the founders asked for.",
+  },
+  {
+    id: 4,
+    tag: "E-commerce · Custom Builds",
+    title: "Full UI Revamp, 3D PC Builder, Cinematic Hero",
+    subtitle:
+      "A complete revamp for Bahrain's custom PC shop - a cinematic landing hero, a 3D PC builder, and a storefront that finally looks the part.",
+    color: "#0E0A1A",
+    accent: "#FF2E88",
+    cardClass: "card-custompc",
+    client: { name: "CustomPC Bahrain", logo: "/assets/custompc.png" },
+    liveUrl: "https://www.custompcbh.com",
+    highlights: [
+      "A cinematic landing hero with custom motion design - the kind of opening sequence that stops the scroll the moment the page loads.",
+      "A 3D PC Builder where customers configure their dream rig piece by piece, with live pricing and a clean, guided flow.",
+      "A full visual revamp - from a tired template look to a premium, brand-true storefront that looks like the products it sells.",
+      "A faster, more confident shop - the new site reads as a destination, not just a checkout.",
+    ],
+    outcome:
+      "A storefront that finally matches the team - and a PC Builder that turns \"I might buy something\" into \"I'm building this exact rig.\"",
   },
 ];
 
