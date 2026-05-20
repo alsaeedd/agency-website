@@ -13,7 +13,6 @@ import CTA from "./components/CTA";
 import Footer from "./components/Footer";
 import ContactCircle from "./components/ContactCircle";
 import Contact from "./components/Contact";
-import RotateOverlay from "./components/RotateOverlay";
 
 function App() {
   const lenisRef = useRef<Lenis | null>(null);
@@ -63,7 +62,7 @@ function App() {
       <ContactCircle onClick={openContact} />
       <Navbar onContactClick={openContact} scrollToSection={scrollToSection} />
       <main>
-        <Hero onContactClick={openContact} isContactOpen={isContactOpen} />
+        <Hero onContactClick={openContact} />
         <Services />
         <About />
         <Clients />
@@ -72,7 +71,6 @@ function App() {
       </main>
       <Footer onContactClick={openContact} />
       <Contact isOpen={isContactOpen} onClose={() => setIsContactOpen(false)} />
-      <RotateOverlay />
     </>
   );
 }

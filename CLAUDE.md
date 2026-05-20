@@ -10,6 +10,7 @@ Single page app with anchor navigation, deployed on Netlify. Live domain: **ralt
 - Lenis (smooth scroll)
 - Pure vanilla CSS + CSS variables (no Tailwind/framework)
 - Contact submits via WhatsApp deep link (`wa.me`) — no backend, no Netlify forms
+- **No 3D / WebGL** — Spline + three.js were retired for performance (May 2026). Hero is typography-led with CSS aurora gradients.
 
 ## Installed Frontend Design Tools
 All of the following are installed and should be used for any frontend work:
@@ -18,9 +19,6 @@ All of the following are installed and should be used for any frontend work:
 |---|---|---|
 | **GSAP + ScrollTrigger** | Scroll animations, timelines, entrance effects | `import gsap from 'gsap'; import ScrollTrigger from 'gsap/ScrollTrigger'` |
 | **Lenis** | Smooth scroll | Already configured in App.tsx |
-| **@splinetool/react-spline** | 3D scenes/objects | `import Spline from '@splinetool/react-spline'` |
-| **@splinetool/runtime** | Spline runtime (loaded by react-spline) | Auto |
-| **Three.js + @types/three** | Custom 3D, WebGL | `import * as THREE from 'three'` |
 | **21st.dev** | Pre-built animated components | Browse https://21st.dev — no install needed |
 | **shadcn MCP** | Component search & examples via MCP | Auto-available via `.mcp.json` |
 
@@ -39,14 +37,15 @@ The full design intent — users, brand personality, aesthetic direction, princi
 
 - **Audience**: GCC founders/SMBs **and** enterprise procurement, equally weighted. Warmth + clarity is the baseline; depth is optional.
 - **Voice**: confident, founder-led, technically serious. First-person, conversational. Avoid corporate passive voice and hype words.
-- **Aesthetic**: dark-only, purple/violet atmosphere with Spline 3D centerpiece. Visual density is at ceiling — new work should add personality (copy, micro-interactions), not more polish (glows, gradients, scroll-pins).
+- **Aesthetic**: dark-only, purple/violet atmosphere, typography-led hero (Spline brain retired May 2026 for performance). Visual density is at ceiling — new work should add personality (copy, micro-interactions), not more polish (glows, gradients, scroll-pins).
 - **Lean warm**: when pulled between elite-futuristic and warm-founder-led, lean warm.
 - **Anti-aesthetics to kill**: generic dev-shop templates, AI-slop landing pages, corporate consulting sterility, crypto/web3 hype.
 - **Accessibility**: not currently addressed; explicitly deprioritized for now.
 
 ## Frontend Work Rules
 - **Always use GSAP** for entrance animations (ScrollTrigger, `once: true`, start `top 70-90%`)
-- **Use Spline** for any 3D elements or visual flair
+- **No 3D / WebGL** — Spline and three.js were retired for performance. Use CSS gradients, masks, and GSAP-driven 2D motion instead.
+- **No pinned/scrubbed scroll** in new work — fire-once entrance triggers only. Pin/scrub was the dominant lag source and is no longer in the codebase.
 - **Check 21st.dev first** before building components from scratch
 - **No Framer Motion** — GSAP is the animation standard here
 - Stagger: 0.1–0.15s between animated items
