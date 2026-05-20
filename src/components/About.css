@@ -1,72 +1,237 @@
-/* ===== About ===== */
+/* ===== About - giant ghost wordmark + ambient depth ===== */
 .about {
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 6rem 0 6.5rem;
+  padding: 7rem 0 0;
   scroll-margin-top: 72px;
   position: relative;
   background: var(--color-surface);
   color: var(--color-text);
-  border-top: 1px solid var(--color-border);
-  border-bottom: 1px solid var(--color-border);
   overflow: hidden;
+  isolation: isolate;
 }
 
-/* Ambient radial glow */
-.about::before {
+/* Generous blend INTO the surrounding bg at top + bottom (no hard cut) */
+.about::before,
+.about::after {
   content: "";
   position: absolute;
+  left: 0;
+  right: 0;
+  height: 220px;
+  pointer-events: none;
+  z-index: 3;
+}
+.about::before {
+  top: 0;
+  background: linear-gradient(180deg, var(--color-bg) 0%, transparent 100%);
+}
+.about::after {
+  bottom: 0;
+  background: linear-gradient(0deg, var(--color-bg) 0%, transparent 100%);
+}
+
+/* Ambient atmosphere */
+.about-ambient {
+  position: absolute;
   inset: 0;
-  background: radial-gradient(
-    ellipse 70% 70% at 50% 50%,
-    rgba(110, 30, 220, 0.1) 0%,
-    rgba(60, 10, 140, 0.05) 50%,
-    transparent 70%
-  );
+  z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(
+      55% 50% at 50% 50%,
+      rgba(180, 100, 255, 0.16) 0%,
+      rgba(100, 30, 200, 0.06) 45%,
+      transparent 70%
+    );
+}
+
+/* Twinkling star field - 36 tiny dots placed via box-shadow */
+.about-stars {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
   pointer-events: none;
 }
 
-/* ── Inner wrapper ── */
+.about-stars::before,
+.about-stars::after {
+  content: "";
+  position: absolute;
+  width: 2px;
+  height: 2px;
+  border-radius: 50%;
+  background: transparent;
+}
+
+.about-stars::before {
+  top: 15%;
+  left: 12%;
+  box-shadow:
+    50px 80px 0 rgba(255, 255, 255, 0.6),
+    160px 40px 0 rgba(167, 139, 250, 0.5),
+    220px 150px 0 rgba(255, 255, 255, 0.4),
+    340px 90px 0 rgba(167, 139, 250, 0.7),
+    420px 210px 0 rgba(74, 245, 192, 0.55),
+    520px 60px 0 rgba(255, 255, 255, 0.5),
+    640px 180px 0 rgba(167, 139, 250, 0.45),
+    760px 110px 0 rgba(255, 255, 255, 0.6),
+    880px 250px 0 rgba(167, 139, 250, 0.5),
+    1000px 70px 0 rgba(255, 255, 255, 0.55),
+    1120px 190px 0 rgba(74, 245, 192, 0.4),
+    1240px 130px 0 rgba(167, 139, 250, 0.55),
+    80px 280px 0 rgba(255, 255, 255, 0.45),
+    260px 340px 0 rgba(167, 139, 250, 0.6),
+    440px 420px 0 rgba(255, 255, 255, 0.5),
+    620px 380px 0 rgba(167, 139, 250, 0.5),
+    820px 460px 0 rgba(74, 245, 192, 0.4),
+    1020px 410px 0 rgba(255, 255, 255, 0.55);
+  animation: aboutStarsTwinkle 4s ease-in-out infinite alternate;
+}
+
+.about-stars::after {
+  top: 45%;
+  right: 8%;
+  box-shadow:
+    -90px 30px 0 rgba(167, 139, 250, 0.5),
+    -210px 110px 0 rgba(255, 255, 255, 0.55),
+    -330px 60px 0 rgba(167, 139, 250, 0.45),
+    -460px 200px 0 rgba(74, 245, 192, 0.4),
+    -580px 80px 0 rgba(255, 255, 255, 0.6),
+    -720px 230px 0 rgba(167, 139, 250, 0.5),
+    -840px 150px 0 rgba(255, 255, 255, 0.5),
+    -120px 320px 0 rgba(167, 139, 250, 0.55),
+    -300px 280px 0 rgba(255, 255, 255, 0.5),
+    -500px 380px 0 rgba(74, 245, 192, 0.45),
+    -700px 350px 0 rgba(167, 139, 250, 0.5),
+    -900px 420px 0 rgba(255, 255, 255, 0.55);
+  animation: aboutStarsTwinkle 3.4s ease-in-out infinite alternate-reverse;
+}
+
+@keyframes aboutStarsTwinkle {
+  0%, 100% { opacity: 0.7; }
+  50%      { opacity: 1; }
+}
+
+/* Rotating concentric text rings - "mission seal" centerpiece */
+.about-rings {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: min(82vw, 780px);
+  height: min(82vw, 780px);
+  transform: translate(-50%, -50%);
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.85;
+  filter: drop-shadow(0 0 28px rgba(167, 139, 250, 0.25));
+}
+
+.about-ring {
+  transform-origin: 400px 400px;
+}
+
+.about-ring-outer {
+  animation: aboutRingSpin 70s linear infinite;
+}
+
+.about-ring-inner {
+  animation: aboutRingSpin 50s linear infinite reverse;
+}
+
+@keyframes aboutRingSpin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+@media (max-width: 768px) {
+  .about-rings { width: min(96vw, 540px); height: min(96vw, 540px); opacity: 0.75; }
+  .about-stars::before,
+  .about-stars::after { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .about-ring-outer,
+  .about-ring-inner,
+  .about-stars::before,
+  .about-stars::after { animation: none; }
+}
+
+/* ── Inner ── */
 .about-inner {
   position: relative;
+  z-index: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
   text-align: center;
-  gap: 2.25rem;
-  padding: 3rem 2rem;
-  max-width: 700px;
+  gap: 1.5rem;
+  padding: 2rem 1.5rem;
+  max-width: 720px;
   width: 100%;
 }
 
-/* ── Logo ── */
+/* Eyebrow */
+.about-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.7rem;
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--color-text-secondary);
+  opacity: 0.75;
+  margin-bottom: 0.5rem;
+}
+
+.about-eyebrow-num {
+  font-variant-numeric: tabular-nums;
+  color: rgba(167, 139, 250, 1);
+  text-shadow: 0 0 12px rgba(167, 139, 250, 0.45);
+}
+
+.about-eyebrow-divider {
+  display: inline-block;
+  width: 28px;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    rgba(167, 139, 250, 0.7),
+    rgba(167, 139, 250, 0.1)
+  );
+}
+
+/* Logo */
 .about-logo-wrap {
   position: relative;
-  width: 130px;
-  height: 130px;
+  width: 110px;
+  height: 110px;
   display: flex;
   align-items: center;
   justify-content: center;
+  margin-top: 0.25rem;
 }
 
 .about-logo-glow {
   position: absolute;
-  inset: -30%;
+  inset: -35%;
   background: radial-gradient(
     circle,
-    rgba(180, 80, 255, 0.25) 0%,
-    rgba(100, 30, 200, 0.1) 45%,
+    rgba(180, 80, 255, 0.32) 0%,
+    rgba(100, 30, 200, 0.12) 45%,
     transparent 70%
   );
   border-radius: 50%;
-  animation: about-glow-pulse 3s ease-in-out infinite alternate;
+  animation: about-glow-pulse 3.4s ease-in-out infinite alternate;
   pointer-events: none;
 }
 
 @keyframes about-glow-pulse {
-  from { opacity: 0.5; transform: scale(0.95); }
-  to   { opacity: 1;   transform: scale(1.05); }
+  from { opacity: 0.55; transform: scale(0.94); }
+  to   { opacity: 1;    transform: scale(1.08); }
 }
 
 .about-logo-img {
@@ -75,86 +240,251 @@
   object-fit: contain;
   position: relative;
   z-index: 1;
-  filter: drop-shadow(0 0 18px rgba(180, 80, 255, 0.35));
+  filter: drop-shadow(0 0 22px rgba(180, 80, 255, 0.45));
 }
 
-/* ── Heading ── */
+/* Heading */
 .about-heading {
-  font-size: clamp(2.5rem, 6vw, 4.5rem);
+  font-size: clamp(2.8rem, 7vw, 5rem);
   font-weight: 500;
-  letter-spacing: -0.03em;
-  color: var(--color-text);
-  line-height: 1.05;
-  margin: 0;
+  letter-spacing: -0.035em;
+  color: #ffffff;
+  line-height: 1.02;
+  margin: 0.5rem 0 0;
   text-shadow:
-    0 0 40px rgba(180, 80, 255, 0.15),
-    0 0 80px rgba(100, 30, 200, 0.08);
+    0 0 48px rgba(180, 80, 255, 0.4),
+    0 0 96px rgba(100, 30, 200, 0.18),
+    0 2px 20px rgba(0, 0, 0, 0.6);
 }
 
-/* ── Body paragraphs ── */
+/* Word mask for staggered reveal */
+.about-word {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: bottom;
+  padding: 0.14em 0;
+  margin: -0.14em 0;
+}
+
+.about-word-in {
+  display: inline-block;
+  will-change: transform, opacity;
+}
+
+/* Body paragraphs - no box, just dark text-shadow to lift the words off the bg */
 .about-body {
   display: flex;
   flex-direction: column;
-  gap: 0.85rem;
-  max-width: 520px;
+  gap: 1rem;
+  max-width: 560px;
+  margin-top: 0.5rem;
 }
 
 .about-para {
-  font-size: clamp(0.875rem, 1.4vw, 1rem);
-  line-height: 1.85;
-  color: var(--color-text-secondary);
+  font-size: clamp(0.95rem, 1.35vw, 1.05rem);
+  line-height: 1.75;
+  color: #ffffff;
   margin: 0;
+  opacity: 0.94;
+  text-shadow:
+    0 1px 12px rgba(0, 0, 0, 0.85),
+    0 0 30px rgba(0, 0, 0, 0.55);
+}
+
+.about-para:last-child {
+  font-weight: 600;
+  color: #ffffff;
+  opacity: 1;
+  font-size: clamp(1.1rem, 1.6vw, 1.25rem);
+  margin-top: 0.5rem;
+  letter-spacing: -0.012em;
+  text-shadow:
+    0 0 24px rgba(167, 139, 250, 0.5),
+    0 2px 16px rgba(0, 0, 0, 0.85);
 }
 
 /* ── Mobile ── */
 @media (max-width: 768px) {
-  .about {
-    align-items: flex-start;
-    padding: 4rem 0 4.5rem;
-  }
-
-  .about-inner {
-    padding-top: 1rem;
-    padding-bottom: 1rem;
-    gap: 1.75rem;
-  }
-
-  .about-logo-wrap {
-    width: 100px;
-    height: 100px;
-  }
-
-  .about-heading {
-    letter-spacing: -0.02em;
-  }
-
-  .about-body {
-    gap: 0.75rem;
-  }
-
-  .about-para {
-    font-size: 0.875rem;
-  }
+  .about { padding: 4.5rem 0 5rem; }
+  .about-inner { padding: 1rem 1.25rem; gap: 1.25rem; }
+  .about-ghost { font-size: clamp(10rem, 45vw, 18rem); }
+  .about-logo-wrap { width: 90px; height: 90px; }
+  .about-heading { font-size: clamp(2rem, 9vw, 3rem); margin-top: 0.25rem; }
+  .about-body { gap: 0.85rem; }
+  .about-para { font-size: 0.9rem; line-height: 1.7; }
+  .about-para:last-child { font-size: 1rem; }
+  .about-eyebrow { font-size: 0.55rem; letter-spacing: 0.22em; }
 }
 
 @media (max-width: 480px) {
-  .about-inner {
-    padding-top: 1.5rem;
-    gap: 1.5rem;
-  }
+  .about { padding: 3.5rem 0 4rem; }
+  .about-inner { padding: 0.5rem 1rem; gap: 1rem; }
+  .about-ghost { font-size: clamp(8rem, 60vw, 14rem); opacity: 0.85; }
+  .about-logo-wrap { width: 76px; height: 76px; }
+  .about-heading { font-size: clamp(1.7rem, 10vw, 2.4rem); letter-spacing: -0.03em; }
+  .about-para { font-size: 0.85rem; line-height: 1.65; }
+  .about-para:last-child { font-size: 0.92rem; }
+  .about-eyebrow { font-size: 0.5rem; letter-spacing: 0.18em; }
+  .about-eyebrow-divider { width: 22px; }
+}
 
-  .about-logo-wrap {
-    width: 82px;
-    height: 82px;
-  }
+@media (prefers-reduced-motion: reduce) {
+  .about-logo-glow { animation: none; }
+}
 
-  .about-heading {
-    font-size: clamp(1.8rem, 8vw, 2.75rem);
-    letter-spacing: -0.02em;
-  }
+/* ── ContainerScroll inner content ── */
+.about > .cscroll-shell {
+  width: 100%;
+  margin-top: -2rem;
+}
 
-  .about-para {
-    font-size: 0.8125rem;
-    line-height: 1.75;
-  }
+.about-cscroll-title {
+  padding: 0 1.5rem;
+}
+
+.about-cscroll-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.45rem 0.95rem;
+  margin-bottom: 1.5rem;
+  border: 1px solid var(--color-border);
+  border-radius: 100px;
+  background: rgba(22, 14, 39, 0.55);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  font-size: 0.62rem;
+  font-weight: 500;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--color-text-secondary);
+}
+
+.about-cscroll-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #4af5c0;
+  box-shadow: 0 0 10px #4af5c0;
+  animation: about-glow-pulse 2s ease-in-out infinite alternate;
+}
+
+.about-cscroll-headline {
+  font-size: clamp(2rem, 6vw, 4.5rem);
+  font-weight: 600;
+  line-height: 1.04;
+  letter-spacing: -0.04em;
+  color: var(--color-text);
+  margin: 0 auto;
+  max-width: 18ch;
+}
+
+.about-cscroll-headline-accent {
+  background: linear-gradient(135deg, #d6c2ff 0%, #a78bfa 45%, #7c5aff 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+
+.about-cscroll-stage {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(
+      ellipse 60% 50% at 50% 50%,
+      rgba(124, 90, 255, 0.22) 0%,
+      transparent 70%
+    ),
+    linear-gradient(180deg, #160e27 0%, #0c0715 100%);
+  overflow: hidden;
+}
+
+.about-cscroll-crest {
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  width: 50%;
+  max-width: 260px;
+  height: auto;
+  opacity: 0.15;
+  filter: drop-shadow(0 0 40px rgba(167, 139, 250, 0.4));
+  animation: about-cscroll-crest-spin 80s linear infinite;
+}
+
+@keyframes about-cscroll-crest-spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+.about-cscroll-overlay {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 2.5rem 2rem;
+  text-align: center;
+  max-width: 720px;
+}
+
+.about-cscroll-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 0.4rem 0.85rem;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 100px;
+  background: rgba(12, 7, 21, 0.5);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  font-size: 0.6rem;
+  font-weight: 600;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: #ffffff;
+  opacity: 1;
+}
+
+.about-cscroll-tag-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #4af5c0;
+  box-shadow: 0 0 10px #4af5c0;
+}
+
+.about-cscroll-quote {
+  font-size: clamp(1.45rem, 2.6vw, 2.4rem);
+  font-weight: 600;
+  line-height: 1.32;
+  letter-spacing: -0.025em;
+  color: #ffffff;
+  margin: 0;
+  max-width: 24ch;
+  text-shadow:
+    0 0 60px rgba(0, 0, 0, 0.65),
+    0 0 30px rgba(167, 139, 250, 0.35),
+    0 2px 12px rgba(0, 0, 0, 0.5);
+}
+
+.about-cscroll-sig {
+  font-size: 0.78rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #ffffff;
+  opacity: 0.92;
+  font-weight: 600;
+  margin-top: 0.25rem;
+}
+
+@media (max-width: 768px) {
+  .about-cscroll-overlay { padding: 1.5rem; gap: 1rem; }
+  .about-cscroll-quote { font-size: 1.1rem; max-width: 24ch; }
+  .about-cscroll-sig { font-size: 0.65rem; }
+  .about-cscroll-crest { width: 50%; max-width: 220px; }
 }

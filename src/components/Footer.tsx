@@ -12,10 +12,10 @@ export default function Footer({ onContactClick }: FooterProps) {
       <div className="container">
         <div className="footer-body">
           <p className="footer-brand-desc">
-            We are a forward-thinking digital agency specializing in custom
-            software development and intelligent AI automation workflows. We
-            transform businesses through cutting-edge technology and innovative
-            solutions tailored to your unique needs.
+            A small, founder-led team in Bahrain shipping custom software and
+            AI automations for GCC founders, SMBs, and enterprise teams. We
+            build your solution as if we literally owned it - and most of the
+            time, you can WhatsApp us before lunch.
           </p>
 
           <div className="footer-col">

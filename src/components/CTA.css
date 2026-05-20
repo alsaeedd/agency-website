@@ -1,30 +1,126 @@
-/* ===== CTA ===== */
+/* ===== CTA - cursor-follow ambient + huge "TELL US" gesture ===== */
 .cta {
+  --cmx: 50%;
+  --cmy: 30%;
   background: var(--color-surface);
   color: var(--color-text);
-  padding: 6rem 0;
+  padding: 7.5rem 0 8rem;
   position: relative;
   overflow: hidden;
-  border-top: 1px solid var(--color-border);
+  isolation: isolate;
 }
 
-.cta-bg {
+/* Cursor-follow giant glow */
+.cta::before {
+  content: "";
   position: absolute;
-  inset: 0;
+  inset: -20%;
+  background: radial-gradient(
+    700px circle at var(--cmx) var(--cmy),
+    rgba(180, 100, 255, 0.25) 0%,
+    rgba(124, 90, 255, 0.1) 35%,
+    transparent 65%
+  );
+  filter: blur(20px);
+  pointer-events: none;
+  z-index: 0;
+  transition: opacity 0.4s ease;
+}
+
+/* Static atmospheric ambient */
+.cta::after {
+  content: "";
+  position: absolute;
+  top: -10%;
+  left: 50%;
+  width: 900px;
+  height: 900px;
+  transform: translateX(-50%);
+  background: radial-gradient(
+    circle,
+    rgba(180, 100, 255, 0.14) 0%,
+    rgba(124, 90, 255, 0.06) 40%,
+    transparent 70%
+  );
+  filter: blur(40px);
+  pointer-events: none;
   z-index: 0;
 }
 
-.cta-bg video {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  opacity: 0.15;
+/* Generous top blend - fades from the previous bg INTO the surface */
+.cta-blend-top {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 240px;
+  background: linear-gradient(180deg, var(--color-bg) 0%, transparent 100%);
+  pointer-events: none;
+  z-index: 4;
+}
+
+/* Animated WebGL gradient layer - kept dim + masked so text contrast holds */
+.cta-gradient-wrap {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.55;
+  mix-blend-mode: screen;
+  mask-image: radial-gradient(
+    ellipse 80% 70% at 50% 50%,
+    transparent 0%,
+    rgba(0, 0, 0, 0.5) 35%,
+    #000 70%
+  );
+  -webkit-mask-image: radial-gradient(
+    ellipse 80% 70% at 50% 50%,
+    transparent 0%,
+    rgba(0, 0, 0, 0.5) 35%,
+    #000 70%
+  );
 }
 
 .cta-content {
   position: relative;
-  z-index: 1;
+  z-index: 2;
   text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Eyebrow with live pulse */
+.cta-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.5rem 0.95rem;
+  margin-bottom: 1.75rem;
+  border: 1px solid var(--color-border);
+  border-radius: 100px;
+  background: rgba(22, 14, 39, 0.55);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+  font-size: 0.68rem;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--color-text-secondary);
+}
+
+.cta-eyebrow-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #4af5c0;
+  box-shadow: 0 0 12px #4af5c0;
+  animation: ctaEyebrowPulse 1.8s ease-in-out infinite;
+}
+
+@keyframes ctaEyebrowPulse {
+  0%, 100% { opacity: 1; box-shadow: 0 0 12px #4af5c0; }
+  50%      { opacity: 0.45; box-shadow: 0 0 4px #4af5c0; }
 }
 
 .cta-title {
@@ -32,7 +128,7 @@
   font-weight: 500;
   line-height: 1.04;
   letter-spacing: -0.04em;
-  margin-bottom: 2.5rem;
+  margin: 0 0 1.5rem;
 }
 
 .cta-title .word {
@@ -47,48 +143,92 @@
   padding: 0.2em;
 }
 
+.cta-sub {
+  font-size: clamp(0.95rem, 1.3vw, 1.0625rem);
+  line-height: 1.6;
+  color: var(--color-text-secondary);
+  margin: 0 auto 2.75rem;
+  max-width: 480px;
+  opacity: 0.75;
+}
+
 .btn-cta-large {
+  --mx: 50%;
+  --my: 50%;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 1rem 3.25rem;
-  font-size: 1rem;
-  font-weight: 500;
-  letter-spacing: 0.06em;
+  gap: 0.7rem;
+  padding: 1.15rem 2.6rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
   font-family: var(--font-cta);
-  border: 1px solid var(--color-border-active);
+  border: 1px solid rgba(248, 248, 248, 0.92);
   border-radius: 100px;
-  color: var(--color-text);
+  background:
+    radial-gradient(
+      200px circle at var(--mx) var(--my),
+      rgba(167, 139, 250, 0.4) 0%,
+      transparent 60%
+    ),
+    var(--color-text);
+  color: var(--color-inverse);
   position: relative;
   overflow: hidden;
+  cursor: pointer;
   transition:
-    color 0.4s var(--ease-out-expo),
-    border-color 0.4s var(--ease-out-expo),
-    box-shadow 0.4s ease;
+    transform 0.35s var(--ease-out-expo),
+    box-shadow 0.35s ease,
+    border-color 0.35s ease;
 }
 
-.btn-cta-large span {
+.btn-cta-large-label {
   position: relative;
   z-index: 1;
 }
 
-.btn-cta-large::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: var(--color-text);
-  transform: scaleX(0);
-  transform-origin: right;
-  transition: transform 0.4s var(--ease-out-expo);
+.btn-cta-large-arrow {
+  position: relative;
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  transition: transform 0.3s var(--ease-out-expo);
+}
+
+.btn-cta-large-arrow svg {
+  width: 100%;
+  height: 100%;
 }
 
 .btn-cta-large:hover {
-  color: var(--color-inverse);
-  border-color: var(--color-text);
-  box-shadow: 0 0 40px rgba(232, 232, 232, 0.1);
+  transform: translateY(-2px);
+  border-color: rgba(167, 139, 250, 0.6);
+  box-shadow:
+    0 14px 44px rgba(124, 90, 255, 0.32),
+    0 0 0 5px rgba(167, 139, 250, 0.08);
 }
 
-.btn-cta-large:hover::before {
-  transform: scaleX(1);
-  transform-origin: left;
+.btn-cta-large:hover .btn-cta-large-arrow {
+  transform: translateX(4px);
+}
+
+@media (max-width: 768px) {
+  .cta { padding: 5rem 0 5.5rem; }
+  .cta-eyebrow { font-size: 0.6rem; padding: 0.4rem 0.8rem; }
+  .cta-sub { margin-bottom: 2rem; max-width: 380px; }
+  .btn-cta-large {
+    width: 100%;
+    max-width: 320px;
+    padding: 1.05rem 2rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .cta { padding: 4rem 0 4.5rem; }
+  .cta-title { font-size: clamp(2.25rem, 13vw, 4rem); }
+  .cta-sub { font-size: 0.9rem; }
 }

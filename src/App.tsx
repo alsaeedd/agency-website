@@ -13,6 +13,8 @@ import CTA from "./components/CTA";
 import Footer from "./components/Footer";
 import ContactCircle from "./components/ContactCircle";
 import Contact from "./components/Contact";
+import CursorFollower from "./components/CursorFollower";
+import ScrollVideoSection from "./components/sections/ScrollVideoSection";
 
 function App() {
   const lenisRef = useRef<Lenis | null>(null);
@@ -59,6 +61,7 @@ function App() {
         <div className="bg-blob bg-blob-2" />
         <div className="bg-blob bg-blob-3" />
       </div>
+      <CursorFollower />
       <ContactCircle onClick={openContact} />
       <Navbar onContactClick={openContact} scrollToSection={scrollToSection} />
       <main>
@@ -66,7 +69,42 @@ function App() {
         <Services />
         <About />
         <Clients />
+        <ScrollVideoSection
+          waveGrid
+          waveVariant="b"
+          ornament="spark"
+          eyebrow={<><span className="sv-dot" /> The work behind the work</>}
+          title={
+            <>
+              Built like it's{" "}
+              <span className="scroll-video-title-accent">ours.</span>
+            </>
+          }
+          subtitle={
+            <>
+              Every project gets the same care - weekly check-ins on real
+              channels, code you can actually read, and zero black boxes.
+            </>
+          }
+        />
         <Portfolio />
+        <ScrollVideoSection
+          waveGrid
+          ornament="ring"
+          eyebrow={<><span className="sv-dot" /> What it feels like to work with us</>}
+          title={
+            <>
+              Less ceremony, <br />
+              <span className="scroll-video-title-accent">more shipping.</span>
+            </>
+          }
+          subtitle={
+            <>
+              No slide decks, no kick-off theater. We scope it on WhatsApp, ship
+              the first slice in a week, and iterate from there.
+            </>
+          }
+        />
         <CTA onContactClick={openContact} />
       </main>
       <Footer onContactClick={openContact} />

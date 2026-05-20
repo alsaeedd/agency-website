@@ -1,8 +1,8 @@
 /* ===== Contact Circle ===== */
 .contact-circle {
   position: fixed;
-  bottom: 2rem;
-  right: 2rem;
+  bottom: max(2rem, calc(1.25rem + env(safe-area-inset-bottom)));
+  right: max(2rem, calc(1.25rem + env(safe-area-inset-right)));
   width: 108px;
   height: 108px;
   z-index: 90;
@@ -65,7 +65,14 @@
   .contact-circle {
     width: 72px;
     height: 72px;
-    bottom: 1rem;
-    right: 1rem;
+    bottom: max(1rem, calc(0.5rem + env(safe-area-inset-bottom)));
+    right: max(1rem, calc(0.5rem + env(safe-area-inset-right)));
+  }
+}
+
+@media (max-width: 480px) {
+  .contact-circle {
+    width: 64px;
+    height: 64px;
   }
 }

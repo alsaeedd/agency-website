@@ -358,10 +358,45 @@ export default function Portfolio() {
     }
   };
 
+  // 3D tilt + light reflection on portfolio cards
+  const handleCardMove = (e: React.MouseEvent<HTMLElement>) => {
+    if (matchMedia("(pointer: coarse)").matches) return;
+    const el = e.currentTarget;
+    const r = el.getBoundingClientRect();
+    const px = (e.clientX - r.left) / r.width;
+    const py = (e.clientY - r.top) / r.height;
+    const rx = (py - 0.5) * -10;
+    const ry = (px - 0.5) * 12;
+    el.style.setProperty("--rx", `${rx}deg`);
+    el.style.setProperty("--ry", `${ry}deg`);
+    el.style.setProperty("--mx", `${px * 100}%`);
+    el.style.setProperty("--my", `${py * 100}%`);
+  };
+
+  const handleCardLeave = (e: React.MouseEvent<HTMLElement>) => {
+    const el = e.currentTarget;
+    el.style.setProperty("--rx", `0deg`);
+    el.style.setProperty("--ry", `0deg`);
+  };
+
   return (
     <>
       <section className="portfolio" id="portfolio" ref={sectionRef}>
         <div className="container">
+          <div className="portfolio-section-header">
+            <span className="portfolio-section-eyebrow">
+              <span className="portfolio-section-eyebrow-num">04</span>
+              <span className="portfolio-section-eyebrow-divider" aria-hidden="true" />
+              <span>Selected work</span>
+            </span>
+            <h2 className="portfolio-section-heading">
+              Four projects.{" "}
+              <span className="portfolio-section-heading-soft">Four real businesses.</span>
+            </h2>
+            <p className="portfolio-section-intro">
+              Tap any card to drop into the case study. Or click the URL to see it live.
+            </p>
+          </div>
           <div className="portfolio-grid" ref={cardsRef}>
             {projects.map((project) => (
               <article
@@ -369,12 +404,18 @@ export default function Portfolio() {
                 className={`portfolio-card ${project.cardClass}`}
                 onClick={() => setActiveProject(project)}
                 onKeyDown={(e) => handleCardKeyDown(e, project)}
+                onMouseMove={handleCardMove}
+                onMouseLeave={handleCardLeave}
                 role="button"
                 tabIndex={0}
                 aria-label={`View case study: ${project.title}`}
                 style={{
                   ["--card-brand" as string]: project.color,
                   ["--card-accent" as string]: project.accent,
+                  ["--rx" as string]: "0deg",
+                  ["--ry" as string]: "0deg",
+                  ["--mx" as string]: "50%",
+                  ["--my" as string]: "50%",
                 }}
               >
                 <div className="portfolio-card-preview">

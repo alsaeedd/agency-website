@@ -528,6 +528,8 @@
 }
 
 .btn-cta-submit {
+  --mx: 50%;
+  --my: 50%;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -538,7 +540,13 @@
   font-family: var(--font-cta);
   border: 1px solid rgba(248, 248, 248, 0.88);
   border-radius: 100px;
-  background: var(--color-text);
+  background:
+    radial-gradient(
+      200px circle at var(--mx) var(--my),
+      rgba(37, 211, 102, 0.28) 0%,
+      transparent 60%
+    ),
+    var(--color-text);
   color: var(--color-inverse);
   cursor: pointer;
   position: relative;

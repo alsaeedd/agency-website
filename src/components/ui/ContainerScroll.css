@@ -1,0 +1,79 @@
+/* ContainerScroll - 3D-perspective scroll-driven card reveal */
+.cscroll-shell {
+  height: 56rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  padding: 1.5rem 1rem;
+}
+
+@media (min-width: 768px) {
+  .cscroll-shell {
+    height: 70rem;
+    padding: 4rem 3rem;
+  }
+}
+
+.cscroll-stage {
+  padding: 1.5rem 0;
+  width: 100%;
+  position: relative;
+  perspective: 1200px;
+}
+
+@media (min-width: 768px) {
+  .cscroll-stage {
+    padding: 5rem 0;
+  }
+}
+
+.cscroll-header {
+  max-width: 64rem;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.cscroll-card {
+  max-width: 64rem;
+  margin: 3rem auto 0;
+  height: 28rem;
+  width: 100%;
+  border: 2px solid rgba(167, 139, 250, 0.18);
+  padding: 0.5rem;
+  background: rgba(22, 14, 39, 0.85);
+  border-radius: 28px;
+  box-shadow:
+    0 0 0 1px rgba(167, 139, 250, 0.06) inset,
+    0 9px 20px rgba(0, 0, 0, 0.3),
+    0 37px 37px rgba(0, 0, 0, 0.26),
+    0 84px 50px rgba(0, 0, 0, 0.15),
+    0 149px 60px rgba(0, 0, 0, 0.04);
+}
+
+@media (min-width: 768px) {
+  .cscroll-card {
+    height: 36rem;
+    margin-top: 5rem;
+    padding: 1rem;
+  }
+}
+
+.cscroll-card-inner {
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+  border-radius: 18px;
+  background: #0c0715;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@media (min-width: 768px) {
+  .cscroll-card-inner {
+    border-radius: 22px;
+    padding: 1rem;
+  }
+}
