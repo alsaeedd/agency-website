@@ -44,19 +44,22 @@ export const ContainerScroll: React.FC<ContainerScrollProps> = ({
       (typeof matchMedia === "function" &&
         matchMedia("(pointer: coarse)").matches);
 
-    // High-tier: dramatic 22deg roll, buttery scrub. Weak tier: subtler 12deg
-    // tilt with no scrub smoothing — still tilts, just snappy.
-    const startRotate = isWeak ? 12 : 22;
-    const startScale = isWeak ? 0.96 : 1.04;
-    const headerTravel = isWeak ? -40 : -80;
+    // Bigger, more dramatic tilt arc. High-tier rolls from 42deg down to
+    // 0 over the scroll range — really feels like the card is laying back
+    // and standing up. Weak tier gets a still-substantial 28deg so it's
+    // visibly the same gesture on mobile.
+    const startRotate = isWeak ? 28 : 42;
+    const startScale = isWeak ? 0.92 : 1.06;
+    const headerTravel = isWeak ? -50 : -100;
     const scrubValue = isWeak ? true : 0.6;
 
     const ctx = gsap.context(() => {
-      // Initial state
+      // Initial state. Lower transformPerspective (900) = stronger 3D
+      // foreshortening so the high startRotate reads dramatically.
       gsap.set(cardRef.current, {
         rotateX: startRotate,
         scale: startScale,
-        transformPerspective: 1200,
+        transformPerspective: 900,
         transformOrigin: "center top",
       });
       gsap.set(headerRef.current, { y: 0 });
