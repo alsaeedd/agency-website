@@ -8,6 +8,10 @@
   position: relative;
   overflow: hidden;
   isolation: isolate;
+  /* Below-fold render skip: same trick as .portfolio / .footer — skip paint
+     until near viewport. */
+  content-visibility: auto;
+  contain-intrinsic-size: auto 880px;
 }
 
 /* Cursor-follow giant glow */

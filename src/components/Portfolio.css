@@ -6,6 +6,11 @@
   background: var(--color-bg);
   overflow: hidden;
   isolation: isolate;
+  /* Below-fold render skip: browser doesn't paint until in range of the
+     viewport. `auto` intrinsic size remembers the rendered height so the
+     scrollbar never jumps. Big win on low-end Android. */
+  content-visibility: auto;
+  contain-intrinsic-size: auto 1400px;
 }
 
 /* Ambient violet glow - LEAKS into section ABOVE (top: -40%) */

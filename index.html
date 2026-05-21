@@ -7,9 +7,15 @@
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <link rel="manifest" href="/site.webmanifest" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <meta name="theme-color" content="#0c0715" />
     <title>RAL Technologies</title>
+
+    <!-- Speed up the WhatsApp deep-link click + DNS resolution. wa.me is the
+         primary contact CTA; pre-warming the connection knocks ~150–300ms off
+         the first tap on mobile. -->
+    <link rel="preconnect" href="https://wa.me" crossorigin />
+    <link rel="dns-prefetch" href="https://wa.me" />
     <meta
       name="description"
       content="RAL Technologies builds custom software and AI automations that scale revenue for GCC founders, SMBs, and enterprises. Bahrain-based, founder-led."
@@ -74,8 +80,179 @@
         "url": "https://raltech.dev/"
       }
     </script>
+    <!-- ─── Intro preloader (Lusion-tier) ─────────────────────────────────
+         Paints on the FIRST frame (inline HTML + critical CSS) before any
+         Vite chunk loads. The wordmark stroke-draws via CSS, the percentage
+         counter and final exit are driven by React (src/components/Preloader.tsx)
+         once fonts + window.load + the hero WebGL "ready" event resolve.
+         Total budget: ≤1.8s on a typical session, with a 4.5s safety dismissal
+         so a stalled signal never traps the user. ──────────────────────── -->
+    <style>
+      html, body { background: #0c0715; }
+      body { margin: 0; }
+      #ral-preloader {
+        position: fixed;
+        inset: 0;
+        z-index: 9999;
+        display: grid;
+        place-items: center;
+        background:
+          radial-gradient(
+            ellipse at 50% 30%,
+            rgba(124, 90, 255, 0.18) 0%,
+            transparent 55%
+          ),
+          radial-gradient(
+            ellipse at 50% 90%,
+            rgba(180, 80, 255, 0.16) 0%,
+            transparent 60%
+          ),
+          #0c0715;
+        color: #f8f8f8;
+        overflow: hidden;
+        isolation: isolate;
+        /* Geometric exit: the entire overlay clips up to nothing, leaving the
+           page beneath visible. clip-path is GPU-cheap and reads as a single
+           confident gesture instead of a fade-out. */
+        clip-path: inset(0 0 0 0);
+        will-change: clip-path;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI",
+          Inter, system-ui, sans-serif;
+      }
+      #ral-preloader[data-state="leaving"] { pointer-events: none; }
+      #ral-preloader.is-removed { display: none; }
+
+      /* Aurora atmosphere behind the wordmark — purely decorative drift. */
+      .ralpl-aurora {
+        position: absolute;
+        inset: -20%;
+        z-index: -1;
+        background:
+          radial-gradient(60% 50% at 30% 40%, rgba(167, 139, 250, 0.20), transparent 70%),
+          radial-gradient(50% 40% at 70% 60%, rgba(74, 245, 192, 0.08), transparent 75%);
+        filter: blur(50px);
+        animation: ralpl-drift 8s ease-in-out infinite alternate;
+        pointer-events: none;
+        opacity: 0;
+        animation:
+          ralpl-aurora-in 0.6s cubic-bezier(0.19, 1, 0.22, 1) forwards,
+          ralpl-drift 9s ease-in-out 0.6s infinite alternate;
+      }
+      @keyframes ralpl-aurora-in { to { opacity: 1; } }
+      @keyframes ralpl-drift {
+        0%   { transform: translate3d(-2%, -1%, 0) scale(1); }
+        100% { transform: translate3d( 2%,  1%, 0) scale(1.05); }
+      }
+
+      /* Centered stage: wordmark above, meta row below. */
+      .ralpl-stage {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 1.5rem;
+      }
+
+      /* SVG wordmark — stroke-drawn on mount, then filled when ready. */
+      .ralpl-mark {
+        width: clamp(180px, 38vw, 320px);
+        height: auto;
+        overflow: visible;
+        filter: drop-shadow(0 0 30px rgba(167, 139, 250, 0.18));
+      }
+      .ralpl-text {
+        font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display",
+          "Segoe UI", Inter, system-ui, sans-serif;
+        font-weight: 600;
+        letter-spacing: -0.04em;
+        stroke: url(#ralpl-grad);
+        stroke-width: 1.1;
+        stroke-linejoin: round;
+        fill: transparent;
+        paint-order: stroke;
+        stroke-dasharray: 600;
+        stroke-dashoffset: 600;
+        animation: ralpl-draw 1.5s cubic-bezier(0.65, 0, 0.35, 1) 0.15s forwards;
+        transition: fill 0.6s ease, stroke-opacity 0.5s ease;
+      }
+      @keyframes ralpl-draw {
+        to { stroke-dashoffset: 0; }
+      }
+      /* When the page signals ready, fill the wordmark with the gradient. */
+      #ral-preloader[data-state="ready"] .ralpl-text,
+      #ral-preloader[data-state="leaving"] .ralpl-text {
+        fill: url(#ralpl-grad);
+        stroke-opacity: 0;
+      }
+
+      /* Meta row: tagline + counter, justified across a thin line. */
+      .ralpl-meta {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1.25rem;
+        width: clamp(180px, 38vw, 320px);
+        font-size: 0.66rem;
+        font-weight: 500;
+        letter-spacing: 0.28em;
+        text-transform: uppercase;
+        color: rgba(209, 196, 233, 0.78);
+        opacity: 0;
+        transform: translateY(8px);
+        animation: ralpl-rise 0.7s cubic-bezier(0.19, 1, 0.22, 1) 0.45s forwards;
+        border-top: 1px solid rgba(209, 196, 233, 0.12);
+        padding-top: 0.85rem;
+      }
+      @keyframes ralpl-rise {
+        to { opacity: 1; transform: translateY(0); }
+      }
+      .ralpl-counter {
+        font-variant-numeric: tabular-nums;
+        display: inline-flex;
+        align-items: baseline;
+        gap: 0.12em;
+        color: #ffffff;
+      }
+      .ralpl-num { min-width: 1.6em; text-align: right; display: inline-block; }
+      .ralpl-pct { opacity: 0.5; }
+
+      /* Reduced motion: collapse animations to instant final state. */
+      @media (prefers-reduced-motion: reduce) {
+        .ralpl-text {
+          animation: none;
+          stroke-dashoffset: 0;
+          fill: url(#ralpl-grad);
+        }
+        .ralpl-meta,
+        .ralpl-aurora { animation: none; opacity: 1; transform: none; }
+      }
+    </style>
   </head>
   <body>
+    <div id="ral-preloader" data-state="loading" aria-hidden="true" role="presentation">
+      <div class="ralpl-aurora"></div>
+      <div class="ralpl-stage">
+        <svg class="ralpl-mark" viewBox="0 0 320 90" preserveAspectRatio="xMidYMid meet">
+          <defs>
+            <linearGradient id="ralpl-grad" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="#ffffff" />
+              <stop offset="50%" stop-color="#d6c2ff" />
+              <stop offset="100%" stop-color="#a78bfa" />
+            </linearGradient>
+          </defs>
+          <text class="ralpl-text"
+                x="160" y="72"
+                text-anchor="middle"
+                font-size="86">RAL</text>
+        </svg>
+        <div class="ralpl-meta">
+          <span class="ralpl-tagline">Technologies</span>
+          <span class="ralpl-counter">
+            <span class="ralpl-num">0</span><span class="ralpl-pct">%</span>
+          </span>
+        </div>
+      </div>
+    </div>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>

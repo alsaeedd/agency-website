@@ -580,10 +580,16 @@ html[data-tier="low"] .hero-particle:nth-child(n + 5) {
 /* Per-letter mask wrapper inside a word */
 .hero-letter {
   display: inline-block;
-  overflow: hidden;
+  /* `overflow: clip` + `overflow-clip-margin` is the modern way to mask the
+     entrance animation while LETTING descenders extend out the bottom. It's
+     supported everywhere now (Chrome 90+, Firefox 102+, Safari 16+ = 2026
+     universal). The 0.6em clip-margin gives any glyph — including the most
+     aggressive descenders at the largest clamp size — room to breathe. */
+  overflow: clip;
+  overflow-clip-margin: 0.6em;
   vertical-align: bottom;
-  padding: 0.16em 0;
-  margin: -0.16em 0;
+  padding: 0.2em 0 0.5em;
+  margin: -0.2em 0 -0.5em;
 }
 
 .hero-letter-in {
@@ -603,13 +609,24 @@ html[data-tier="low"] .hero-particle:nth-child(n + 5) {
   color: transparent;
 }
 
-/* Word cycler - the accent noun rotates every ~2.8s */
+/* Word cycler - the accent noun rotates every ~2.8s.
+   IMPORTANT: this is the OUTER mask wrapper (overflow:hidden) that contains
+   the rotating word. Its bottom padding must clear descenders ('g' in
+   'margins', 'p' in 'pipelines', etc.) AND any in-flight rise animation,
+   otherwise the descender visibly clips mid-cycle. 0.5em bottom is roughly
+   2.5× Inter's natural descender depth — comfortable margin at every clamp
+   font-size. The matching negative margin keeps surrounding spacing the same. */
 .hero-cycler {
   display: inline-block;
-  overflow: hidden;
+  /* Same modern clip trick as .hero-letter — keeps the word-rotation mask
+     while letting descenders ('g' in 'margins', 'p' in 'pipelines', 'q'
+     anywhere) extend out the bottom. 0.7em clip margin is generous enough
+     that even mid-cycle GSAP translations don't clip. */
+  overflow: clip;
+  overflow-clip-margin: 0.7em;
   vertical-align: bottom;
-  padding: 0.16em 0.05em;
-  margin: -0.16em -0.05em;
+  padding: 0.2em 0.05em 0.5em;
+  margin: -0.2em -0.05em -0.5em;
   position: relative;
 }
 

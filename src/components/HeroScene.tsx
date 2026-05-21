@@ -249,6 +249,7 @@ export default function HeroScene() {
     // ──────────────────────────────────────────
     let raf = 0;
     let lastTime = performance.now();
+    let firstRenderFired = false;
     const tmpVec = new THREE.Vector3();
     const linePosArr = new Float32Array(satellites.length * satellites.length * 6);
     const linePosBuffer = new THREE.BufferAttribute(linePosArr, 3);
@@ -349,6 +350,14 @@ export default function HeroScene() {
       constellation.geometry.setDrawRange(0, lineIndex * 2);
 
       renderer.render(scene, camera);
+
+      if (!firstRenderFired) {
+        firstRenderFired = true;
+        // Signal the preloader that the hero WebGL has rendered its first frame.
+        // The preloader holds the intro overlay open until this fires (or a
+        // safety timeout elapses), so the user never sees a blank/flashing hero.
+        window.dispatchEvent(new Event("ral:hero-ready"));
+      }
     };
 
     // Loop lifecycle — only run when tab-visible AND scrolled on screen.
