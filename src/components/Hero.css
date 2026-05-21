@@ -550,7 +550,11 @@ html[data-tier="low"] .hero-particle:nth-child(n + 5) {
   font-family: var(--font-family);
   font-size: clamp(2.6rem, 8vw, 7rem);
   font-weight: 600;
-  line-height: 1.02;
+  /* 1.15 (was 1.02) reserves natural descender room in the line-box so
+     'g', 'p', 'q', 'y' have breathing space below the baseline. With
+     1.02 the line-box was almost exactly cap-height, so any descender
+     visually crashed into the next line. */
+  line-height: 1.15;
   letter-spacing: -0.045em;
   color: #ffffff;
   margin: 0 auto 1.75rem;
@@ -580,16 +584,14 @@ html[data-tier="low"] .hero-particle:nth-child(n + 5) {
 /* Per-letter mask wrapper inside a word */
 .hero-letter {
   display: inline-block;
-  /* `overflow: clip` + `overflow-clip-margin` is the modern way to mask the
-     entrance animation while LETTING descenders extend out the bottom. It's
-     supported everywhere now (Chrome 90+, Firefox 102+, Safari 16+ = 2026
-     universal). The 0.6em clip-margin gives any glyph — including the most
-     aggressive descenders at the largest clamp size — room to breathe. */
+  /* `overflow: clip` + `overflow-clip-margin` — modern (2026 universal)
+     way to mask the entrance animation while letting glyphs (especially
+     descenders 'g', 'p', 'q', 'y') extend OUT of the mask box. */
   overflow: clip;
-  overflow-clip-margin: 0.6em;
+  overflow-clip-margin: 1em;
   vertical-align: bottom;
-  padding: 0.2em 0 0.5em;
-  margin: -0.2em 0 -0.5em;
+  padding: 0.2em 0 0.7em;
+  margin: -0.2em 0 -0.7em;
 }
 
 .hero-letter-in {
@@ -618,15 +620,18 @@ html[data-tier="low"] .hero-particle:nth-child(n + 5) {
    font-size. The matching negative margin keeps surrounding spacing the same. */
 .hero-cycler {
   display: inline-block;
-  /* Same modern clip trick as .hero-letter — keeps the word-rotation mask
-     while letting descenders ('g' in 'margins', 'p' in 'pipelines', 'q'
-     anywhere) extend out the bottom. 0.7em clip margin is generous enough
-     that even mid-cycle GSAP translations don't clip. */
+  /* Modern overflow:clip + overflow-clip-margin lets descenders extend OUT
+     of the mask box even though the mask is still active for the word-
+     rotation reveal. 1em clip-margin is intentionally huge so even the
+     mid-cycle GSAP translateY can't push a descender into a clipped zone. */
   overflow: clip;
-  overflow-clip-margin: 0.7em;
+  overflow-clip-margin: 1em;
   vertical-align: bottom;
-  padding: 0.2em 0.05em 0.5em;
-  margin: -0.2em -0.05em -0.5em;
+  /* 0.8em bottom padding extends the visible mask region itself well past
+     any glyph's descender depth. Matching negative margin keeps the layout
+     spacing identical to before. */
+  padding: 0.2em 0.05em 0.8em;
+  margin: -0.2em -0.05em -0.8em;
   position: relative;
 }
 
@@ -986,4 +991,59 @@ html[data-tier="low"] .hero-particle:nth-child(n + 5) {
   .hero-ticker-track,
   .hero-particle,
   .hero-scrollcue-line { animation: none; }
+}
+
+/* ─── Non-high-tier mobile/weak-device overrides ─────────────────────────
+   Anything inside `html:not([data-tier="high"])` runs on phones and on any
+   non-flagship device. The two MOST expensive things on mobile GPUs here:
+   (1) backdrop-filter on the BAHRAIN badge, which blurs the whole hero
+       backdrop every frame the hero is composited; and
+   (2) the 9+ `will-change` declarations that each spawn a compositor layer
+       — fine on desktop, catastrophic on memory-constrained Android.
+
+   We kill backdrop-filter and gate will-change to high-tier only. We ALSO
+   reduce the aurora blur radius on med (existing low-tier rule already
+   handled this) — 40px blur on a viewport-bleed layer is mobile suicide.
+*/
+
+/* Kill backdrop-filter on the BAHRAIN badge chip on non-high. */
+html:not([data-tier="high"]) .hero-label {
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+  background: rgba(22, 14, 39, 0.92);
+}
+
+/* Med-tier auroras need the same haircut as low — 40-45px blur is the
+   single biggest compositing cost in this section. */
+html[data-tier="med"] .hero-aurora,
+html[data-tier="med"] .hero-aurora-2 {
+  filter: blur(18px);
+  animation: none;
+}
+
+/* will-change is a compositor-layer hint. ONE layer is cheap; ten layers
+   blow GPU memory budgets on weak Android. Keep will-change only where
+   we're sure we need it (high-tier where the parallax actually runs). */
+html:not([data-tier="high"]) .hero-aurora,
+html:not([data-tier="high"]) .hero-aurora-2,
+html:not([data-tier="high"]) .hero-grid,
+html:not([data-tier="high"]) .hero-blob,
+html:not([data-tier="high"]) .hero-blob-1,
+html:not([data-tier="high"]) .hero-blob-2,
+html:not([data-tier="high"]) .hero-blob-3,
+html:not([data-tier="high"]) .hero-blob-4,
+html:not([data-tier="high"]) .hero-blob-5,
+html:not([data-tier="high"]) .hero-particle,
+html:not([data-tier="high"]) .hero-letter-in,
+html:not([data-tier="high"]) .hero-cycler-text,
+html:not([data-tier="high"]) .hero-ticker-track {
+  will-change: auto;
+}
+
+/* Cut the parallax response to zero on non-high so the aurora layer stops
+   re-rendering every pointermove. The transform itself stays on the GPU,
+   but reducing to identity removes constant repaints. */
+html:not([data-tier="high"]) .hero-aurora,
+html:not([data-tier="high"]) .hero-aurora-2 {
+  transform: none !important;
 }

@@ -34,11 +34,22 @@ export default function About() {
   useEffect(() => {
     if (!sectionRef.current) return;
 
+    // On mobile / weak tiers, kick the section entrance EARLIER and FASTER
+    // so it doesn't "take a while to pop up". Desktop keeps the slow
+    // cinematic timing because it has the perf budget for it.
+    const tier = document.documentElement.dataset.tier;
+    const isWeak =
+      tier === "low" ||
+      tier === "med" ||
+      (typeof matchMedia === "function" &&
+        matchMedia("(pointer: coarse)").matches);
+
     const ctx = gsap.context(() => {
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: sectionRef.current,
-          start: "top 75%",
+          // Fire earlier on mobile so users don't scroll past a blank section.
+          start: isWeak ? "top 92%" : "top 75%",
           once: true,
         },
       });
@@ -46,7 +57,7 @@ export default function About() {
       tl.from(ghostRef.current, {
         opacity: 0,
         scale: 0.92,
-        duration: 1.4,
+        duration: isWeak ? 0.7 : 1.4,
         ease: "expo.out",
       })
         .from(
@@ -55,32 +66,34 @@ export default function About() {
             opacity: 0,
             y: 24,
             scale: 0.92,
-            duration: 0.9,
+            duration: isWeak ? 0.55 : 0.9,
             ease: "expo.out",
           },
-          "-=1.1",
+          isWeak ? "-=0.55" : "-=1.1",
         )
         .from(
           ".about-heading .about-word-in",
           {
             yPercent: 110,
             opacity: 0,
-            duration: 0.9,
+            duration: isWeak ? 0.55 : 0.9,
             ease: "expo.out",
-            stagger: 0.06,
+            stagger: isWeak ? 0.035 : 0.06,
           },
-          "-=0.6",
+          isWeak ? "-=0.35" : "-=0.6",
         )
         .from(
           ".about-body .about-word-in",
           {
             yPercent: 110,
             opacity: 0,
-            duration: 0.7,
+            duration: isWeak ? 0.45 : 0.7,
             ease: "expo.out",
-            stagger: 0.012,
+            // Much tighter stagger on mobile — paragraphs would otherwise
+            // dribble in across ~2s and feel slow.
+            stagger: isWeak ? 0.005 : 0.012,
           },
-          "-=0.6",
+          isWeak ? "-=0.35" : "-=0.6",
         );
     }, sectionRef);
 

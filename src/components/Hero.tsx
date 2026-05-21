@@ -61,11 +61,26 @@ export default function Hero({ onContactClick }: HeroProps) {
   const gridRef = useRef<HTMLDivElement>(null);
   const titleRef = useRef<HTMLHeadingElement>(null);
 
+  // ── Adaptive perf gate ─────────────────────────────────────────────
+  // The `filter: blur(...)` keyframes below are gorgeous on a 4090, ugly on
+  // a $120 Android: each tweened blur(8px → 0) frame is a full-screen GPU
+  // re-rasterization. On non-high tiers we run the same animations with
+  // only opacity + translate — composited operations the GPU loves.
+  const heroPerf = (() => {
+    if (typeof document === "undefined") return { useBlur: true };
+    const tier = document.documentElement.dataset.tier;
+    const coarse =
+      typeof matchMedia === "function" &&
+      matchMedia("(pointer: coarse)").matches;
+    return { useBlur: tier === "high" && !coarse };
+  })();
+
   // Word cycler on the accent word (revenue → pipelines → margins → ...)
   useEffect(() => {
     let timeout: ReturnType<typeof setTimeout>;
     let interval: ReturnType<typeof setInterval>;
     let idx = 0;
+    const cyclerBlur = heroPerf.useBlur ? "blur(6px)" : "blur(0px)";
 
     const cycle = () => {
       const el = document.querySelector<HTMLElement>(".hero-cycler-text");
@@ -78,7 +93,7 @@ export default function Hero({ onContactClick }: HeroProps) {
         .to(el, {
           yPercent: -110,
           opacity: 0,
-          filter: "blur(6px)",
+          filter: cyclerBlur,
           duration: 0.42,
           ease: "expo.in",
         })
@@ -87,7 +102,7 @@ export default function Hero({ onContactClick }: HeroProps) {
         })
         .fromTo(
           el,
-          { yPercent: 110, opacity: 0, filter: "blur(6px)" },
+          { yPercent: 110, opacity: 0, filter: cyclerBlur },
           {
             yPercent: 0,
             opacity: 1,
@@ -116,30 +131,32 @@ export default function Hero({ onContactClick }: HeroProps) {
       );
       if (!letters) return;
 
+      const letterBlur = heroPerf.useBlur ? "blur(8px)" : "blur(0px)";
+
       gsap.fromTo(
         letters,
-        { yPercent: 130, opacity: 0, filter: "blur(8px)" },
+        { yPercent: 130, opacity: 0, filter: letterBlur },
         {
           yPercent: 0,
           opacity: 1,
           filter: "blur(0px)",
-          duration: 1.2,
+          duration: heroPerf.useBlur ? 1.2 : 0.8,
           ease: "expo.out",
-          stagger: 0.022,
+          stagger: heroPerf.useBlur ? 0.022 : 0.012,
           delay: 0.2,
         },
       );
 
       gsap.fromTo(
         "[data-hero-anim]",
-        { opacity: 0, y: 22, filter: "blur(8px)" },
+        { opacity: 0, y: 22, filter: letterBlur },
         {
           opacity: 1,
           y: 0,
           filter: "blur(0px)",
-          duration: 1,
+          duration: heroPerf.useBlur ? 1 : 0.7,
           ease: "expo.out",
-          stagger: 0.09,
+          stagger: heroPerf.useBlur ? 0.09 : 0.05,
           delay: 0.18,
         },
       );

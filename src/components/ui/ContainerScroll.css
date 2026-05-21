@@ -59,6 +59,38 @@
   }
 }
 
+/* ── LITE MODE (mobile / low+med tier) ─────────────────────────────
+   When ContainerScroll renders without the framer-motion scroll pipeline,
+   drop everything that costs the GPU per-frame: perspective, the heavy
+   stacked shadows, and the tall shell that pads above/below for the 3D
+   reveal range. The card just enters via a cheap CSS transition and sits
+   there. Capable desktops still get the full 3D choreography. */
+.cscroll-shell-lite {
+  height: auto;
+  min-height: auto;
+  padding: 1.5rem 1rem 2rem;
+}
+.cscroll-stage-lite {
+  padding: 0;
+  perspective: none;
+}
+.cscroll-card-lite {
+  margin-top: 1.5rem;
+  height: 24rem;
+  box-shadow:
+    0 0 0 1px rgba(167, 139, 250, 0.06) inset,
+    0 12px 30px rgba(0, 0, 0, 0.45);
+  opacity: 0;
+  transform: translateY(28px);
+  animation: cscroll-card-in 0.8s cubic-bezier(0.19, 1, 0.22, 1) 0.1s forwards;
+}
+@keyframes cscroll-card-in {
+  to { opacity: 1; transform: translateY(0); }
+}
+@media (min-width: 768px) {
+  .cscroll-card-lite { height: 30rem; }
+}
+
 .cscroll-card-inner {
   height: 100%;
   width: 100%;

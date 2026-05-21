@@ -488,3 +488,49 @@
   .about-cscroll-sig { font-size: 0.65rem; }
   .about-cscroll-crest { width: 50%; max-width: 220px; }
 }
+
+/* ─── Mobile / weak-device optimizations ─────────────────────────────
+   Anything inside `html:not([data-tier="high"])` runs on phones, tablets,
+   and any device that doesn't pass the high-tier bar (8+ cores, 8+ GB RAM,
+   non-touch). High-tier desktops keep the full visual fidelity untouched.
+
+   What we're killing:
+   - backdrop-filter (huge GPU cost — blurs whole backdrop every frame)
+   - large drop-shadow blurs (each px of blur quadruples the work)
+   - long-running CSS animations on heavy SVGs (rings, crest)
+*/
+html:not([data-tier="high"]) .about-cscroll-eyebrow,
+html:not([data-tier="high"]) .about-cscroll-tag {
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+  background: rgba(22, 14, 39, 0.92);
+}
+
+html:not([data-tier="high"]) .about-rings {
+  filter: drop-shadow(0 0 6px rgba(167, 139, 250, 0.18));
+  opacity: 0.7;
+}
+
+html:not([data-tier="high"]) .about-logo-img {
+  filter: drop-shadow(0 0 8px rgba(180, 80, 255, 0.28));
+}
+
+html:not([data-tier="high"]) .about-cscroll-crest {
+  filter: drop-shadow(0 0 10px rgba(167, 139, 250, 0.22));
+  animation: about-cscroll-crest-spin 140s linear infinite;
+}
+
+/* Slow the rings spin on weak devices so each repaint is rarer. */
+html:not([data-tier="high"]) .about-ring-outer {
+  animation: aboutRingSpin 120s linear infinite;
+}
+html:not([data-tier="high"]) .about-ring-inner {
+  animation: aboutRingSpin 90s linear infinite reverse;
+}
+
+/* If the user prefers reduced motion, freeze the rings entirely. */
+@media (prefers-reduced-motion: reduce) {
+  .about-ring-outer,
+  .about-ring-inner,
+  .about-cscroll-crest { animation: none; }
+}
