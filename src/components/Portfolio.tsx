@@ -360,19 +360,29 @@ export default function Portfolio() {
     }
   };
 
-  // 3D tilt + light reflection on portfolio cards
+  // 3D tilt + light reflection on portfolio cards. rAF-throttled — mousemove
+  // fires 60-120x/sec, but we only need one DOM write per frame. Skipped
+  // entirely on coarse pointer (touch).
+  const cardMoveScheduled = useRef(new WeakMap<HTMLElement, boolean>());
   const handleCardMove = (e: React.MouseEvent<HTMLElement>) => {
     if (matchMedia("(pointer: coarse)").matches) return;
     const el = e.currentTarget;
-    const r = el.getBoundingClientRect();
-    const px = (e.clientX - r.left) / r.width;
-    const py = (e.clientY - r.top) / r.height;
-    const rx = (py - 0.5) * -10;
-    const ry = (px - 0.5) * 12;
-    el.style.setProperty("--rx", `${rx}deg`);
-    el.style.setProperty("--ry", `${ry}deg`);
-    el.style.setProperty("--mx", `${px * 100}%`);
-    el.style.setProperty("--my", `${py * 100}%`);
+    if (cardMoveScheduled.current.get(el)) return;
+    cardMoveScheduled.current.set(el, true);
+    const clientX = e.clientX;
+    const clientY = e.clientY;
+    requestAnimationFrame(() => {
+      cardMoveScheduled.current.set(el, false);
+      const r = el.getBoundingClientRect();
+      const px = (clientX - r.left) / r.width;
+      const py = (clientY - r.top) / r.height;
+      const rx = (py - 0.5) * -10;
+      const ry = (px - 0.5) * 12;
+      el.style.setProperty("--rx", `${rx}deg`);
+      el.style.setProperty("--ry", `${ry}deg`);
+      el.style.setProperty("--mx", `${px * 100}%`);
+      el.style.setProperty("--my", `${py * 100}%`);
+    });
   };
 
   const handleCardLeave = (e: React.MouseEvent<HTMLElement>) => {

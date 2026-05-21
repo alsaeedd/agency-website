@@ -13,17 +13,40 @@ import Contact from "./components/Contact";
 import Preloader from "./components/Preloader";
 
 // Below-the-fold sections are code-split into their own chunks so the initial
-// JS payload only contains what's needed to paint the first viewport. The
-// preloader covers the screen while these chunks stream in, so the Suspense
-// fallback is essentially invisible to the user. Contact stays EAGER — it
-// must respond instantly the moment the user taps the contact circle.
-const Clients = lazy(() => import("./components/Clients"));
-const Portfolio = lazy(() => import("./components/Portfolio"));
-const CTA = lazy(() => import("./components/CTA"));
-const Footer = lazy(() => import("./components/Footer"));
-const ScrollVideoSection = lazy(
-  () => import("./components/sections/ScrollVideoSection"),
-);
+// JS payload only contains what's needed to paint the first viewport. We
+// IMMEDIATELY kick off the dynamic imports for ALL of them (the `lazy()`
+// alone doesn't fetch — it waits for the boundary to render) so the chunks
+// stream down the wire IN PARALLEL with hero hydration, and the preloader
+// waits for them to finish before dismissing. By the time the user can see
+// the page, every section is already hydrated — no "section appears halfway
+// through scroll" jank.
+const portfolioImport = import("./components/Portfolio");
+const clientsImport = import("./components/Clients");
+const ctaImport = import("./components/CTA");
+const footerImport = import("./components/Footer");
+const scrollVideoImport = import("./components/sections/ScrollVideoSection");
+
+// Expose a single promise the preloader waits on before dismissing.
+declare global {
+  interface Window {
+    __ralChunksReady?: Promise<unknown>;
+  }
+}
+if (typeof window !== "undefined") {
+  window.__ralChunksReady = Promise.all([
+    portfolioImport,
+    clientsImport,
+    ctaImport,
+    footerImport,
+    scrollVideoImport,
+  ]).catch(() => undefined);
+}
+
+const Clients = lazy(() => clientsImport);
+const Portfolio = lazy(() => portfolioImport);
+const CTA = lazy(() => ctaImport);
+const Footer = lazy(() => footerImport);
+const ScrollVideoSection = lazy(() => scrollVideoImport);
 
 function App() {
   const lenisRef = useRef<Lenis | null>(null);
@@ -39,19 +62,45 @@ function App() {
   };
 
   useEffect(() => {
-    const lenis = new Lenis({
-      duration: 1.2,
-      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-      orientation: "vertical",
-      smoothWheel: true,
+    // ── ScrollTrigger global perf tuning ─────────────────────────
+    // limitCallbacks: throttle onEnter/onLeave to rAF (biggest single win)
+    // ignoreMobileResize: ignore iOS Safari URL-bar resize storms
+    ScrollTrigger.config({
+      limitCallbacks: true,
+      ignoreMobileResize: true,
+    });
+    ScrollTrigger.defaults({
+      fastScrollEnd: true,
     });
 
-    lenisRef.current = lenis;
+    const reducedMotion =
+      typeof matchMedia === "function" &&
+      matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const isCoarse =
+      typeof matchMedia === "function" &&
+      matchMedia("(pointer: coarse)").matches;
 
-    lenis.on("scroll", ScrollTrigger.update);
+    // ── Lenis touch/desktop tuning ───────────────────────────────
+    // On coarse pointer (mobile/tablet), native momentum is BETTER than
+    // Lenis. We use a much shorter duration so the JS smoothing barely
+    // fights native scroll. On desktop, the cinematic 1.2s easing stays.
+    // If the user prefers reduced motion, don't initialize Lenis at all.
+    let lenis: Lenis | null = null;
+    if (!reducedMotion) {
+      lenis = new Lenis({
+        duration: isCoarse ? 0.4 : 1.2,
+        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+        orientation: "vertical",
+        smoothWheel: true,
+        syncTouch: false,
+        touchMultiplier: 1,
+      });
+      lenisRef.current = lenis;
+      lenis.on("scroll", ScrollTrigger.update);
+    }
 
     const tickerCallback = (time: number) => {
-      lenis.raf(time * 1000);
+      lenis?.raf(time * 1000);
     };
 
     gsap.ticker.add(tickerCallback);
@@ -59,7 +108,7 @@ function App() {
 
     return () => {
       gsap.ticker.remove(tickerCallback);
-      lenis.destroy();
+      lenis?.destroy();
     };
   }, []);
 

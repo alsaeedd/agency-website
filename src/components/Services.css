@@ -144,6 +144,10 @@
   --mx: 50%;
   --my: 50%;
   position: relative;
+  /* `contain: layout paint` scopes layout/paint invalidation to this card
+     so a child reflow (icon hover, cursor-follow glow) doesn't invalidate
+     siblings or the grid. Compositor stays cheap. */
+  contain: layout paint;
   display: flex;
   flex-direction: column;
   align-items: center;

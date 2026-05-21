@@ -1,4 +1,10 @@
-/* ===== Navbar ===== */
+/* ===== Navbar =====
+   Logic ported from palmandplate-landingpage:
+     - 3-line hamburger that morphs to X (CSS transitions only)
+     - Full-screen mobile overlay (separate fixed element, not a dropdown)
+     - Scrolled-state class at >80px (deeper background + brighter text)
+     - All transforms are GPU-cheap (no backdrop-filter unless high-tier)
+*/
 .navbar {
   position: fixed;
   top: 0;
@@ -6,10 +12,30 @@
   right: 0;
   z-index: 100;
   padding: 1.125rem 0;
-  background: rgba(12, 7, 21, 0.85);
+  background: rgba(12, 7, 21, 0.78);
+  border-bottom: 1px solid var(--color-border);
+  transition:
+    background 0.4s ease,
+    border-color 0.4s ease;
+}
+
+/* Backdrop blur only for high-tier (flagship) devices. On mobile/weak we
+   use a slightly more opaque background instead — visually almost
+   identical, but skips the expensive per-frame re-blur of the whole
+   scene behind the bar (the single biggest mobile compositing cost). */
+html[data-tier="high"] .navbar {
+  background: rgba(12, 7, 21, 0.55);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  border-bottom: 1px solid var(--color-border);
+}
+
+.navbar.nav-scrolled {
+  background: rgba(12, 7, 21, 0.92);
+}
+html[data-tier="high"] .navbar.nav-scrolled {
+  background: rgba(12, 7, 21, 0.78);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
 }
 
 .navbar-inner {
@@ -32,6 +58,8 @@
 .navbar-logo {
   display: flex;
   align-items: center;
+  position: relative;
+  z-index: 102;
 }
 
 .navbar-logo-icon {
@@ -74,10 +102,7 @@
   transition: transform 0.4s var(--ease-out-expo);
 }
 
-.navbar-nav a:hover span {
-  transform: translateY(-100%);
-}
-
+.navbar-nav a:hover span,
 .navbar-nav a:hover::after {
   transform: translateY(-100%);
 }
@@ -109,35 +134,40 @@
   }
 }
 
-/* ===== Mobile Hamburger ===== */
+/* ===== Hamburger (3-line → X morph) =====
+   Identical motion to palmandplate: lines 1 and 3 rotate ±45°, the middle
+   line fades. Lines tint to lavender (#a78bfa) when open. */
 .navbar-hamburger {
   display: none;
+  position: relative;
+  z-index: 102;
+  margin-left: auto;
+  width: 44px;
+  height: 44px;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
   background: none;
   border: none;
   padding: 0;
   cursor: pointer;
-  z-index: 101;
-  margin-left: auto;
-  width: 40px;
-  height: 40px;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.3s var(--ease-out-expo);
-  line-height: 1;
-  color: var(--color-text);
-  overflow: hidden;
-  font-weight: bold;
+  /* Kill the default iOS/Android tap-highlight flash and Firefox dotted
+     outline — we already animate the lines themselves to give feedback,
+     the grey/blue overlay was reading as a glitch. */
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+  appearance: none;
+  outline: none;
+  user-select: none;
 }
 
-.navbar-hamburger::before {
-  content: "\2261";
-  transition: all 0.3s var(--ease-out-expo);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  height: 100%;
-  font-size: 2.2rem;
+.navbar-hamburger:focus,
+.navbar-hamburger:focus-visible,
+.navbar-hamburger:active {
+  outline: none;
+  background: none;
+  -webkit-tap-highlight-color: transparent;
 }
 
 @media (max-width: 768px) {
@@ -146,65 +176,189 @@
   }
 }
 
-.navbar-hamburger.active::before {
-  content: "\2715";
-  font-size: 1.8rem;
+.burger-line {
+  display: block;
+  width: 22px;
+  height: 2px;
+  border-radius: 1px;
+  background: var(--color-text);
+  transform-origin: center;
+  transition:
+    transform 0.3s var(--ease-out-expo),
+    opacity 0.3s var(--ease-out-expo),
+    background-color 0.3s ease;
+  will-change: transform, opacity;
 }
 
-/* ===== Mobile Menu ===== */
+.navbar-hamburger.is-open .burger-line:nth-child(1) {
+  transform: translateY(7px) rotate(45deg);
+  background: #a78bfa;
+}
+.navbar-hamburger.is-open .burger-line:nth-child(2) {
+  opacity: 0;
+  transform: scaleX(0.6);
+}
+.navbar-hamburger.is-open .burger-line:nth-child(3) {
+  transform: translateY(-7px) rotate(-45deg);
+  background: #a78bfa;
+}
+
+/* ===== Mobile Menu (full-screen overlay) =====
+   Outside the navbar in the DOM, fixed inset: 0. The root container's
+   visibility toggles INSTANTLY (no opacity fade on the whole sheet) so
+   the moment the user taps the hamburger, the backdrop snaps in and
+   visually replaces the page behind it. Only the content (links, button)
+   slides up on the .is-open transition. */
 .navbar-mobile-menu {
+  position: fixed;
+  inset: 0;
+  z-index: 99;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  visibility: hidden;
+  pointer-events: none;
+  /* No opacity transition on the root — the backdrop child handles its
+     own near-instant fade. visibility flip is gated by content's
+     animation length when closing so the slide-out has time to finish. */
+  transition: visibility 0s linear 0.4s;
+}
+
+.navbar-mobile-menu.is-open {
+  visibility: visible;
+  pointer-events: auto;
+  transition: visibility 0s linear 0s;
+}
+
+.navbar-mobile-backdrop {
   position: absolute;
-  top: 100%;
-  left: 0;
-  right: 0;
-  background: rgba(12, 7, 21, 0.98);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border-bottom: 1px solid var(--color-border);
-  padding: 1.25rem 1.5rem;
+  inset: 0;
+  background:
+    radial-gradient(
+      ellipse 60% 50% at 50% 28%,
+      rgba(124, 90, 255, 0.18) 0%,
+      transparent 65%
+    ),
+    rgba(12, 7, 21, 0.96);
+  cursor: pointer;
+  opacity: 0;
+  /* The backdrop snaps to full opacity in 80ms — fast enough to read as
+     "immediate" but with just enough easing to avoid a hard pop. */
+  transition: opacity 0.08s linear;
+}
+html[data-tier="high"] .navbar-mobile-backdrop {
+  background:
+    radial-gradient(
+      ellipse 60% 50% at 50% 28%,
+      rgba(124, 90, 255, 0.18) 0%,
+      transparent 65%
+    ),
+    rgba(12, 7, 21, 0.82);
+  backdrop-filter: blur(28px);
+  -webkit-backdrop-filter: blur(28px);
+}
+
+.navbar-mobile-menu.is-open .navbar-mobile-backdrop {
+  opacity: 1;
+}
+
+.navbar-mobile-content {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 2rem 2rem;
+  max-width: 480px;
+  width: 100%;
+  text-align: center;
+  /* Slide-up entrance — separate from the overlay fade so the content
+     itself has a sense of arrival. Held on transform so opening feels
+     immediate, but the type rises into place. */
+  transform: translateY(18px);
+  opacity: 0;
+  transition:
+    transform 0.55s var(--ease-out-expo) 0.08s,
+    opacity 0.45s var(--ease-out-expo) 0.08s;
+}
+
+.navbar-mobile-menu.is-open .navbar-mobile-content {
+  transform: translateY(0);
+  opacity: 1;
 }
 
 .navbar-mobile-nav {
   display: flex;
   flex-direction: column;
-  gap: 0.625rem;
-  padding: 0;
+  align-items: center;
+  gap: 0.25rem;
+  width: 100%;
 }
 
 .navbar-mobile-link {
-  padding: 0.875rem 1.25rem;
-  font-size: 0.9375rem;
-  font-weight: 600;
-  color: var(--color-text);
-  background: var(--color-surface);
-  border: 1px solid var(--color-border);
-  border-radius: 8px;
-  transition:
-    border-color 0.3s ease,
-    background 0.3s ease;
   display: block;
+  padding: 0.85rem 1.5rem;
+  width: 100%;
+  font-family: var(--font-family);
+  font-size: 1.85rem;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  color: var(--color-text);
   text-align: center;
+  transition: color 0.25s ease;
 }
 
-.navbar-mobile-link:hover {
-  border-color: var(--color-border-active);
-  background: var(--color-surface-2);
+.navbar-mobile-link:hover,
+.navbar-mobile-link:active {
+  color: #a78bfa;
+}
+
+.navbar-mobile-divider {
+  width: 64px;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(167, 139, 250, 0.4),
+    transparent
+  );
+  margin: 1.5rem 0;
 }
 
 .navbar-mobile-contact-btn {
-  padding: 0.875rem 1.25rem;
-  font-size: 0.9375rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.95rem 2rem;
+  font-size: 0.95rem;
   font-weight: 600;
+  letter-spacing: 0.02em;
   color: var(--color-inverse);
   background: var(--color-text);
-  border: 1px solid var(--color-text);
-  border-radius: 8px;
+  border: none;
+  border-radius: 100px;
   cursor: pointer;
-  transition: opacity 0.3s ease;
   font-family: var(--font-cta);
-  text-align: center;
+  transition:
+    transform 0.3s var(--ease-out-expo),
+    box-shadow 0.3s ease,
+    opacity 0.3s ease;
+  min-width: 200px;
 }
 
-.navbar-mobile-contact-btn:hover {
-  opacity: 0.85;
+.navbar-mobile-contact-btn:hover,
+.navbar-mobile-contact-btn:active {
+  opacity: 0.92;
+  transform: translateY(-1px);
+  box-shadow: 0 0 32px rgba(167, 139, 250, 0.32);
+}
+
+/* Respect reduced motion — collapse to instant fades, no slide. */
+@media (prefers-reduced-motion: reduce) {
+  .navbar,
+  .navbar-mobile-menu,
+  .navbar-mobile-content,
+  .burger-line { transition-duration: 0.15s; }
+  .navbar-mobile-content { transform: none; }
 }

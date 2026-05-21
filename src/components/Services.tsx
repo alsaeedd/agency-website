@@ -179,6 +179,24 @@ export default function Services() {
           },
         });
       }
+
+      // Pause the infinite icon CSS animations when their card isn't on
+      // screen. Each icon has drop-shadow + continuous transform, so 4
+      // animations running off-screen costs real GPU time on mobile.
+      // animation-play-state on the icon container respects each variant.
+      const io = new IntersectionObserver(
+        (entries) => {
+          for (const entry of entries) {
+            const icon = entry.target.querySelector<HTMLElement>(".service-card-icon");
+            if (!icon) continue;
+            icon.style.animationPlayState = entry.isIntersecting ? "running" : "paused";
+          }
+        },
+        { threshold: 0.05, rootMargin: "100px 0px" },
+      );
+      cards.forEach((card) => io.observe(card));
+
+      return () => io.disconnect();
     }, sectionRef);
 
     return () => ctx.revert();

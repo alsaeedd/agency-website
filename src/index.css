@@ -52,6 +52,12 @@ body {
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  /* Tell the compositor this is a vertical scroller — skips the 300ms
+     touch-action test and prevents accidental horizontal pan capture. */
+  touch-action: pan-y;
+  /* Stops iOS Safari's "pull-to-refresh" / Android's overscroll bounce
+     from eating frames during scroll. */
+  overscroll-behavior-y: none;
 }
 
 /* Guard against horizontal page overflow at any viewport */
@@ -60,6 +66,7 @@ html, main { overflow-x: hidden; max-width: 100%; }
 a {
   color: inherit;
   text-decoration: none;
+  -webkit-tap-highlight-color: transparent;
 }
 
 button {
@@ -67,6 +74,7 @@ button {
   cursor: pointer;
   border: none;
   background: none;
+  -webkit-tap-highlight-color: transparent;
 }
 
 img,

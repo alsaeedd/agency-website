@@ -70,8 +70,18 @@ export default function Preloader() {
       window.addEventListener("ral:hero-ready", () => resolve(), { once: true });
     });
 
-    fontsReady.then(() => advanceTo(38, 0.55));
-    loadReady.then(() => advanceTo(72, 0.7));
+    // Below-fold lazy chunks (Portfolio, Footer, CTA, Clients,
+    // ScrollVideoSection) are kicked off immediately in App.tsx — we wait
+    // for them here so the page is FULLY HYDRATED when the preloader lifts.
+    // No more "section pops in halfway through scroll".
+    const chunksReady: Promise<void> =
+      (window as Window & { __ralChunksReady?: Promise<unknown> }).__ralChunksReady
+        ?.then(() => undefined)
+        ?.catch(() => undefined) ?? Promise.resolve();
+
+    fontsReady.then(() => advanceTo(28, 0.55));
+    loadReady.then(() => advanceTo(58, 0.7));
+    chunksReady.then(() => advanceTo(82, 0.6));
     heroReady.then(() => advanceTo(96, 0.5));
 
     // Idle settle: let the main thread breathe before the dramatic exit, so
@@ -138,7 +148,7 @@ export default function Preloader() {
     // / failed WebGL init never traps the user behind the curtain.
     const safety = window.setTimeout(dismiss, 4500);
 
-    Promise.all([fontsReady, loadReady, heroReady])
+    Promise.all([fontsReady, loadReady, heroReady, chunksReady])
       .then(settleIdle)
       .then(() => {
         clearTimeout(safety);

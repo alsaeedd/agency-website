@@ -6,12 +6,6 @@
   border-top: 1px solid var(--color-border);
   position: relative;
   overflow: hidden;
-  /* Below-fold render skip: browser doesn't paint/style the footer until it's
-     near the viewport. `auto` for contain-intrinsic-size remembers the last
-     rendered size so the scrollbar doesn't jump on first reveal. Pure win on
-     low-end Android — fewer style/layout/paint cycles when scrolling above. */
-  content-visibility: auto;
-  contain-intrinsic-size: auto 720px;
 }
 
 .footer-top-glow {

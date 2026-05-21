@@ -69,7 +69,8 @@ html[data-tier="med"] .hero-blob-4,
 html[data-tier="med"] .hero-blob-5 {
   animation: none;
 }
-html[data-tier="med"] .hero-particle:nth-child(n + 11) {
+/* Med-tier particle budget tightened: keep only 7 (was 10). */
+html[data-tier="med"] .hero-particle:nth-child(n + 8) {
   display: none;
 }
 
@@ -83,8 +84,17 @@ html[data-tier="low"] .hero-blob,
 html[data-tier="low"] .hero-grain {
   display: none;
 }
-html[data-tier="low"] .hero-particle:nth-child(n + 5) {
+/* Low-tier: only 3 particles (was 4) — each one is a compositor layer. */
+html[data-tier="low"] .hero-particle:nth-child(n + 4) {
   display: none;
+}
+
+/* SVG <feTurbulence> animations re-rasterize the entire blob filter every
+   frame — expensive on weak GPUs. Freeze it on non-high. The blob's
+   `animation` (movement) is already gated above on med/low. */
+html:not([data-tier="high"]) .hero-blob feTurbulence,
+html:not([data-tier="high"]) .hero-blob animate {
+  animation: none !important;
 }
 
 /* Aurora 2 - subtle accent highlights */

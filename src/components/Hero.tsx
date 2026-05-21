@@ -113,13 +113,26 @@ export default function Hero({ onContactClick }: HeroProps) {
         );
     };
 
+    // Pause the cycler entirely when the tab isn't visible — no point
+    // burning a GSAP timeline + main-thread work on a hidden page.
+    const onVis = () => {
+      if (document.hidden) {
+        clearInterval(interval);
+      } else {
+        clearInterval(interval);
+        interval = setInterval(cycle, 2800);
+      }
+    };
+
     timeout = setTimeout(() => {
       interval = setInterval(cycle, 2800);
+      document.addEventListener("visibilitychange", onVis);
     }, 3200);
 
     return () => {
       clearTimeout(timeout);
       clearInterval(interval);
+      document.removeEventListener("visibilitychange", onVis);
     };
   }, []);
 
