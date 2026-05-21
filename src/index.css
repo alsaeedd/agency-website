@@ -171,12 +171,6 @@ html[data-tier="low"] .navbar-mobile-menu {
   .nav-loader-bar,
   .hero-ticker-track,
   .navbar-hamburger .burger-line,
-  /* About section rings + crest — continuously rotating SVGs. Without
-     a compositor layer, every frame re-rasterizes against the section
-     bg (=expensive). */
-  .about-ring,
-  .about-ring-outer,
-  .about-ring-inner,
   .about-cscroll-crest { will-change: transform; }
 
   /* SVG filter primitives on the blob — kill on touch. The blob's

@@ -47,14 +47,21 @@
   z-index: 0;
 }
 
-/* Generous top blend - fades from the previous bg INTO the surface */
+/* Soft top transition - reduced from 240px solid-dark to 120px low-alpha so
+   the previous section blends into the CTA surface without leaving a heavy
+   dark band that the owner flagged as "kinda dark near the top". */
 .cta-blend-top {
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
-  height: 240px;
-  background: linear-gradient(180deg, var(--color-bg) 0%, transparent 100%);
+  height: 120px;
+  background: linear-gradient(
+    180deg,
+    rgba(12, 7, 21, 0.55) 0%,
+    rgba(22, 14, 39, 0.2) 55%,
+    transparent 100%
+  );
   pointer-events: none;
   z-index: 4;
 }

@@ -29,7 +29,7 @@ export default function About() {
   const sectionRef = useRef<HTMLElement>(null);
   const logoRef = useRef<HTMLDivElement>(null);
   const headingRef = useRef<HTMLHeadingElement>(null);
-  const ghostRef = useRef<SVGSVGElement>(null);
+  const ghostRef = useRef<HTMLDivElement>(null);
 
   useLayoutEffect(() => {
     if (!sectionRef.current) return;
@@ -102,49 +102,13 @@ export default function About() {
 
   return (
     <section className="about" id="about" ref={sectionRef}>
-      {/* Rotating concentric text rings - a "mission seal" centerpiece */}
-      <svg
-        ref={ghostRef}
-        className="about-rings"
-        viewBox="0 0 800 800"
-        aria-hidden="true"
-      >
-        <defs>
-          <linearGradient id="about-ring-grad" x1="0" y1="0" x2="800" y2="800">
-            <stop offset="0%" stopColor="#d6c2ff" />
-            <stop offset="50%" stopColor="#a78bfa" />
-            <stop offset="100%" stopColor="#7c5aff" />
-          </linearGradient>
-          <path
-            id="about-ring-outer-path"
-            d="M 400, 400 m -340, 0 a 340,340 0 1,1 680,0 a 340,340 0 1,1 -680,0"
-          />
-          <path
-            id="about-ring-inner-path"
-            d="M 400, 400 m -220, 0 a 220,220 0 1,1 440,0 a 220,220 0 1,1 -440,0"
-          />
-        </defs>
-
-        {/* Faint border circles */}
-        <circle cx="400" cy="400" r="340" fill="none" stroke="rgba(167,139,250,0.12)" strokeWidth="1" />
-        <circle cx="400" cy="400" r="220" fill="none" stroke="rgba(167,139,250,0.08)" strokeWidth="1" />
-
-        <g className="about-ring about-ring-outer">
-          <text fill="url(#about-ring-grad)" fontSize="22" fontWeight="600" letterSpacing="10">
-            <textPath href="#about-ring-outer-path" startOffset="0">
-              BUILT IN BAHRAIN · SHIPPED WORLDWIDE · BUILT IN BAHRAIN · SHIPPED WORLDWIDE ·
-            </textPath>
-          </text>
-        </g>
-
-        <g className="about-ring about-ring-inner">
-          <text fill="rgba(167,139,250,0.55)" fontSize="14" fontWeight="500" letterSpacing="8">
-            <textPath href="#about-ring-inner-path" startOffset="0">
-              RAL TECHNOLOGIES · MMXXVI · FOUNDER-LED · END-TO-END · RAL TECHNOLOGIES · MMXXVI ·
-            </textPath>
-          </text>
-        </g>
-      </svg>
+      {/* Cheap static centerpiece — was a rotating SVG text-along-path
+          which re-rasterized every frame on mobile (the dominant lag
+          source in this section). Replaced with a layered radial-gradient
+          halo + a single static "mission seal" SVG aura. Same visual
+          mood, zero per-frame work. ghostRef still exists so the GSAP
+          entrance can scale it in. */}
+      <div ref={ghostRef} className="about-aura" aria-hidden="true" />
 
       <div className="about-ambient" aria-hidden="true" />
       <div className="about-stars" aria-hidden="true" />

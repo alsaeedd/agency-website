@@ -115,8 +115,10 @@
   50%      { opacity: 1; }
 }
 
-/* Rotating concentric text rings - "mission seal" centerpiece */
-.about-rings {
+/* Static centerpiece aura — replaces the rotating text rings. Same
+   visual mood (purple halo behind the section content) at zero per-
+   frame cost. One layer, composited once, never repainted. */
+.about-aura {
   position: absolute;
   top: 50%;
   left: 50%;
@@ -125,61 +127,49 @@
   transform: translate(-50%, -50%);
   z-index: 0;
   pointer-events: none;
-  opacity: 0.85;
-  /* filter: drop-shadow was here and was the actual cause of the ring
-     "lag" — it re-rasterized the entire SVG every frame as the children
-     rotated. Removed entirely; a static radial gradient sibling carries
-     the halo without touching the compositor each frame. */
+  background:
+    radial-gradient(
+      circle at center,
+      rgba(167, 139, 250, 0.22) 0%,
+      rgba(124, 90, 255, 0.10) 28%,
+      rgba(70, 30, 130, 0.04) 52%,
+      transparent 72%
+    );
+  filter: blur(40px);
+  opacity: 0.9;
 }
 
-/* Static halo behind the rings — was the drop-shadow's job. Composited
-   once, never repainted during rotation. */
-.about-rings::before {
+/* Faint concentric reference circles — pure CSS, no animation. Reads
+   like the "mission seal" mood the rings had, without the cost. */
+.about-aura::before,
+.about-aura::after {
   content: "";
   position: absolute;
-  inset: -8%;
-  background: radial-gradient(
-    circle at center,
-    rgba(167, 139, 250, 0.16) 0%,
-    rgba(124, 90, 255, 0.06) 35%,
-    transparent 70%
-  );
-  z-index: -1;
+  top: 50%;
+  left: 50%;
+  border-radius: 50%;
+  border: 1px solid rgba(167, 139, 250, 0.08);
   pointer-events: none;
-  filter: blur(20px);
 }
-
-.about-ring {
-  transform-origin: 400px 400px;
-  /* transform-box: fill-box keeps the rotation origin tied to the group's
-     own bounding box rather than the document — Chromium then promotes
-     this to its own compositor layer and the spin is pure GPU work. */
-  transform-box: fill-box;
-  will-change: transform;
+.about-aura::before {
+  width: 68%;
+  height: 68%;
+  transform: translate(-50%, -50%);
 }
-
-.about-ring-outer {
-  animation: aboutRingSpin 70s linear infinite;
-}
-
-.about-ring-inner {
-  animation: aboutRingSpin 50s linear infinite reverse;
-}
-
-@keyframes aboutRingSpin {
-  from { transform: rotate(0deg); }
-  to   { transform: rotate(360deg); }
+.about-aura::after {
+  width: 44%;
+  height: 44%;
+  transform: translate(-50%, -50%);
+  border-color: rgba(167, 139, 250, 0.05);
 }
 
 @media (max-width: 768px) {
-  .about-rings { width: min(96vw, 540px); height: min(96vw, 540px); opacity: 0.75; }
+  .about-aura { width: min(96vw, 540px); height: min(96vw, 540px); opacity: 0.8; }
   .about-stars::before,
   .about-stars::after { display: none; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .about-ring-outer,
-  .about-ring-inner,
   .about-stars::before,
   .about-stars::after { animation: none; }
 }
