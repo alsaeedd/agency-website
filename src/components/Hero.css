@@ -1,4 +1,9 @@
-/* ===== Hero - centered, all-sans, full atmospheric depth ===== */
+/* ===== Hero - centered, all-sans, full atmospheric depth =====
+   `min-height: 100svh` makes the hero fill the viewport. On shorter
+   PC viewports (1366×768 laptops, half-screen browser, etc.) the
+   default top/bottom padding pushed content past 100svh and the
+   ticker rendered below the fold. The @media (max-height) blocks
+   below compress padding so content fits + ticker stays visible. */
 .hero {
   position: relative;
   width: 100%;
@@ -11,6 +16,9 @@
   overflow: hidden;
   isolation: isolate;
 }
+
+/* (max-height PC overrides moved to the END of this file so they win
+   the cascade against the per-element rules below.) */
 
 /* Aurora - layer 1, DIMMED for text contrast */
 .hero-aurora {
@@ -1070,4 +1078,45 @@ html:not([data-tier="high"]) .hero-ticker-track {
 html:not([data-tier="high"]) .hero-aurora,
 html:not([data-tier="high"]) .hero-aurora-2 {
   transform: none !important;
+}
+
+/* ───── Short PC viewports — fit content + ticker inside 100svh ─────
+   Placed at the END of the file so these override every earlier rule
+   in source order (CSS cascade for equal specificity). Without these,
+   the hero ticker rendered below the visible fold on common laptop
+   sizes (1366×768, 1440×900, half-screen browser windows) because
+   the display title alone was ~377px tall at 1366 width. */
+@media (max-height: 950px) and (min-width: 769px) {
+  .hero { padding: 5rem 4rem 3.5rem !important; }
+  .hero-title { font-size: clamp(2.2rem, 6.5vw, 5rem) !important; }
+  .hero-sub   { font-size: clamp(0.92rem, 1.4vw, 1.05rem) !important; margin-bottom: 1.5rem !important; }
+}
+
+@media (max-height: 820px) and (min-width: 769px) {
+  .hero { padding: 4rem 4rem 2.75rem !important; }
+  .hero-title { font-size: clamp(2rem, 5.5vw, 3.75rem) !important; line-height: 1.1 !important; }
+  .hero-sub   { font-size: 0.95rem !important; margin-bottom: 1.25rem !important; }
+  .hero-label { margin-bottom: 1.25rem !important; }
+  .hero-cta-row { margin-bottom: 1.5rem !important; }
+  .hero-stats { padding-top: 1.25rem !important; }
+}
+
+@media (max-height: 720px) and (min-width: 769px) {
+  .hero { padding: 3rem 4rem 2.5rem !important; }
+  .hero-title { font-size: clamp(1.8rem, 4.5vw, 3rem) !important; }
+  .hero-stats { display: none !important; }
+}
+
+/* Tiny mobile (iPhone SE 1st gen 320×568, Galaxy Fold cover screen, etc.)
+   The default mobile breakpoint already compresses content but on a 568px
+   viewport even that's not enough — the ticker rendered 96px below fold.
+   Drop stats + tighten everything so the ticker is the visible bottom. */
+@media (max-height: 640px) and (max-width: 768px) {
+  .hero { padding: 4rem 1rem 2.5rem !important; }
+  .hero-title { font-size: clamp(1.6rem, 7vw, 2.1rem) !important; line-height: 1.08 !important; margin-bottom: 0.85rem !important; }
+  .hero-sub { font-size: 0.8rem !important; margin-bottom: 1rem !important; max-width: 280px !important; }
+  .hero-label { margin-bottom: 1rem !important; font-size: 0.5rem !important; }
+  .hero-cta-row { gap: 0.65rem !important; margin-bottom: 1rem !important; }
+  .hero-cta { padding: 0.65rem 1.1rem !important; font-size: 0.82rem !important; }
+  .hero-stats { display: none !important; }
 }

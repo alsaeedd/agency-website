@@ -51,7 +51,10 @@ export const ContainerScroll: React.FC<ContainerScrollProps> = ({
     const startRotate = isWeak ? 28 : 42;
     const startScale = isWeak ? 0.92 : 1.06;
     const headerTravel = isWeak ? -50 : -100;
-    const scrubValue = isWeak ? true : 0.6;
+    // Higher scrub value = more smoothing → no end-of-scroll snap when
+    // the trigger window ends. Weak tier stays `true` (instant) since
+    // mobile native scroll already absorbs the abrupt end.
+    const scrubValue = isWeak ? true : 1.2;
 
     const ctx = gsap.context(() => {
       // Initial state. Lower transformPerspective (900) = stronger 3D
@@ -64,7 +67,11 @@ export const ContainerScroll: React.FC<ContainerScrollProps> = ({
       });
       gsap.set(headerRef.current, { y: 0 });
 
-      // Card: scroll-driven roll + scale to its natural state.
+      // Card: scroll-driven roll + scale to its natural state. End the
+      // tween at "center 40%" (card center hits 40% from viewport top)
+      // instead of "center center" — gives the animation finishes WELL
+      // before the section scrolls out, eliminating the abrupt snap
+      // when the trigger window ends.
       gsap.to(cardRef.current, {
         rotateX: 0,
         scale: 1,
@@ -72,7 +79,7 @@ export const ContainerScroll: React.FC<ContainerScrollProps> = ({
         scrollTrigger: {
           trigger: shellRef.current,
           start: "top bottom",
-          end: "center center",
+          end: "center 40%",
           scrub: scrubValue,
           invalidateOnRefresh: true,
         },

@@ -1,46 +1,45 @@
 /* ContainerScroll - 3D-perspective scroll-driven card reveal.
-   Shell height is set to give the scroll-trigger range enough runway
-   for the tilt animation to feel deliberate without leaving large
-   black gaps below the card. */
+   Auto-height shell: contents stack naturally (header on top, card
+   below) and the section is exactly as tall as it needs to be.
+   This fixes the overlap into About above that happened when a
+   fixed-height shell was shorter than (header + card) combined. */
 .cscroll-shell {
-  height: 38rem;
   display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   position: relative;
-  padding: 1rem 1rem;
+  padding: 2rem 1rem 6rem;
+  width: 100%;
 }
 
 @media (min-width: 768px) {
   .cscroll-shell {
-    height: 50rem;
-    padding: 3rem 3rem;
+    padding: 4rem 3rem 9rem;
   }
 }
 
 .cscroll-stage {
-  padding: 1.5rem 0;
+  padding: 0;
   width: 100%;
   position: relative;
   perspective: 1200px;
-}
-
-@media (min-width: 768px) {
-  .cscroll-stage {
-    padding: 5rem 0;
-  }
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .cscroll-header {
   max-width: 64rem;
   margin: 0 auto;
   text-align: center;
+  width: 100%;
 }
 
 .cscroll-card {
   max-width: 64rem;
-  margin: 3rem auto 0;
-  height: 28rem;
+  margin: 2.5rem auto 0;
+  height: 26rem;
   width: 100%;
   border: 2px solid rgba(167, 139, 250, 0.18);
   padding: 0.5rem;
@@ -56,8 +55,8 @@
 
 @media (min-width: 768px) {
   .cscroll-card {
-    height: 36rem;
-    margin-top: 5rem;
+    height: 34rem;
+    margin-top: 4rem;
     padding: 1rem;
   }
 }
@@ -72,15 +71,14 @@ html:not([data-tier="high"]) .cscroll-card {
     0 14px 36px rgba(0, 0, 0, 0.5);
 }
 
-/* Tighten mobile vertical real-estate — the tilt range doesn't need the
-   massive 56rem shell that desktops use for the long-scroll choreography. */
+/* Mobile tightening — smaller card, less padding, same flex-column flow.
+   Bottom padding kept generous so there's clear visual breathing room
+   between the iPad card and the next section ("Teams that ship"). */
 @media (max-width: 768px) {
   .cscroll-shell {
-    height: 30rem;
-    padding: 0.5rem 1rem 1rem;
+    padding: 1.25rem 1rem 4rem;
   }
-  .cscroll-stage { padding: 0.5rem 0; }
-  .cscroll-card { height: 22rem; margin-top: 1.25rem; }
+  .cscroll-card { height: 20rem; margin-top: 1.5rem; }
 }
 
 .cscroll-card-inner {
