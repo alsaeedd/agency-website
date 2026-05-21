@@ -22,6 +22,16 @@
   z-index: 0;
 }
 
+/* The WebGL scene's <canvas> must fill the bg regardless of its backing
+   resolution. (three.js setSize(..., updateStyle=false) sets the drawing-buffer
+   size but not the CSS size, so without this the canvas would display at its
+   pixel-ratio-scaled width and get clipped.) Mirrors .hero-scene canvas. */
+.scroll-video-bg canvas {
+  display: block;
+  width: 100% !important;
+  height: 100% !important;
+}
+
 /* WebGL gradient sits BEHIND video (z 0). Video sits over it (z 1) when loaded. */
 .scroll-video-gradient {
   position: absolute;

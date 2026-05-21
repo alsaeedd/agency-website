@@ -1,7 +1,6 @@
 import { useEffect, useRef } from "react";
 import * as THREE from "three";
 import { getDeviceProfile } from "../../lib/deviceProfile";
-import { makeFpsGuard } from "../../lib/fpsGuard";
 
 interface ScrollSceneProps {
   /** Element whose scroll progress drives the camera. Defaults to the parent section. */
@@ -38,7 +37,7 @@ export default function ScrollScene({ triggerRef }: ScrollSceneProps) {
       powerPreference: "high-performance",
       stencil: false,
     });
-    let dpr = profile.dpr;
+    const dpr = profile.dpr;
     renderer.setPixelRatio(dpr);
     renderer.setSize(w, h, false);
     renderer.setClearColor(0x000000, 0);
@@ -220,12 +219,6 @@ export default function ScrollScene({ triggerRef }: ScrollSceneProps) {
     );
     io.observe(host);
 
-    const fpsGuard = makeFpsGuard(() => {
-      dpr = Math.max(0.75, dpr - 0.25);
-      renderer.setPixelRatio(dpr);
-      material.uniforms.uPixelRatio.value = dpr;
-    });
-
     const tick = (time: number) => {
       if (!visible || !onScreen) {
         raf = 0;
@@ -235,7 +228,6 @@ export default function ScrollScene({ triggerRef }: ScrollSceneProps) {
 
       const dt = Math.min(0.05, (time - lastTime) / 1000);
       lastTime = time;
-      fpsGuard(time);
 
       // Lerp
       scrollProgress += (scrollTarget - scrollProgress) * 0.08;

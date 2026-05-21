@@ -1,7 +1,6 @@
 import { useEffect, useRef } from "react";
 import * as THREE from "three";
 import { getDeviceProfile } from "../lib/deviceProfile";
-import { makeFpsGuard } from "../lib/fpsGuard";
 import "./HeroScene.css";
 
 /**
@@ -36,8 +35,7 @@ export default function HeroScene() {
       powerPreference: "high-performance",
       stencil: false,
     });
-    let dpr = profile.dpr;
-    renderer.setPixelRatio(dpr);
+    renderer.setPixelRatio(profile.dpr);
     renderer.setSize(w, h, false);
     renderer.setClearColor(0x000000, 0);
     host.appendChild(renderer.domElement);
@@ -256,11 +254,6 @@ export default function HeroScene() {
     const linePosBuffer = new THREE.BufferAttribute(linePosArr, 3);
     constellation.geometry.setAttribute("position", linePosBuffer);
 
-    const fpsGuard = makeFpsGuard(() => {
-      dpr = Math.max(0.75, dpr - 0.25);
-      renderer.setPixelRatio(dpr);
-    });
-
     const tick = (time: number) => {
       if (!visible || !onScreen) {
         raf = 0;
@@ -270,7 +263,6 @@ export default function HeroScene() {
 
       const dt = Math.min(0.05, (time - lastTime) / 1000);
       lastTime = time;
-      fpsGuard(time);
       const t = time * 0.001;
 
       // Smooth cursor for camera tilt

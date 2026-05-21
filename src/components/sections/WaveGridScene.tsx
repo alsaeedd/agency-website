@@ -1,7 +1,6 @@
 import { useEffect, useRef } from "react";
 import * as THREE from "three";
 import { getDeviceProfile } from "../../lib/deviceProfile";
-import { makeFpsGuard } from "../../lib/fpsGuard";
 
 interface WaveGridSceneProps {
   triggerRef?: React.RefObject<HTMLElement>;
@@ -65,7 +64,7 @@ export default function WaveGridScene({ triggerRef, variant = "a" }: WaveGridSce
       powerPreference: "high-performance",
       stencil: false,
     });
-    let dpr = profile.dpr;
+    const dpr = profile.dpr;
     renderer.setPixelRatio(dpr);
     renderer.setSize(w, h, false);
     renderer.setClearColor(0x000000, 0);
@@ -231,13 +230,6 @@ export default function WaveGridScene({ triggerRef, variant = "a" }: WaveGridSce
     );
     io.observe(host);
 
-    // Drop renderer DPR a notch if frames stay low on a weak device.
-    const fpsGuard = makeFpsGuard(() => {
-      dpr = Math.max(0.75, dpr - 0.25);
-      renderer.setPixelRatio(dpr);
-      mat.uniforms.uPixelRatio.value = dpr;
-    });
-
     const resize = () => {
       const ww = host.clientWidth;
       const hh = host.clientHeight;
@@ -256,7 +248,6 @@ export default function WaveGridScene({ triggerRef, variant = "a" }: WaveGridSce
       raf = requestAnimationFrame(tick);
       const dt = Math.min(0.05, (time - lastTime) / 1000);
       lastTime = time;
-      fpsGuard(time);
 
       scrollLerp += (scrollTarget - scrollLerp) * 0.08;
       mouseCurrent.x += (mouseTarget.x - mouseCurrent.x) * 0.06;
