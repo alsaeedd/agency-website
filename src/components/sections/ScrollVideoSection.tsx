@@ -93,41 +93,36 @@ export default function ScrollVideoSection({
 }: ScrollVideoSectionProps) {
   const sectionRef = useRef<HTMLElement>(null);
 
-  // Coarse-pointer = mobile/tablet → skip WebGL mounts entirely, use a
-  // static gradient. Computed once at render so the conditional JSX below
-  // doesn't pay matchMedia on each render.
-  const isCoarse =
-    typeof matchMedia === "function" &&
-    matchMedia("(pointer: coarse)").matches;
-
   useEffect(() => {
     const section = sectionRef.current;
     if (!section) return;
 
     const tier = document.documentElement.dataset.tier;
-    const isMobile =
+    const isWeak =
       tier !== "high" ||
       (typeof matchMedia === "function" &&
         matchMedia("(pointer: coarse)").matches);
-
-    if (isMobile) return; // No entrance on mobile — content visible from mount
 
     const ctx = gsap.context(() => {
       gsap.fromTo(
         section.querySelectorAll(
           ".scroll-video-ornament, .scroll-video-eyebrow, .scroll-video-title, .scroll-video-subtitle",
         ),
-        { opacity: 0, y: 30, filter: "blur(12px)" },
+        // No blur on weak tier — `filter: blur(...)` keyframes force a
+        // full-screen re-rasterization per frame on weak GPUs.
+        { opacity: 0, y: 24, filter: isWeak ? "blur(0px)" : "blur(12px)" },
         {
           opacity: 1,
           y: 0,
           filter: "blur(0px)",
-          duration: 1,
+          duration: isWeak ? 0.6 : 1,
           ease: "expo.out",
-          stagger: 0.1,
+          stagger: isWeak ? 0.05 : 0.1,
           scrollTrigger: {
             trigger: section,
-            start: "top 85%",
+            // "top bottom" fires as soon as the section's top crosses the
+            // viewport bottom — earliest reliable trigger on mobile.
+            start: "top bottom",
             once: true,
           },
         },
@@ -144,42 +139,28 @@ export default function ScrollVideoSection({
       id={id}
     >
       {/* BG LAYER: absolute, fills the section bg behind text.
-          On coarse pointer (mobile/tablet) we skip every WebGL mount.
-          The CSS gradient `.scroll-video-tint` + a static body
-          background carries the visual interest. Saves 128KB of
-          three.js + the per-frame fragment-shader cost. */}
+          WebGL mounts on every device — the owner confirmed these
+          background scenes were fine on mobile. Each scene self-
+          throttles via deviceProfile (lower DPR, fewer particles) and
+          pauses its rAF loop when off-screen via IntersectionObserver. */}
       <div className="scroll-video-bg" aria-hidden="true">
-        {particleTunnel && !isCoarse && (
+        {particleTunnel && (
           <Suspense fallback={null}>
             <ScrollScene triggerRef={sectionRef} />
           </Suspense>
         )}
-        {waveGrid && !isCoarse && (
+        {waveGrid && (
           <Suspense fallback={null}>
             <WaveGridScene triggerRef={sectionRef} variant={waveVariant} />
           </Suspense>
         )}
-        {!particleTunnel && !waveGrid && fallbackGradient && !isCoarse && (
+        {!particleTunnel && !waveGrid && fallbackGradient && (
           <div className="scroll-video-gradient">
             <AnimatedGradient
               config={{ preset: "Plasma", speed: 18 }}
               noise={{ opacity: 0.22, scale: 1.2 }}
             />
           </div>
-        )}
-        {/* Mobile / coarse: static dark gradient backdrop so the section
-            still has atmospheric depth without WebGL. */}
-        {isCoarse && (
-          <div
-            className="scroll-video-static-bg"
-            aria-hidden="true"
-            style={{
-              position: "absolute",
-              inset: 0,
-              background:
-                "radial-gradient(ellipse 70% 60% at 50% 40%, rgba(124, 90, 255, 0.18) 0%, transparent 70%), linear-gradient(180deg, #0c0715 0%, #160e27 100%)",
-            }}
-          />
         )}
         <div className="scroll-video-tint" style={{ background: tint }} />
       </div>

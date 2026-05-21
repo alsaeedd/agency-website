@@ -34,52 +34,66 @@ export default function About() {
   useLayoutEffect(() => {
     if (!sectionRef.current) return;
 
-    // ── FINAL DECISION (no more flip-flop) ─────────────────────────────
-    // Mobile/coarse-pointer/weak-tier: NO entrance animation. Content is
-    // visible from mount. Every previous attempt to reliably animate
-    // entrances on mobile traded one bug for another — stale trigger
-    // positions, URL-bar refresh thrash, GSAP timeline backlog on weak
-    // GPUs. The owner's hardware is an RTX 5060 (gets the full
-    // cinematic), so we keep that experience on capable devices and stop
-    // animating on touch.
     const tier = document.documentElement.dataset.tier;
-    const isMobile =
+    const isWeak =
       tier !== "high" ||
       (typeof matchMedia === "function" &&
         matchMedia("(pointer: coarse)").matches);
 
-    if (isMobile) return;
-
-    // Desktop high-tier only — full cinematic timeline.
     const ctx = gsap.context(() => {
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: sectionRef.current,
-          start: "top 80%",
+          // "top bottom" fires the moment the section's top crosses the
+          // viewport bottom — earliest possible reliable trigger. The
+          // Preloader's dismiss() runs ScrollTrigger.refresh() so cached
+          // positions are correct against the final post-load layout.
+          start: "top bottom",
           once: true,
         },
       });
 
+      // Mobile: snappy entrance (no filter:blur, short durations, tight
+      // stagger). Desktop: full cinematic timeline. Both versions actually
+      // PLAY (no more "mobile = nothing").
       tl.from(ghostRef.current, {
         opacity: 0,
         scale: 0.94,
-        duration: 1.4,
+        duration: isWeak ? 0.55 : 1.4,
         ease: "expo.out",
       })
         .from(
           logoRef.current,
-          { opacity: 0, y: 24, scale: 0.94, duration: 0.9, ease: "expo.out" },
-          "-=1.1",
+          {
+            opacity: 0,
+            y: 20,
+            scale: 0.94,
+            duration: isWeak ? 0.45 : 0.9,
+            ease: "expo.out",
+          },
+          isWeak ? "-=0.45" : "-=1.1",
         )
         .from(
           ".about-heading .about-word-in",
-          { yPercent: 110, opacity: 0, duration: 0.9, ease: "expo.out", stagger: 0.06 },
-          "-=0.6",
+          {
+            yPercent: 110,
+            opacity: 0,
+            duration: isWeak ? 0.5 : 0.9,
+            ease: "expo.out",
+            stagger: isWeak ? 0.025 : 0.06,
+          },
+          isWeak ? "-=0.3" : "-=0.6",
         )
         .from(
           ".about-body .about-word-in",
-          { yPercent: 110, opacity: 0, duration: 0.7, ease: "expo.out", stagger: 0.012 },
-          "-=0.6",
+          {
+            yPercent: 110,
+            opacity: 0,
+            duration: isWeak ? 0.4 : 0.7,
+            ease: "expo.out",
+            stagger: isWeak ? 0.004 : 0.012,
+          },
+          isWeak ? "-=0.3" : "-=0.6",
         );
     }, sectionRef);
 

@@ -150,7 +150,7 @@ export default function Services() {
     if (!sectionRef.current) return;
 
     const tier = document.documentElement.dataset.tier;
-    const isMobile =
+    const isWeak =
       tier !== "high" ||
       (typeof matchMedia === "function" &&
         matchMedia("(pointer: coarse)").matches);
@@ -158,36 +158,34 @@ export default function Services() {
     const ctx = gsap.context(() => {
       const cards = cardsRef.current.filter((c): c is HTMLDivElement => c !== null);
 
-      // Desktop high-tier only — full entrance. Mobile skips entrance and
-      // jumps straight to the icon-pause perf gate below.
-      if (!isMobile) {
-        gsap.from(headerRef.current, {
-          y: -28,
+      // Entrance plays on every device — short on weak, cinematic on
+      // desktop. No filter:blur on weak (it forces full-screen re-raster).
+      gsap.from(headerRef.current, {
+        y: -28,
+        opacity: 0,
+        duration: isWeak ? 0.55 : 0.9,
+        ease: "expo.out",
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: "top bottom",
+          once: true,
+        },
+      });
+
+      if (cards.length > 0) {
+        gsap.from(cards, {
+          y: 36,
           opacity: 0,
-          duration: 0.9,
+          filter: isWeak ? "blur(0px)" : "blur(8px)",
+          duration: isWeak ? 0.55 : 0.95,
           ease: "expo.out",
+          stagger: isWeak ? 0.04 : 0.1,
           scrollTrigger: {
-            trigger: sectionRef.current,
-            start: "top 80%",
+            trigger: cards[0],
+            start: "top bottom",
             once: true,
           },
         });
-
-        if (cards.length > 0) {
-          gsap.from(cards, {
-            y: 36,
-            opacity: 0,
-            filter: "blur(8px)",
-            duration: 0.95,
-            ease: "expo.out",
-            stagger: 0.1,
-            scrollTrigger: {
-              trigger: cards[0],
-              start: "top 85%",
-              once: true,
-            },
-          });
-        }
       }
 
       // Icon off-screen pause runs on EVERY device (mobile included) —

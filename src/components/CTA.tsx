@@ -28,11 +28,10 @@ export default function CTA({ onContactClick }: CTAProps) {
     if (!buttonRef.current) return;
 
     const tier = document.documentElement.dataset.tier;
-    const isMobile =
+    const isWeak =
       tier !== "high" ||
       (typeof matchMedia === "function" &&
         matchMedia("(pointer: coarse)").matches);
-    if (isMobile) return;
 
     const ctx = gsap.context(() => {
       gsap.fromTo(
@@ -41,25 +40,25 @@ export default function CTA({ onContactClick }: CTAProps) {
         {
           scale: 1,
           opacity: 1,
-          duration: 1,
+          duration: isWeak ? 0.6 : 1,
           ease: "expo.out",
           scrollTrigger: {
             trigger: sectionRef.current,
-            start: "top 60%",
+            start: "top bottom",
             once: true,
           },
-          delay: 0.3,
+          delay: isWeak ? 0.1 : 0.3,
         }
       );
 
       gsap.from(".cta-eyebrow", {
         opacity: 0,
         y: 12,
-        duration: 0.8,
+        duration: isWeak ? 0.45 : 0.8,
         ease: "expo.out",
         scrollTrigger: {
           trigger: sectionRef.current,
-          start: "top 70%",
+          start: "top bottom",
           once: true,
         },
       });
@@ -67,12 +66,12 @@ export default function CTA({ onContactClick }: CTAProps) {
       gsap.from(".cta-sub", {
         opacity: 0,
         y: 16,
-        duration: 0.9,
+        duration: isWeak ? 0.55 : 0.9,
         ease: "expo.out",
-        delay: 0.5,
+        delay: isWeak ? 0.15 : 0.5,
         scrollTrigger: {
           trigger: sectionRef.current,
-          start: "top 60%",
+          start: "top bottom",
           once: true,
         },
       });

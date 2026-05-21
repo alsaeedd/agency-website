@@ -327,22 +327,10 @@ export default function Portfolio() {
     if (!cardsRef.current) return;
 
     const tier = document.documentElement.dataset.tier;
-    const isMobile =
+    const isWeak =
       tier !== "high" ||
       (typeof matchMedia === "function" &&
         matchMedia("(pointer: coarse)").matches);
-
-    // Mobile: no entrance animation, cards visible from mount.
-    if (isMobile) {
-      // Strip the CSS initial-hidden state so cards are visible.
-      const cards = cardsRef.current.querySelectorAll<HTMLElement>(".portfolio-card");
-      cards.forEach((card) => {
-        card.style.opacity = "1";
-        card.style.transform = "none";
-        card.style.filter = "none";
-      });
-      return;
-    }
 
     const ctx = gsap.context(() => {
       const cards = cardsRef.current!.querySelectorAll(".portfolio-card");
@@ -350,19 +338,19 @@ export default function Portfolio() {
       cards.forEach((card, index) => {
         gsap.fromTo(
           card,
-          { y: 40, opacity: 0, filter: "blur(8px)" },
+          { y: 40, opacity: 0, filter: isWeak ? "blur(0px)" : "blur(8px)" },
           {
             y: 0,
             opacity: 1,
             filter: "blur(0px)",
-            duration: 1,
+            duration: isWeak ? 0.55 : 1,
             ease: "expo.out",
             scrollTrigger: {
               trigger: card,
-              start: "top 85%",
+              start: "top bottom",
               once: true,
             },
-            delay: index * 0.12,
+            delay: index * (isWeak ? 0.05 : 0.12),
           },
         );
       });

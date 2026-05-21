@@ -76,17 +76,16 @@ export default function Hero({ onContactClick }: HeroProps) {
     return { useBlur: tier === "high" && !coarse, isCoarse: coarse };
   })();
 
-  // On coarse-pointer devices we skip mounting <HeroScene/> (saves 128KB
-  // of three.js + the first-frame render stall). The Preloader is waiting
-  // on a "ral:hero-ready" event — fire it on next rAF so the curtain can
-  // lift without sitting at 96% for the 4.5s safety timeout.
+  // Safety: if HeroScene takes >2.5s to dispatch ral:hero-ready (slow
+  // network on a phone), fire it ourselves so the Preloader never gets
+  // stuck at 96%. HeroScene's own dispatch is still authoritative when
+  // it fires first.
   useEffect(() => {
-    if (!heroPerf.isCoarse) return;
-    const raf = requestAnimationFrame(() => {
+    const timeout = setTimeout(() => {
       window.dispatchEvent(new Event("ral:hero-ready"));
-    });
-    return () => cancelAnimationFrame(raf);
-  }, [heroPerf.isCoarse]);
+    }, 2500);
+    return () => clearTimeout(timeout);
+  }, []);
 
   // Word cycler on the accent word (revenue → pipelines → margins → ...)
   useEffect(() => {
@@ -361,16 +360,14 @@ export default function Hero({ onContactClick }: HeroProps) {
         ))}
       </div>
 
-      {/* WebGL physics scene — desktop only. Mobile gets the CSS aurora
-          and atmospheric blobs which already carry the visual interest;
-          shipping a 128KB-gzip three.js chunk to a phone for a 60fps
-          floating crystal is bad math. The static CSS atmosphere reads
-          identical at glance on a 6" screen. */}
-      {!heroPerf.isCoarse && (
-        <Suspense fallback={null}>
-          <HeroScene />
-        </Suspense>
-      )}
+      {/* WebGL physics scene — mounts on every device. Owner confirmed
+          the WebGL animations were "fine" on mobile; the lag was
+          elsewhere (will-change spam, GSAP entrance backlog). Renderer
+          uses low-power preference + depth:false on non-high tiers
+          for mobile-friendly thermal/VRAM behavior. */}
+      <Suspense fallback={null}>
+        <HeroScene />
+      </Suspense>
 
       <div className="hero-year" aria-hidden="true">
         <span className="hero-year-line" />

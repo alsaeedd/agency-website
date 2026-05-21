@@ -76,25 +76,24 @@ export default function Clients() {
   useEffect(() => {
     if (!sectionRef.current) return;
     const tier = document.documentElement.dataset.tier;
-    const isMobile =
+    const isWeak =
       tier !== "high" ||
       (typeof matchMedia === "function" &&
         matchMedia("(pointer: coarse)").matches);
-    if (isMobile) return;
 
     const ctx = gsap.context(() => {
       gsap.from(
         sectionRef.current!.querySelectorAll(".clients-header-anim"),
         {
           opacity: 0,
-          y: 28,
-          filter: "blur(10px)",
-          duration: 1,
+          y: 24,
+          filter: isWeak ? "blur(0px)" : "blur(10px)",
+          duration: isWeak ? 0.55 : 1,
           ease: "expo.out",
-          stagger: 0.12,
+          stagger: isWeak ? 0.05 : 0.12,
           scrollTrigger: {
             trigger: sectionRef.current,
-            start: "top 75%",
+            start: "top bottom",
             once: true,
           },
         },
