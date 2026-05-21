@@ -1,6 +1,9 @@
 /* ===== Clients - dual opposite-direction marquee ===== */
 .clients {
-  padding: 7rem 0 7.5rem;
+  /* Reduced top padding (was 7rem) so the gap between About's
+     ContainerScroll card and the "Teams that ship" headline is tight,
+     not a dead black band. */
+  padding: 3rem 0 7.5rem;
   scroll-margin-top: 72px;
   overflow: hidden;
   background: var(--color-bg);

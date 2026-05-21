@@ -1,17 +1,20 @@
-/* ContainerScroll - 3D-perspective scroll-driven card reveal */
+/* ContainerScroll - 3D-perspective scroll-driven card reveal.
+   Shell height is set to give the scroll-trigger range enough runway
+   for the tilt animation to feel deliberate without leaving large
+   black gaps below the card. */
 .cscroll-shell {
-  height: 56rem;
+  height: 38rem;
   display: flex;
   align-items: center;
   justify-content: center;
   position: relative;
-  padding: 1.5rem 1rem;
+  padding: 1rem 1rem;
 }
 
 @media (min-width: 768px) {
   .cscroll-shell {
-    height: 70rem;
-    padding: 4rem 3rem;
+    height: 50rem;
+    padding: 3rem 3rem;
   }
 }
 
@@ -73,11 +76,11 @@ html:not([data-tier="high"]) .cscroll-card {
    massive 56rem shell that desktops use for the long-scroll choreography. */
 @media (max-width: 768px) {
   .cscroll-shell {
-    height: 44rem;
-    padding: 1rem 1rem 2rem;
+    height: 30rem;
+    padding: 0.5rem 1rem 1rem;
   }
-  .cscroll-stage { padding: 1rem 0; }
-  .cscroll-card { height: 22rem; margin-top: 2rem; }
+  .cscroll-stage { padding: 0.5rem 0; }
+  .cscroll-card { height: 22rem; margin-top: 1.25rem; }
 }
 
 .cscroll-card-inner {
