@@ -149,18 +149,29 @@ export default function Services() {
   useLayoutEffect(() => {
     if (!sectionRef.current) return;
 
+    const tier = document.documentElement.dataset.tier;
+    const isWeak =
+      tier === "low" ||
+      tier === "med" ||
+      (typeof matchMedia === "function" &&
+        matchMedia("(pointer: coarse)").matches);
+
     const ctx = gsap.context(() => {
       const cards = cardsRef.current.filter((c): c is HTMLDivElement => c !== null);
 
+      // Entrance animations stay on every device — the owner likes them.
+      // Reliability comes from `start: "top bottom"` (fires as soon as the
+      // section enters the viewport at all, not waiting until 10–25% in)
+      // and the global ScrollTrigger.refresh() the preloader runs on
+      // dismiss so cached pixel positions are correct post-layout-shift.
       gsap.from(headerRef.current, {
         y: -28,
         opacity: 0,
-        duration: 0.9,
+        duration: isWeak ? 0.6 : 0.9,
         ease: "expo.out",
         scrollTrigger: {
           trigger: sectionRef.current,
-          // Earlier (was 78%) — fires the moment the section is in viewport.
-          start: "top 90%",
+          start: "top bottom",
           once: true,
         },
       });
@@ -169,23 +180,19 @@ export default function Services() {
         gsap.from(cards, {
           y: 36,
           opacity: 0,
-          filter: "blur(8px)",
-          duration: 0.95,
+          filter: isWeak ? "blur(0px)" : "blur(8px)",
+          duration: isWeak ? 0.55 : 0.95,
           ease: "expo.out",
-          stagger: 0.1,
+          stagger: isWeak ? 0.05 : 0.1,
           scrollTrigger: {
             trigger: cards[0],
-            // Earlier (was 88%) so card stagger starts as the row appears.
-            start: "top 92%",
+            start: "top bottom",
             once: true,
           },
         });
       }
 
-      // Pause the infinite icon CSS animations when their card isn't on
-      // screen. Each icon has drop-shadow + continuous transform, so 4
-      // animations running off-screen costs real GPU time on mobile.
-      // animation-play-state on the icon container respects each variant.
+      // Icon off-screen pause runs on EVERY device — perf gate, not entrance.
       const io = new IntersectionObserver(
         (entries) => {
           for (const entry of entries) {

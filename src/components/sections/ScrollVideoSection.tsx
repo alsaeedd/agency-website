@@ -112,9 +112,10 @@ export default function ScrollVideoSection({
           stagger: 0.1,
           scrollTrigger: {
             trigger: section,
-            // Earlier (was 80%) — content arrives as section appears
-            // instead of waiting until 20% of it is in viewport.
-            start: "top 92%",
+            // "top bottom" — earliest possible fire as section crosses
+            // viewport bottom. Post-preloader ScrollTrigger.refresh()
+            // ensures cached pixel positions are correct.
+            start: "top bottom",
             once: true,
           },
         },

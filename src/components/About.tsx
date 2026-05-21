@@ -34,9 +34,12 @@ export default function About() {
   useLayoutEffect(() => {
     if (!sectionRef.current) return;
 
-    // On mobile / weak tiers, kick the section entrance EARLIER and FASTER
-    // so it doesn't "take a while to pop up". Desktop keeps the slow
-    // cinematic timing because it has the perf budget for it.
+    // Coarse-pointer / weak tiers get FASTER durations so the entrance
+    // completes before the user can scroll past it — but the animation
+    // itself stays (owner likes it). The key change is that we no longer
+    // depend on trigger positions being exactly right: a `ral:trigger-
+    // refresh` event from the preloader will force every ScrollTrigger
+    // to re-evaluate and fire any whose start has already been crossed.
     const tier = document.documentElement.dataset.tier;
     const isWeak =
       tier === "low" ||
@@ -48,18 +51,16 @@ export default function About() {
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: sectionRef.current,
-          // Fire EARLY on every device — the user reported sections rendering
-          // "late". 92% on mobile, 88% on desktop. With the new content
-          // pre-mounted (no more lazy/Suspense), the animation starts the
-          // moment the section enters view rather than 25% in.
-          start: isWeak ? "top 92%" : "top 88%",
+          // Fire VERY early so the timeline starts the moment the section
+          // is anywhere near the viewport.
+          start: "top bottom",
           once: true,
         },
       });
 
       tl.from(ghostRef.current, {
         opacity: 0,
-        scale: 0.92,
+        scale: 0.94,
         duration: isWeak ? 0.7 : 1.4,
         ease: "expo.out",
       })
@@ -68,8 +69,8 @@ export default function About() {
           {
             opacity: 0,
             y: 24,
-            scale: 0.92,
-            duration: isWeak ? 0.55 : 0.9,
+            scale: 0.94,
+            duration: isWeak ? 0.5 : 0.9,
             ease: "expo.out",
           },
           isWeak ? "-=0.55" : "-=1.1",
@@ -81,7 +82,7 @@ export default function About() {
             opacity: 0,
             duration: isWeak ? 0.55 : 0.9,
             ease: "expo.out",
-            stagger: isWeak ? 0.035 : 0.06,
+            stagger: isWeak ? 0.03 : 0.06,
           },
           isWeak ? "-=0.35" : "-=0.6",
         )
@@ -92,8 +93,6 @@ export default function About() {
             opacity: 0,
             duration: isWeak ? 0.45 : 0.7,
             ease: "expo.out",
-            // Much tighter stagger on mobile — paragraphs would otherwise
-            // dribble in across ~2s and feel slow.
             stagger: isWeak ? 0.005 : 0.012,
           },
           isWeak ? "-=0.35" : "-=0.6",

@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 /**
  * Lusion-tier intro preloader.
@@ -97,6 +98,18 @@ export default function Preloader() {
     const dismiss = () => {
       if (dismissed) return;
       dismissed = true;
+
+      // CRITICAL: refresh ScrollTrigger right before the curtain lifts so
+      // every cached trigger start/end position is recomputed against the
+      // FINAL layout (fonts loaded, images loaded, lazy chunks mounted).
+      // Without this, entrance animations on About / Portfolio / etc. can
+      // fire at the wrong scrollY on mobile and look like they "never
+      // popped up". One refresh inside rAF is idempotent + cheap.
+      try {
+        ScrollTrigger.refresh();
+      } catch {
+        /* GSAP not yet loaded; non-fatal */
+      }
 
       el.setAttribute("data-state", "leaving");
 
