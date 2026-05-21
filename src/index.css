@@ -52,16 +52,19 @@ body {
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  /* Tell the compositor this is a vertical scroller — skips the 300ms
-     touch-action test and prevents accidental horizontal pan capture. */
-  touch-action: pan-y;
-  /* Stops iOS Safari's "pull-to-refresh" / Android's overscroll bounce
-     from eating frames during scroll. */
-  overscroll-behavior-y: none;
+  /* `touch-action: pan-y` was here as a perf hint but in Chrome
+     DevTools mobile emulation it was reading as "block scroll" and
+     the owner couldn't scroll. Default `auto` works fine — Chrome's
+     native compositor already optimizes vertical scrolls. */
+  /* `overscroll-behavior-y: none` ALSO removed — it interacts
+     unpredictably with DevTools touch emulation. Bounce on iOS is
+     fine to keep. */
 }
 
-/* Guard against horizontal page overflow at any viewport */
-html, main { overflow-x: hidden; max-width: 100%; }
+/* Guard against horizontal page overflow at any viewport. NOT on
+   <html> — overflow-x:hidden on html can break momentum scroll on
+   iOS Safari and DevTools mobile emulation. */
+main { overflow-x: hidden; max-width: 100%; }
 
 a {
   color: inherit;

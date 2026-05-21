@@ -50,7 +50,12 @@ export const ContainerScroll: React.FC<ContainerScrollProps> = ({
     // visibly the same gesture on mobile.
     const startRotate = isWeak ? 28 : 42;
     const startScale = isWeak ? 0.92 : 1.06;
-    const headerTravel = isWeak ? -50 : -100;
+    // Header parallax disabled — it was pulling the cscroll-header UP
+    // by up to 100px during scroll, shrinking the visual gap between
+    // the About body and the "Built in Bahrain" headline so they
+    // looked like they were overlapping. The card tilt carries the
+    // motion on its own.
+    const headerTravel = 0;
     // Higher scrub value = more smoothing → no end-of-scroll snap when
     // the trigger window ends. Weak tier stays `true` (instant) since
     // mobile native scroll already absorbs the abrupt end.

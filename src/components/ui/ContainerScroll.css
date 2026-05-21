@@ -9,13 +9,20 @@
   align-items: center;
   justify-content: flex-start;
   position: relative;
-  padding: 2rem 1rem 6rem;
+  /* Generous top padding so the About body has clear visual separation
+     from the cscroll-header "Built in Bahrain. Shipped to the world."
+     Same generous bottom so the iPad card doesn't bleed into the
+     next section. */
+  padding: 5rem 1rem 6rem;
   width: 100%;
+  /* Defensive: nothing inside should be allowed to bleed out the top
+     into the About body above. */
+  margin-top: 0;
 }
 
 @media (min-width: 768px) {
   .cscroll-shell {
-    padding: 4rem 3rem 9rem;
+    padding: 9rem 3rem 9rem;
   }
 }
 
@@ -71,12 +78,11 @@ html:not([data-tier="high"]) .cscroll-card {
     0 14px 36px rgba(0, 0, 0, 0.5);
 }
 
-/* Mobile tightening — smaller card, less padding, same flex-column flow.
-   Bottom padding kept generous so there's clear visual breathing room
-   between the iPad card and the next section ("Teams that ship"). */
+/* Mobile tightening — smaller card, but PRESERVE top breathing room
+   so the About body doesn't crash into the "Built in Bahrain" header. */
 @media (max-width: 768px) {
   .cscroll-shell {
-    padding: 1.25rem 1rem 4rem;
+    padding: 4rem 1rem 4rem;
   }
   .cscroll-card { height: 20rem; margin-top: 1.5rem; }
 }
