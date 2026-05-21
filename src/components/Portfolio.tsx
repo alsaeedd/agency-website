@@ -341,7 +341,9 @@ export default function Portfolio() {
             ease: "expo.out",
             scrollTrigger: {
               trigger: card,
-              start: "top 88%",
+              // Earlier (was 88%) so cards finish their entrance by the
+              // time the user actually sees them — no more "late render".
+              start: "top 92%",
               once: true,
             },
             delay: index * 0.12,

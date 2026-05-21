@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, lazy, Suspense } from "react";
+import { useLayoutEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Lenis from "lenis";
@@ -7,46 +7,26 @@ import Navbar from "./components/Navbar";
 import Hero from "./components/Hero";
 import Services from "./components/Services";
 import About from "./components/About";
+import Clients from "./components/Clients";
+import Portfolio from "./components/Portfolio";
+import CTA from "./components/CTA";
+import Footer from "./components/Footer";
+import ScrollVideoSection from "./components/sections/ScrollVideoSection";
 import ContactCircle from "./components/ContactCircle";
 import CursorFollower from "./components/CursorFollower";
 import Contact from "./components/Contact";
 import Preloader from "./components/Preloader";
+import NavLoader from "./components/NavLoader";
 
-// Below-the-fold sections are code-split into their own chunks so the initial
-// JS payload only contains what's needed to paint the first viewport. We
-// IMMEDIATELY kick off the dynamic imports for ALL of them (the `lazy()`
-// alone doesn't fetch — it waits for the boundary to render) so the chunks
-// stream down the wire IN PARALLEL with hero hydration, and the preloader
-// waits for them to finish before dismissing. By the time the user can see
-// the page, every section is already hydrated — no "section appears halfway
-// through scroll" jank.
-const portfolioImport = import("./components/Portfolio");
-const clientsImport = import("./components/Clients");
-const ctaImport = import("./components/CTA");
-const footerImport = import("./components/Footer");
-const scrollVideoImport = import("./components/sections/ScrollVideoSection");
-
-// Expose a single promise the preloader waits on before dismissing.
-declare global {
-  interface Window {
-    __ralChunksReady?: Promise<unknown>;
-  }
-}
-if (typeof window !== "undefined") {
-  window.__ralChunksReady = Promise.all([
-    portfolioImport,
-    clientsImport,
-    ctaImport,
-    footerImport,
-    scrollVideoImport,
-  ]).catch(() => undefined);
-}
-
-const Clients = lazy(() => clientsImport);
-const Portfolio = lazy(() => portfolioImport);
-const CTA = lazy(() => ctaImport);
-const Footer = lazy(() => footerImport);
-const ScrollVideoSection = lazy(() => scrollVideoImport);
+// React.lazy + Suspense was pausing reconciliation on below-fold sections —
+// the chunks downloaded, but Suspense kept the subtrees in "pending" state
+// until the boundary settled, and the browser deferred their paint to the
+// compositor commit. Result: content visibly "rendered late" when scrolled
+// to. Bundle is small enough (~110KB gzip total) that the savings from
+// code-splitting weren't worth the UX cost. Static imports everywhere
+// below the fold; the preloader still hides initial paint, and every
+// section is fully laid out + ScrollTrigger-registered by the time the
+// curtain lifts. Contact stays its own normal import (modal, always-ready).
 
 function App() {
   const lenisRef = useRef<Lenis | null>(null);
@@ -56,21 +36,34 @@ function App() {
 
   const scrollToSection = (selector: string) => {
     const el = document.querySelector(selector) as HTMLElement | null;
-    if (el && lenisRef.current) {
-      lenisRef.current.scrollTo(el, { offset: -80, immediate: false });
+    if (el) {
+      window.dispatchEvent(
+        new CustomEvent("ral:nav-scroll", { detail: { selector } }),
+      );
+      if (lenisRef.current) {
+        lenisRef.current.scrollTo(el, { offset: -80, immediate: false });
+      } else {
+        const top = el.getBoundingClientRect().top + window.scrollY - 80;
+        window.scrollTo({ top, behavior: "smooth" });
+      }
     }
   };
 
-  useEffect(() => {
+  // useLayoutEffect runs synchronously before paint — ensures ScrollTrigger
+  // has read element positions BEFORE the first paint, so initial entrance
+  // triggers fire on the right frame instead of one frame late.
+  useLayoutEffect(() => {
     // ── ScrollTrigger global perf tuning ─────────────────────────
     // limitCallbacks: throttle onEnter/onLeave to rAF (biggest single win)
     // ignoreMobileResize: ignore iOS Safari URL-bar resize storms
+    // preventOverlaps: stop sibling timelines fighting during reverse scroll
     ScrollTrigger.config({
       limitCallbacks: true,
       ignoreMobileResize: true,
     });
     ScrollTrigger.defaults({
       fastScrollEnd: true,
+      preventOverlaps: true,
     });
 
     const reducedMotion =
@@ -80,33 +73,47 @@ function App() {
       typeof matchMedia === "function" &&
       matchMedia("(pointer: coarse)").matches;
 
-    // ── Lenis touch/desktop tuning ───────────────────────────────
-    // On coarse pointer (mobile/tablet), native momentum is BETTER than
-    // Lenis. We use a much shorter duration so the JS smoothing barely
-    // fights native scroll. On desktop, the cinematic 1.2s easing stays.
-    // If the user prefers reduced motion, don't initialize Lenis at all.
+    // ── Lenis: lerp (symmetric responsiveness up/down) ─────────────
+    // The previous `duration: 1.2` was the dominant cause of "scroll-back
+    // lag" — time-based easing has to unwind inertia from the previous
+    // direction, so reverse scroll feels rubbery. `lerp` is frame-rate
+    // independent linear interpolation toward the target — identical
+    // responsiveness in both directions. 0.085 desktop keeps cinematic
+    // smoothness without the rubber-band. Skip Lenis entirely on touch
+    // (native iOS/Android momentum is better than anything JS can do)
+    // and under prefers-reduced-motion.
     let lenis: Lenis | null = null;
-    if (!reducedMotion) {
+    if (!reducedMotion && !isCoarse) {
       lenis = new Lenis({
-        duration: isCoarse ? 0.4 : 1.2,
-        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+        lerp: 0.085,
         orientation: "vertical",
         smoothWheel: true,
         syncTouch: false,
         touchMultiplier: 1,
       });
       lenisRef.current = lenis;
-      lenis.on("scroll", ScrollTrigger.update);
     }
 
+    // GSAP ticker drives BOTH Lenis (via .raf) and ScrollTrigger's own
+    // internal scroll polling. The previous `lenis.on('scroll',
+    // ScrollTrigger.update)` was a SECOND update path — doubled per-frame
+    // work and could re-enter on fast scroll. Single ticker is enough.
     const tickerCallback = (time: number) => {
       lenis?.raf(time * 1000);
     };
-
     gsap.ticker.add(tickerCallback);
     gsap.ticker.lagSmoothing(0);
 
+    // After the DOM and ScrollTrigger have settled, do ONE refresh in the
+    // next rAF so every trigger has correct pixel positions. Without this,
+    // triggers cached against pre-image-load layout fire at the wrong
+    // scroll position when chunks/images settle.
+    const refreshTimer = window.setTimeout(() => {
+      requestAnimationFrame(() => ScrollTrigger.refresh());
+    }, 60);
+
     return () => {
+      window.clearTimeout(refreshTimer);
       gsap.ticker.remove(tickerCallback);
       lenis?.destroy();
     };
@@ -127,54 +134,48 @@ function App() {
         <Hero onContactClick={openContact} />
         <Services />
         <About />
-        {/* Below-fold sections stream in their own chunks behind the
-            preloader. fallback={null} is safe because the preloader covers
-            the viewport while these resolve. */}
-        <Suspense fallback={null}>
-          <Clients />
-          <ScrollVideoSection
-            waveGrid
-            waveVariant="b"
-            ornament="spark"
-            eyebrow={<><span className="sv-dot" /> The work behind the work</>}
-            title={
-              <>
-                Built like it's{" "}
-                <span className="scroll-video-title-accent">ours.</span>
-              </>
-            }
-            subtitle={
-              <>
-                Every project gets the same care - weekly check-ins on real
-                channels, code you can actually read, and zero black boxes.
-              </>
-            }
-          />
-          <Portfolio />
-          <ScrollVideoSection
-            waveGrid
-            ornament="ring"
-            eyebrow={<><span className="sv-dot" /> What it feels like to work with us</>}
-            title={
-              <>
-                Less ceremony, <br />
-                <span className="scroll-video-title-accent">more shipping.</span>
-              </>
-            }
-            subtitle={
-              <>
-                No slide decks, no kick-off theater. We scope it on WhatsApp, ship
-                the first slice in a week, and iterate from there.
-              </>
-            }
-          />
-          <CTA onContactClick={openContact} />
-        </Suspense>
+        <Clients />
+        <ScrollVideoSection
+          waveGrid
+          waveVariant="b"
+          ornament="spark"
+          eyebrow={<><span className="sv-dot" /> The work behind the work</>}
+          title={
+            <>
+              Built like it's{" "}
+              <span className="scroll-video-title-accent">ours.</span>
+            </>
+          }
+          subtitle={
+            <>
+              Every project gets the same care - weekly check-ins on real
+              channels, code you can actually read, and zero black boxes.
+            </>
+          }
+        />
+        <Portfolio />
+        <ScrollVideoSection
+          waveGrid
+          ornament="ring"
+          eyebrow={<><span className="sv-dot" /> What it feels like to work with us</>}
+          title={
+            <>
+              Less ceremony, <br />
+              <span className="scroll-video-title-accent">more shipping.</span>
+            </>
+          }
+          subtitle={
+            <>
+              No slide decks, no kick-off theater. We scope it on WhatsApp, ship
+              the first slice in a week, and iterate from there.
+            </>
+          }
+        />
+        <CTA onContactClick={openContact} />
       </main>
-      <Suspense fallback={null}>
-        <Footer onContactClick={openContact} />
-      </Suspense>
+      <Footer onContactClick={openContact} />
       <Contact isOpen={isContactOpen} onClose={() => setIsContactOpen(false)} />
+      <NavLoader />
     </>
   );
 }

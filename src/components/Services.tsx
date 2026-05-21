@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useLayoutEffect, useRef } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import "./Services.css";
@@ -146,7 +146,7 @@ export default function Services() {
   const headerRef = useRef<HTMLDivElement>(null);
   const cardsRef = useRef<(HTMLDivElement | null)[]>([]);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (!sectionRef.current) return;
 
     const ctx = gsap.context(() => {
@@ -159,7 +159,8 @@ export default function Services() {
         ease: "expo.out",
         scrollTrigger: {
           trigger: sectionRef.current,
-          start: "top 78%",
+          // Earlier (was 78%) — fires the moment the section is in viewport.
+          start: "top 90%",
           once: true,
         },
       });
@@ -174,7 +175,8 @@ export default function Services() {
           stagger: 0.1,
           scrollTrigger: {
             trigger: cards[0],
-            start: "top 88%",
+            // Earlier (was 88%) so card stagger starts as the row appears.
+            start: "top 92%",
             once: true,
           },
         });

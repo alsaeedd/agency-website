@@ -96,13 +96,19 @@
   pointer-events: none;
   overflow: hidden;
   contain: strict;
+  /* Promote the WHOLE container to a single compositor layer instead of
+     per-blob will-change (was creating three large texture layers — that
+     was triggering memory thrash on weak Android during scroll-back).
+     One layer composites the three radial-gradient children once and the
+     compositor blends it under the page in one pass. */
+  transform: translateZ(0);
+  will-change: transform;
 }
 
 .bg-blob {
   position: absolute;
   border-radius: 50%;
-  will-change: transform;
-  transform: translateZ(0);
+  /* Per-blob will-change removed — parent layer handles compositing. */
   backface-visibility: hidden;
 }
 
@@ -184,4 +190,11 @@
 
 @media (max-width: 768px) {
   .bg-blob { animation: none; }
+}
+
+/* Catch all non-high tiers across desktop too — many laptops are
+   classified med (4-cores / 4GB), and their compositor doesn't love
+   three viewport-sized translating layers during reverse scroll. */
+html:not([data-tier="high"]) .bg-blob {
+  animation: none;
 }

@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useLayoutEffect, useRef } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import logoMain from "../../assets/logo_main.png";
@@ -31,7 +31,7 @@ export default function About() {
   const headingRef = useRef<HTMLHeadingElement>(null);
   const ghostRef = useRef<SVGSVGElement>(null);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (!sectionRef.current) return;
 
     // On mobile / weak tiers, kick the section entrance EARLIER and FASTER
@@ -48,8 +48,11 @@ export default function About() {
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: sectionRef.current,
-          // Fire earlier on mobile so users don't scroll past a blank section.
-          start: isWeak ? "top 92%" : "top 75%",
+          // Fire EARLY on every device — the user reported sections rendering
+          // "late". 92% on mobile, 88% on desktop. With the new content
+          // pre-mounted (no more lazy/Suspense), the animation starts the
+          // moment the section enters view rather than 25% in.
+          start: isWeak ? "top 92%" : "top 88%",
           once: true,
         },
       });

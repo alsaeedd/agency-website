@@ -126,11 +126,36 @@
   z-index: 0;
   pointer-events: none;
   opacity: 0.85;
-  filter: drop-shadow(0 0 28px rgba(167, 139, 250, 0.25));
+  /* filter: drop-shadow was here and was the actual cause of the ring
+     "lag" — it re-rasterized the entire SVG every frame as the children
+     rotated. Removed entirely; a static radial gradient sibling carries
+     the halo without touching the compositor each frame. */
+}
+
+/* Static halo behind the rings — was the drop-shadow's job. Composited
+   once, never repainted during rotation. */
+.about-rings::before {
+  content: "";
+  position: absolute;
+  inset: -8%;
+  background: radial-gradient(
+    circle at center,
+    rgba(167, 139, 250, 0.16) 0%,
+    rgba(124, 90, 255, 0.06) 35%,
+    transparent 70%
+  );
+  z-index: -1;
+  pointer-events: none;
+  filter: blur(20px);
 }
 
 .about-ring {
   transform-origin: 400px 400px;
+  /* transform-box: fill-box keeps the rotation origin tied to the group's
+     own bounding box rather than the document — Chromium then promotes
+     this to its own compositor layer and the spin is pure GPU work. */
+  transform-box: fill-box;
+  will-change: transform;
 }
 
 .about-ring-outer {
@@ -507,7 +532,8 @@ html:not([data-tier="high"]) .about-cscroll-tag {
 }
 
 html:not([data-tier="high"]) .about-rings {
-  filter: drop-shadow(0 0 6px rgba(167, 139, 250, 0.18));
+  /* No drop-shadow on the rings at any tier now (static ::before halo
+     handles it); reduce overall opacity slightly on weak devices. */
   opacity: 0.7;
 }
 
@@ -517,16 +543,14 @@ html:not([data-tier="high"]) .about-logo-img {
 
 html:not([data-tier="high"]) .about-cscroll-crest {
   filter: drop-shadow(0 0 10px rgba(167, 139, 250, 0.22));
-  animation: about-cscroll-crest-spin 140s linear infinite;
+  /* Restored to original speed — without drop-shadow on the rings layer
+     the GPU can spin SVG content at zero main-thread cost. */
+  animation: about-cscroll-crest-spin 80s linear infinite;
 }
 
-/* Slow the rings spin on weak devices so each repaint is rarer. */
-html:not([data-tier="high"]) .about-ring-outer {
-  animation: aboutRingSpin 120s linear infinite;
-}
-html:not([data-tier="high"]) .about-ring-inner {
-  animation: aboutRingSpin 90s linear infinite reverse;
-}
+/* Ring rotation: SAME speed on every tier — the cost was drop-shadow,
+   not the animation. With the filter removed the rotation is pure GPU
+   compositing and runs at native frame rate on the cheapest phone. */
 
 /* If the user prefers reduced motion, freeze the rings entirely. */
 @media (prefers-reduced-motion: reduce) {

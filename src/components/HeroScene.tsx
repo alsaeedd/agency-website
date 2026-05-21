@@ -378,12 +378,16 @@ export default function HeroScene() {
       else stop();
     }
 
+    // rootMargin: "200px 0px" wakes the scene up BEFORE it scrolls into
+    // view, so the first frame on resume is computed during the buffer
+    // window and the user sees the already-running animation — no
+    // first-frame stutter when scrolling back into the hero.
     const io = new IntersectionObserver(
       ([entry]) => {
         onScreen = entry.isIntersecting;
         sync();
       },
-      { threshold: 0 },
+      { threshold: 0, rootMargin: "200px 0px" },
     );
     io.observe(host);
 
