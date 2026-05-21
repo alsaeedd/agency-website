@@ -5,6 +5,7 @@ import {
   useState,
   CSSProperties,
 } from "react";
+import { getDeviceProfile } from "../../lib/deviceProfile";
 
 type PatternShape = "Checks" | "Stripes" | "Edge";
 
@@ -201,10 +202,10 @@ export default function AnimatedGradient({
       swirlIterations: gl.getUniformLocation(program, "u_swirlIterations"),
     };
 
+    const dpr = getDeviceProfile().dpr;
     const resize = () => {
       const w = container.clientWidth;
       const h = container.clientHeight;
-      const dpr = Math.min(window.devicePixelRatio || 1, 2);
       canvas.width = w * dpr;
       canvas.height = h * dpr;
       canvas.style.width = `${w}px`;
@@ -217,7 +218,38 @@ export default function AnimatedGradient({
 
     startTimeRef.current = performance.now();
 
+    // Pause the shader loop when scrolled off-screen or the tab is hidden.
+    let visible = !document.hidden;
+    let onScreen = true;
+    const sync = () => {
+      if (visible && onScreen) {
+        if (frameIdRef.current === undefined) {
+          frameIdRef.current = requestAnimationFrame(animate);
+        }
+      } else if (frameIdRef.current !== undefined) {
+        cancelAnimationFrame(frameIdRef.current);
+        frameIdRef.current = undefined;
+      }
+    };
+    const onVis = () => {
+      visible = !document.hidden;
+      sync();
+    };
+    document.addEventListener("visibilitychange", onVis);
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        onScreen = entry.isIntersecting;
+        sync();
+      },
+      { threshold: 0 },
+    );
+    io.observe(container);
+
     const animate = (time: number) => {
+      if (!visible || !onScreen) {
+        frameIdRef.current = undefined;
+        return;
+      }
       const elapsed = (time - startTimeRef.current) / 1000;
       const speed = (params.speed / 100) * 5;
       gl.uniform1f(U.time, elapsed * speed + params.offset * 0.01);
@@ -247,11 +279,13 @@ export default function AnimatedGradient({
       gl.drawArrays(gl.TRIANGLES, 0, 6);
       frameIdRef.current = requestAnimationFrame(animate);
     };
-    frameIdRef.current = requestAnimationFrame(animate);
+    sync();
 
     return () => {
       if (frameIdRef.current !== undefined)
         cancelAnimationFrame(frameIdRef.current);
+      document.removeEventListener("visibilitychange", onVis);
+      io.disconnect();
       ro.disconnect();
       gl.deleteProgram(program);
       gl.deleteShader(vShader);

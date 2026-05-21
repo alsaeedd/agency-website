@@ -44,9 +44,47 @@
   animation: heroAurora 22s ease-in-out infinite alternate;
 }
 
+/* Drift via opacity, NOT background-position: animating background-position on
+   a blur(40px) layer forces a full re-blur every frame. Opacity is composited
+   (the blurred texture is cached), so this drift is effectively free. */
 @keyframes heroAurora {
-  0%   { background-position: -2% -1%; }
-  100% { background-position: 4% 2%; }
+  0%   { opacity: 0.62; }
+  100% { opacity: 0.82; }
+}
+
+/* ───────── Adaptive quality — scale atmosphere to the device tier ─────────
+   <html data-tier> is stamped once at boot (src/lib/deviceProfile.ts). Capable
+   devices keep the full look; weaker ones shed the most expensive compositing
+   (large-radius blur, blend-mode re-raster, particle layers). */
+
+/* MED: stop the liquid blob re-blurring every frame; lighten its blur. */
+html[data-tier="med"] .hero-blob {
+  filter: blur(26px) saturate(0.9);
+}
+html[data-tier="med"] .hero-blob-group,
+html[data-tier="med"] .hero-blob-1,
+html[data-tier="med"] .hero-blob-2,
+html[data-tier="med"] .hero-blob-3,
+html[data-tier="med"] .hero-blob-4,
+html[data-tier="med"] .hero-blob-5 {
+  animation: none;
+}
+html[data-tier="med"] .hero-particle:nth-child(n + 11) {
+  display: none;
+}
+
+/* LOW: drop the heaviest layers — the aurora alone carries the mood. */
+html[data-tier="low"] .hero-aurora,
+html[data-tier="low"] .hero-aurora-2 {
+  filter: blur(16px);
+  animation: none;
+}
+html[data-tier="low"] .hero-blob,
+html[data-tier="low"] .hero-grain {
+  display: none;
+}
+html[data-tier="low"] .hero-particle:nth-child(n + 5) {
+  display: none;
 }
 
 /* Aurora 2 - subtle accent highlights */

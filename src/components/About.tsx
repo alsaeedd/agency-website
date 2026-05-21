@@ -184,6 +184,8 @@ export default function About() {
             alt=""
             aria-hidden="true"
             className="about-cscroll-crest"
+            loading="lazy"
+            decoding="async"
           />
           <div className="about-cscroll-overlay">
             <span className="about-cscroll-tag">

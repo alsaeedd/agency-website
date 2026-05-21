@@ -1,5 +1,7 @@
 import { useEffect, useRef } from "react";
 import * as THREE from "three";
+import { getDeviceProfile } from "../../lib/deviceProfile";
+import { makeFpsGuard } from "../../lib/fpsGuard";
 
 interface WaveGridSceneProps {
   triggerRef?: React.RefObject<HTMLElement>;
@@ -21,6 +23,9 @@ export default function WaveGridScene({ triggerRef, variant = "a" }: WaveGridSce
   useEffect(() => {
     const host = mountRef.current;
     if (!host) return;
+
+    const profile = getDeviceProfile();
+    const lowTier = profile.tier === "low";
 
     // Variant config
     const cfg = variant === "b"
@@ -56,10 +61,12 @@ export default function WaveGridScene({ triggerRef, variant = "a" }: WaveGridSce
 
     const renderer = new THREE.WebGLRenderer({
       alpha: true,
-      antialias: true,
+      antialias: profile.antialias,
       powerPreference: "high-performance",
+      stencil: false,
     });
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    let dpr = profile.dpr;
+    renderer.setPixelRatio(dpr);
     renderer.setSize(w, h, false);
     renderer.setClearColor(0x000000, 0);
     host.appendChild(renderer.domElement);
@@ -67,8 +74,10 @@ export default function WaveGridScene({ triggerRef, variant = "a" }: WaveGridSce
     // ──────────────────────────────────────────
     // WAVE GRID - rectangular plane of points
     // ──────────────────────────────────────────
-    const GRID_X = cfg.gridSize;
-    const GRID_Z = cfg.gridSize;
+    // Thin the grid on weak devices (point count scales with the square).
+    const gridSize = lowTier ? Math.round(cfg.gridSize * 0.6) : cfg.gridSize;
+    const GRID_X = gridSize;
+    const GRID_Z = gridSize;
     const SPACING = cfg.spacing;
     const COUNT = GRID_X * GRID_Z;
 
@@ -102,7 +111,7 @@ export default function WaveGridScene({ triggerRef, variant = "a" }: WaveGridSce
         uProgress: { value: 0 },
         uColorA: { value: cfg.colorA },
         uColorB: { value: cfg.colorB },
-        uPixelRatio: { value: Math.min(window.devicePixelRatio, 2) },
+        uPixelRatio: { value: dpr },
         uMouseX: { value: 0 },
         uMouseY: { value: 0 },
       },
@@ -188,11 +197,46 @@ export default function WaveGridScene({ triggerRef, variant = "a" }: WaveGridSce
     };
     if (!isCoarse) window.addEventListener("pointermove", onMove, { passive: true });
 
+    // Loop runs only while the section is BOTH tab-visible AND on screen.
     let visible = !document.hidden;
+    let onScreen = true;
+    let raf = 0;
+    let lastTime = performance.now();
+
+    const start = () => {
+      if (!raf && visible && onScreen) {
+        lastTime = performance.now();
+        raf = requestAnimationFrame(tick);
+      }
+    };
+    const stop = () => {
+      if (raf) {
+        cancelAnimationFrame(raf);
+        raf = 0;
+      }
+    };
+
     const onVis = () => {
       visible = !document.hidden;
+      visible ? start() : stop();
     };
     document.addEventListener("visibilitychange", onVis);
+
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        onScreen = entry.isIntersecting;
+        onScreen ? start() : stop();
+      },
+      { threshold: 0 },
+    );
+    io.observe(host);
+
+    // Drop renderer DPR a notch if frames stay low on a weak device.
+    const fpsGuard = makeFpsGuard(() => {
+      dpr = Math.max(0.75, dpr - 0.25);
+      renderer.setPixelRatio(dpr);
+      mat.uniforms.uPixelRatio.value = dpr;
+    });
 
     const resize = () => {
       const ww = host.clientWidth;
@@ -204,13 +248,15 @@ export default function WaveGridScene({ triggerRef, variant = "a" }: WaveGridSce
     const ro = new ResizeObserver(resize);
     ro.observe(host);
 
-    let raf = 0;
-    let lastTime = performance.now();
     const tick = (time: number) => {
+      if (!visible || !onScreen) {
+        raf = 0;
+        return;
+      }
       raf = requestAnimationFrame(tick);
-      if (!visible) return;
       const dt = Math.min(0.05, (time - lastTime) / 1000);
       lastTime = time;
+      fpsGuard(time);
 
       scrollLerp += (scrollTarget - scrollLerp) * 0.08;
       mouseCurrent.x += (mouseTarget.x - mouseCurrent.x) * 0.06;
@@ -231,13 +277,14 @@ export default function WaveGridScene({ triggerRef, variant = "a" }: WaveGridSce
 
       renderer.render(scene, camera);
     };
-    raf = requestAnimationFrame(tick);
+    start();
 
     return () => {
-      cancelAnimationFrame(raf);
+      stop();
       window.removeEventListener("scroll", onScroll);
       window.removeEventListener("pointermove", onMove);
       document.removeEventListener("visibilitychange", onVis);
+      io.disconnect();
       ro.disconnect();
       geo.dispose();
       mat.dispose();

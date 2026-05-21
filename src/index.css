@@ -126,3 +126,24 @@ video {
   white-space: nowrap;
   border: 0;
 }
+
+/* ===== Performance ===== */
+
+/* Skip rendering/painting lower sections until they're near the viewport.
+   `auto` intrinsic size lets the browser remember real height after first
+   reveal, so the scrollbar doesn't jump. Hero/above-fold are excluded. */
+.scroll-video-section,
+.cta,
+.footer {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 800px;
+}
+
+/* Low tier: the glass navbar's backdrop-filter re-samples everything behind it
+   on every scroll frame. Swap it for a near-solid fill on weak devices. */
+html[data-tier="low"] .navbar,
+html[data-tier="low"] .navbar-mobile-menu {
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+  background: rgba(12, 7, 21, 0.96);
+}

@@ -1,5 +1,7 @@
 import { useEffect, useRef } from "react";
 import * as THREE from "three";
+import { getDeviceProfile } from "../lib/deviceProfile";
+import { makeFpsGuard } from "../lib/fpsGuard";
 import "./HeroScene.css";
 
 /**
@@ -19,6 +21,7 @@ export default function HeroScene() {
     if (!host) return;
 
     const isCoarse = matchMedia("(pointer: coarse)").matches;
+    const profile = getDeviceProfile();
 
     const scene = new THREE.Scene();
     const w = host.clientWidth;
@@ -29,10 +32,12 @@ export default function HeroScene() {
 
     const renderer = new THREE.WebGLRenderer({
       alpha: true,
-      antialias: true,
+      antialias: profile.antialias,
       powerPreference: "high-performance",
+      stencil: false,
     });
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    let dpr = profile.dpr;
+    renderer.setPixelRatio(dpr);
     renderer.setSize(w, h, false);
     renderer.setClearColor(0x000000, 0);
     host.appendChild(renderer.domElement);
@@ -64,20 +69,18 @@ export default function HeroScene() {
     const coreGroup = new THREE.Group();
     scene.add(coreGroup);
 
-    // Inner solid icosahedron - iridescent crystal
+    // Inner solid icosahedron - glowing violet crystal.
+    // Was MeshPhysicalMaterial with transmission+iridescence+clearcoat — the
+    // transmission alone forced an extra full-scene render pass every frame
+    // (the dominant GPU cost on mobile). MeshStandardMaterial + emissive reads
+    // as the same glowing crystal at this size for a fraction of the cost.
     const innerGeo = new THREE.IcosahedronGeometry(0.85, 1);
-    const innerMat = new THREE.MeshPhysicalMaterial({
+    const innerMat = new THREE.MeshStandardMaterial({
       color: 0xb084ff,
-      metalness: 0.55,
-      roughness: 0.16,
-      clearcoat: 1,
-      clearcoatRoughness: 0.08,
-      iridescence: 1,
-      iridescenceIOR: 1.65,
-      iridescenceThicknessRange: [200, 700],
-      transmission: 0.22,
-      thickness: 0.8,
-      reflectivity: 0.85,
+      metalness: 0.6,
+      roughness: 0.18,
+      emissive: 0x6a3fd0,
+      emissiveIntensity: 0.45,
     });
     const innerMesh = new THREE.Mesh(innerGeo, innerMat);
     coreGroup.add(innerMesh);
@@ -121,43 +124,63 @@ export default function HeroScene() {
     // ──────────────────────────────────────────
     // SATELLITE PARTICLES (two orbital rings)
     // ──────────────────────────────────────────
-    const satellites: { mesh: THREE.Mesh; angle: number; ring: number; radius: number; tilt: number; speed: number; verticalPhase: number }[] = [];
-    const satGeo = new THREE.SphereGeometry(0.08, 16, 16);
-    const satMat = new THREE.MeshPhysicalMaterial({
+    // Satellites: one InstancedMesh per ring (was 28 individual draw calls →
+    // now 2), and cheap MeshStandardMaterial instead of MeshPhysicalMaterial.
+    const satellites: {
+      angle: number;
+      ring: number;
+      local: number;
+      radius: number;
+      tilt: number;
+      speed: number;
+      verticalPhase: number;
+      pos: THREE.Vector3;
+    }[] = [];
+    const satGeo = new THREE.SphereGeometry(0.08, 12, 12);
+    const satMat = new THREE.MeshStandardMaterial({
       color: 0xe6d4ff,
       metalness: 0.4,
-      roughness: 0.2,
+      roughness: 0.25,
       emissive: 0x8866ff,
       emissiveIntensity: 0.55,
-      clearcoat: 1,
+      transparent: true,
     });
-    const satMatMint = new THREE.MeshPhysicalMaterial({
+    const satMatMint = new THREE.MeshStandardMaterial({
       color: 0xc8fff0,
       metalness: 0.3,
-      roughness: 0.25,
+      roughness: 0.3,
       emissive: 0x4af5c0,
       emissiveIntensity: 0.5,
-      clearcoat: 1,
+      transparent: true,
     });
 
-    const SAT_COUNT_PER_RING = isCoarse ? 8 : 14;
+    const SAT_COUNT_PER_RING = profile.tier === "low" ? 6 : isCoarse ? 9 : 14;
     const RINGS = 2;
+    const satDummy = new THREE.Object3D();
+    const ringMeshes: THREE.InstancedMesh[] = [];
     for (let r = 0; r < RINGS; r++) {
+      const im = new THREE.InstancedMesh(
+        satGeo,
+        r === 0 ? satMat : satMatMint,
+        SAT_COUNT_PER_RING,
+      );
+      im.frustumCulled = false; // instances orbit far from geometry origin
+      ringMeshes.push(im);
+      scene.add(im);
+
       const radius = 3.4 + r * 1.3;
       const tilt = r === 0 ? 0.32 : -0.45;
       for (let i = 0; i < SAT_COUNT_PER_RING; i++) {
-        const mesh = new THREE.Mesh(satGeo, r === 0 ? satMat : satMatMint);
-        const angle = (i / SAT_COUNT_PER_RING) * Math.PI * 2;
         satellites.push({
-          mesh,
-          angle,
+          angle: (i / SAT_COUNT_PER_RING) * Math.PI * 2,
           ring: r,
+          local: i,
           radius,
           tilt,
           speed: 0.08 + r * 0.04 + Math.random() * 0.03,
           verticalPhase: Math.random() * Math.PI * 2,
+          pos: new THREE.Vector3(),
         });
-        scene.add(mesh);
       }
     }
 
@@ -184,6 +207,7 @@ export default function HeroScene() {
     const target = new THREE.Vector2(0, 0);
     const current = new THREE.Vector2(0, 0);
     let visible = !document.hidden;
+    let onScreen = true;
 
     const onMove = (e: PointerEvent) => {
       target.x = (e.clientX / window.innerWidth) * 2 - 1;
@@ -193,6 +217,7 @@ export default function HeroScene() {
 
     const onVis = () => {
       visible = !document.hidden;
+      sync();
     };
     document.addEventListener("visibilitychange", onVis);
 
@@ -222,21 +247,30 @@ export default function HeroScene() {
     ro.observe(host);
 
     // ──────────────────────────────────────────
-    // ANIMATION LOOP
+    // ANIMATION LOOP — runs only while tab-visible AND on screen
     // ──────────────────────────────────────────
     let raf = 0;
     let lastTime = performance.now();
     const tmpVec = new THREE.Vector3();
     const linePosArr = new Float32Array(satellites.length * satellites.length * 6);
-    let linePosBuffer = new THREE.BufferAttribute(linePosArr, 3);
+    const linePosBuffer = new THREE.BufferAttribute(linePosArr, 3);
     constellation.geometry.setAttribute("position", linePosBuffer);
 
+    const fpsGuard = makeFpsGuard(() => {
+      dpr = Math.max(0.75, dpr - 0.25);
+      renderer.setPixelRatio(dpr);
+    });
+
     const tick = (time: number) => {
+      if (!visible || !onScreen) {
+        raf = 0;
+        return;
+      }
       raf = requestAnimationFrame(tick);
-      if (!visible) return;
 
       const dt = Math.min(0.05, (time - lastTime) / 1000);
       lastTime = time;
+      fpsGuard(time);
       const t = time * 0.001;
 
       // Smooth cursor for camera tilt
@@ -273,9 +307,10 @@ export default function HeroScene() {
       wireMat.opacity = 0.55 * (1 - spEase * 0.6);
       cageMat.opacity = 0.18 * (1 - spEase * 0.9);
 
-      // Satellites: explode outward, accelerate, fade
+      // Satellites: explode outward, accelerate, fade (written to instances)
       const radiusMul = 1 + spEase * 1.6;
       const orbitAccel = 1 + spEase * 4;
+      const satScale = 1 + spEase * 0.6;
       for (let i = 0; i < satellites.length; i++) {
         const s = satellites[i];
         s.angle += s.speed * dt * orbitAccel;
@@ -284,15 +319,16 @@ export default function HeroScene() {
         const ringTiltY = Math.sin(s.angle) * liveRadius * Math.cos(s.tilt);
         const ringTiltZ = Math.sin(s.angle) * liveRadius * Math.sin(s.tilt);
         const wobble = Math.sin(t * 1.2 + s.verticalPhase) * 0.18;
-        s.mesh.position.set(ringTiltX, ringTiltY + wobble, ringTiltZ);
-        // Scale up briefly as they fly out, then fade
-        const scale = 1 + spEase * 0.6;
-        s.mesh.scale.setScalar(scale);
+        s.pos.set(ringTiltX, ringTiltY + wobble, ringTiltZ);
+        satDummy.position.copy(s.pos);
+        satDummy.scale.setScalar(satScale);
+        satDummy.updateMatrix();
+        ringMeshes[s.ring].setMatrixAt(s.local, satDummy.matrix);
       }
+      ringMeshes[0].instanceMatrix.needsUpdate = true;
+      ringMeshes[1].instanceMatrix.needsUpdate = true;
       satMat.opacity = 1 - spEase * 0.55;
       satMatMint.opacity = 1 - spEase * 0.55;
-      satMat.transparent = true;
-      satMatMint.transparent = true;
       lineMat.opacity = 0.32 * (1 - spEase * 0.9);
 
       // Constellation lines - connect particles within distance threshold
@@ -302,15 +338,15 @@ export default function HeroScene() {
       const thresholdSq = 2.4 * 2.4;
       for (let i = 0; i < satellites.length && lineIndex < maxLines; i++) {
         for (let j = i + 1; j < satellites.length && lineIndex < maxLines; j++) {
-          tmpVec.subVectors(satellites[i].mesh.position, satellites[j].mesh.position);
+          tmpVec.subVectors(satellites[i].pos, satellites[j].pos);
           const dSq = tmpVec.lengthSq();
           if (dSq < thresholdSq) {
-            positions[lineIndex * 6 + 0] = satellites[i].mesh.position.x;
-            positions[lineIndex * 6 + 1] = satellites[i].mesh.position.y;
-            positions[lineIndex * 6 + 2] = satellites[i].mesh.position.z;
-            positions[lineIndex * 6 + 3] = satellites[j].mesh.position.x;
-            positions[lineIndex * 6 + 4] = satellites[j].mesh.position.y;
-            positions[lineIndex * 6 + 5] = satellites[j].mesh.position.z;
+            positions[lineIndex * 6 + 0] = satellites[i].pos.x;
+            positions[lineIndex * 6 + 1] = satellites[i].pos.y;
+            positions[lineIndex * 6 + 2] = satellites[i].pos.z;
+            positions[lineIndex * 6 + 3] = satellites[j].pos.x;
+            positions[lineIndex * 6 + 4] = satellites[j].pos.y;
+            positions[lineIndex * 6 + 5] = satellites[j].pos.z;
             lineIndex++;
           }
         }
@@ -322,16 +358,48 @@ export default function HeroScene() {
 
       renderer.render(scene, camera);
     };
-    raf = requestAnimationFrame(tick);
+
+    // Loop lifecycle — only run when tab-visible AND scrolled on screen.
+    const start = () => {
+      if (!raf && visible && onScreen) {
+        lastTime = performance.now();
+        raf = requestAnimationFrame(tick);
+      }
+    };
+    const stop = () => {
+      if (raf) {
+        cancelAnimationFrame(raf);
+        raf = 0;
+      }
+    };
+    function sync() {
+      if (visible && onScreen) start();
+      else stop();
+    }
+
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        onScreen = entry.isIntersecting;
+        sync();
+      },
+      { threshold: 0 },
+    );
+    io.observe(host);
+
+    sync();
 
     return () => {
-      cancelAnimationFrame(raf);
+      stop();
       window.removeEventListener("pointermove", onMove);
       window.removeEventListener("scroll", onScroll);
       document.removeEventListener("visibilitychange", onVis);
+      io.disconnect();
       ro.disconnect();
 
-      satellites.forEach((s) => scene.remove(s.mesh));
+      ringMeshes.forEach((im) => {
+        scene.remove(im);
+        im.dispose();
+      });
       scene.remove(coreGroup);
       scene.remove(constellation);
 

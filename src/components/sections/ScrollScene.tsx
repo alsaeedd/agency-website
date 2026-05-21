@@ -1,5 +1,7 @@
 import { useEffect, useRef } from "react";
 import * as THREE from "three";
+import { getDeviceProfile } from "../../lib/deviceProfile";
+import { makeFpsGuard } from "../../lib/fpsGuard";
 
 interface ScrollSceneProps {
   /** Element whose scroll progress drives the camera. Defaults to the parent section. */
@@ -21,6 +23,9 @@ export default function ScrollScene({ triggerRef }: ScrollSceneProps) {
     const host = mountRef.current;
     if (!host) return;
 
+    const profile = getDeviceProfile();
+    const lowTier = profile.tier === "low";
+
     const scene = new THREE.Scene();
     const w = host.clientWidth;
     const h = host.clientHeight;
@@ -29,10 +34,12 @@ export default function ScrollScene({ triggerRef }: ScrollSceneProps) {
 
     const renderer = new THREE.WebGLRenderer({
       alpha: true,
-      antialias: true,
+      antialias: profile.antialias,
       powerPreference: "high-performance",
+      stencil: false,
     });
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    let dpr = profile.dpr;
+    renderer.setPixelRatio(dpr);
     renderer.setSize(w, h, false);
     renderer.setClearColor(0x000000, 0);
     host.appendChild(renderer.domElement);
@@ -40,8 +47,9 @@ export default function ScrollScene({ triggerRef }: ScrollSceneProps) {
     // ──────────────────────────────────────────────
     // PARTICLE GRID - a long Z-axis tunnel of dots
     // ──────────────────────────────────────────────
-    const GRID_X = 16;
-    const GRID_Y = 12;
+    // Thin the field density on weak devices; keep Z depth so tunnel length holds.
+    const GRID_X = lowTier ? 10 : 16;
+    const GRID_Y = lowTier ? 8 : 12;
     const GRID_Z = 60;
     const SPACING_XY = 1.2;
     const SPACING_Z = 1.4;
@@ -82,7 +90,7 @@ export default function ScrollScene({ triggerRef }: ScrollSceneProps) {
         uColorA: { value: new THREE.Color(0xa78bfa) },
         uColorB: { value: new THREE.Color(0x4af5c0) },
         uProgress: { value: 0 },
-        uPixelRatio: { value: Math.min(window.devicePixelRatio, 2) },
+        uPixelRatio: { value: dpr },
       },
       vertexShader: /* glsl */ `
         attribute float aOffset;
@@ -176,24 +184,58 @@ export default function ScrollScene({ triggerRef }: ScrollSceneProps) {
     const ro = new ResizeObserver(resize);
     ro.observe(host);
 
+    // ──────────────────────────────────────────────
+    // ANIMATION LOOP — runs only while tab-visible AND on screen
+    // ──────────────────────────────────────────────
     let visible = !document.hidden;
-    const onVis = () => {
-      visible = !document.hidden;
-    };
-    document.addEventListener("visibilitychange", onVis);
-
-    // ──────────────────────────────────────────────
-    // ANIMATION LOOP
-    // ──────────────────────────────────────────────
+    let onScreen = true;
     let raf = 0;
     let lastTime = performance.now();
 
+    const start = () => {
+      if (!raf && visible && onScreen) {
+        lastTime = performance.now();
+        raf = requestAnimationFrame(tick);
+      }
+    };
+    const stop = () => {
+      if (raf) {
+        cancelAnimationFrame(raf);
+        raf = 0;
+      }
+    };
+
+    const onVis = () => {
+      visible = !document.hidden;
+      visible ? start() : stop();
+    };
+    document.addEventListener("visibilitychange", onVis);
+
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        onScreen = entry.isIntersecting;
+        onScreen ? start() : stop();
+      },
+      { threshold: 0 },
+    );
+    io.observe(host);
+
+    const fpsGuard = makeFpsGuard(() => {
+      dpr = Math.max(0.75, dpr - 0.25);
+      renderer.setPixelRatio(dpr);
+      material.uniforms.uPixelRatio.value = dpr;
+    });
+
     const tick = (time: number) => {
+      if (!visible || !onScreen) {
+        raf = 0;
+        return;
+      }
       raf = requestAnimationFrame(tick);
-      if (!visible) return;
 
       const dt = Math.min(0.05, (time - lastTime) / 1000);
       lastTime = time;
+      fpsGuard(time);
 
       // Lerp
       scrollProgress += (scrollTarget - scrollProgress) * 0.08;
@@ -215,13 +257,14 @@ export default function ScrollScene({ triggerRef }: ScrollSceneProps) {
 
       renderer.render(scene, camera);
     };
-    raf = requestAnimationFrame(tick);
+    start();
 
     return () => {
-      cancelAnimationFrame(raf);
+      stop();
       window.removeEventListener("scroll", onScroll);
       window.removeEventListener("pointermove", onMove);
       document.removeEventListener("visibilitychange", onVis);
+      io.disconnect();
       ro.disconnect();
       geometry.dispose();
       material.dispose();

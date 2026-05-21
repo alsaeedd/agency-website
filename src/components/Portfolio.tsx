@@ -252,6 +252,8 @@ function ProjectDetail({
                     src={project.client.logo}
                     alt={project.client.name}
                     className="pd-visual-client-logo"
+                    loading="lazy"
+                    decoding="async"
                   />
                   <span className="pd-visual-corner" aria-hidden="true">
                     <ArrowUpRight />
@@ -290,7 +292,7 @@ function ProjectDetail({
                 <span className="pd-section-label">Client</span>
                 <div className="pd-client-row">
                   <div className="pd-client-logo-wrap">
-                    <img src={project.client.logo} alt={project.client.name} />
+                    <img src={project.client.logo} alt={project.client.name} loading="lazy" decoding="async" />
                   </div>
                   <div className="pd-client-meta">
                     <span className="pd-client-name">{project.client.name}</span>
@@ -425,6 +427,7 @@ export default function Portfolio() {
                       alt={project.client.name}
                       className="portfolio-card-preview-logo"
                       loading="lazy"
+                      decoding="async"
                     />
                   </div>
                   <span className="portfolio-card-cue" aria-hidden="true">

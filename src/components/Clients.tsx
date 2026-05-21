@@ -39,7 +39,7 @@ const trackB = [...rowB, ...rowB, ...rowB];
 function LogoItem({ logo, idx }: { logo: Logo; idx: number }) {
   const inner = (
     <>
-      <img src={logo.src} alt={logo.name} loading="lazy" />
+      <img src={logo.src} alt={logo.name} loading="lazy" decoding="async" />
       {logo.href && (
         <span className="client-logo-link-cue" aria-hidden="true">
           <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
