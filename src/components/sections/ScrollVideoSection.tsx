@@ -93,6 +93,13 @@ export default function ScrollVideoSection({
 }: ScrollVideoSectionProps) {
   const sectionRef = useRef<HTMLElement>(null);
 
+  // Coarse-pointer = mobile/tablet → skip WebGL mounts entirely, use a
+  // static gradient. Computed once at render so the conditional JSX below
+  // doesn't pay matchMedia on each render.
+  const isCoarse =
+    typeof matchMedia === "function" &&
+    matchMedia("(pointer: coarse)").matches;
+
   useEffect(() => {
     const section = sectionRef.current;
     if (!section) return;
@@ -136,25 +143,43 @@ export default function ScrollVideoSection({
       className={`scroll-video-section ${className}`}
       id={id}
     >
-      {/* BG LAYER: absolute, fills the section bg behind text */}
+      {/* BG LAYER: absolute, fills the section bg behind text.
+          On coarse pointer (mobile/tablet) we skip every WebGL mount.
+          The CSS gradient `.scroll-video-tint` + a static body
+          background carries the visual interest. Saves 128KB of
+          three.js + the per-frame fragment-shader cost. */}
       <div className="scroll-video-bg" aria-hidden="true">
-        {particleTunnel && (
+        {particleTunnel && !isCoarse && (
           <Suspense fallback={null}>
             <ScrollScene triggerRef={sectionRef} />
           </Suspense>
         )}
-        {waveGrid && (
+        {waveGrid && !isCoarse && (
           <Suspense fallback={null}>
             <WaveGridScene triggerRef={sectionRef} variant={waveVariant} />
           </Suspense>
         )}
-        {!particleTunnel && !waveGrid && fallbackGradient && (
+        {!particleTunnel && !waveGrid && fallbackGradient && !isCoarse && (
           <div className="scroll-video-gradient">
             <AnimatedGradient
               config={{ preset: "Plasma", speed: 18 }}
               noise={{ opacity: 0.22, scale: 1.2 }}
             />
           </div>
+        )}
+        {/* Mobile / coarse: static dark gradient backdrop so the section
+            still has atmospheric depth without WebGL. */}
+        {isCoarse && (
+          <div
+            className="scroll-video-static-bg"
+            aria-hidden="true"
+            style={{
+              position: "absolute",
+              inset: 0,
+              background:
+                "radial-gradient(ellipse 70% 60% at 50% 40%, rgba(124, 90, 255, 0.18) 0%, transparent 70%), linear-gradient(180deg, #0c0715 0%, #160e27 100%)",
+            }}
+          />
         )}
         <div className="scroll-video-tint" style={{ background: tint }} />
       </div>

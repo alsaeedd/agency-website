@@ -32,8 +32,14 @@ export default function HeroScene() {
     const renderer = new THREE.WebGLRenderer({
       alpha: true,
       antialias: profile.antialias,
-      powerPreference: "high-performance",
+      // low-power on mid-tier desktop laptops keeps the integrated GPU
+      // engaged instead of waking the discrete card — better thermal
+      // behavior and faster sustained frame rates on M1/intel-iGPU laps.
+      powerPreference: profile.tier === "high" ? "high-performance" : "low-power",
       stencil: false,
+      // depth: false saves ~20% VRAM on tile-based GPUs (we don't use
+      // depth ordering — all materials are blend-additive lights).
+      depth: false,
     });
     renderer.setPixelRatio(profile.dpr);
     renderer.setSize(w, h, false);

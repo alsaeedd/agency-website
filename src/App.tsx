@@ -31,6 +31,14 @@ import NavLoader from "./components/NavLoader";
 function App() {
   const lenisRef = useRef<Lenis | null>(null);
   const [isContactOpen, setIsContactOpen] = useState(false);
+  // Defer non-critical UI chrome (contact circle, custom cursor) past the
+  // first paint so they don't compete with hero hydration for the main
+  // thread. requestIdleCallback fires during browser idle time; fallback
+  // setTimeout(1500) for browsers without it (Safari).
+  const [chromeReady, setChromeReady] = useState(false);
+  const isCoarse =
+    typeof matchMedia === "function" &&
+    matchMedia("(pointer: coarse)").matches;
 
   const openContact = () => setIsContactOpen(true);
 
@@ -114,8 +122,24 @@ function App() {
       requestAnimationFrame(() => ScrollTrigger.refresh());
     }, 120);
 
+    // Idle-defer the non-critical UI chrome (contact circle, custom
+    // cursor). They mount AFTER the hero has had a frame to breathe.
+    const ric = (
+      window as Window & {
+        requestIdleCallback?: (cb: () => void, opts?: { timeout: number }) => number;
+      }
+    ).requestIdleCallback;
+    const idleId = ric
+      ? ric(() => setChromeReady(true), { timeout: 2000 })
+      : window.setTimeout(() => setChromeReady(true), 1500);
+
     return () => {
       window.clearTimeout(refreshTimer);
+      const cic = (
+        window as Window & { cancelIdleCallback?: (id: number) => void }
+      ).cancelIdleCallback;
+      if (cic) cic(idleId);
+      else window.clearTimeout(idleId);
       gsap.ticker.remove(tickerCallback);
       lenis?.destroy();
     };
@@ -129,8 +153,8 @@ function App() {
         <div className="bg-blob bg-blob-2" />
         <div className="bg-blob bg-blob-3" />
       </div>
-      <CursorFollower />
-      <ContactCircle onClick={openContact} />
+      {chromeReady && !isCoarse && <CursorFollower />}
+      {chromeReady && <ContactCircle onClick={openContact} />}
       <Navbar onContactClick={openContact} scrollToSection={scrollToSection} />
       <main>
         <Hero onContactClick={openContact} />

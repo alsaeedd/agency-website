@@ -75,6 +75,14 @@ export default function Preloader() {
     // bundle and mounts synchronously with the app — no separate chunk to
     // wait for. window.load already covers the JS + critical asset
     // download. Three-source readiness is enough now.
+    // Minimum visible time so the curtain doesn't pop in and out on
+    // ultra-fast connections (cached load). Also gives async hydration
+    // + GSAP setup a chance to settle before reveal so the user never
+    // sees a janky first-frame.
+    const minVisible: Promise<void> = new Promise((resolve) =>
+      setTimeout(resolve, 1200),
+    );
+
     fontsReady.then(() => advanceTo(34, 0.55));
     loadReady.then(() => advanceTo(72, 0.7));
     heroReady.then(() => advanceTo(96, 0.5));
@@ -155,7 +163,7 @@ export default function Preloader() {
     // / failed WebGL init never traps the user behind the curtain.
     const safety = window.setTimeout(dismiss, 4500);
 
-    Promise.all([fontsReady, loadReady, heroReady])
+    Promise.all([fontsReady, loadReady, heroReady, minVisible])
       .then(settleIdle)
       .then(() => {
         clearTimeout(safety);

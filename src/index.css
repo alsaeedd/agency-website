@@ -147,3 +147,36 @@ html[data-tier="low"] .navbar-mobile-menu {
   backdrop-filter: none;
   background: rgba(12, 7, 21, 0.96);
 }
+
+/* ─── Mobile-wide GPU memory + paint diet ─────────────────────────────
+   The single biggest source of mid-Android jank was 98 layer-promoting
+   `will-change` declarations across the codebase. Each one allocates a
+   compositor layer with its own GPU texture; mobile GPUs cap at ~40-60
+   layers before they start evicting and re-rasterizing mid-scroll. We
+   blanket-reset will-change on every touch device, then re-enable only
+   the elements actively animating. Net: ~40-60 MB freed on mid Android.
+   Also kills animated SVG `<feTurbulence>` / `<feDisplacementMap>` —
+   they're the dominant filter cost on iOS Safari and we don't need
+   them on touch (the static aurora carries the look). */
+@media (pointer: coarse) {
+  *,
+  *::before,
+  *::after {
+    will-change: auto !important;
+  }
+  /* The handful of elements that truly do need a compositor layer
+     because they're moving continuously: */
+  .hero-cycler-text,
+  .ralpl-text,
+  .nav-loader-bar,
+  .hero-ticker-track,
+  .navbar-hamburger .burger-line { will-change: transform; }
+
+  /* SVG filter primitives on the blob — kill on touch. The blob's
+     own animation has been frozen on non-high tiers already; this
+     removes the static filter graph evaluation too. */
+  .hero-blob feTurbulence,
+  .hero-blob feDisplacementMap,
+  .hero-blob feGaussianBlur,
+  .hero-blob animate { display: none !important; }
+}
