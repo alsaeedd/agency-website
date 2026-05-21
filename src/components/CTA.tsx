@@ -27,6 +27,13 @@ export default function CTA({ onContactClick }: CTAProps) {
   useEffect(() => {
     if (!buttonRef.current) return;
 
+    const tier = document.documentElement.dataset.tier;
+    const isMobile =
+      tier !== "high" ||
+      (typeof matchMedia === "function" &&
+        matchMedia("(pointer: coarse)").matches);
+    if (isMobile) return;
+
     const ctx = gsap.context(() => {
       gsap.fromTo(
         buttonRef.current,

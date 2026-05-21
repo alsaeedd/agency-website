@@ -104,42 +104,18 @@ function App() {
     gsap.ticker.add(tickerCallback);
     gsap.ticker.lagSmoothing(0);
 
-    // Refresh ScrollTrigger at every layout-shift checkpoint so cached
-    // trigger positions are always accurate. Mobile is especially prone
-    // to bad cached starts because of URL-bar collapse + font-driven
-    // reflow. Each refresh is idempotent and cheap (~1ms per 10 triggers).
+    // ONE post-mount ScrollTrigger.refresh() — the Preloader's own
+    // dismiss() runs another against final layout. Calling refresh from
+    // multiple sources (visualViewport, fonts.ready, window.load) was
+    // CAUSING the lag — each refresh is O(triggers) and the visualViewport
+    // listener was firing every URL-bar tick on mobile during scroll. One
+    // refresh is enough; the rest were paranoia.
     const refreshTimer = window.setTimeout(() => {
       requestAnimationFrame(() => ScrollTrigger.refresh());
-    }, 60);
-
-    // 1. After fonts are loaded — typography changes line heights.
-    const fonts = (document as Document & { fonts?: FontFaceSet }).fonts;
-    fonts?.ready.then(() => ScrollTrigger.refresh()).catch(() => undefined);
-
-    // 2. After window load — images + critical assets done.
-    const onLoad = () => ScrollTrigger.refresh();
-    if (document.readyState === "complete") {
-      requestAnimationFrame(onLoad);
-    } else {
-      window.addEventListener("load", onLoad, { once: true });
-    }
-
-    // 3. On visualViewport resize — iOS URL-bar collapse changes innerHeight.
-    // visualViewport reports the real visible viewport, unlike window resize
-    // which doesn't fire on URL-bar toggle.
-    const vv = window.visualViewport;
-    let vvTimer: number | undefined;
-    const onVvResize = () => {
-      window.clearTimeout(vvTimer);
-      vvTimer = window.setTimeout(() => ScrollTrigger.refresh(), 200);
-    };
-    vv?.addEventListener("resize", onVvResize);
+    }, 120);
 
     return () => {
       window.clearTimeout(refreshTimer);
-      window.clearTimeout(vvTimer);
-      window.removeEventListener("load", onLoad);
-      vv?.removeEventListener("resize", onVvResize);
       gsap.ticker.remove(tickerCallback);
       lenis?.destroy();
     };

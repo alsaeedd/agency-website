@@ -97,6 +97,14 @@ export default function ScrollVideoSection({
     const section = sectionRef.current;
     if (!section) return;
 
+    const tier = document.documentElement.dataset.tier;
+    const isMobile =
+      tier !== "high" ||
+      (typeof matchMedia === "function" &&
+        matchMedia("(pointer: coarse)").matches);
+
+    if (isMobile) return; // No entrance on mobile — content visible from mount
+
     const ctx = gsap.context(() => {
       gsap.fromTo(
         section.querySelectorAll(
@@ -112,10 +120,7 @@ export default function ScrollVideoSection({
           stagger: 0.1,
           scrollTrigger: {
             trigger: section,
-            // "top bottom" — earliest possible fire as section crosses
-            // viewport bottom. Post-preloader ScrollTrigger.refresh()
-            // ensures cached pixel positions are correct.
-            start: "top bottom",
+            start: "top 85%",
             once: true,
           },
         },

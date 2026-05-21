@@ -188,6 +188,12 @@
   will-change: transform;
 }
 
+/* Mobile / non-high tier: NO entrance animation, cards visible from
+   mount. CSS-level override so the JS doesn't need to race the paint. */
+html:not([data-tier="high"]) .portfolio-card {
+  opacity: 1;
+}
+
 .portfolio-card:hover {
   transform: perspective(1400px) rotateX(var(--rx)) rotateY(var(--ry));
   z-index: 2;

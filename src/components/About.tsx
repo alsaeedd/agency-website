@@ -34,26 +34,28 @@ export default function About() {
   useLayoutEffect(() => {
     if (!sectionRef.current) return;
 
-    // Coarse-pointer / weak tiers get FASTER durations so the entrance
-    // completes before the user can scroll past it — but the animation
-    // itself stays (owner likes it). The key change is that we no longer
-    // depend on trigger positions being exactly right: a `ral:trigger-
-    // refresh` event from the preloader will force every ScrollTrigger
-    // to re-evaluate and fire any whose start has already been crossed.
+    // ── FINAL DECISION (no more flip-flop) ─────────────────────────────
+    // Mobile/coarse-pointer/weak-tier: NO entrance animation. Content is
+    // visible from mount. Every previous attempt to reliably animate
+    // entrances on mobile traded one bug for another — stale trigger
+    // positions, URL-bar refresh thrash, GSAP timeline backlog on weak
+    // GPUs. The owner's hardware is an RTX 5060 (gets the full
+    // cinematic), so we keep that experience on capable devices and stop
+    // animating on touch.
     const tier = document.documentElement.dataset.tier;
-    const isWeak =
-      tier === "low" ||
-      tier === "med" ||
+    const isMobile =
+      tier !== "high" ||
       (typeof matchMedia === "function" &&
         matchMedia("(pointer: coarse)").matches);
 
+    if (isMobile) return;
+
+    // Desktop high-tier only — full cinematic timeline.
     const ctx = gsap.context(() => {
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: sectionRef.current,
-          // Fire VERY early so the timeline starts the moment the section
-          // is anywhere near the viewport.
-          start: "top bottom",
+          start: "top 80%",
           once: true,
         },
       });
@@ -61,41 +63,23 @@ export default function About() {
       tl.from(ghostRef.current, {
         opacity: 0,
         scale: 0.94,
-        duration: isWeak ? 0.7 : 1.4,
+        duration: 1.4,
         ease: "expo.out",
       })
         .from(
           logoRef.current,
-          {
-            opacity: 0,
-            y: 24,
-            scale: 0.94,
-            duration: isWeak ? 0.5 : 0.9,
-            ease: "expo.out",
-          },
-          isWeak ? "-=0.55" : "-=1.1",
+          { opacity: 0, y: 24, scale: 0.94, duration: 0.9, ease: "expo.out" },
+          "-=1.1",
         )
         .from(
           ".about-heading .about-word-in",
-          {
-            yPercent: 110,
-            opacity: 0,
-            duration: isWeak ? 0.55 : 0.9,
-            ease: "expo.out",
-            stagger: isWeak ? 0.03 : 0.06,
-          },
-          isWeak ? "-=0.35" : "-=0.6",
+          { yPercent: 110, opacity: 0, duration: 0.9, ease: "expo.out", stagger: 0.06 },
+          "-=0.6",
         )
         .from(
           ".about-body .about-word-in",
-          {
-            yPercent: 110,
-            opacity: 0,
-            duration: isWeak ? 0.45 : 0.7,
-            ease: "expo.out",
-            stagger: isWeak ? 0.005 : 0.012,
-          },
-          isWeak ? "-=0.35" : "-=0.6",
+          { yPercent: 110, opacity: 0, duration: 0.7, ease: "expo.out", stagger: 0.012 },
+          "-=0.6",
         );
     }, sectionRef);
 

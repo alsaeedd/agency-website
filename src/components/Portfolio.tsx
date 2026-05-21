@@ -326,6 +326,24 @@ export default function Portfolio() {
   useEffect(() => {
     if (!cardsRef.current) return;
 
+    const tier = document.documentElement.dataset.tier;
+    const isMobile =
+      tier !== "high" ||
+      (typeof matchMedia === "function" &&
+        matchMedia("(pointer: coarse)").matches);
+
+    // Mobile: no entrance animation, cards visible from mount.
+    if (isMobile) {
+      // Strip the CSS initial-hidden state so cards are visible.
+      const cards = cardsRef.current.querySelectorAll<HTMLElement>(".portfolio-card");
+      cards.forEach((card) => {
+        card.style.opacity = "1";
+        card.style.transform = "none";
+        card.style.filter = "none";
+      });
+      return;
+    }
+
     const ctx = gsap.context(() => {
       const cards = cardsRef.current!.querySelectorAll(".portfolio-card");
 
@@ -341,11 +359,7 @@ export default function Portfolio() {
             ease: "expo.out",
             scrollTrigger: {
               trigger: card,
-              // "top bottom" fires the moment the card crosses the
-              // viewport bottom — earliest possible reliable trigger.
-              // Refresh on fonts.ready + post-preloader keeps the cached
-              // start position accurate even if layout shifts above.
-              start: "top bottom",
+              start: "top 85%",
               once: true,
             },
             delay: index * 0.12,
