@@ -229,6 +229,11 @@ export default function HeroScene() {
     // SCROLL - drives the morph: core shrinks, cage fades,
     // satellites explode outward, camera pulls back
     // ──────────────────────────────────────────
+    // On touch devices, heavily damp the scroll-driven morph (camera pull-back
+    // + satellite explosion). At full strength a tiny mobile scroll visibly
+    // "zooms" the scene, which reads as the hero enlarging on scroll. 0.2 keeps
+    // a hint of life without the disorienting jump.
+    const scrollMorph = isCoarse ? 0.2 : 1;
     let scrollProgress = 0; // 0 at top of hero, 1 when fully scrolled past
     let scrollTarget = 0;
     const onScroll = () => {
@@ -247,7 +252,15 @@ export default function HeroScene() {
       camera.updateProjectionMatrix();
       renderer.setSize(ww, hh, false);
     };
-    const ro = new ResizeObserver(resize);
+    // Debounce: the mobile address bar showing/hiding fires a burst of resize
+    // events; reframing the camera per-event makes the scene visibly jump.
+    // Coalesce them into a single resize after the viewport settles.
+    let resizeTimer = 0;
+    const onResize = () => {
+      clearTimeout(resizeTimer);
+      resizeTimer = window.setTimeout(resize, 150);
+    };
+    const ro = new ResizeObserver(onResize);
     ro.observe(host);
 
     // ──────────────────────────────────────────
@@ -279,7 +292,7 @@ export default function HeroScene() {
       // Smooth scroll progress
       scrollProgress += (scrollTarget - scrollProgress) * 0.08;
       const sp = scrollProgress; // 0..1
-      const spEase = sp * sp * (3 - 2 * sp); // smoothstep
+      const spEase = sp * sp * (3 - 2 * sp) * scrollMorph; // smoothstep, damped on touch
 
       // Camera: pulls back + drifts up as you scroll
       camera.position.x = current.x * 0.6;
@@ -406,6 +419,7 @@ export default function HeroScene() {
       document.removeEventListener("visibilitychange", onVis);
       io.disconnect();
       ro.disconnect();
+      clearTimeout(resizeTimer);
 
       ringMeshes.forEach((im) => {
         scene.remove(im);

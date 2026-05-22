@@ -60,6 +60,7 @@ export default function Hero({ onContactClick }: HeroProps) {
   const blobRef = useRef<SVGSVGElement>(null);
   const gridRef = useRef<HTMLDivElement>(null);
   const titleRef = useRef<HTMLHeadingElement>(null);
+  const cyclerRef = useRef<HTMLSpanElement>(null);
 
   // ── Adaptive perf gate ─────────────────────────────────────────────
   // The `filter: blur(...)` keyframes below are gorgeous on a 4090, ugly on
@@ -87,57 +88,78 @@ export default function Hero({ onContactClick }: HeroProps) {
     return () => clearTimeout(timeout);
   }, []);
 
-  // Word cycler on the accent word (revenue → pipelines → margins → ...)
+  // Word cycler (revenue → pipelines → margins → ...). Two stacked layers
+  // crossfade/slide SIMULTANEOUSLY so words bridge with no blank gap, and the
+  // wrapper width is tweened to the next word so the neighbouring "your" glides
+  // instead of snapping. No overflow clip → descenders are never cut on iOS.
   useEffect(() => {
+    const wrap = cyclerRef.current;
+    if (!wrap) return;
+    const sizer = wrap.querySelector<HTMLElement>(".hero-cycler-sizer");
+    const layers = Array.from(
+      wrap.querySelectorAll<HTMLElement>(".hero-cycler-word"),
+    );
+    if (!sizer || layers.length < 2) return;
+
+    let idx = 0;
     let timeout: ReturnType<typeof setTimeout>;
     let interval: ReturnType<typeof setInterval>;
-    let idx = 0;
-    const cyclerBlur = heroPerf.useBlur ? "blur(6px)" : "blur(0px)";
+    const reduce =
+      typeof matchMedia === "function" &&
+      matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const blur = heroPerf.useBlur ? "blur(5px)" : "blur(0px)";
+
+    // Which layer is showing is derived from idx parity (no swap state that can
+    // desync): even idx → layers[0], odd idx → layers[1]. The wrapper carries an
+    // explicit width at all times so the neighbouring "your" glides; we tween it
+    // each cycle and never clear it, so layout never depends on a callback firing.
+    sizer.textContent = CYCLE_WORDS[0];
+    gsap.set(layers[1], { autoAlpha: 0 });
+    gsap.set(wrap, { width: layers[0].offsetWidth });
 
     const cycle = () => {
-      const el = document.querySelector<HTMLElement>(".hero-cycler-text");
-      if (!el) return;
+      const prevIdx = idx;
       idx = (idx + 1) % CYCLE_WORDS.length;
-      const next = CYCLE_WORDS[idx];
+      const word = CYCLE_WORDS[idx];
+      const inLayer = layers[idx % 2];
+      const outLayer = layers[prevIdx % 2];
+      inLayer.textContent = word;
+      const endW = inLayer.offsetWidth; // absolute layer ⇒ natural width
+
+      if (reduce) {
+        gsap.set(outLayer, { autoAlpha: 0 });
+        gsap.set(inLayer, { autoAlpha: 1, yPercent: 0, filter: "blur(0px)" });
+        gsap.set(wrap, { width: endW });
+        return;
+      }
+
+      gsap.set(inLayer, { yPercent: 45, autoAlpha: 0, filter: blur });
 
       gsap
-        .timeline()
-        .to(el, {
-          yPercent: -110,
-          opacity: 0,
-          filter: cyclerBlur,
-          duration: 0.42,
-          ease: "expo.in",
-        })
-        .call(() => {
-          el.textContent = next;
-        })
-        .fromTo(
-          el,
-          { yPercent: 110, opacity: 0, filter: cyclerBlur },
-          {
-            yPercent: 0,
-            opacity: 1,
-            filter: "blur(0px)",
-            duration: 0.6,
-            ease: "expo.out",
-          },
-        );
+        .timeline({ defaults: { ease: "expo.out" } })
+        // old word lifts up + fades out
+        .to(
+          outLayer,
+          { yPercent: -45, autoAlpha: 0, filter: blur, duration: 0.42, ease: "power2.in" },
+          0,
+        )
+        // wrapper width glides → "your" slides over smoothly
+        .to(wrap, { width: endW, duration: 0.62 }, 0)
+        // new word rises in, overlapping the exit so they bridge (no blank)
+        .to(inLayer, { yPercent: 0, autoAlpha: 1, filter: "blur(0px)", duration: 0.62 }, 0.18);
     };
 
-    // Pause the cycler entirely when the tab isn't visible — no point
-    // burning a GSAP timeline + main-thread work on a hidden page.
+    const start = () => {
+      clearInterval(interval);
+      interval = setInterval(cycle, 2800);
+    };
     const onVis = () => {
-      if (document.hidden) {
-        clearInterval(interval);
-      } else {
-        clearInterval(interval);
-        interval = setInterval(cycle, 2800);
-      }
+      if (document.hidden) clearInterval(interval);
+      else start();
     };
 
     timeout = setTimeout(() => {
-      interval = setInterval(cycle, 2800);
+      start();
       document.addEventListener("visibilitychange", onVis);
     }, 3200);
 
@@ -392,8 +414,13 @@ export default function Hero({ onContactClick }: HeroProps) {
           </span>
           <span className="hero-title-line">
             {buildPhrase("that scales your ")}
-            <span className="hero-cycler">
-              <span className="hero-cycler-text hero-title-accent">revenue.</span>
+            <span className="hero-cycler" ref={cyclerRef}>
+              {/* in-flow, invisible: sets the wrapper's natural width + baseline
+                  so the two absolute layers sit where inline text would */}
+              <span className="hero-cycler-sizer" aria-hidden="true">revenue.</span>
+              {/* two layers crossfade simultaneously — no blank gap */}
+              <span className="hero-cycler-word hero-title-accent" aria-hidden="true">revenue.</span>
+              <span className="hero-cycler-word hero-title-accent" aria-hidden="true" />
             </span>
           </span>
         </h1>

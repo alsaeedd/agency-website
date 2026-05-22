@@ -41,54 +41,68 @@ export default function About() {
         matchMedia("(pointer: coarse)").matches);
 
     const ctx = gsap.context(() => {
+      // Explicit hidden initial state, applied pre-paint (useLayoutEffect) so
+      // there's no flash. Using gsap.set + .to (NOT .from) makes the reveal
+      // deterministic: when the trigger activates it PLAYS the tween from 0,
+      // instead of — as .from does on a late ScrollTrigger.refresh() after the
+      // preloader dismisses — snapping straight to the finished state. That
+      // snap was the "About pops in like a lazy-loaded image" bug.
+      gsap.set(ghostRef.current, { opacity: 0, scale: 0.94 });
+      gsap.set(logoRef.current, { opacity: 0, y: 20, scale: 0.94 });
+      gsap.set([".about-heading .about-word-in", ".about-body .about-word-in"], {
+        yPercent: 110,
+        opacity: 0,
+      });
+
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: sectionRef.current,
-          // "top bottom" fires the moment the section's top crosses the
-          // viewport bottom — earliest possible reliable trigger. The
-          // Preloader's dismiss() runs ScrollTrigger.refresh() so cached
-          // positions are correct against the final post-load layout.
-          start: "top bottom",
+          // "top 80%" gives a real reveal distance (fires when the section top
+          // reaches 80% of the viewport) instead of "top bottom" which fires
+          // the instant any pixel enters and is prone to firing-at-completion
+          // on a post-preloader refresh. invalidateOnRefresh re-measures so the
+          // trigger survives the late layout/font settle.
+          start: "top 80%",
           once: true,
+          invalidateOnRefresh: true,
         },
       });
 
-      // Mobile: snappy entrance (no filter:blur, short durations, tight
-      // stagger). Desktop: full cinematic timeline. Both versions actually
-      // PLAY (no more "mobile = nothing").
-      tl.from(ghostRef.current, {
-        opacity: 0,
-        scale: 0.94,
+      // Mobile: snappy (short durations, tight stagger). Desktop: cinematic.
+      // Both PLAY a real tween — never skipped, never snapped.
+      tl.to(ghostRef.current, {
+        opacity: 1,
+        scale: 1,
         duration: isWeak ? 0.55 : 1.4,
         ease: "expo.out",
       })
-        .from(
+        .to(
           logoRef.current,
           {
-            opacity: 0,
-            y: 20,
-            scale: 0.94,
+            opacity: 1,
+            y: 0,
+            scale: 1,
             duration: isWeak ? 0.45 : 0.9,
             ease: "expo.out",
           },
           isWeak ? "-=0.45" : "-=1.1",
         )
-        .from(
+        .to(
           ".about-heading .about-word-in",
           {
-            yPercent: 110,
-            opacity: 0,
+            yPercent: 0,
+            opacity: 1,
             duration: isWeak ? 0.5 : 0.9,
             ease: "expo.out",
             stagger: isWeak ? 0.025 : 0.06,
           },
           isWeak ? "-=0.3" : "-=0.6",
         )
-        .from(
+        .to(
           ".about-body .about-word-in",
           {
-            yPercent: 110,
-            opacity: 0,
+            yPercent: 0,
+            opacity: 1,
             duration: isWeak ? 0.4 : 0.7,
             ease: "expo.out",
             stagger: isWeak ? 0.004 : 0.012,

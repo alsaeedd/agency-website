@@ -629,33 +629,36 @@ html:not([data-tier="high"]) .hero-blob animate {
   color: transparent;
 }
 
-/* Word cycler - the accent noun rotates every ~2.8s.
-   IMPORTANT: this is the OUTER mask wrapper (overflow:hidden) that contains
-   the rotating word. Its bottom padding must clear descenders ('g' in
-   'margins', 'p' in 'pipelines', etc.) AND any in-flight rise animation,
-   otherwise the descender visibly clips mid-cycle. 0.5em bottom is roughly
-   2.5× Inter's natural descender depth — comfortable margin at every clamp
-   font-size. The matching negative margin keeps surrounding spacing the same. */
+/* Word cycler — the accent noun rotates every ~2.8s.
+   Two stacked layers crossfade/slide simultaneously (driven by GSAP) so words
+   bridge with NO blank gap. NO overflow clip: overflow-clip-margin is
+   unreliable on iOS Safari and was cutting descenders ('g' in "margins", 'p'
+   in "output"). The crossfade itself hides each word, so no mask is needed. */
 .hero-cycler {
-  display: inline-block;
-  /* Modern overflow:clip + overflow-clip-margin lets descenders extend OUT
-     of the mask box even though the mask is still active for the word-
-     rotation reveal. 1em clip-margin is intentionally huge so even the
-     mid-cycle GSAP translateY can't push a descender into a clipped zone. */
-  overflow: clip;
-  overflow-clip-margin: 1em;
-  vertical-align: bottom;
-  /* 0.8em bottom padding extends the visible mask region itself well past
-     any glyph's descender depth. Matching negative margin keeps the layout
-     spacing identical to before. */
-  padding: 0.2em 0.05em 0.8em;
-  margin: -0.2em -0.05em -0.8em;
   position: relative;
+  display: inline-block;
+  vertical-align: bottom;
+  text-align: left;
+  white-space: nowrap;
 }
 
-.hero-cycler-text {
-  display: inline-block;
-  will-change: transform, opacity, filter;
+/* In-flow but invisible: establishes the wrapper's natural width + baseline so
+   the two absolutely-positioned word layers align exactly with the inline
+   text around them. At rest the wrapper is sized by this; during a transition
+   GSAP tweens an explicit width, then clears it back to this on settle. */
+.hero-cycler-sizer {
+  visibility: hidden;
+  white-space: nowrap;
+}
+
+/* The two animating layers, stacked over the sizer and bottom-aligned so their
+   baseline matches the surrounding text. */
+.hero-cycler-word {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  white-space: nowrap;
+  will-change: transform, opacity;
 }
 
 /* ===== Subhead ===== */
@@ -1067,7 +1070,7 @@ html:not([data-tier="high"]) .hero-blob-4,
 html:not([data-tier="high"]) .hero-blob-5,
 html:not([data-tier="high"]) .hero-particle,
 html:not([data-tier="high"]) .hero-letter-in,
-html:not([data-tier="high"]) .hero-cycler-text,
+html:not([data-tier="high"]) .hero-cycler-word,
 html:not([data-tier="high"]) .hero-ticker-track {
   will-change: auto;
 }

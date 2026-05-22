@@ -169,7 +169,7 @@ html[data-tier="low"] .navbar-mobile-menu {
   }
   /* The handful of elements that truly do need a compositor layer
      because they're moving continuously: */
-  .hero-cycler-text,
+  .hero-cycler-word,
   .ralpl-text,
   .nav-loader-bar,
   .hero-ticker-track,
