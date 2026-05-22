@@ -655,11 +655,17 @@ html:not([data-tier="high"]) .hero-blob animate {
 }
 
 /* The two animating layers, stacked over the sizer and bottom-aligned so their
-   baseline matches the surrounding text. */
+   baseline matches the surrounding text.
+   The padding-bottom + matching negative bottom extend the gradient's
+   background-box BELOW the baseline without moving the text: iOS/WebKit clips
+   `-webkit-background-clip: text` fill to the box, and the tight title
+   line-height leaves descenders ('g','p','y') outside it — so they'd render
+   unfilled (looking clipped). The extra 0.26em of background-box covers them. */
 .hero-cycler-word {
   position: absolute;
   left: 0;
-  bottom: 0;
+  bottom: -0.26em;
+  padding-bottom: 0.26em;
   white-space: nowrap;
   will-change: transform, opacity;
 }
