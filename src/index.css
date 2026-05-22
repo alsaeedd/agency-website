@@ -30,6 +30,14 @@
 html {
   font-size: 16px;
   scroll-behavior: smooth;
+  /* Clip (NOT hidden) horizontal overflow at the root. This is the guard
+     against mobile "shrink-to-fit" page-zoom: if ANY descendant ever exceeds
+     the viewport width, the browser loads zoomed-OUT to fit it, then snaps
+     back to 100% on the first scroll — so the whole hero (text AND the WebGL
+     sphere) appears to grow on a hair of scroll. `overflow-x: clip` does not
+     create a scroll container, so unlike `overflow-x: hidden` on <html> it
+     does NOT break iOS momentum scrolling. */
+  overflow-x: clip;
 }
 
 html.lenis {
@@ -49,7 +57,7 @@ body {
   background: var(--color-bg);
   color: var(--color-text);
   line-height: 1.5;
-  overflow-x: hidden;
+  overflow-x: clip;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   /* `touch-action: pan-y` was here as a perf hint but in Chrome
@@ -61,10 +69,9 @@ body {
      fine to keep. */
 }
 
-/* Guard against horizontal page overflow at any viewport. NOT on
-   <html> — overflow-x:hidden on html can break momentum scroll on
-   iOS Safari and DevTools mobile emulation. */
-main { overflow-x: hidden; max-width: 100%; }
+/* Belt-and-suspenders with the root clip above. `clip` (not hidden) keeps
+   iOS momentum scrolling intact. */
+main { overflow-x: clip; max-width: 100%; }
 
 a {
   color: inherit;
