@@ -11,12 +11,17 @@ export default function Footer({ onContactClick }: FooterProps) {
       <div className="footer-top-glow" />
       <div className="container">
         <div className="footer-body">
-          <p className="footer-brand-desc">
-            A small, founder-led team in Bahrain shipping custom software and
-            AI automations for GCC founders, SMBs, and enterprise teams. We
-            build your solution as if we literally owned it - and most of the
-            time, you can WhatsApp us before lunch.
-          </p>
+          <div className="footer-brand">
+            <p className="footer-brand-desc">
+              A small, founder-led team in Bahrain shipping custom software
+              and AI automations for GCC founders, SMBs, and enterprise teams.
+              We build your solution as if we literally owned it, and most of
+              the time, you can WhatsApp us before lunch.
+            </p>
+            <p className="footer-local">
+              Made by hand in Manama.
+            </p>
+          </div>
 
           <div className="footer-col">
             <span className="footer-col-label">Get in Touch</span>

@@ -294,21 +294,20 @@
 .contact-title {
   font-size: clamp(2.25rem, 5vw, 3.5rem);
   font-weight: 500;
-  line-height: 1.04;
+  line-height: 1.08;
   letter-spacing: -0.038em;
   color: var(--color-text);
 }
 
-.contact-title .word {
-  display: inline-block;
-  overflow: hidden;
-  vertical-align: top;
-  padding-bottom: 0.1em;
-  margin-bottom: -0.1em;
+/* Extra descender room in the masks so the serif italic 'g' survives */
+.contact-title .wmask {
+  padding-bottom: 0.28em;
+  margin-bottom: -0.28em;
 }
 
-.contact-title .word-inner {
-  display: inline-block;
+.contact-title-accent {
+  font-size: 1.05em;
+  color: #e6dcff;
 }
 
 .contact-subtitle {

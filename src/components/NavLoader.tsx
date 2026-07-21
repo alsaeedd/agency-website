@@ -5,7 +5,7 @@ import "./NavLoader.css";
  * Brief overlay shown when the user clicks a menu/nav link. Holds until the
  * smooth-scroll has visibly settled at the target so the user sees a clear
  * "I clicked → something is happening → arrived" loop instead of a janky
- * mid-scroll arrival. Pure CSS animations — no GSAP cost during scroll.
+ * mid-scroll arrival. Pure CSS animations - no GSAP cost during scroll.
  *
  * Triggered by a custom event from App.tsx#scrollToSection:
  *   window.dispatchEvent(new CustomEvent("ral:nav-scroll", ...));

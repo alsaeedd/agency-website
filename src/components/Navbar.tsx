@@ -28,9 +28,9 @@ export default function Navbar({ onContactClick, scrollToSection }: NavbarProps)
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
-  // ── Entrance reveal — fade in once the user scrolls past ~60px.
+  // ── Entrance reveal - fade in once the user scrolls past ~60px.
   // Stays mostly out of the way at the very top, then slides in. Cheaper
-  // than a continuous transform — only updates when crossing the threshold.
+  // than a continuous transform - only updates when crossing the threshold.
   useEffect(() => {
     if (!navRef.current) return;
     gsap.set(navRef.current, { yPercent: -100, opacity: 0 });
@@ -109,7 +109,7 @@ export default function Navbar({ onContactClick, scrollToSection }: NavbarProps)
   const handleLinkClick = (href: string) => {
     setMenuOpen(false);
     // Defer a frame so the menu's close transition starts before scroll
-    // begins — feels more cohesive than scrolling immediately.
+    // begins - feels more cohesive than scrolling immediately.
     requestAnimationFrame(() => scrollToSection(href));
   };
 
@@ -144,6 +144,10 @@ export default function Navbar({ onContactClick, scrollToSection }: NavbarProps)
                   <span>{link.text}</span>
                 </a>
               ))}
+              <span className="navbar-clock" title="Based in Manama">
+                <span className="live-dot" aria-hidden="true" />
+                Manama
+              </span>
               <button
                 onClick={onContactClick}
                 data-text="Contact Us"
@@ -168,7 +172,7 @@ export default function Navbar({ onContactClick, scrollToSection }: NavbarProps)
         </div>
       </header>
 
-      {/* Full-screen mobile menu overlay — outside the navbar, fixed inset:0
+      {/* Full-screen mobile menu overlay - outside the navbar, fixed inset:0
           so it covers everything behind it. Always rendered but visually
           hidden when closed (opacity + pointer-events) so the open/close
           transition has time to run. */}
@@ -205,6 +209,10 @@ export default function Navbar({ onContactClick, scrollToSection }: NavbarProps)
           >
             Contact Us
           </button>
+          <span className="navbar-mobile-local">
+            <span className="live-dot" aria-hidden="true" />
+            Manama · GMT+3
+          </span>
         </div>
       </div>
     </>
