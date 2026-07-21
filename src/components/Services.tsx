@@ -1,14 +1,14 @@
 import { useLayoutEffect, useRef } from "react";
 import { gsap } from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { revealUp } from "../lib/reveal";
 import "./Services.css";
-
-gsap.registerPlugin(ScrollTrigger);
 
 interface Service {
   id: number;
   title: string;
   description: string;
+  /** A real, recent artifact - specificity beats impressiveness. */
+  artifact: string;
   icon: React.ReactNode;
   /** Animation flavor for the icon - matches CSS class */
   flavor: "float" | "spin" | "wobble" | "pulse";
@@ -19,6 +19,7 @@ const services: Service[] = [
     id: 1,
     title: "Websites",
     description: "Marketing sites & shop fronts. Fast to load, easy to sell from.",
+    artifact: "kgadvisers.com",
     flavor: "float",
     icon: (
       <svg viewBox="0 0 80 80" fill="none">
@@ -47,6 +48,7 @@ const services: Service[] = [
     id: 2,
     title: "Systems",
     description: "Internal tools, dashboards, custom CRMs. The kind that replaces five spreadsheets.",
+    artifact: "A members portal & events CRM",
     flavor: "wobble",
     icon: (
       <svg viewBox="0 0 80 80" fill="none">
@@ -60,7 +62,7 @@ const services: Service[] = [
         <rect x="14" y="14" width="52" height="14" rx="3" stroke="url(#svc-grad-2)" strokeWidth="1.8" />
         <rect x="14" y="32" width="52" height="14" rx="3" stroke="url(#svc-grad-2)" strokeWidth="1.8" />
         <rect x="14" y="50" width="52" height="14" rx="3" stroke="url(#svc-grad-2)" strokeWidth="1.8" />
-        {/* Status dots */}
+        {/* Status dots - the top one is live */}
         <circle cx="22" cy="21" r="1.8" fill="#4af5c0" />
         <circle cx="22" cy="39" r="1.8" fill="url(#svc-grad-2)" />
         <circle cx="22" cy="57" r="1.8" fill="url(#svc-grad-2)" />
@@ -75,6 +77,7 @@ const services: Service[] = [
     id: 3,
     title: "Apps",
     description: "Web & mobile apps with a real backend. Shipped to production, not a slide deck.",
+    artifact: "A 3D PC-builder for custompcbh.com",
     flavor: "pulse",
     icon: (
       <svg viewBox="0 0 80 80" fill="none">
@@ -103,6 +106,7 @@ const services: Service[] = [
     id: 4,
     title: "AI",
     description: "Agents & workflows that quietly do the work your team was about to hire for.",
+    artifact: "1,000-candidate outreach batches",
     flavor: "spin",
     icon: (
       <svg viewBox="0 0 80 80" fill="none">
@@ -113,8 +117,8 @@ const services: Service[] = [
             <stop offset="100%" stopColor="#7c5aff" />
           </linearGradient>
           <radialGradient id="svc-grad-4r" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stopColor="#4af5c0" stopOpacity="0.9" />
-            <stop offset="100%" stopColor="#4af5c0" stopOpacity="0" />
+            <stop offset="0%" stopColor="#d6c2ff" stopOpacity="0.9" />
+            <stop offset="100%" stopColor="#d6c2ff" stopOpacity="0" />
           </radialGradient>
         </defs>
         {/* Outer star/spark - 4-point */}
@@ -149,46 +153,24 @@ export default function Services() {
   useLayoutEffect(() => {
     if (!sectionRef.current) return;
 
-    const tier = document.documentElement.dataset.tier;
-    const isWeak =
-      tier !== "high" ||
-      (typeof matchMedia === "function" &&
-        matchMedia("(pointer: coarse)").matches);
-
     const ctx = gsap.context(() => {
       const cards = cardsRef.current.filter((c): c is HTMLDivElement => c !== null);
 
-      // Entrance plays on every device — short on weak, cinematic on
-      // desktop. No filter:blur on weak (it forces full-screen re-raster).
-      gsap.from(headerRef.current, {
-        y: -28,
-        opacity: 0,
-        duration: isWeak ? 0.55 : 0.9,
-        ease: "expo.out",
-        scrollTrigger: {
-          trigger: sectionRef.current,
-          start: "top bottom",
-          once: true,
-        },
+      revealUp(headerRef.current ? [headerRef.current] : [], {
+        trigger: sectionRef.current,
+        start: "top 85%",
       });
 
       if (cards.length > 0) {
-        gsap.from(cards, {
+        revealUp(cards, {
+          trigger: cards[0],
+          start: "top 88%",
+          stagger: 0.1,
           y: 36,
-          opacity: 0,
-          filter: isWeak ? "blur(0px)" : "blur(8px)",
-          duration: isWeak ? 0.55 : 0.95,
-          ease: "expo.out",
-          stagger: isWeak ? 0.04 : 0.1,
-          scrollTrigger: {
-            trigger: cards[0],
-            start: "top bottom",
-            once: true,
-          },
         });
       }
 
-      // Icon off-screen pause runs on EVERY device (mobile included) —
+      // Icon off-screen pause runs on EVERY device (mobile included) -
       // not an entrance animation, just an ongoing perf gate.
       const io = new IntersectionObserver(
         (entries) => {
@@ -220,16 +202,17 @@ export default function Services() {
   return (
     <section className="services" id="services" ref={sectionRef}>
       <div className="container">
-        <div className="services-header" ref={headerRef}>
-          <span className="services-eyebrow">
-            <span className="services-eyebrow-num">01</span>
-            <span className="services-eyebrow-divider" aria-hidden="true" />
+        <div className="section-head is-centered" ref={headerRef}>
+          <span className="eyebrow">
+            <span className="eyebrow-num">01</span>
+            <span className="eyebrow-rule" aria-hidden="true" />
             <span>What we build</span>
           </span>
-          <h2 className="services-heading">
-            Four things we ship. <span className="services-heading-soft">In-house, end-to-end.</span>
+          <h2 className="section-heading">
+            Four things we ship.{" "}
+            <span className="serif-accent">In&#8209;house, end&#8209;to&#8209;end.</span>
           </h2>
-          <p className="services-intro">
+          <p className="section-intro">
             No sub-contractors, no hand-offs. The same small team scopes it,
             builds it, and ships it.
           </p>
@@ -249,6 +232,7 @@ export default function Services() {
               </div>
               <h3 className="service-card-title">{service.title}</h3>
               <p className="service-card-desc">{service.description}</p>
+              <span className="service-card-artifact">{service.artifact}</span>
               <span className="service-card-arrow" aria-hidden="true">
                 <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M5 11l6-6" />

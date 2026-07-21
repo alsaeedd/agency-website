@@ -1,10 +1,10 @@
-/* ===== CTA - cursor-follow ambient + huge "TELL US" gesture ===== */
+/* ===== CTA - cursor-follow ambient + the "cooking" gesture ===== */
 .cta {
   --cmx: 50%;
   --cmy: 30%;
   background: var(--color-surface);
   color: var(--color-text);
-  padding: 7.5rem 0 8rem;
+  padding: calc(var(--space-section) + 1rem) 0;
   position: relative;
   overflow: hidden;
   isolation: isolate;
@@ -47,9 +47,8 @@
   z-index: 0;
 }
 
-/* Soft top transition - reduced from 240px solid-dark to 120px low-alpha so
-   the previous section blends into the CTA surface without leaving a heavy
-   dark band that the owner flagged as "kinda dark near the top". */
+/* Soft top transition so the previous section blends in without a
+   heavy dark band */
 .cta-blend-top {
   position: absolute;
   top: 0;
@@ -66,25 +65,56 @@
   z-index: 4;
 }
 
-/* Animated WebGL gradient layer - kept dim + masked so text contrast holds */
-.cta-gradient-wrap {
+/* Pure CSS aurora - the warmth the WebGL layer used to fake, composited
+   once and never repainted. */
+.cta-aurora {
+  position: absolute;
+  inset: -15% -8%;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(
+      44% 55% at 24% 68%,
+      rgba(140, 80, 220, 0.22) 0%,
+      transparent 70%
+    ),
+    radial-gradient(
+      40% 50% at 78% 30%,
+      rgba(200, 120, 255, 0.14) 0%,
+      transparent 70%
+    ),
+    radial-gradient(
+      55% 45% at 50% 90%,
+      rgba(90, 45, 180, 0.2) 0%,
+      transparent 68%
+    );
+  filter: blur(36px);
+  opacity: 0.9;
+}
+
+html:not([data-tier="high"]) .cta-aurora {
+  filter: blur(14px);
+}
+
+/* Masked micro-grid - ties the CTA back to the hero's language */
+.cta-grid {
   position: absolute;
   inset: 0;
   z-index: 0;
   pointer-events: none;
-  opacity: 0.55;
-  mix-blend-mode: screen;
+  background-image:
+    linear-gradient(rgba(209, 196, 233, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(209, 196, 233, 0.04) 1px, transparent 1px);
+  background-size: 88px 88px;
   mask-image: radial-gradient(
-    ellipse 80% 70% at 50% 50%,
-    transparent 0%,
-    rgba(0, 0, 0, 0.5) 35%,
-    #000 70%
+    ellipse 62% 70% at 50% 50%,
+    #000 15%,
+    transparent 75%
   );
   -webkit-mask-image: radial-gradient(
-    ellipse 80% 70% at 50% 50%,
-    transparent 0%,
-    rgba(0, 0, 0, 0.5) 35%,
-    #000 70%
+    ellipse 62% 70% at 50% 50%,
+    #000 15%,
+    transparent 75%
   );
 }
 
@@ -97,57 +127,43 @@
   align-items: center;
 }
 
-/* Eyebrow with live pulse */
 .cta-eyebrow {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.6rem;
-  padding: 0.5rem 0.95rem;
   margin-bottom: 1.75rem;
-  border: 1px solid var(--color-border);
-  border-radius: 100px;
-  background: rgba(22, 14, 39, 0.55);
-  -webkit-backdrop-filter: blur(12px);
-  backdrop-filter: blur(12px);
-  font-size: 0.68rem;
-  font-weight: 500;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: var(--color-text-secondary);
-}
-
-.cta-eyebrow-dot {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: #4af5c0;
-  box-shadow: 0 0 12px #4af5c0;
-  animation: ctaEyebrowPulse 1.8s ease-in-out infinite;
-}
-
-@keyframes ctaEyebrowPulse {
-  0%, 100% { opacity: 1; box-shadow: 0 0 12px #4af5c0; }
-  50%      { opacity: 0.45; box-shadow: 0 0 4px #4af5c0; }
+  font-variant-numeric: tabular-nums;
 }
 
 .cta-title {
-  font-size: clamp(3rem, 9vw, 7.5rem);
+  font-size: clamp(3rem, 8.5vw, 7rem);
   font-weight: 500;
-  line-height: 1.04;
+  line-height: 1.06;
   letter-spacing: -0.04em;
   margin: 0 0 1.5rem;
+  color: #ffffff;
+  /* Dark shadow only - a purple halo here gets clipped by the per-word
+     reveal masks into visible rectangles. The aurora carries the glow. */
+  text-shadow: 0 4px 36px rgba(0, 0, 0, 0.6);
 }
 
-.cta-title .word {
-  display: inline-block;
-  overflow: hidden;
-  vertical-align: top;
-  margin: -0.2em;
+/* Serif accent word - extra descender room inside its mask so the
+   italic 'g' never gets clipped */
+.cta-title .wmask {
+  padding-bottom: 0.28em;
+  margin-bottom: -0.28em;
 }
 
-.cta-title .word-inner {
-  display: inline-block;
-  padding: 0.2em;
+.cta-title-accent {
+  font-size: 1.05em;
+  color: #e6dcff;
+}
+
+/* The serif accent is a different font at 1.05em; bottom-aligned inline
+   masks leave its baseline riding above the Inter words. Nudge the whole
+   masked word down onto the shared baseline. `position`, not `transform`,
+   so it never fights the GSAP word-reveal and the mask moves with it (no
+   descender clip). Scales with the clamp because the offset is in em. */
+.cta-title .cta-accent-wmask {
+  position: relative;
+  top: 0.11em;
 }
 
 .cta-sub {
@@ -157,6 +173,13 @@
   margin: 0 auto 2.75rem;
   max-width: 480px;
   opacity: 0.75;
+}
+
+.cta-btn-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.1rem;
 }
 
 .btn-cta-large {
@@ -223,19 +246,30 @@
   transform: translateX(4px);
 }
 
+/* The live local-time line - a human on the other end */
+.cta-local {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 0.92rem;
+  color: var(--color-text-secondary);
+  opacity: 0.7;
+  margin: 0;
+  font-variant-numeric: tabular-nums;
+}
+
 @media (max-width: 768px) {
   .cta { padding: 5rem 0 5.5rem; }
-  .cta-eyebrow { font-size: 0.6rem; padding: 0.4rem 0.8rem; }
   .cta-sub { margin-bottom: 2rem; max-width: 380px; }
   .btn-cta-large {
     width: 100%;
     max-width: 320px;
     padding: 1.05rem 2rem;
   }
+  .cta-local { font-size: 0.85rem; }
 }
 
 @media (max-width: 480px) {
   .cta { padding: 4rem 0 4.5rem; }
-  .cta-title { font-size: clamp(2.25rem, 13vw, 4rem); }
+  .cta-title { font-size: clamp(2.25rem, 12vw, 3.75rem); }
   .cta-sub { font-size: 0.9rem; }
 }

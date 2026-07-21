@@ -11,14 +11,14 @@ import Clients from "./components/Clients";
 import Portfolio from "./components/Portfolio";
 import CTA from "./components/CTA";
 import Footer from "./components/Footer";
-import ScrollVideoSection from "./components/sections/ScrollVideoSection";
+import Interlude from "./components/Interlude";
 import ContactCircle from "./components/ContactCircle";
 import CursorFollower from "./components/CursorFollower";
 import Contact from "./components/Contact";
 import Preloader from "./components/Preloader";
 import NavLoader from "./components/NavLoader";
 
-// React.lazy + Suspense was pausing reconciliation on below-fold sections —
+// React.lazy + Suspense was pausing reconciliation on below-fold sections -
 // the chunks downloaded, but Suspense kept the subtrees in "pending" state
 // until the boundary settled, and the browser deferred their paint to the
 // compositor commit. Result: content visibly "rendered late" when scrolled
@@ -57,7 +57,7 @@ function App() {
     }
   };
 
-  // useLayoutEffect runs synchronously before paint — ensures ScrollTrigger
+  // useLayoutEffect runs synchronously before paint - ensures ScrollTrigger
   // has read element positions BEFORE the first paint, so initial entrance
   // triggers fire on the right frame instead of one frame late.
   useLayoutEffect(() => {
@@ -83,9 +83,9 @@ function App() {
 
     // ── Lenis: lerp (symmetric responsiveness up/down) ─────────────
     // The previous `duration: 1.2` was the dominant cause of "scroll-back
-    // lag" — time-based easing has to unwind inertia from the previous
+    // lag" - time-based easing has to unwind inertia from the previous
     // direction, so reverse scroll feels rubbery. `lerp` is frame-rate
-    // independent linear interpolation toward the target — identical
+    // independent linear interpolation toward the target - identical
     // responsiveness in both directions. 0.085 desktop keeps cinematic
     // smoothness without the rubber-band. Skip Lenis entirely on touch
     // (native iOS/Android momentum is better than anything JS can do)
@@ -104,7 +104,7 @@ function App() {
 
     // GSAP ticker drives BOTH Lenis (via .raf) and ScrollTrigger's own
     // internal scroll polling. The previous `lenis.on('scroll',
-    // ScrollTrigger.update)` was a SECOND update path — doubled per-frame
+    // ScrollTrigger.update)` was a SECOND update path - doubled per-frame
     // work and could re-enter on fast scroll. Single ticker is enough.
     const tickerCallback = (time: number) => {
       lenis?.raf(time * 1000);
@@ -112,10 +112,10 @@ function App() {
     gsap.ticker.add(tickerCallback);
     gsap.ticker.lagSmoothing(0);
 
-    // ONE post-mount ScrollTrigger.refresh() — the Preloader's own
+    // ONE post-mount ScrollTrigger.refresh() - the Preloader's own
     // dismiss() runs another against final layout. Calling refresh from
     // multiple sources (visualViewport, fonts.ready, window.load) was
-    // CAUSING the lag — each refresh is O(triggers) and the visualViewport
+    // CAUSING the lag - each refresh is O(triggers) and the visualViewport
     // listener was firing every URL-bar tick on mobile during scroll. One
     // refresh is enough; the rest were paranoia.
     const refreshTimer = window.setTimeout(() => {
@@ -160,40 +160,46 @@ function App() {
         <Hero onContactClick={openContact} />
         <Services />
         <About />
-        <Clients />
-        <ScrollVideoSection
-          waveGrid
-          waveVariant="b"
-          ornament="spark"
-          eyebrow={<><span className="sv-dot" /> The work behind the work</>}
-          title={
+        <Interlude
+          crest
+          eyebrow={
             <>
-              Built like it's{" "}
-              <span className="scroll-video-title-accent">ours.</span>
+              <span className="live-dot" aria-hidden="true" /> Manama · GMT+3
             </>
           }
-          subtitle={
+          title={
             <>
-              Every project gets the same care - weekly check-ins on real
-              channels, code you can actually read, and zero black boxes.
+              Built in Bahrain. <br />
+              <span className="serif-accent">Shipped to the world.</span>
+            </>
+          }
+          sub={
+            <>
+              Same working hours as your customers, same standards as anywhere.
+              Weekly check-ins on channels you actually open, and zero black
+              boxes.
             </>
           }
         />
+        <Clients />
         <Portfolio />
-        <ScrollVideoSection
-          waveGrid
-          ornament="ring"
-          eyebrow={<><span className="sv-dot" /> What it feels like to work with us</>}
+        <Interlude
+          eyebrow={
+            <>
+              <span className="live-dot" aria-hidden="true" /> What it feels
+              like to work with us
+            </>
+          }
           title={
             <>
               Less ceremony, <br />
-              <span className="scroll-video-title-accent">more shipping.</span>
+              <span className="serif-accent">more shipping.</span>
             </>
           }
-          subtitle={
+          sub={
             <>
-              No slide decks, no kick-off theater. We scope it on WhatsApp, ship
-              the first slice in a week, and iterate from there.
+              No slide decks, no kick-off theater. We scope it on WhatsApp,
+              ship the first slice in a week, and iterate from there.
             </>
           }
         />

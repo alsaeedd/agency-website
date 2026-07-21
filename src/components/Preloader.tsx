@@ -8,14 +8,14 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
  * The markup + critical CSS live inline in index.html so the wordmark stroke
  * begins drawing on the FIRST frame (before any Vite chunk hits the wire).
  * React only drives:
- *   1) A real percentage counter that tracks multi-source ready progress —
+ *   1) A real percentage counter that tracks multi-source ready progress -
  *      fonts, window 'load', the hero WebGL "ral:hero-ready" event.
  *   2) The final exit timeline: counter snaps to 100, wordmark fills, then
  *      the whole overlay clips upward, the stage flies up faster than the
  *      mask so the wordmark "escapes" before the curtain closes.
  *   3) A safety dismissal after 4.5s so a stalled signal never traps anyone.
  *
- * This component renders nothing — it mutates the pre-existing #ral-preloader
+ * This component renders nothing - it mutates the pre-existing #ral-preloader
  * element.
  */
 export default function Preloader() {
@@ -28,7 +28,7 @@ export default function Preloader() {
 
     let dismissed = false;
     // Counter starts at 0 and walks toward `target` over time. We advance
-    // `target` as real readiness signals fire — so the number always tracks
+    // `target` as real readiness signals fire - so the number always tracks
     // genuine progress, never a fake timer.
     const counter = { value: 0 };
     let target = 8; // small initial creep so the number is alive immediately
@@ -72,7 +72,7 @@ export default function Preloader() {
     });
 
     // With React.lazy retired, every below-fold section is now in the main
-    // bundle and mounts synchronously with the app — no separate chunk to
+    // bundle and mounts synchronously with the app - no separate chunk to
     // wait for. window.load already covers the JS + critical asset
     // download. Three-source readiness is enough now.
     // Minimum visible time so the curtain doesn't pop in and out on

@@ -1,10 +1,10 @@
-/* ===== About - giant ghost wordmark + ambient depth ===== */
+/* ===== About - the founder letter ===== */
 .about {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 7rem 0 0;
+  padding: var(--space-section) 0;
   scroll-margin-top: 72px;
   position: relative;
   background: var(--color-surface);
@@ -20,7 +20,7 @@
   position: absolute;
   left: 0;
   right: 0;
-  height: 220px;
+  height: 200px;
   pointer-events: none;
   z-index: 3;
 }
@@ -48,7 +48,7 @@
     );
 }
 
-/* Twinkling star field - 36 tiny dots placed via box-shadow */
+/* Twinkling star field - tiny dots placed via box-shadow */
 .about-stars {
   position: absolute;
   inset: 0;
@@ -74,19 +74,19 @@
     160px 40px 0 rgba(167, 139, 250, 0.5),
     220px 150px 0 rgba(255, 255, 255, 0.4),
     340px 90px 0 rgba(167, 139, 250, 0.7),
-    420px 210px 0 rgba(74, 245, 192, 0.55),
+    420px 210px 0 rgba(214, 194, 255, 0.55),
     520px 60px 0 rgba(255, 255, 255, 0.5),
     640px 180px 0 rgba(167, 139, 250, 0.45),
     760px 110px 0 rgba(255, 255, 255, 0.6),
     880px 250px 0 rgba(167, 139, 250, 0.5),
     1000px 70px 0 rgba(255, 255, 255, 0.55),
-    1120px 190px 0 rgba(74, 245, 192, 0.4),
+    1120px 190px 0 rgba(214, 194, 255, 0.4),
     1240px 130px 0 rgba(167, 139, 250, 0.55),
     80px 280px 0 rgba(255, 255, 255, 0.45),
     260px 340px 0 rgba(167, 139, 250, 0.6),
     440px 420px 0 rgba(255, 255, 255, 0.5),
     620px 380px 0 rgba(167, 139, 250, 0.5),
-    820px 460px 0 rgba(74, 245, 192, 0.4),
+    820px 460px 0 rgba(214, 194, 255, 0.4),
     1020px 410px 0 rgba(255, 255, 255, 0.55);
   animation: aboutStarsTwinkle 4s ease-in-out infinite alternate;
 }
@@ -98,13 +98,13 @@
     -90px 30px 0 rgba(167, 139, 250, 0.5),
     -210px 110px 0 rgba(255, 255, 255, 0.55),
     -330px 60px 0 rgba(167, 139, 250, 0.45),
-    -460px 200px 0 rgba(74, 245, 192, 0.4),
+    -460px 200px 0 rgba(214, 194, 255, 0.4),
     -580px 80px 0 rgba(255, 255, 255, 0.6),
     -720px 230px 0 rgba(167, 139, 250, 0.5),
     -840px 150px 0 rgba(255, 255, 255, 0.5),
     -120px 320px 0 rgba(167, 139, 250, 0.55),
     -300px 280px 0 rgba(255, 255, 255, 0.5),
-    -500px 380px 0 rgba(74, 245, 192, 0.45),
+    -500px 380px 0 rgba(214, 194, 255, 0.45),
     -700px 350px 0 rgba(167, 139, 250, 0.5),
     -900px 420px 0 rgba(255, 255, 255, 0.55);
   animation: aboutStarsTwinkle 3.4s ease-in-out infinite alternate-reverse;
@@ -115,9 +115,7 @@
   50%      { opacity: 1; }
 }
 
-/* Static centerpiece aura — replaces the rotating text rings. Same
-   visual mood (purple halo behind the section content) at zero per-
-   frame cost. One layer, composited once, never repainted. */
+/* Static centerpiece aura - one layer, composited once, never repainted. */
 .about-aura {
   position: absolute;
   top: 50%;
@@ -139,8 +137,7 @@
   opacity: 0.9;
 }
 
-/* Faint concentric reference circles — pure CSS, no animation. Reads
-   like the "mission seal" mood the rings had, without the cost. */
+/* Faint concentric reference circles - pure CSS, no animation. */
 .about-aura::before,
 .about-aura::after {
   content: "";
@@ -188,42 +185,15 @@
   width: 100%;
 }
 
-/* Eyebrow */
 .about-eyebrow {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.7rem;
-  font-size: 0.62rem;
-  font-weight: 600;
-  letter-spacing: 0.28em;
-  text-transform: uppercase;
-  color: var(--color-text-secondary);
-  opacity: 0.75;
-  margin-bottom: 0.5rem;
-}
-
-.about-eyebrow-num {
-  font-variant-numeric: tabular-nums;
-  color: rgba(167, 139, 250, 1);
-  text-shadow: 0 0 12px rgba(167, 139, 250, 0.45);
-}
-
-.about-eyebrow-divider {
-  display: inline-block;
-  width: 28px;
-  height: 1px;
-  background: linear-gradient(
-    90deg,
-    rgba(167, 139, 250, 0.7),
-    rgba(167, 139, 250, 0.1)
-  );
+  margin-bottom: 0.25rem;
 }
 
 /* Logo */
 .about-logo-wrap {
   position: relative;
-  width: 110px;
-  height: 110px;
+  width: 104px;
+  height: 104px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -258,9 +228,13 @@
   filter: drop-shadow(0 0 22px rgba(180, 80, 255, 0.45));
 }
 
+html:not([data-tier="high"]) .about-logo-img {
+  filter: drop-shadow(0 0 8px rgba(180, 80, 255, 0.28));
+}
+
 /* Heading */
 .about-heading {
-  font-size: clamp(2.8rem, 7vw, 5rem);
+  font-size: clamp(2.4rem, 6vw, 4.25rem);
   font-weight: 500;
   letter-spacing: -0.035em;
   color: #ffffff;
@@ -286,7 +260,7 @@
   will-change: transform, opacity;
 }
 
-/* Body paragraphs - no box, just dark text-shadow to lift the words off the bg */
+/* Body paragraphs - dark text-shadow lifts the words off the bg */
 .about-body {
   display: flex;
   flex-direction: column;
@@ -306,245 +280,102 @@
     0 0 30px rgba(0, 0, 0, 0.55);
 }
 
-.about-para:last-child {
-  font-weight: 600;
+/* ── The pull-quote - the founder's voice, full volume ── */
+.about-quote {
+  margin: 1.25rem 0 0;
+  border: none;
+}
+
+.about-quote p {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-weight: 500;
+  font-size: clamp(1.7rem, 3.6vw, 2.7rem);
+  line-height: 1.28;
+  letter-spacing: -0.015em;
   color: #ffffff;
-  opacity: 1;
-  font-size: clamp(1.1rem, 1.6vw, 1.25rem);
-  margin-top: 0.5rem;
-  letter-spacing: -0.012em;
+  margin: 0 auto;
+  /* ch is measured in THIS serif size - wraps to two balanced lines */
+  max-width: 24ch;
   text-shadow:
-    0 0 24px rgba(167, 139, 250, 0.5),
-    0 2px 16px rgba(0, 0, 0, 0.85);
+    0 0 32px rgba(167, 139, 250, 0.45),
+    0 2px 18px rgba(0, 0, 0, 0.8);
+}
+
+/* Quote marks - oversized, faint, editorial */
+.about-quote {
+  position: relative;
+}
+.about-quote::before {
+  content: "\201C";
+  position: absolute;
+  top: -0.32em;
+  left: -0.52em;
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 2.6em;
+  line-height: 1;
+  color: rgba(167, 139, 250, 0.28);
+  pointer-events: none;
+}
+
+.about-sig {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.9rem;
+  margin-top: 0.25rem;
+}
+
+.about-sig-rule {
+  width: 34px;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(167, 139, 250, 0.5)
+  );
+}
+.about-sig-rule:last-child {
+  background: linear-gradient(
+    90deg,
+    rgba(167, 139, 250, 0.5),
+    transparent
+  );
+}
+
+.about-sig-text {
+  font-size: 0.64rem;
+  font-weight: 600;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  color: var(--color-text-secondary);
+  opacity: 0.7;
+  white-space: nowrap;
 }
 
 /* ── Mobile ── */
 @media (max-width: 768px) {
   .about { padding: 4.5rem 0 5rem; }
   .about-inner { padding: 1rem 1.25rem; gap: 1.25rem; }
-  .about-ghost { font-size: clamp(10rem, 45vw, 18rem); }
-  .about-logo-wrap { width: 90px; height: 90px; }
-  .about-heading { font-size: clamp(2rem, 9vw, 3rem); margin-top: 0.25rem; }
+  .about-logo-wrap { width: 88px; height: 88px; }
+  .about-heading { font-size: clamp(1.9rem, 8.5vw, 2.8rem); margin-top: 0.25rem; }
   .about-body { gap: 0.85rem; }
   .about-para { font-size: 0.9rem; line-height: 1.7; }
-  .about-para:last-child { font-size: 1rem; }
-  .about-eyebrow { font-size: 0.55rem; letter-spacing: 0.22em; }
+  .about-quote { margin-top: 1rem; }
+  .about-quote p { font-size: clamp(1.35rem, 5.6vw, 1.8rem); }
 }
 
 @media (max-width: 480px) {
   .about { padding: 3.5rem 0 4rem; }
   .about-inner { padding: 0.5rem 1rem; gap: 1rem; }
-  .about-ghost { font-size: clamp(8rem, 60vw, 14rem); opacity: 0.85; }
-  .about-logo-wrap { width: 76px; height: 76px; }
-  .about-heading { font-size: clamp(1.7rem, 10vw, 2.4rem); letter-spacing: -0.03em; }
+  .about-logo-wrap { width: 74px; height: 74px; }
+  .about-heading { font-size: clamp(1.65rem, 9.5vw, 2.2rem); letter-spacing: -0.03em; }
   .about-para { font-size: 0.85rem; line-height: 1.65; }
-  .about-para:last-child { font-size: 0.92rem; }
-  .about-eyebrow { font-size: 0.5rem; letter-spacing: 0.18em; }
-  .about-eyebrow-divider { width: 22px; }
+  .about-quote p { font-size: clamp(1.2rem, 6.4vw, 1.55rem); }
+  .about-sig-text { font-size: 0.55rem; letter-spacing: 0.2em; }
+  .about-sig-rule { width: 24px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .about-logo-glow { animation: none; }
-}
-
-/* ── ContainerScroll inner content ── */
-.about > .cscroll-shell {
-  width: 100%;
-  margin-top: -2rem;
-}
-
-.about-cscroll-title {
-  padding: 0 1.5rem;
-}
-
-.about-cscroll-eyebrow {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.6rem;
-  padding: 0.45rem 0.95rem;
-  margin-bottom: 1.5rem;
-  border: 1px solid var(--color-border);
-  border-radius: 100px;
-  background: rgba(22, 14, 39, 0.55);
-  -webkit-backdrop-filter: blur(10px);
-  backdrop-filter: blur(10px);
-  font-size: 0.62rem;
-  font-weight: 500;
-  letter-spacing: 0.22em;
-  text-transform: uppercase;
-  color: var(--color-text-secondary);
-}
-
-.about-cscroll-dot {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: #4af5c0;
-  box-shadow: 0 0 10px #4af5c0;
-  animation: about-glow-pulse 2s ease-in-out infinite alternate;
-}
-
-.about-cscroll-headline {
-  font-size: clamp(2rem, 6vw, 4.5rem);
-  font-weight: 600;
-  line-height: 1.04;
-  letter-spacing: -0.04em;
-  color: var(--color-text);
-  margin: 0 auto;
-  max-width: 18ch;
-}
-
-.about-cscroll-headline-accent {
-  background: linear-gradient(135deg, #d6c2ff 0%, #a78bfa 45%, #7c5aff 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-  color: transparent;
-}
-
-.about-cscroll-stage {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: radial-gradient(
-      ellipse 60% 50% at 50% 50%,
-      rgba(124, 90, 255, 0.22) 0%,
-      transparent 70%
-    ),
-    linear-gradient(180deg, #160e27 0%, #0c0715 100%);
-  overflow: hidden;
-}
-
-.about-cscroll-crest {
-  position: absolute;
-  inset: 0;
-  margin: auto;
-  width: 50%;
-  max-width: 260px;
-  height: auto;
-  opacity: 0.15;
-  filter: drop-shadow(0 0 40px rgba(167, 139, 250, 0.4));
-  animation: about-cscroll-crest-spin 80s linear infinite;
-}
-
-@keyframes about-cscroll-crest-spin {
-  from { transform: rotate(0deg); }
-  to   { transform: rotate(360deg); }
-}
-
-.about-cscroll-overlay {
-  position: relative;
-  z-index: 2;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 1.5rem;
-  padding: 2.5rem 2rem;
-  text-align: center;
-  max-width: 720px;
-}
-
-.about-cscroll-tag {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.55rem;
-  padding: 0.4rem 0.85rem;
-  border: 1px solid rgba(255, 255, 255, 0.14);
-  border-radius: 100px;
-  background: rgba(12, 7, 21, 0.5);
-  -webkit-backdrop-filter: blur(8px);
-  backdrop-filter: blur(8px);
-  font-size: 0.6rem;
-  font-weight: 600;
-  letter-spacing: 0.24em;
-  text-transform: uppercase;
-  color: #ffffff;
-  opacity: 1;
-}
-
-.about-cscroll-tag-dot {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: #4af5c0;
-  box-shadow: 0 0 10px #4af5c0;
-}
-
-.about-cscroll-quote {
-  font-size: clamp(1.45rem, 2.6vw, 2.4rem);
-  font-weight: 600;
-  line-height: 1.32;
-  letter-spacing: -0.025em;
-  color: #ffffff;
-  margin: 0;
-  max-width: 24ch;
-  text-shadow:
-    0 0 60px rgba(0, 0, 0, 0.65),
-    0 0 30px rgba(167, 139, 250, 0.35),
-    0 2px 12px rgba(0, 0, 0, 0.5);
-}
-
-.about-cscroll-sig {
-  font-size: 0.78rem;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: #ffffff;
-  opacity: 0.92;
-  font-weight: 600;
-  margin-top: 0.25rem;
-}
-
-@media (max-width: 768px) {
-  .about-cscroll-overlay { padding: 1.5rem; gap: 1rem; }
-  .about-cscroll-quote { font-size: 1.1rem; max-width: 24ch; }
-  .about-cscroll-sig { font-size: 0.65rem; }
-  .about-cscroll-crest { width: 50%; max-width: 220px; }
-}
-
-/* ─── Mobile / weak-device optimizations ─────────────────────────────
-   Anything inside `html:not([data-tier="high"])` runs on phones, tablets,
-   and any device that doesn't pass the high-tier bar (8+ cores, 8+ GB RAM,
-   non-touch). High-tier desktops keep the full visual fidelity untouched.
-
-   What we're killing:
-   - backdrop-filter (huge GPU cost — blurs whole backdrop every frame)
-   - large drop-shadow blurs (each px of blur quadruples the work)
-   - long-running CSS animations on heavy SVGs (rings, crest)
-*/
-html:not([data-tier="high"]) .about-cscroll-eyebrow,
-html:not([data-tier="high"]) .about-cscroll-tag {
-  -webkit-backdrop-filter: none;
-  backdrop-filter: none;
-  background: rgba(22, 14, 39, 0.92);
-}
-
-html:not([data-tier="high"]) .about-rings {
-  /* No drop-shadow on the rings at any tier now (static ::before halo
-     handles it); reduce overall opacity slightly on weak devices. */
-  opacity: 0.7;
-}
-
-html:not([data-tier="high"]) .about-logo-img {
-  filter: drop-shadow(0 0 8px rgba(180, 80, 255, 0.28));
-}
-
-html:not([data-tier="high"]) .about-cscroll-crest {
-  filter: drop-shadow(0 0 10px rgba(167, 139, 250, 0.22));
-  /* Restored to original speed — without drop-shadow on the rings layer
-     the GPU can spin SVG content at zero main-thread cost. */
-  animation: about-cscroll-crest-spin 80s linear infinite;
-}
-
-/* Ring rotation: SAME speed on every tier — the cost was drop-shadow,
-   not the animation. With the filter removed the rotation is pure GPU
-   compositing and runs at native frame rate on the cheapest phone. */
-
-/* If the user prefers reduced motion, freeze the rings entirely. */
-@media (prefers-reduced-motion: reduce) {
-  .about-ring-outer,
-  .about-ring-inner,
-  .about-cscroll-crest { animation: none; }
 }

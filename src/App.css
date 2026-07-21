@@ -1,90 +1,3 @@
-/* ===== Showreel ===== */
-.showreel {
-  padding: 2rem 0 6rem;
-}
-
-.showreel-preview {
-  position: relative;
-  border-radius: 1.5rem;
-  overflow: hidden;
-  cursor: pointer;
-  transform: scale(0.95);
-  opacity: 0;
-  transition:
-    transform 1s var(--ease-out-expo),
-    opacity 1s var(--ease-out-expo);
-}
-
-.showreel-preview.revealed {
-  transform: scale(1);
-  opacity: 1;
-}
-
-.showreel-preview video {
-  width: 100%;
-  aspect-ratio: 16/9;
-  object-fit: cover;
-}
-
-/* ===== Custom Cursor ===== */
-.cursor {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 14px;
-  height: 14px;
-  border-radius: 50%;
-  background: var(--color-text);
-  pointer-events: none;
-  z-index: 9999;
-  mix-blend-mode: difference;
-  transform: translate(-50%, -50%);
-  transition:
-    width 0.3s var(--ease-out-expo),
-    height 0.3s var(--ease-out-expo);
-}
-
-.cursor.hover {
-  width: 52px;
-  height: 52px;
-}
-
-.cursor-text {
-  position: fixed;
-  top: 0;
-  left: 0;
-  pointer-events: none;
-  z-index: 10000;
-  transform: translate(-50%, -50%);
-  font-size: 0.65rem;
-  font-weight: 600;
-  color: var(--color-inverse);
-  opacity: 0;
-  transition: opacity 0.3s ease;
-}
-
-.cursor-text.visible {
-  opacity: 1;
-}
-
-/* ===== Scroll Progress ===== */
-.scroll-progress {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 1px;
-  background: rgba(209, 196, 233, 0.08);
-  z-index: 1000;
-}
-
-.scroll-progress-bar {
-  height: 100%;
-  background: rgba(209, 196, 233, 0.5);
-  transform-origin: left;
-  transform: scaleX(0);
-}
-
 /* ===== Lava Lamp Background Blobs ===== */
 /* Soft edges baked into the radial-gradient stops instead of `filter: blur(...)`,
    so the browser composites a static layer and only animates `translate3d`.
@@ -97,7 +10,7 @@
   overflow: hidden;
   contain: strict;
   /* Promote the WHOLE container to a single compositor layer instead of
-     per-blob will-change (was creating three large texture layers — that
+     per-blob will-change (was creating three large texture layers - that
      was triggering memory thrash on weak Android during scroll-back).
      One layer composites the three radial-gradient children once and the
      compositor blends it under the page in one pass. */
@@ -108,7 +21,7 @@
 .bg-blob {
   position: absolute;
   border-radius: 50%;
-  /* Per-blob will-change removed — parent layer handles compositing. */
+  /* Per-blob will-change removed - parent layer handles compositing. */
   backface-visibility: hidden;
 }
 
@@ -192,7 +105,7 @@
   .bg-blob { animation: none; }
 }
 
-/* Catch all non-high tiers across desktop too — many laptops are
+/* Catch all non-high tiers across desktop too - many laptops are
    classified med (4-cores / 4GB), and their compositor doesn't love
    three viewport-sized translating layers during reverse scroll. */
 html:not([data-tier="high"]) .bg-blob {

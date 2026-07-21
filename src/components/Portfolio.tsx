@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState, useCallback } from "react";
 import { gsap } from "gsap";
+import { revealUp } from "../lib/reveal";
 import "./Portfolio.css";
 
 interface Project {
@@ -12,6 +13,8 @@ interface Project {
   cardClass: string;
   client: { name: string; logo: string };
   liveUrl: string;
+  /** One-line scope statement for the case-study fact strip */
+  scope: string;
   highlights: string[];
   outcome: string;
 }
@@ -28,6 +31,7 @@ const projects: Project[] = [
     cardClass: "card-palmnplate",
     client: { name: "Palm & Plate", logo: "/assets/palmnplate-red.png" },
     liveUrl: "https://www.palmandplate.com",
+    scope: "Full platform, design to deploy",
     highlights: [
       "A complete membership platform - from a hospitality concept on paper to a working business that members across Bahrain actually use.",
       "Tiered memberships with a frictionless join flow - no passwords to remember, no clunky forms in the way.",
@@ -48,6 +52,7 @@ const projects: Project[] = [
     cardClass: "card-knightsgate",
     client: { name: "Knights Gate Advisers", logo: "/assets/knightsgate.png" },
     liveUrl: "https://www.kgadvisers.com",
+    scope: "Web presence, design to deploy",
     highlights: [
       "Cinematic hero with custom motion treatment, paired with a refined editorial type system.",
       "Modular sections - services, leadership, why KGA, closing CTA - easy to extend as the firm grows.",
@@ -69,6 +74,7 @@ const projects: Project[] = [
     cardClass: "card-kaakbsemsom",
     client: { name: "Kaak Bsemsom", logo: "/assets/kaakbsemsom-green.jpeg" },
     liveUrl: "https://www.kaakbsemsom.com",
+    scope: "Bilingual landing, EN/AR",
     highlights: [
       "Bilingual EN/AR experience with full RTL support and a smooth language toggle.",
       "GSAP ScrollTrigger + Framer Motion choreography - parallax, pinned sections, scrubbed timelines.",
@@ -90,6 +96,7 @@ const projects: Project[] = [
     cardClass: "card-custompc",
     client: { name: "CustomPC Bahrain", logo: "/assets/custompc.png" },
     liveUrl: "https://www.custompcbh.com",
+    scope: "Full revamp + 3D builder",
     highlights: [
       "A cinematic landing hero with custom motion design - the kind of opening sequence that stops the scroll the moment the page loads.",
       "A 3D PC Builder where customers configure their dream rig piece by piece, with live pricing and a clean, guided flow.",
@@ -220,6 +227,25 @@ function ProjectDetail({
                 <h1 className="pd-title">{project.title}</h1>
                 <p className="pd-subtitle">{project.subtitle}</p>
 
+                {/* Fact strip - the 10-second procurement read */}
+                <div className="pd-facts" aria-label="Project facts">
+                  <div className="pd-fact">
+                    <span className="pd-fact-label">Scope</span>
+                    <span className="pd-fact-value">{project.scope}</span>
+                  </div>
+                  <div className="pd-fact">
+                    <span className="pd-fact-label">Status</span>
+                    <span className="pd-fact-value pd-fact-live">
+                      <span className="live-dot" aria-hidden="true" />
+                      Live in production
+                    </span>
+                  </div>
+                  <div className="pd-fact">
+                    <span className="pd-fact-label">Built from</span>
+                    <span className="pd-fact-value">Manama, Bahrain</span>
+                  </div>
+                </div>
+
                 <div className="pd-cta-row">
                   <a
                     className="pd-cta-primary"
@@ -326,33 +352,20 @@ export default function Portfolio() {
   useEffect(() => {
     if (!cardsRef.current) return;
 
-    const tier = document.documentElement.dataset.tier;
-    const isWeak =
-      tier !== "high" ||
-      (typeof matchMedia === "function" &&
-        matchMedia("(pointer: coarse)").matches);
-
     const ctx = gsap.context(() => {
-      const cards = cardsRef.current!.querySelectorAll(".portfolio-card");
+      const header = sectionRef.current?.querySelector(".portfolio-head");
+      if (header) {
+        revealUp([header], { trigger: header, start: "top 85%" });
+      }
 
+      const cards = cardsRef.current!.querySelectorAll(".portfolio-card");
       cards.forEach((card, index) => {
-        gsap.fromTo(
-          card,
-          { y: 40, opacity: 0, filter: isWeak ? "blur(0px)" : "blur(8px)" },
-          {
-            y: 0,
-            opacity: 1,
-            filter: "blur(0px)",
-            duration: isWeak ? 0.55 : 1,
-            ease: "expo.out",
-            scrollTrigger: {
-              trigger: card,
-              start: "top bottom",
-              once: true,
-            },
-            delay: index * (isWeak ? 0.05 : 0.12),
-          },
-        );
+        revealUp([card], {
+          trigger: card,
+          start: "top 92%",
+          y: 40,
+          delay: (index % 2) * 0.1,
+        });
       });
     }, sectionRef);
 
@@ -366,7 +379,7 @@ export default function Portfolio() {
     }
   };
 
-  // 3D tilt + light reflection on portfolio cards. rAF-throttled — mousemove
+  // 3D tilt + light reflection on portfolio cards. rAF-throttled - mousemove
   // fires 60-120x/sec, but we only need one DOM write per frame. Skipped
   // entirely on coarse pointer (touch).
   const cardMoveScheduled = useRef(new WeakMap<HTMLElement, boolean>());
@@ -401,18 +414,19 @@ export default function Portfolio() {
     <>
       <section className="portfolio" id="portfolio" ref={sectionRef}>
         <div className="container">
-          <div className="portfolio-section-header">
-            <span className="portfolio-section-eyebrow">
-              <span className="portfolio-section-eyebrow-num">04</span>
-              <span className="portfolio-section-eyebrow-divider" aria-hidden="true" />
+          <div className="section-head portfolio-head">
+            <span className="eyebrow">
+              <span className="eyebrow-num">04</span>
+              <span className="eyebrow-rule" aria-hidden="true" />
               <span>Selected work</span>
             </span>
-            <h2 className="portfolio-section-heading">
+            <h2 className="section-heading">
               Four projects.{" "}
-              <span className="portfolio-section-heading-soft">Four real businesses.</span>
+              <span className="serif-accent">Four real businesses.</span>
             </h2>
-            <p className="portfolio-section-intro">
-              Tap any card to drop into the case study. Or click the URL to see it live.
+            <p className="section-intro">
+              Tap any card to drop into the case study. Or click the URL to
+              see it live, everything here is in production.
             </p>
           </div>
           <div className="portfolio-grid" ref={cardsRef}>
