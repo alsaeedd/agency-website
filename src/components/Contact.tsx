@@ -6,7 +6,7 @@ import "./Contact.css";
 const services = [
   { id: "site-scratch", label: "Site from scratch" },
   { id: "system-from-scratch", label: "System from scratch" },
-  { id: "ai-automations", label: "AI automations" },
+  { id: "ai-agents", label: "AI agents" },
   { id: "cloud-deployment-only", label: "Cloud deployment only" },
   { id: "other", label: "Something else" },
 ];

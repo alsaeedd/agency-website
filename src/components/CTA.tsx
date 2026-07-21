@@ -89,8 +89,8 @@ export default function CTA({ onContactClick }: CTAProps) {
             <span className="wmask cta-accent-wmask"><span className="wmask-in serif-accent cta-title-accent">cooking?</span></span>
           </h2>
           <p className="cta-sub">
-            One quick chat, no decks, no pricing tables. Send us a few lines
-            and we'll pick it up on WhatsApp.
+            No formalities needed, we'd genuinely love to hear what you've got
+            in mind. Reach out and let's talk.
           </p>
           <div className="cta-btn-wrap">
             <button
@@ -108,7 +108,7 @@ export default function CTA({ onContactClick }: CTAProps) {
               </span>
             </button>
             <p className="cta-local">
-              We're in Manama, and probably online right now.
+              We're in Bahrain, and probably online right now.
             </p>
           </div>
         </div>

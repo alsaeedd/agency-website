@@ -1,6 +1,7 @@
 import { useEffect, useRef } from "react";
 import { gsap } from "gsap";
 import bhCoatOfArms from "../../assets/bh-coat-of-arms.svg";
+import HeroStatus from "./ui/HeroStatus";
 import "./Hero.css";
 
 interface HeroProps {
@@ -9,7 +10,7 @@ interface HeroProps {
 
 const tickerItems = [
   "Custom software",
-  "AI automations",
+  "Event-driven backends",
   "Production deploys",
   "Real CRMs",
   "Bahrain · GMT+3",
@@ -309,8 +310,8 @@ export default function Hero({ onContactClick }: HeroProps) {
           <span className="live-dot" aria-hidden="true" />
           <img src={bhCoatOfArms} alt="" className="hero-label-crest" />
           <span>
-            Manama&nbsp;·&nbsp;GMT+3
-            <span className="hero-label-tail">&nbsp;·&nbsp;currently building</span>
+            Bahrain&nbsp;·&nbsp;GMT+3
+            <span className="hero-label-tail">&nbsp;·&nbsp;<HeroStatus /></span>
           </span>
         </div>
 
@@ -336,8 +337,8 @@ export default function Hero({ onContactClick }: HeroProps) {
         </h1>
 
         <p className="hero-sub" data-hero-anim>
-          Custom software &amp; AI automations, shipped end-to-end from Manama
-          by a small team that actually ships.
+          We take your idea from a conversation to a complete product running
+          in production. And we build it like we own it.
         </p>
 
         <div className="hero-cta-row" data-hero-anim>

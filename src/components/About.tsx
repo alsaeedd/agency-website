@@ -50,7 +50,6 @@ export default function About() {
         opacity: 0,
       });
       gsap.set(".about-quote", { opacity: 0, y: 26, scale: 0.985 });
-      gsap.set(".about-sig", { opacity: 0, y: 12 });
 
       const tl = gsap.timeline({
         scrollTrigger: {
@@ -114,11 +113,6 @@ export default function About() {
             ease: "expo.out",
           },
           isWeak ? "-=0.2" : "-=0.35",
-        )
-        .to(
-          ".about-sig",
-          { opacity: 1, y: 0, duration: isWeak ? 0.4 : 0.8, ease: "expo.out" },
-          isWeak ? "-=0.25" : "-=0.7",
         );
     }, sectionRef);
 
@@ -161,11 +155,6 @@ export default function About() {
         <blockquote className="about-quote">
           <p>{PULL_QUOTE}</p>
         </blockquote>
-        <div className="about-sig">
-          <span className="about-sig-rule" aria-hidden="true" />
-          <span className="about-sig-text">the whole team, every project</span>
-          <span className="about-sig-rule" aria-hidden="true" />
-        </div>
       </div>
     </section>
   );

@@ -27,7 +27,7 @@
     system-ui, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
 
   /* Type scale - fluid, shared by every section */
-  --size-hero: clamp(2.6rem, 7.6vw, 6.75rem);
+  --size-hero: clamp(2.4rem, 6.3vw, 5.7rem);
   --size-display: clamp(2.2rem, 4.8vw, 3.8rem);
   --size-statement: clamp(2rem, 5.2vw, 4.2rem);
   --size-intro: clamp(0.92rem, 1.3vw, 1.02rem);

@@ -277,7 +277,7 @@ html[data-tier="med"] .hero-particle:nth-child(n + 8) {
   align-items: center;
 }
 
-/* ===== Top label - live Manama clock chip ===== */
+/* ===== Top label - Bahrain status chip ===== */
 .hero-label {
   display: inline-flex;
   align-items: center;
@@ -316,7 +316,7 @@ html[data-tier="med"] .hero-particle:nth-child(n + 8) {
   letter-spacing: -0.045em;
   color: #ffffff;
   margin: 0 auto 1.75rem;
-  max-width: 16ch;
+  max-width: none;
   text-shadow:
     0 0 50px rgba(167, 139, 250, 0.5),
     0 0 100px rgba(120, 80, 220, 0.25),
@@ -325,6 +325,15 @@ html[data-tier="med"] .hero-particle:nth-child(n + 8) {
 
 .hero-title-line {
   display: block;
+}
+
+/* Desktop only: keep "that scales your <word>" on one line so the cycler
+   never drops below "your" (the longest word still fits down to 769px).
+   Mobile wraps normally, since nowrap would overflow the narrow viewport. */
+@media (min-width: 769px) {
+  .hero-title-line {
+    white-space: nowrap;
+  }
 }
 
 /* Word groups keep letters together so a word never breaks across lines */
@@ -376,6 +385,9 @@ html[data-tier="med"] .hero-particle:nth-child(n + 8) {
    itself hides each word, so no mask is needed. */
 .hero-cycler {
   position: relative;
+  /* Newsreader italic at 1.04em bottom-aligns a touch high against Inter;
+     drop it a hair so its baseline sits on "your". */
+  top: 0.06em;
   display: inline-block;
   vertical-align: bottom;
   text-align: left;

@@ -164,7 +164,7 @@ function App() {
           crest
           eyebrow={
             <>
-              <span className="live-dot" aria-hidden="true" /> Manama · GMT+3
+              <span className="live-dot" aria-hidden="true" /> Bahrain · GMT+3
             </>
           }
           title={
@@ -175,9 +175,9 @@ function App() {
           }
           sub={
             <>
-              Same working hours as your customers, same standards as anywhere.
-              Weekly check-ins on channels you actually open, and zero black
-              boxes.
+              We're a small team from a small island, and proud of both. We do
+              serious work without taking ourselves too seriously, and we build
+              things made to last. Big ambitions, no ego.
             </>
           }
         />
@@ -198,8 +198,9 @@ function App() {
           }
           sub={
             <>
-              No slide decks, no kick-off theater. We scope it on WhatsApp,
-              ship the first slice in a week, and iterate from there.
+              No kick-off theater. We sit down and hear you out, then scope it
+              as if it were ours, genuinely invested in whether it works. We get
+              moving fast and iterate from there.
             </>
           }
         />

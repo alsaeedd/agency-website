@@ -107,7 +107,7 @@ html[data-tier="high"] .navbar.nav-scrolled {
   transform: translateY(-100%);
 }
 
-/* Live Manama clock - quiet proof there's a team awake behind the bar */
+/* Bahrain marker - quiet proof there's a team awake behind the bar */
 .navbar-clock {
   display: inline-flex;
   align-items: center;

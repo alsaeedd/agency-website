@@ -242,7 +242,7 @@ function ProjectDetail({
                   </div>
                   <div className="pd-fact">
                     <span className="pd-fact-label">Built from</span>
-                    <span className="pd-fact-value">Manama, Bahrain</span>
+                    <span className="pd-fact-value">Bahrain</span>
                   </div>
                 </div>
 
