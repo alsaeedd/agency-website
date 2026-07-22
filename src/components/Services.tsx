@@ -7,8 +7,6 @@ interface Service {
   id: number;
   title: string;
   description: string;
-  /** A real, recent artifact - specificity beats impressiveness. */
-  artifact: string;
   icon: React.ReactNode;
   /** Animation flavor for the icon - matches CSS class */
   flavor: "float" | "spin" | "wobble" | "pulse";
@@ -19,7 +17,6 @@ const services: Service[] = [
     id: 1,
     title: "Websites",
     description: "Marketing sites & shop fronts. Fast to load, easy to sell from.",
-    artifact: "kgadvisers.com",
     flavor: "float",
     icon: (
       <svg viewBox="0 0 80 80" fill="none">
@@ -48,7 +45,6 @@ const services: Service[] = [
     id: 2,
     title: "Systems",
     description: "Internal tools, dashboards, custom CRMs. The kind that replaces five spreadsheets.",
-    artifact: "A members portal & events CRM",
     flavor: "wobble",
     icon: (
       <svg viewBox="0 0 80 80" fill="none">
@@ -77,7 +73,6 @@ const services: Service[] = [
     id: 3,
     title: "Apps",
     description: "Web & mobile apps with a real backend. Shipped to production, not a slide deck.",
-    artifact: "A 3D PC-builder for custompcbh.com",
     flavor: "pulse",
     icon: (
       <svg viewBox="0 0 80 80" fill="none">
@@ -106,7 +101,6 @@ const services: Service[] = [
     id: 4,
     title: "AI",
     description: "Agents & workflows that quietly do the work your team was about to hire for.",
-    artifact: "1,000-candidate outreach batches",
     flavor: "spin",
     icon: (
       <svg viewBox="0 0 80 80" fill="none">
@@ -232,7 +226,6 @@ export default function Services() {
               </div>
               <h3 className="service-card-title">{service.title}</h3>
               <p className="service-card-desc">{service.description}</p>
-              <span className="service-card-artifact">{service.artifact}</span>
               <span className="service-card-arrow" aria-hidden="true">
                 <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M5 11l6-6" />

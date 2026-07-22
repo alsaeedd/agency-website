@@ -81,6 +81,9 @@ html:not([data-tier="high"]) .services::after {
   display: flex;
   flex-direction: column;
   align-items: center;
+  /* Center the num/icon/title/desc stack now that the bottom receipt line is
+     gone, so the min-height card stays balanced with no empty gap. */
+  justify-content: center;
   text-align: center;
   gap: 0.75rem;
   padding: 2.5rem 2.25rem 2rem;
@@ -210,34 +213,6 @@ html[data-tier="high"] .service-card {
   max-width: 38ch;
 }
 
-/* The receipt line - a real recent artifact in the founder's hand */
-.service-card-artifact {
-  margin-top: auto;
-  padding-top: 1rem;
-  font-family: var(--font-serif);
-  font-style: italic;
-  font-size: 0.86rem;
-  color: var(--color-text-secondary);
-  opacity: 0;
-  transform: translateY(4px);
-  transition:
-    opacity 0.4s ease,
-    transform 0.45s var(--ease-out-expo);
-}
-
-.service-card:hover .service-card-artifact {
-  opacity: 0.85;
-  transform: translateY(0);
-}
-
-/* Touch devices can't hover - always show the receipt line */
-@media (hover: none) {
-  .service-card-artifact {
-    opacity: 0.7;
-    transform: none;
-  }
-}
-
 .service-card-arrow {
   position: absolute;
   top: 1.25rem;
@@ -284,7 +259,6 @@ html[data-tier="high"] .service-card {
   .service-card-icon { width: 72px; height: 72px; }
   .service-card-title { font-size: 1.5rem; }
   .service-card-desc { font-size: 0.82rem; }
-  .service-card-artifact { font-size: 0.8rem; padding-top: 0.75rem; }
 }
 
 @media (max-width: 480px) {
@@ -293,7 +267,6 @@ html[data-tier="high"] .service-card {
   .service-card-icon { width: 64px; height: 64px; margin: 0.25rem 0 0.5rem; }
   .service-card-title { font-size: 1.35rem; }
   .service-card-desc { font-size: 0.78rem; }
-  .service-card-artifact { font-size: 0.76rem; }
   .service-card-arrow { width: 22px; height: 22px; top: 1rem; right: 1rem; }
   .service-card-arrow svg { width: 11px; height: 11px; }
 }
