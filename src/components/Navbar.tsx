@@ -144,10 +144,6 @@ export default function Navbar({ onContactClick, scrollToSection }: NavbarProps)
                   <span>{link.text}</span>
                 </a>
               ))}
-              <span className="navbar-clock" title="Based in Bahrain">
-                <span className="live-dot" aria-hidden="true" />
-                Bahrain
-              </span>
               <button
                 onClick={onContactClick}
                 data-text="Contact Us"
@@ -209,10 +205,6 @@ export default function Navbar({ onContactClick, scrollToSection }: NavbarProps)
           >
             Contact Us
           </button>
-          <span className="navbar-mobile-local">
-            <span className="live-dot" aria-hidden="true" />
-            Bahrain · GMT+3
-          </span>
         </div>
       </div>
     </>

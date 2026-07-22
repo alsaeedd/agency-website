@@ -107,40 +107,6 @@ html[data-tier="high"] .navbar.nav-scrolled {
   transform: translateY(-100%);
 }
 
-/* Bahrain marker - quiet proof there's a team awake behind the bar */
-.navbar-clock {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  font-size: 0.68rem;
-  font-weight: 500;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--color-text-secondary);
-  opacity: 0.72;
-  font-variant-numeric: tabular-nums;
-  padding: 0.35rem 0.85rem;
-  border: 1px solid var(--color-border);
-  border-radius: 100px;
-  white-space: nowrap;
-  cursor: default;
-  transition: opacity 0.3s ease, border-color 0.3s ease;
-}
-
-.navbar-clock:hover {
-  opacity: 1;
-  border-color: var(--color-border-active);
-}
-
-.navbar-clock .live-dot {
-  width: 5px;
-  height: 5px;
-}
-
-@media (max-width: 1024px) {
-  .navbar-clock { display: none; }
-}
-
 .navbar-contact-btn {
   font-size: 0.8125rem;
   font-weight: 600;
@@ -386,26 +352,6 @@ html[data-tier="high"] .navbar-mobile-backdrop {
   opacity: 0.92;
   transform: translateY(-1px);
   box-shadow: 0 0 32px rgba(167, 139, 250, 0.32);
-}
-
-/* Local-time line at the bottom of the mobile sheet */
-.navbar-mobile-local {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  margin-top: 1.75rem;
-  font-size: 0.62rem;
-  font-weight: 500;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: var(--color-text-secondary);
-  opacity: 0.65;
-  font-variant-numeric: tabular-nums;
-}
-
-.navbar-mobile-local .live-dot {
-  width: 5px;
-  height: 5px;
 }
 
 /* Respect reduced motion - collapse to instant fades, no slide. */
