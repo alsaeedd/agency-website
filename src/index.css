@@ -1,5 +1,11 @@
 @import "lenis/dist/lenis.css";
 
+/* ════════════════════════════════════════════════════════════════════
+   RAL design tokens - one system, applied everywhere.
+   Two voices: Inter carries the structure, Newsreader italic carries
+   the founder's voice leaning in. Dark only. Mint is reserved for
+   "live" pulses - nothing else gets to be mint.
+   ════════════════════════════════════════════════════════════════════ */
 :root {
   --color-bg: #0c0715;
   --color-surface: #160e27;
@@ -10,6 +16,8 @@
   --color-text-secondary: #d1c4e9;
   --color-primary: #f8f8f8;
   --color-inverse: #0c0715;
+  --color-accent: #a78bfa;
+
   --font-family:
     "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   --font-serif:
@@ -17,6 +25,17 @@
   --font-cta:
     -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text",
     system-ui, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+
+  /* Type scale - fluid, shared by every section */
+  --size-hero: clamp(2.4rem, 6.3vw, 5.7rem);
+  --size-display: clamp(2.2rem, 4.8vw, 3.8rem);
+  --size-statement: clamp(2rem, 5.2vw, 4.2rem);
+  --size-intro: clamp(0.92rem, 1.3vw, 1.02rem);
+
+  /* Spacing rhythm - sections are sized by content, never by viewport */
+  --space-section: clamp(5rem, 11vw, 7.5rem);
+  --space-head: clamp(2.75rem, 5vw, 4rem);
+
   --ease-out-expo: cubic-bezier(0.19, 1, 0.22, 1);
   --ease-out-quad: cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
@@ -33,10 +52,9 @@ html {
   /* Clip (NOT hidden) horizontal overflow at the root. This is the guard
      against mobile "shrink-to-fit" page-zoom: if ANY descendant ever exceeds
      the viewport width, the browser loads zoomed-OUT to fit it, then snaps
-     back to 100% on the first scroll — so the whole hero (text AND the WebGL
-     sphere) appears to grow on a hair of scroll. `overflow-x: clip` does not
-     create a scroll container, so unlike `overflow-x: hidden` on <html> it
-     does NOT break iOS momentum scrolling. */
+     back to 100% on the first scroll. `overflow-x: clip` does not create a
+     scroll container, so unlike `overflow-x: hidden` on <html> it does NOT
+     break iOS momentum scrolling. */
   overflow-x: clip;
 }
 
@@ -60,13 +78,6 @@ body {
   overflow-x: clip;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  /* `touch-action: pan-y` was here as a perf hint but in Chrome
-     DevTools mobile emulation it was reading as "block scroll" and
-     the owner couldn't scroll. Default `auto` works fine — Chrome's
-     native compositor already optimizes vertical scrolls. */
-  /* `overscroll-behavior-y: none` ALSO removed — it interacts
-     unpredictably with DevTools touch emulation. Bounce on iOS is
-     fine to keep. */
 }
 
 /* Belt-and-suspenders with the root clip above. `clip` (not hidden) keeps
@@ -94,6 +105,11 @@ video {
   display: block;
 }
 
+::selection {
+  background: rgba(167, 139, 250, 0.32);
+  color: #fff;
+}
+
 /* ===== Container ===== */
 .container {
   width: 100%;
@@ -108,30 +124,156 @@ video {
   }
 }
 
-/* ===== Shared Section Styles ===== */
-.section-header {
-  margin-bottom: 1.5rem;
+/* ════════════════════════════════════════════════════════════════════
+   Shared editorial system - every section speaks the same language.
+   ════════════════════════════════════════════════════════════════════ */
+
+/* Chapter eyebrow: `01 ─ What we build`. Numbered chapters only -
+   interludes and the CTA use the pill-chip variant instead. */
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.7rem;
+  font-size: 0.64rem;
+  font-weight: 600;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--color-text-secondary);
+  opacity: 0.8;
 }
 
-.section-title {
-  font-size: clamp(2rem, 5vw, 4rem);
+.eyebrow-num {
+  font-variant-numeric: tabular-nums;
+  color: var(--color-accent);
+  letter-spacing: 0.18em;
+  text-shadow: 0 0 12px rgba(167, 139, 250, 0.45);
+}
+
+.eyebrow-rule {
+  display: inline-block;
+  width: 30px;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    rgba(167, 139, 250, 0.7),
+    rgba(167, 139, 250, 0.08)
+  );
+}
+
+/* Pill chip variant - for live/status eyebrows (interludes, CTA, hero) */
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.5rem 1rem;
+  border: 1px solid var(--color-border);
+  border-radius: 100px;
+  background: rgba(22, 14, 39, 0.55);
+  font-size: 0.66rem;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--color-text-secondary);
+}
+
+html[data-tier="high"] .chip {
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+}
+
+/* The ONLY sanctioned use of mint: something is live, right now. */
+.live-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #4af5c0;
+  box-shadow: 0 0 12px #4af5c0;
+  animation: liveDotPulse 1.8s ease-in-out infinite;
+  flex-shrink: 0;
+}
+
+@keyframes liveDotPulse {
+  0%, 100% { opacity: 1; box-shadow: 0 0 12px #4af5c0; }
+  50%      { opacity: 0.45; box-shadow: 0 0 4px #4af5c0; }
+}
+
+/* The founder's voice leaning in - serif italic accent inside display
+   type. This replaces the old gradient-text-everywhere habit. */
+.serif-accent {
+  font-family: var(--font-serif);
+  font-style: italic;
   font-weight: 500;
-  line-height: 1.08;
-  letter-spacing: -0.025em;
+  letter-spacing: -0.01em;
+  color: var(--color-text-secondary);
 }
 
-.section-title .word {
+/* Small handwritten-adjacent aside - used sparingly (2–3 sitewide). */
+.marginalia {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: clamp(0.95rem, 1.4vw, 1.1rem);
+  font-weight: 400;
+  letter-spacing: 0;
+  color: var(--color-text-secondary);
+  opacity: 0.75;
+}
+
+/* Standard section head block */
+.section-head {
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+  margin-bottom: var(--space-head);
+  max-width: 760px;
+}
+
+.section-head.is-centered {
+  align-items: center;
+  text-align: center;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.section-heading {
+  font-size: var(--size-display);
+  font-weight: 500;
+  letter-spacing: -0.035em;
+  line-height: 1.06;
+  color: var(--color-text);
+  margin: 0;
+  max-width: 22ch;
+}
+
+.section-heading .serif-accent {
+  font-size: 1.02em;
+}
+
+.section-intro {
+  font-size: var(--size-intro);
+  line-height: 1.7;
+  color: var(--color-text-secondary);
+  max-width: 520px;
+  margin-top: 0.25rem;
+  opacity: 0.78;
+}
+
+@media (max-width: 480px) {
+  .eyebrow { font-size: 0.56rem; letter-spacing: 0.22em; }
+  .eyebrow-rule { width: 22px; }
+  .chip { font-size: 0.58rem; padding: 0.42rem 0.8rem; letter-spacing: 0.16em; }
+}
+
+/* Word-mask helpers for staggered headline reveals */
+.wmask {
   display: inline-block;
   overflow: hidden;
-  vertical-align: top;
-  /* Asymmetric: extra bottom room so descenders ('g', 'y', etc.) clear the
-     overflow:hidden clip even at the upper end of the clamp font-size. */
-  margin: -0.2em -0.2em -0.34em;
+  vertical-align: bottom;
+  padding: 0.14em 0.05em 0.22em;
+  margin: -0.14em -0.05em -0.22em;
 }
 
-.section-title .word-inner {
+.wmask-in {
   display: inline-block;
-  padding: 0.2em 0.2em 0.34em;
 }
 
 /* ===== Utility ===== */
@@ -159,15 +301,12 @@ html[data-tier="low"] .navbar-mobile-menu {
 }
 
 /* ─── Mobile-wide GPU memory + paint diet ─────────────────────────────
-   The single biggest source of mid-Android jank was 98 layer-promoting
+   The single biggest source of mid-Android jank was layer-promoting
    `will-change` declarations across the codebase. Each one allocates a
    compositor layer with its own GPU texture; mobile GPUs cap at ~40-60
    layers before they start evicting and re-rasterizing mid-scroll. We
    blanket-reset will-change on every touch device, then re-enable only
-   the elements actively animating. Net: ~40-60 MB freed on mid Android.
-   Also kills animated SVG `<feTurbulence>` / `<feDisplacementMap>` —
-   they're the dominant filter cost on iOS Safari and we don't need
-   them on touch (the static aurora carries the look). */
+   the elements actively animating. */
 @media (pointer: coarse) {
   *,
   *::before,
@@ -175,19 +314,12 @@ html[data-tier="low"] .navbar-mobile-menu {
     will-change: auto !important;
   }
   /* The handful of elements that truly do need a compositor layer
-     because they're moving continuously: */
+     because they're moving continuously (!important so the whitelist
+     actually beats the blanket reset above): */
   .hero-cycler-word,
   .ralpl-text,
   .nav-loader-bar,
   .hero-ticker-track,
-  .navbar-hamburger .burger-line,
-  .about-cscroll-crest { will-change: transform; }
-
-  /* SVG filter primitives on the blob — kill on touch. The blob's
-     own animation has been frozen on non-high tiers already; this
-     removes the static filter graph evaluation too. */
-  .hero-blob feTurbulence,
-  .hero-blob feDisplacementMap,
-  .hero-blob feGaussianBlur,
-  .hero-blob animate { display: none !important; }
+  .clients-track,
+  .navbar-hamburger .burger-line { will-change: transform !important; }
 }

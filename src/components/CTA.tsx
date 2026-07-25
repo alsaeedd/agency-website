@@ -1,7 +1,6 @@
 import { useEffect, useRef } from "react";
 import { gsap } from "gsap";
-import AnimatedText from "./AnimatedText";
-import AnimatedGradient from "./ui/AnimatedGradient";
+import { revealUp, revealWords } from "../lib/reveal";
 import "./CTA.css";
 
 interface CTAProps {
@@ -25,55 +24,27 @@ export default function CTA({ onContactClick }: CTAProps) {
   const buttonRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
-    if (!buttonRef.current) return;
-
-    const tier = document.documentElement.dataset.tier;
-    const isWeak =
-      tier !== "high" ||
-      (typeof matchMedia === "function" &&
-        matchMedia("(pointer: coarse)").matches);
+    if (!sectionRef.current) return;
 
     const ctx = gsap.context(() => {
-      gsap.fromTo(
-        buttonRef.current,
-        { scale: 0.85, opacity: 0 },
-        {
-          scale: 1,
-          opacity: 1,
-          duration: isWeak ? 0.6 : 1,
-          ease: "expo.out",
-          scrollTrigger: {
-            trigger: sectionRef.current,
-            start: "top bottom",
-            once: true,
-          },
-          delay: isWeak ? 0.1 : 0.3,
-        }
-      );
-
-      gsap.from(".cta-eyebrow", {
-        opacity: 0,
-        y: 12,
-        duration: isWeak ? 0.45 : 0.8,
-        ease: "expo.out",
-        scrollTrigger: {
-          trigger: sectionRef.current,
-          start: "top bottom",
-          once: true,
-        },
+      revealUp(".cta-eyebrow", {
+        trigger: sectionRef.current,
+        start: "top 80%",
+        y: 14,
       });
 
-      gsap.from(".cta-sub", {
-        opacity: 0,
-        y: 16,
-        duration: isWeak ? 0.55 : 0.9,
-        ease: "expo.out",
-        delay: isWeak ? 0.15 : 0.5,
-        scrollTrigger: {
-          trigger: sectionRef.current,
-          start: "top bottom",
-          once: true,
-        },
+      revealWords(".cta-title .wmask-in", {
+        trigger: sectionRef.current,
+        start: "top 80%",
+        stagger: 0.09,
+        delay: 0.1,
+      });
+
+      revealUp([".cta-sub", ".cta-btn-wrap"], {
+        trigger: sectionRef.current,
+        start: "top 80%",
+        stagger: 0.14,
+        delay: 0.35,
       });
     }, sectionRef);
 
@@ -102,41 +73,44 @@ export default function CTA({ onContactClick }: CTAProps) {
     <section className="cta" id="contact" ref={sectionRef} onMouseMove={handleSectionMove}>
       {/* Soft top blend so the section doesn't cut hard */}
       <div className="cta-blend-top" aria-hidden="true" />
-      {/* Animated WebGL gradient bg - brand-tinted, kept dim so text reads */}
-      <div className="cta-gradient-wrap" aria-hidden="true">
-        <AnimatedGradient config={{ preset: "Plasma", speed: 14 }} noise={{ opacity: 0.18, scale: 1.2 }} />
-      </div>
+      {/* Pure CSS aurora - replaced the WebGL gradient at zero frame cost */}
+      <div className="cta-aurora" aria-hidden="true" />
+      <div className="cta-grid" aria-hidden="true" />
       <div className="container">
         <div className="cta-content">
-          <span className="cta-eyebrow">
-            <span className="cta-eyebrow-dot" aria-hidden="true" />
+          <span className="chip cta-eyebrow">
+            <span className="live-dot" aria-hidden="true" />
             Now booking · {getBookingLabel()}
           </span>
-          <AnimatedText
-            as="h2"
-            className="cta-title"
-            triggerOnScroll
-            stagger={0.15}
-          >
-            What're we cooking?
-          </AnimatedText>
+          <h2 className="cta-title" aria-label="So, what're we cooking?">
+            <span className="wmask"><span className="wmask-in">So,</span></span>{" "}
+            <span className="wmask"><span className="wmask-in">what're</span></span>{" "}
+            <span className="wmask"><span className="wmask-in">we</span></span>{" "}
+            <span className="wmask cta-accent-wmask"><span className="wmask-in serif-accent cta-title-accent">cooking?</span></span>
+          </h2>
           <p className="cta-sub">
-            One quick chat, no decks, no pricing tables. Send us a few lines and we'll pick it up on WhatsApp.
+            No formalities needed, we'd genuinely love to hear what you've got
+            in mind. Reach out and let's talk.
           </p>
-          <button
-            className="btn-cta-large"
-            ref={buttonRef}
-            onClick={onContactClick}
-            onMouseMove={handleCtaMove}
-          >
-            <span className="btn-cta-large-label">Tell us about it</span>
-            <span className="btn-cta-large-arrow" aria-hidden="true">
-              <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M4 10h12" />
-                <path d="M11 5l5 5-5 5" />
-              </svg>
-            </span>
-          </button>
+          <div className="cta-btn-wrap">
+            <button
+              className="btn-cta-large"
+              ref={buttonRef}
+              onClick={onContactClick}
+              onMouseMove={handleCtaMove}
+            >
+              <span className="btn-cta-large-label">Tell us about it</span>
+              <span className="btn-cta-large-arrow" aria-hidden="true">
+                <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M4 10h12" />
+                  <path d="M11 5l5 5-5 5" />
+                </svg>
+              </span>
+            </button>
+            <p className="cta-local">
+              We're in Bahrain, and probably online right now.
+            </p>
+          </div>
         </div>
       </div>
     </section>

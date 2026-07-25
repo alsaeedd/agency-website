@@ -1,9 +1,9 @@
-/* NavLoader — a thin top-edge progress bar shown while a menu-click smooth
+/* NavLoader - a thin top-edge progress bar shown while a menu-click smooth
    scroll is in flight. Two reasons for the top-edge thin-bar pattern over a
    full-screen overlay:
      1) It doesn't block the user from seeing the page move beneath it, so
         scroll feedback is preserved.
-     2) Zero compositing cost (no blur, no big translucent layer) — the
+     2) Zero compositing cost (no blur, no big translucent layer) - the
         thing that's supposed to make navigation feel polished can't itself
         cause a frame stall.
    Pure CSS: opacity + transform only. */

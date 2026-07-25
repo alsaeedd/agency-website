@@ -1,23 +1,23 @@
 /**
- * Device capability profiling — picks a quality tier ONCE at boot so the rest
+ * Device capability profiling - picks a quality tier ONCE at boot so the rest
  * of the app can scale effect intensity to the hardware instead of shipping the
  * same heavy WebGL/CSS to a flagship and a $120 Android.
  *
  * Signals (all optional / progressively enhanced):
- *  - hardwareConcurrency  — logical CPU cores (broad support incl. Safari/FF)
- *  - deviceMemory         — RAM in GiB (Chromium-only; assumed mid elsewhere)
- *  - connection.saveData  — user asked for reduced data (Chromium-only)
- *  - connection.effectiveType — slow-2g/2g/3g => constrained context
- *  - (update: slow)       — display can't render smooth animation (e-ink etc.)
- *  - (pointer: coarse)    — touch device, used as a "probably a phone" nudge
- *  - prefers-reduced-motion — exposed separately; CSS handles motion gating
+ *  - hardwareConcurrency  - logical CPU cores (broad support incl. Safari/FF)
+ *  - deviceMemory         - RAM in GiB (Chromium-only; assumed mid elsewhere)
+ *  - connection.saveData  - user asked for reduced data (Chromium-only)
+ *  - connection.effectiveType - slow-2g/2g/3g => constrained context
+ *  - (update: slow)       - display can't render smooth animation (e-ink etc.)
+ *  - (pointer: coarse)    - touch device, used as a "probably a phone" nudge
+ *  - prefers-reduced-motion - exposed separately; CSS handles motion gating
  */
 
 export type DeviceTier = "low" | "med" | "high";
 
 export interface DeviceProfile {
   tier: DeviceTier;
-  /** Pixel ratio to pass to WebGLRenderer.setPixelRatio — capped per tier. */
+  /** Pixel ratio to pass to WebGLRenderer.setPixelRatio - capped per tier. */
   dpr: number;
   /** Enable MSAA on WebGL renderers? Expensive on mobile tiled GPUs. */
   antialias: boolean;

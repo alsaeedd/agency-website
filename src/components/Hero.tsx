@@ -1,10 +1,8 @@
-import { useEffect, useRef, lazy, Suspense } from "react";
+import { useEffect, useRef } from "react";
 import { gsap } from "gsap";
 import bhCoatOfArms from "../../assets/bh-coat-of-arms.svg";
+import HeroStatus from "./ui/HeroStatus";
 import "./Hero.css";
-
-// Lazy-load the Three.js scene (keeps initial bundle lean)
-const HeroScene = lazy(() => import("./HeroScene"));
 
 interface HeroProps {
   onContactClick: () => void;
@@ -12,7 +10,7 @@ interface HeroProps {
 
 const tickerItems = [
   "Custom software",
-  "AI automations",
+  "Event-driven backends",
   "Production deploys",
   "Real CRMs",
   "Bahrain · GMT+3",
@@ -57,16 +55,14 @@ export default function Hero({ onContactClick }: HeroProps) {
   const ctaRef = useRef<HTMLButtonElement>(null);
   const auroraRef = useRef<HTMLDivElement>(null);
   const aurora2Ref = useRef<HTMLDivElement>(null);
-  const blobRef = useRef<SVGSVGElement>(null);
   const gridRef = useRef<HTMLDivElement>(null);
   const titleRef = useRef<HTMLHeadingElement>(null);
   const cyclerRef = useRef<HTMLSpanElement>(null);
 
   // ── Adaptive perf gate ─────────────────────────────────────────────
-  // The `filter: blur(...)` keyframes below are gorgeous on a 4090, ugly on
-  // a $120 Android: each tweened blur(8px → 0) frame is a full-screen GPU
-  // re-rasterization. On non-high tiers we run the same animations with
-  // only opacity + translate — composited operations the GPU loves.
+  // filter:blur keyframes are gorgeous on a 4090, ugly on a $120 Android:
+  // each tweened blur frame is a full-layer GPU re-rasterization. On
+  // non-high tiers we run the same animations with only opacity+translate.
   const heroPerf = (() => {
     if (typeof document === "undefined")
       return { useBlur: true, isCoarse: false };
@@ -77,15 +73,11 @@ export default function Hero({ onContactClick }: HeroProps) {
     return { useBlur: tier === "high" && !coarse, isCoarse: coarse };
   })();
 
-  // Safety: if HeroScene takes >2.5s to dispatch ral:hero-ready (slow
-  // network on a phone), fire it ourselves so the Preloader never gets
-  // stuck at 96%. HeroScene's own dispatch is still authoritative when
-  // it fires first.
+  // The preloader waits on "ral:hero-ready". The hero is pure CSS/GSAP now
+  // (the WebGL scene was retired in the 2026 redesign) - the atmosphere is
+  // painted with the first frame, so signal readiness immediately.
   useEffect(() => {
-    const timeout = setTimeout(() => {
-      window.dispatchEvent(new Event("ral:hero-ready"));
-    }, 2500);
-    return () => clearTimeout(timeout);
+    window.dispatchEvent(new Event("ral:hero-ready"));
   }, []);
 
   // Word cycler (revenue → pipelines → margins → ...). Two stacked layers
@@ -116,6 +108,14 @@ export default function Hero({ onContactClick }: HeroProps) {
     sizer.textContent = CYCLE_WORDS[0];
     gsap.set(layers[1], { autoAlpha: 0 });
     gsap.set(wrap, { width: layers[0].offsetWidth });
+    // The cycler is set in Newsreader italic - if the serif arrives after
+    // mount, the width measured above is stale until the first cycle.
+    // Re-measure once the fonts settle.
+    const fontsReady = (document as Document & { fonts?: FontFaceSet }).fonts
+      ?.ready;
+    fontsReady?.then(() => {
+      if (wrap.isConnected) gsap.set(wrap, { width: layers[0].offsetWidth });
+    });
 
     const cycle = () => {
       const prevIdx = idx;
@@ -239,10 +239,6 @@ export default function Hero({ onContactClick }: HeroProps) {
         aurora2Ref.current.style.setProperty("--mpx", `${cx * -44}px`);
         aurora2Ref.current.style.setProperty("--mpy", `${cy * -28}px`);
       }
-      if (blobRef.current) {
-        blobRef.current.style.setProperty("--mpx", `${cx * 18}px`);
-        blobRef.current.style.setProperty("--mpy", `${cy * 12}px`);
-      }
       if (gridRef.current) {
         gridRef.current.style.setProperty("--mpx", `${cx * 8}px`);
         gridRef.current.style.setProperty("--mpy", `${cy * 5}px`);
@@ -293,103 +289,15 @@ export default function Hero({ onContactClick }: HeroProps) {
     <section className="hero" ref={sectionRef}>
       <div className="hero-aurora" ref={auroraRef} aria-hidden="true" />
       <div className="hero-aurora hero-aurora-2" ref={aurora2Ref} aria-hidden="true" />
-
-      {/* Liquid SVG blob layer with goo + displacement (Lusion-style without WebGL) */}
-      <svg
-        ref={blobRef}
-        className="hero-blob"
-        viewBox="0 0 1200 800"
-        preserveAspectRatio="xMidYMid slice"
-        aria-hidden="true"
-      >
-        <defs>
-          <radialGradient id="blob-violet" cx="50%" cy="50%" r="55%">
-            <stop offset="0%" stopColor="#cf9bff" stopOpacity="1" />
-            <stop offset="45%" stopColor="#8b5fff" stopOpacity="0.62" />
-            <stop offset="100%" stopColor="#5a2cff" stopOpacity="0" />
-          </radialGradient>
-          <radialGradient id="blob-pink" cx="50%" cy="50%" r="55%">
-            <stop offset="0%" stopColor="#ff7ad6" stopOpacity="0.92" />
-            <stop offset="55%" stopColor="#c441f0" stopOpacity="0.45" />
-            <stop offset="100%" stopColor="#a73fe0" stopOpacity="0" />
-          </radialGradient>
-          <radialGradient id="blob-cyan" cx="50%" cy="50%" r="55%">
-            <stop offset="0%" stopColor="#74d6ff" stopOpacity="0.55" />
-            <stop offset="55%" stopColor="#5cb0ff" stopOpacity="0.22" />
-            <stop offset="100%" stopColor="#4af5c0" stopOpacity="0" />
-          </radialGradient>
-
-          {/* Goo / gooify filter - merges overlapping blobs into a single liquid mass */}
-          <filter id="goo">
-            <feGaussianBlur in="SourceGraphic" stdDeviation="14" result="blur" />
-            <feColorMatrix
-              in="blur"
-              type="matrix"
-              values="
-                1 0 0 0  0
-                0 1 0 0  0
-                0 0 1 0  0
-                0 0 0 22 -10
-              "
-              result="goo"
-            />
-            <feComposite in="SourceGraphic" in2="goo" operator="atop" />
-          </filter>
-
-          {/* Liquid displacement - turbulent noise warps the blobs */}
-          <filter id="liquid" x="-20%" y="-20%" width="140%" height="140%">
-            <feTurbulence
-              type="fractalNoise"
-              baseFrequency="0.011 0.018"
-              numOctaves="2"
-              seed="3"
-              result="noise"
-            >
-              <animate
-                attributeName="baseFrequency"
-                dur="36s"
-                values="0.011 0.018; 0.018 0.012; 0.011 0.018"
-                repeatCount="indefinite"
-              />
-            </feTurbulence>
-            <feDisplacementMap
-              in="SourceGraphic"
-              in2="noise"
-              scale="65"
-              xChannelSelector="R"
-              yChannelSelector="G"
-            />
-          </filter>
-        </defs>
-
-        <g className="hero-blob-group" filter="url(#liquid)">
-          <g filter="url(#goo)">
-            <ellipse cx="360" cy="240" rx="340" ry="290" fill="url(#blob-violet)" className="hero-blob-1" />
-            <ellipse cx="880" cy="220" rx="320" ry="260" fill="url(#blob-pink)"   className="hero-blob-2" />
-            <ellipse cx="640" cy="560" rx="360" ry="240" fill="url(#blob-violet)" className="hero-blob-3" />
-            <ellipse cx="220" cy="640" rx="280" ry="200" fill="url(#blob-pink)"   className="hero-blob-4" opacity="0.7" />
-            <ellipse cx="1000" cy="600" rx="240" ry="180" fill="url(#blob-cyan)"  className="hero-blob-5" />
-          </g>
-        </g>
-      </svg>
-
+      <div className="hero-beams" aria-hidden="true" />
       <div className="hero-grid" ref={gridRef} aria-hidden="true" />
       <div className="hero-grain" aria-hidden="true" />
 
       <div className="hero-particles" aria-hidden="true">
-        {Array.from({ length: 18 }).map((_, i) => (
+        {Array.from({ length: 12 }).map((_, i) => (
           <span key={i} className={`hero-particle hero-particle-${i % 5}`} />
         ))}
       </div>
-
-      {/* WebGL physics scene — mounts on every device. Owner confirmed
-          the WebGL animations were "fine" on mobile; the lag was
-          elsewhere (will-change spam, GSAP entrance backlog). Renderer
-          uses low-power preference + depth:false on non-high tiers
-          for mobile-friendly thermal/VRAM behavior. */}
-      <Suspense fallback={null}>
-        <HeroScene />
-      </Suspense>
 
       <div className="hero-year" aria-hidden="true">
         <span className="hero-year-line" />
@@ -399,9 +307,12 @@ export default function Hero({ onContactClick }: HeroProps) {
 
       <div className="hero-inner">
         <div className="hero-label" data-hero-anim>
-          <span className="hero-label-dot" aria-hidden="true" />
+          <span className="live-dot" aria-hidden="true" />
           <img src={bhCoatOfArms} alt="" className="hero-label-crest" />
-          <span>Bahrain · 2026 · currently building</span>
+          <span>
+            Bahrain&nbsp;·&nbsp;GMT+3
+            <span className="hero-label-tail">&nbsp;·&nbsp;<HeroStatus /></span>
+          </span>
         </div>
 
         <h1
@@ -418,7 +329,7 @@ export default function Hero({ onContactClick }: HeroProps) {
               {/* in-flow, invisible: sets the wrapper's natural width + baseline
                   so the two absolute layers sit where inline text would */}
               <span className="hero-cycler-sizer" aria-hidden="true">revenue.</span>
-              {/* two layers crossfade simultaneously — no blank gap */}
+              {/* two layers crossfade simultaneously - no blank gap */}
               <span className="hero-cycler-word hero-title-accent" aria-hidden="true">revenue.</span>
               <span className="hero-cycler-word hero-title-accent" aria-hidden="true" />
             </span>
@@ -426,7 +337,8 @@ export default function Hero({ onContactClick }: HeroProps) {
         </h1>
 
         <p className="hero-sub" data-hero-anim>
-          Custom software &amp; AI automations, shipped end-to-end by a small team that actually ships.
+          We take your idea from a conversation to a complete product running
+          in production. And we build it like we own it.
         </p>
 
         <div className="hero-cta-row" data-hero-anim>
@@ -445,7 +357,7 @@ export default function Hero({ onContactClick }: HeroProps) {
               </svg>
             </span>
           </button>
-          <a href="#clients" className="hero-cta-secondary">
+          <a href="#portfolio" className="hero-cta-secondary">
             <span>See the work</span>
             <span aria-hidden="true" className="hero-cta-secondary-arrow">↗</span>
           </a>
@@ -453,8 +365,8 @@ export default function Hero({ onContactClick }: HeroProps) {
 
         <div className="hero-stats" data-hero-anim>
           <div className="hero-stat">
-            <span className="hero-stat-num">Dozens of</span>
-            <span className="hero-stat-label">Projects shipped</span>
+            <span className="hero-stat-num">12+</span>
+            <span className="hero-stat-label">Brands shipped for</span>
           </div>
           <span className="hero-stat-divider" aria-hidden="true" />
           <div className="hero-stat">

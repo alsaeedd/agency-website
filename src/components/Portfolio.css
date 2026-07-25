@@ -69,80 +69,14 @@
   margin: 0 auto;
 }
 
-.portfolio .section-header {
-  text-align: center;
-  margin-bottom: 3rem;
-}
-
-/* ── Portfolio section header ── */
-.portfolio-section-header {
-  display: flex;
-  flex-direction: column;
-  gap: 0.7rem;
+/* ── Portfolio section header - shared .section-head system ── */
+.portfolio-head {
   margin-bottom: 3.25rem;
-  max-width: 720px;
-}
-
-.portfolio-section-eyebrow {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.7rem;
-  font-size: 0.625rem;
-  font-weight: 600;
-  letter-spacing: 0.28em;
-  text-transform: uppercase;
-  color: var(--color-text-secondary);
-  opacity: 0.7;
-}
-
-.portfolio-section-eyebrow-num {
-  font-variant-numeric: tabular-nums;
-  color: rgba(167, 139, 250, 0.95);
-  letter-spacing: 0.18em;
-}
-
-.portfolio-section-eyebrow-divider {
-  display: inline-block;
-  width: 28px;
-  height: 1px;
-  background: linear-gradient(
-    90deg,
-    rgba(167, 139, 250, 0.6),
-    rgba(167, 139, 250, 0.1)
-  );
-}
-
-.portfolio-section-heading {
-  font-size: clamp(2rem, 4vw, 3.25rem);
-  font-weight: 500;
-  letter-spacing: -0.03em;
-  line-height: 1.08;
-  color: var(--color-text);
-  margin: 0;
-  max-width: 22ch;
-}
-
-.portfolio-section-heading-soft {
-  color: var(--color-text-secondary);
-  font-weight: 400;
-}
-
-.portfolio-section-intro {
-  font-size: clamp(0.85rem, 1.2vw, 0.95rem);
-  line-height: 1.75;
-  color: var(--color-text-secondary);
-  max-width: 520px;
-  margin-top: 0.25rem;
-  opacity: 0.7;
 }
 
 @media (max-width: 768px) {
-  .portfolio-section-header {
+  .portfolio-head {
     margin-bottom: 2rem;
-    gap: 0.5rem;
-  }
-  .portfolio-section-heading {
-    font-size: clamp(1.6rem, 7vw, 2.2rem);
   }
 }
 
@@ -172,7 +106,7 @@
   --ry: 0deg;
   --mx: 50%;
   --my: 50%;
-  /* Scope layout/paint invalidation — a hover-tilt on one card shouldn't
+  /* Scope layout/paint invalidation - a hover-tilt on one card shouldn't
      invalidate siblings or trigger a grid reflow. */
   contain: layout paint;
   cursor: pointer;
@@ -536,7 +470,48 @@ html:not([data-tier="high"]) .portfolio-card {
   line-height: 1.8;
   color: rgba(255, 255, 255, 0.78);
   max-width: 540px;
-  margin-bottom: 2rem;
+  margin-bottom: 1.75rem;
+}
+
+/* ── Fact strip - the 10-second procurement read ── */
+.pd-facts {
+  display: flex;
+  align-items: stretch;
+  gap: 2rem;
+  padding: 1rem 0;
+  margin-bottom: 1.75rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.14);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.14);
+  flex-wrap: wrap;
+}
+
+.pd-fact {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  min-width: 0;
+}
+
+.pd-fact-label {
+  font-size: 0.56rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.pd-fact-value {
+  font-size: 0.82rem;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.92);
+  letter-spacing: -0.005em;
+  white-space: nowrap;
+}
+
+.pd-fact-live {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
 }
 
 /* ── Hero CTA row ── */
@@ -865,6 +840,16 @@ html:not([data-tier="high"]) .portfolio-card {
   .pd-cta-primary {
     flex: 1;
     justify-content: center;
+  }
+
+  .pd-facts {
+    gap: 1.25rem;
+    padding: 0.85rem 0;
+    margin-bottom: 1.5rem;
+  }
+
+  .pd-fact-value {
+    font-size: 0.76rem;
   }
 
   .pd-body {

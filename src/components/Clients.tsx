@@ -1,9 +1,7 @@
 import { useEffect, useRef } from "react";
 import { gsap } from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { revealUp } from "../lib/reveal";
 import "./Clients.css";
-
-gsap.registerPlugin(ScrollTrigger);
 
 type Logo = {
   name: string;
@@ -75,29 +73,13 @@ export default function Clients() {
 
   useEffect(() => {
     if (!sectionRef.current) return;
-    const tier = document.documentElement.dataset.tier;
-    const isWeak =
-      tier !== "high" ||
-      (typeof matchMedia === "function" &&
-        matchMedia("(pointer: coarse)").matches);
 
     const ctx = gsap.context(() => {
-      gsap.from(
-        sectionRef.current!.querySelectorAll(".clients-header-anim"),
-        {
-          opacity: 0,
-          y: 24,
-          filter: isWeak ? "blur(0px)" : "blur(10px)",
-          duration: isWeak ? 0.55 : 1,
-          ease: "expo.out",
-          stagger: isWeak ? 0.05 : 0.12,
-          scrollTrigger: {
-            trigger: sectionRef.current,
-            start: "top bottom",
-            once: true,
-          },
-        },
-      );
+      revealUp(sectionRef.current!.querySelectorAll(".clients-header-anim"), {
+        trigger: sectionRef.current,
+        start: "top 85%",
+        stagger: 0.12,
+      });
     }, sectionRef);
     return () => ctx.revert();
   }, []);
@@ -107,17 +89,17 @@ export default function Clients() {
       <div className="clients-ambient" aria-hidden="true" />
 
       <div className="container">
-        <div className="clients-header">
-          <span className="clients-eyebrow clients-header-anim">
-            <span className="clients-eyebrow-dot" aria-hidden="true" />
-            Trusted by
+        <div className="section-head is-centered clients-header">
+          <span className="eyebrow clients-header-anim">
+            <span className="eyebrow-num">03</span>
+            <span className="eyebrow-rule" aria-hidden="true" />
+            <span>Trusted by</span>
           </span>
-          <h2 className="clients-heading clients-header-anim">
-            Teams that{" "}
-            <span className="clients-heading-accent">ship.</span>
+          <h2 className="section-heading clients-heading clients-header-anim">
+            Teams that <span className="serif-accent">ship.</span>
           </h2>
-          <p className="clients-intro clients-header-anim">
-            From bootstrapped founders to banks - the same care, every brief,
+          <p className="section-intro clients-header-anim">
+            From bootstrapped founders to banks, the same care, every brief,
             every brand.
           </p>
         </div>

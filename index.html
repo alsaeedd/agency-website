@@ -44,7 +44,7 @@
     />
     <meta name="twitter:image" content="https://raltech.dev/apple-touch-icon.png" />
 
-    <!-- Inter is self-hosted via @fontsource (imported in main.tsx) — no
+    <!-- Inter is self-hosted via @fontsource (imported in main.tsx) - no
          Google Fonts round-trip. -->
 
     <!-- Structured data: Organization -->
@@ -84,7 +84,7 @@
          Paints on the FIRST frame (inline HTML + critical CSS) before any
          Vite chunk loads. The wordmark stroke-draws via CSS, the percentage
          counter and final exit are driven by React (src/components/Preloader.tsx)
-         once fonts + window.load + the hero WebGL "ready" event resolve.
+         once fonts + window.load + the hero "ral:hero-ready" event resolve.
          Total budget: ≤1.8s on a typical session, with a 4.5s safety dismissal
          so a stalled signal never traps the user. ──────────────────────── -->
     <style>
@@ -122,7 +122,7 @@
       #ral-preloader[data-state="leaving"] { pointer-events: none; }
       #ral-preloader.is-removed { display: none; }
 
-      /* Aurora atmosphere behind the wordmark — purely decorative drift. */
+      /* Aurora atmosphere behind the wordmark - purely decorative drift. */
       .ralpl-aurora {
         position: absolute;
         inset: -20%;
@@ -153,7 +153,7 @@
         gap: 1.5rem;
       }
 
-      /* SVG wordmark — stroke-drawn on mount, then filled when ready. */
+      /* SVG wordmark - stroke-drawn on mount, then filled when ready. */
       .ralpl-mark {
         width: clamp(180px, 38vw, 320px);
         height: auto;

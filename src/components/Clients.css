@@ -1,9 +1,6 @@
 /* ===== Clients - dual opposite-direction marquee ===== */
 .clients {
-  /* Reduced top padding (was 7rem) so the gap between About's
-     ContainerScroll card and the "Teams that ship" headline is tight,
-     not a dead black band. */
-  padding: 3rem 0 7.5rem;
+  padding: 4.5rem 0 6.5rem;
   scroll-margin-top: 72px;
   overflow: hidden;
   background: var(--color-bg);
@@ -47,74 +44,24 @@
   z-index: 1;
 }
 
-/* ── Header ── */
+/* ── Header - shared .section-head system, plus the marginalia aside ── */
 .clients-header {
-  text-align: center;
-  margin-bottom: 4.5rem;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.85rem;
-}
-
-.clients-eyebrow {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.6rem;
-  padding: 0.5rem 0.95rem;
-  border: 1px solid var(--color-border);
-  border-radius: 100px;
-  background: rgba(22, 14, 39, 0.55);
-  -webkit-backdrop-filter: blur(10px);
-  backdrop-filter: blur(10px);
-  font-size: 0.65rem;
-  font-weight: 600;
-  letter-spacing: 0.26em;
-  text-transform: uppercase;
-  color: #ffffff;
-}
-
-.clients-eyebrow-dot {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: #4af5c0;
-  box-shadow: 0 0 12px #4af5c0;
-  animation: clients-eyebrow-pulse 1.8s ease-in-out infinite;
-}
-
-@keyframes clients-eyebrow-pulse {
-  0%, 100% { opacity: 1; box-shadow: 0 0 12px #4af5c0; }
-  50%      { opacity: 0.45; box-shadow: 0 0 4px #4af5c0; }
+  margin-bottom: 4rem;
 }
 
 .clients-heading {
-  font-size: clamp(2.5rem, 6vw, 5rem);
-  font-weight: 500;
-  letter-spacing: -0.04em;
-  line-height: 1.02;
-  color: var(--color-text);
-  margin: 0;
   text-shadow:
     0 0 40px rgba(167, 139, 250, 0.28),
     0 0 80px rgba(120, 80, 220, 0.12);
 }
 
-.clients-heading-accent {
-  background: linear-gradient(135deg, #d6c2ff 0%, #a78bfa 45%, #7c5aff 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-  color: transparent;
+.clients-heading .serif-accent {
+  color: #e6dcff;
 }
 
-.clients-intro {
-  font-size: clamp(0.95rem, 1.35vw, 1.1rem);
-  line-height: 1.6;
-  color: var(--color-text-secondary);
-  max-width: 540px;
-  margin: 0.5rem auto 0;
-  opacity: 0.78;
+.clients-header .marginalia {
+  margin-top: -0.15rem;
+  transform: rotate(-1.2deg);
 }
 
 /* ── Marquee rows ── */
@@ -204,8 +151,7 @@
 @media (max-width: 480px) {
   .client-logo { width: 96px; height: 96px; }
   .clients-track { gap: 3rem; }
-  .clients-heading { font-size: clamp(2rem, 9vw, 3rem); }
-  .clients-intro { font-size: 0.88rem; }
+  .clients-header { margin-bottom: 2.75rem; }
 }
 
 .client-logo img {

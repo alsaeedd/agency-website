@@ -55,3 +55,8 @@ coverage/
 /*.png
 /*.jpeg
 /*.jpg
+# Cloudflare Wrangler scratch
+.wrangler/
+
+# Agent session scratch (screenshots, scripts)
+.agents/

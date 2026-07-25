@@ -1,13 +1,12 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { gsap } from "gsap";
-import AnimatedText from "./AnimatedText";
 import logoMain from "../../assets/logo_main.png";
 import "./Contact.css";
 
 const services = [
   { id: "site-scratch", label: "Site from scratch" },
   { id: "system-from-scratch", label: "System from scratch" },
-  { id: "ai-automations", label: "AI automations" },
+  { id: "ai-agents", label: "AI agents" },
   { id: "cloud-deployment-only", label: "Cloud deployment only" },
   { id: "other", label: "Something else" },
 ];
@@ -56,6 +55,12 @@ export default function Contact({ isOpen, onClose }: ContactProps) {
       gsap.set(contentRef.current, { y: 80, opacity: 0 });
       gsap.set(closeButtonRef.current, { scale: 0, opacity: 0 });
 
+      const titleWords =
+        contentRef.current.querySelectorAll(".contact-title .wmask-in");
+      if (titleWords.length) {
+        gsap.set(titleWords, { yPercent: 115, opacity: 0 });
+      }
+
       if (subtitleRef.current) {
         gsap.set(subtitleRef.current, { y: 15, opacity: 0 });
       }
@@ -85,6 +90,20 @@ export default function Contact({ isOpen, onClose }: ContactProps) {
           { scale: 1, opacity: 1, duration: 0.4, ease: "back.out(1.7)" },
           "-=0.4",
         );
+
+      if (titleWords.length) {
+        tl.to(
+          titleWords,
+          {
+            yPercent: 0,
+            opacity: 1,
+            duration: 0.85,
+            ease: "expo.out",
+            stagger: 0.08,
+          },
+          "-=0.35",
+        );
+      }
 
       if (subtitleRef.current) {
         tl.to(
@@ -413,14 +432,14 @@ export default function Contact({ isOpen, onClose }: ContactProps) {
             ) : (
               <>
                 <div className="contact-header">
-                  <AnimatedText
-                    as="h1"
-                    className="contact-title"
-                    delay={0.2}
-                    stagger={0.1}
-                  >
-                    So, what're we cooking?
-                  </AnimatedText>
+                  <h1 className="contact-title" aria-label="So, what're we cooking?">
+                    <span className="wmask"><span className="wmask-in">So,</span></span>{" "}
+                    <span className="wmask"><span className="wmask-in">what're</span></span>{" "}
+                    <span className="wmask"><span className="wmask-in">we</span></span>{" "}
+                    <span className="wmask">
+                      <span className="wmask-in serif-accent contact-title-accent">cooking?</span>
+                    </span>
+                  </h1>
                   <p className="contact-subtitle" ref={subtitleRef}>
                     Three lines, then we move to WhatsApp.
                   </p>
