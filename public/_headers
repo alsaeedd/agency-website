@@ -1,6 +1,39 @@
+# Cloudflare Pages (and Netlify) read this from the publish dir. Rules are
+# additive: /* is the site-wide security baseline, the cache blocks below only
+# layer Cache-Control on top. Closes the mkcyber.app header findings from
+# 2026-07-31 (headers scored 53/100).
+#
+# Notes on the values chosen:
+#  - HSTS deliberately omits `preload`. That list is effectively one-way, so
+#    it needs a deliberate call, not a drive-by header fix.
+#  - CSP is tight because the site is fully self-hosted: no CDN scripts, no
+#    analytics, no iframes, no XHR. 'unsafe-inline' is styles-only, for the
+#    intro preloader's inline <style> in index.html. data: covers the CSS
+#    noise/grain SVGs. media-src covers the ContactCircle gutra_guy.mp4.
+#  - X-XSS-Protection: 0 disables the legacy auditor rather than re-enabling
+#    it. Per OWASP, `1; mode=block` reintroduced an XS-Leak; CSP is the real
+#    defence. The header is present either way, which is what the scan wanted.
+#  - Permissions-Policy keeps autoplay for that video, denies the rest.
+#  - `! Access-Control-Allow-Origin` drops the Pages default `*`. Nothing here
+#    is a cross-origin API, and self-hosted fonts are same-origin so CORS is
+#    moot for them.
+/*
+  Strict-Transport-Security: max-age=31536000; includeSubDomains
+  Content-Security-Policy: default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; media-src 'self'; connect-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'; upgrade-insecure-requests
+  X-Frame-Options: DENY
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  X-XSS-Protection: 0
+  Permissions-Policy: accelerometer=(), autoplay=(self), camera=(), display-capture=(), encrypted-media=(), geolocation=(), gyroscope=(), magnetometer=(), microphone=(), midi=(), payment=(), usb=(), xr-spatial-tracking=()
+  ! Access-Control-Allow-Origin
+
+# Vite emits content-hashed filenames, so hashed assets can be cached forever.
 /assets/*
   Cache-Control: public, max-age=31536000, immutable
+
 /*.woff2
   Cache-Control: public, max-age=31536000, immutable
+
+# index.html must always revalidate so deploys go live immediately.
 /index.html
   Cache-Control: public, max-age=0, must-revalidate
