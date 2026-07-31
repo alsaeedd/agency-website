@@ -6,10 +6,18 @@
 # Notes on the values chosen:
 #  - HSTS deliberately omits `preload`. That list is effectively one-way, so
 #    it needs a deliberate call, not a drive-by header fix.
-#  - CSP is tight because the site is fully self-hosted: no CDN scripts, no
-#    analytics, no iframes, no XHR. 'unsafe-inline' is styles-only, for the
+#  - CSP is tight because the app itself is fully self-hosted: no iframes, no
+#    XHR, no CDN-hosted libraries. 'unsafe-inline' is styles-only, for the
 #    intro preloader's inline <style> in index.html. data: covers the CSS
 #    noise/grain SVGs. media-src covers the ContactCircle gutra_guy.mp4.
+#  - script-src has exactly two third-party origins, both deliberate:
+#    static.cloudflareinsights.com is the Web Analytics beacon Cloudflare
+#    edge-injects into HTML (it is NOT in this repo and curl never sees it,
+#    only real browsers do, so it will not show up in a source grep), and
+#    mkcyber.app is the uptime/security monitor script in index.html.
+#    mkcyber.app is in connect-src too, since its beacon reports back out.
+#    Cloudflare's beacon needs no connect-src entry: with edge auto-injection
+#    it reports to our own origin, which 'self' already covers.
 #  - X-XSS-Protection: 0 disables the legacy auditor rather than re-enabling
 #    it. Per OWASP, `1; mode=block` reintroduced an XS-Leak; CSP is the real
 #    defence. The header is present either way, which is what the scan wanted.
@@ -19,7 +27,7 @@
 #    moot for them.
 /*
   Strict-Transport-Security: max-age=31536000; includeSubDomains
-  Content-Security-Policy: default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; media-src 'self'; connect-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'; upgrade-insecure-requests
+  Content-Security-Policy: default-src 'self'; script-src 'self' https://static.cloudflareinsights.com https://mkcyber.app; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; media-src 'self'; connect-src 'self' https://mkcyber.app; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'; upgrade-insecure-requests
   X-Frame-Options: DENY
   X-Content-Type-Options: nosniff
   Referrer-Policy: strict-origin-when-cross-origin

@@ -23,8 +23,19 @@
     <link rel="canonical" href="https://raltech.dev/" />
     <meta name="robots" content="index, follow" />
 
-    <!-- Domain ownership proof for mkcyber.app continuous monitoring. -->
+    <!-- mkcyber.app continuous monitoring: domain-ownership proof plus the
+         monitor beacon. `async` so it never blocks the intro. Both IDs below
+         are client-side by design (they ship in the HTML of every page), so
+         they are public identifiers, not secrets. The origin is allowlisted in
+         script-src + connect-src in public/_headers; the CSP will block this
+         script if that entry is ever removed. -->
     <meta name="mkcyber-verify" content="5fe958d6-cc41-4354-a6aa-ef6c4693bb96" />
+    <script
+      async
+      src="https://mkcyber.app/monitor.js"
+      data-site-id="a0aab3e2-4621-4d4f-9897-55aa78d8b303"
+      data-key="fd144a1d-8184-45a0-ad0d-0cd4d67b23fc"
+    ></script>
 
     <!-- Open Graph -->
     <meta property="og:type" content="website" />
