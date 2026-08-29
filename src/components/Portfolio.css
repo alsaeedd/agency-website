@@ -226,6 +226,7 @@ html:not([data-tier="high"]) .portfolio-card {
   border-radius: 12px;
 }
 .card-custompc      .portfolio-card-preview-logo { max-height: 140px; }
+.card-letterlock    .portfolio-card-preview-logo { max-height: 130px; height: 130px; }
 
 /* ── "View case study" cue badge ── */
 .portfolio-card-cue {
@@ -874,4 +875,5 @@ html:not([data-tier="high"]) .portfolio-card {
   .card-knightsgate   .portfolio-card-preview-logo { max-height: 100px; }
   .card-kaakbsemsom   .portfolio-card-preview-logo { max-height: 84px; }
   .card-custompc      .portfolio-card-preview-logo { max-height: 118px; }
+  .card-letterlock    .portfolio-card-preview-logo { max-height: 108px; height: 108px; }
 }

@@ -106,6 +106,28 @@ const projects: Project[] = [
     outcome:
       "A storefront that finally matches the team - and a PC Builder that turns \"I might buy something\" into \"I'm building this exact rig.\"",
   },
+  {
+    id: 5,
+    tag: "Gaming · Web App",
+    title: "Letterlock - Letter Lock Trivia Board Game",
+    subtitle:
+      "Letterlock is our own free online trivia board game - two teams claim and lock letters on a hex board to connect their edges. A fair, modern reinvention of the classic Blockbusters game show.",
+    color: "#0a0e1f",
+    accent: "#FFD166",
+    cardClass: "card-letterlock",
+    client: { name: "Letterlock", logo: "/assets/letterlock.svg" },
+    liveUrl: "https://letterlock.raltech.dev",
+    scope: "Full game, engine to deploy",
+    highlights: [
+      "A provably-fair hex board where both teams cross the same number of letters - the flaw in the original TV format, fixed with real math.",
+      "180+ question packs and 40,000+ questions in English and Arabic - trivia, flags, maps, movies, music, charades, and more.",
+      "Party Mode turns every phone into a controller - players buzz in and answer from their own devices while the board runs on the TV.",
+      "Accounts, XP ranks, leaderboards, and level-gated categories keep teams coming back - all running on a real-time cloud backend.",
+      "Playable free in any browser - phone, tablet, laptop, or the living-room TV.",
+    ],
+    outcome:
+      "A polished, production game with thousands of questions and online multiplayer - proof we ship products, not just websites. Play it free at letterlock.raltech.dev.",
+  },
 ];
 
 const featureIcons = [
@@ -421,8 +443,8 @@ export default function Portfolio() {
               <span>Selected work</span>
             </span>
             <h2 className="section-heading">
-              Four projects.{" "}
-              <span className="serif-accent">Four real businesses.</span>
+              Five projects.{" "}
+              <span className="serif-accent">Five real products.</span>
             </h2>
             <p className="section-intro">
               Tap any card to drop into the case study. Or click the URL to
