@@ -1,6 +1,11 @@
 import { useEffect, useRef, useState, useCallback } from "react";
 import { gsap } from "gsap";
 import { revealUp } from "../lib/reveal";
+// Imported (not public/) so Vite emits a content-hashed filename. The bare
+// /assets/letterlock-*.svg URLs kept getting edge-poisoned: any request made
+// before the deploy finished cached the SPA HTML fallback under the immutable
+// /assets/* cache header. A hashed name can't be requested before it exists.
+import letterlockMark from "../assets/letterlock-mark.svg";
 import "./Portfolio.css";
 
 interface Project {
@@ -115,7 +120,7 @@ const projects: Project[] = [
     color: "#0a0e1f",
     accent: "#FFD166",
     cardClass: "card-letterlock",
-    client: { name: "Letterlock", logo: "/assets/letterlock-mark.svg" },
+    client: { name: "Letterlock", logo: letterlockMark },
     liveUrl: "https://letterlock.raltech.dev",
     scope: "Full game, engine to deploy",
     highlights: [
