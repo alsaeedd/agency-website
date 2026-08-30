@@ -115,7 +115,7 @@ const projects: Project[] = [
     color: "#0a0e1f",
     accent: "#FFD166",
     cardClass: "card-letterlock",
-    client: { name: "Letterlock", logo: "/assets/letterlock-hex.svg" },
+    client: { name: "Letterlock", logo: "/assets/letterlock-mark.svg" },
     liveUrl: "https://letterlock.raltech.dev",
     scope: "Full game, engine to deploy",
     highlights: [
