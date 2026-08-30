@@ -2,6 +2,15 @@
   command = "npm run build"
   publish = "dist"
 
+# A MISSING file under /assets must 404, never fall through to the SPA rewrite:
+# the immutable /assets/* cache header below would make that HTML fallback
+# permanently cacheable at the edge/browser for the asset URL (this bit us with
+# the Letterlock logo). Real files still win — rewrites never shadow files.
+[[redirects]]
+  from = "/assets/*"
+  to = "/index.html"
+  status = 404
+
 [[redirects]]
   from = "/*"
   to = "/index.html"
