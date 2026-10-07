@@ -1,0 +1,5 @@
+# app-ads.txt for apps whose store listing names https://raltech.dev as the developer website
+# (LetterLock: Hex Trivia on Google Play). AdMob crawls this exact host, so the
+# copy on letterlock.raltech.dev alone does not verify the Play app.
+# pub-7138183978612183 is the RAL SOFTWARE SERVICES AdMob publisher id.
+google.com, pub-7138183978612183, DIRECT, f08c47fec0942fa0
