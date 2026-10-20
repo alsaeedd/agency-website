@@ -161,7 +161,7 @@ export const pages = [
 </ol>
 
 <h2>What happens next</h2>
-<p>We reply, usually within a few hours on a working day, and suggest a short call or a chat on WhatsApp. If the project is a good fit, we write a scope with what goes into the first release and a quote. If it is not a good fit for us, we will say so plainly and, where we can, point you somewhere better.</p>
+<p>We read every message, reply personally, and suggest a short call or a chat on WhatsApp. If the project is a good fit, we write a scope with what goes into the first release and a quote. If it is not a good fit for us, we will say so plainly and, where we can, point you somewhere better.</p>
 
 <h2>Common questions</h2>
 <h3>Do you take on small projects?</h3>
@@ -260,7 +260,7 @@ CR No. 196651-1</p>
   <li><strong>TV:</strong> the Android TV app is fully playable with a remote's arrow keys, including an on-screen pad for typing room codes.</li>
 </ul>
 <h3>Content at scale, checked properly</h3>
-<p>Every question is written so its answer starts with a specific letter, which is what lets any hex serve a question. There are now 193 categories and 42,745 questions, from a Kids and Family pack to a Genius tier, plus flags, maps, logos, film, music and charades, and packs written natively in Arabic that play with Arabic letters on the board. Every pack goes through scripted checks for duplicates, wrong first letters and answers that leak into the question, then a separate fact-check. The complete list is in the <a href="https://letterlock.raltech.dev/packs.html">LetterLock packs guide</a>.</p>
+<p>Every question is written so its answer starts with a specific letter, which is what lets any hex serve a question. There are now 193 categories and 42,745 questions, from a Kids and Family pack to a Genius tier, plus flags, maps, logos, film, music and charades, and packs written natively in Arabic that play with Arabic letters on the board. Every pack goes through scripted checks for duplicates, wrong first letters and answers that leak into the question, and a separate reviewer fact-checks a sample of every pack before it ships. The complete list is in the <a href="https://letterlock.raltech.dev/packs.html">LetterLock packs guide</a>.</p>
 <p>We learned one lesson here the hard way. Content generated cheaply can pass every automated check and still be factually wrong. We threw that content away and rewrote it, and we now treat automated checks as a floor, never as proof of quality.</p>
 <h3>Accounts, progress and a backend we run</h3>
 <p>Players can start as guests with no sign-up. A free account, with sign-in by email code, Google or Apple, adds XP and levels, friends, leaderboards, saved games and a pack editor for writing your own questions. The backend runs on infrastructure we operate ourselves, with automated off-site backups and error monitoring.</p>
