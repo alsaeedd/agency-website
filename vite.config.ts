@@ -95,8 +95,11 @@ function perfPreload(): Plugin {
 }
 
 // https://vite.dev/config/
-export default defineConfig({
-  plugins: [
+// isSsrBuild: the second `vite build --ssr` pass (see package.json) that only
+// produces dist-ssr/entry-server.js for scripts/prerender.mjs. It must not copy
+// public/, compress, rewrite _headers, or split GSAP (it stays external there).
+export default defineConfig(({ isSsrBuild }) => ({
+  plugins: isSsrBuild ? [react()] : [
     react(),
     perfPreload(),
     // Pre-compress build output. Hosts that serve static .br/.gz (Cloudflare
@@ -106,6 +109,7 @@ export default defineConfig({
     compression({ algorithm: 'gzip', threshold: 1024 }),
   ],
   build: {
+    copyPublicDir: !isSsrBuild,
     // ES2020 drops legacy polyfills — every device that loads this site
     // supports it (Safari 14+, Chrome 90+, Firefox 88+). Smaller output,
     // no transpilation overhead for class fields / nullish coalescing.
@@ -133,10 +137,10 @@ export default defineConfig({
       output: {
         // Keep the heavy, rarely-changing GSAP lib in its own long-cached
         // chunk. (three was retired with the WebGL hero, so no chunk for it.)
-        manualChunks: {
+        manualChunks: isSsrBuild ? undefined : {
           gsap: ['gsap', 'gsap/ScrollTrigger'],
         },
       },
     },
   },
-})
+}))

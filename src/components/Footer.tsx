@@ -72,14 +72,17 @@ export default function Footer({ onContactClick }: FooterProps) {
           <div className="footer-col">
             <span className="footer-col-label">Navigation</span>
             <nav className="footer-nav">
-              <a href="#services" className="footer-nav-item">
+              <a href="/services/" className="footer-nav-item">
                 Services
               </a>
-              <a href="#about" className="footer-nav-item">
+              <a href="/work/" className="footer-nav-item">
+                Work
+              </a>
+              <a href="/about/" className="footer-nav-item">
                 About
               </a>
-              <a href="#clients" className="footer-nav-item">
-                Clients
+              <a href="/insights/" className="footer-nav-item">
+                Insights
               </a>
               <button
                 onClick={onContactClick}
@@ -87,6 +90,9 @@ export default function Footer({ onContactClick }: FooterProps) {
               >
                 Contact
               </button>
+              <a href="/privacy/" className="footer-nav-item">
+                Privacy
+              </a>
             </nav>
           </div>
         </div>
