@@ -11,10 +11,8 @@ type Logo = {
 };
 
 const logos: Logo[] = [
-  { name: "Calo",         src: "/assets/calo.png",          className: "" },
-  { name: "Citibank",     src: "/assets/citibank.png",      className: "logo-citibank" },
+  { name: "Last 1",       src: "/assets/lastone.png",       className: "logo-lastone", href: "https://lastoneco.com" },
   { name: "Baby Details", src: "/assets/babydetails.png",   className: "logo-babydetails" },
-  { name: "Credimax",     src: "/assets/credimax.png",      className: "logo-credimax" },
   { name: "Kaak Bsemsom", src: "/assets/kaakbsemsom.png",   className: "logo-kaakbsemsom", href: "https://www.kaakbsemsom.com" },
   { name: "Knights Gate", src: "/assets/knightsgate-mark.png", className: "logo-knightsgate", href: "https://www.kgadvisers.com" },
   { name: "Yellow Sports", src: "/assets/yellowsports.jpeg", className: "logo-yellowsports", href: "https://www.yellowsportsbh.com" },
