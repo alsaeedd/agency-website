@@ -93,6 +93,9 @@ export default function Footer({ onContactClick }: FooterProps) {
               <a href="/privacy/" className="footer-nav-item">
                 Privacy
               </a>
+              <a href="/terms/" className="footer-nav-item">
+                Terms
+              </a>
             </nav>
           </div>
         </div>

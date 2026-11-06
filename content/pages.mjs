@@ -11,6 +11,16 @@
 import { readFileSync } from 'node:fs'
 
 const privacyBody = readFileSync(new URL('./privacy-body.html', import.meta.url), 'utf8')
+const termsBody = readFileSync(new URL('./terms-body.html', import.meta.url), 'utf8')
+import { hrArticles } from './articles-hr.mjs'
+
+const hrCards = hrArticles
+  .map((a) => `  <li>
+    <p class="tag">${a.tag} · ${a.published}</p>
+    <h2><a href="${a.path}">${a.title}</a></h2>
+    <p>${a.description}</p>
+  </li>`)
+  .join('\n')
 
 export const pages = [
   // ── Services ────────────────────────────────────────────────────────────
@@ -289,14 +299,15 @@ CR No. 196651-1</p>
     path: '/insights/',
     title: 'Insights: notes on building software that ships',
     description:
-      'Practical articles from RAL Technologies on custom internal systems, AI automation for small businesses, and the engineering behind our own product, LetterLock.',
+      'Practical articles from RAL Technologies on HR and payroll in Bahrain (WPS, SIO, document expiries), choosing an HR system, AI assistants, websites for local businesses, custom internal systems and AI automation.',
     eyebrow: 'Insights',
     h1: 'Notes from <span class="serif">the workshop.</span>',
     lead:
       'Practical write-ups on the work we actually do: replacing spreadsheets with real systems, using AI where it pays, and the engineering behind products we ship.',
-    updated: '2026-10-20',
+    updated: '2026-11-06',
     body: `
 <ul class="cards">
+${hrCards}
   <li>
     <p class="tag">Systems · 2026-10-20</p>
     <h2><a href="/insights/replace-spreadsheets-with-a-custom-system/">When to replace your spreadsheets with a custom system</a></h2>
@@ -502,7 +513,22 @@ CR No. 196651-1</p>
 `,
   },
 
-  // ── Privacy (text unchanged, now inside the site template) ──────────────
+  ...hrArticles,
+
+  // ── Terms ───────────────────────────────────────────────────────────────
+  {
+    path: '/terms/',
+    title: 'Terms of Use',
+    description:
+      'Terms of Use for raltech.dev, the website of RAL Technologies: use of the site and its content, articles as general information, third-party links, advertising, liability and governing law.',
+    eyebrow: 'Legal',
+    h1: 'Terms of Use',
+    lead: '',
+    updated: '2026-11-06',
+    body: termsBody,
+  },
+
+  // ── Privacy ─────────────────────────────────────────────────────────────
   {
     path: '/privacy/',
     title: 'Privacy Policy',
@@ -511,7 +537,7 @@ CR No. 196651-1</p>
     eyebrow: 'Legal',
     h1: 'Privacy Policy',
     lead: '',
-    updated: '2026-09-24',
+    updated: '2026-11-06',
     body: privacyBody,
   },
 ]

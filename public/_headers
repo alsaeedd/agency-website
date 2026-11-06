@@ -16,6 +16,9 @@
 #    only real browsers do, so it will not show up in a source grep), and
 #    mkcyber.app is the uptime/security monitor script in index.html.
 #    mkcyber.app is in connect-src too, since its beacon reports back out.
+#  - Google AdSense (2026-11-06): adsbygoogle.js is in every page head for
+#    AdSense review, so its origins are allowed in script/connect/frame-src
+#    and img-src takes https: (ad creatives come from many hosts).
 #    Cloudflare's beacon needs no connect-src entry: with edge auto-injection
 #    it reports to our own origin, which 'self' already covers.
 #  - X-XSS-Protection: 0 disables the legacy auditor rather than re-enabling
@@ -27,7 +30,7 @@
 #    moot for them.
 /*
   Strict-Transport-Security: max-age=31536000; includeSubDomains
-  Content-Security-Policy: default-src 'self'; script-src 'self' https://static.cloudflareinsights.com https://mkcyber.app; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; media-src 'self'; connect-src 'self' https://mkcyber.app; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'; upgrade-insecure-requests
+  Content-Security-Policy: default-src 'self'; script-src 'self' https://static.cloudflareinsights.com https://mkcyber.app https://pagead2.googlesyndication.com https://*.googlesyndication.com https://*.google.com https://*.googleadservices.com https://*.doubleclick.net https://*.adtrafficquality.google https://fundingchoicesmessages.google.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self'; media-src 'self'; connect-src 'self' https://mkcyber.app https://pagead2.googlesyndication.com https://*.googlesyndication.com https://*.google.com https://*.googleadservices.com https://*.doubleclick.net https://*.adtrafficquality.google https://fundingchoicesmessages.google.com; frame-src https://*.googlesyndication.com https://*.doubleclick.net https://*.google.com https://*.adtrafficquality.google; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'; upgrade-insecure-requests
   X-Frame-Options: DENY
   X-Content-Type-Options: nosniff
   Referrer-Policy: strict-origin-when-cross-origin

@@ -69,6 +69,7 @@ function template(p) {
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
 <meta name="theme-color" content="#0c0715" />
 <meta name="google-adsense-account" content="ca-pub-7138183978612183" />
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7138183978612183" crossorigin="anonymous"></script>
 <title>${esc(title)}</title>
 <meta name="description" content="${esc(p.description)}" />
 <meta name="robots" content="index, follow" />
@@ -117,7 +118,7 @@ ${p.body}
     </div>
     <nav aria-label="Pages">
       <p class="foot-label">Pages</p>
-      <a href="/">Home</a>${NAV.map(([h, l]) => `<a href="${h}">${l}</a>`).join('')}<a href="/work/letterlock/">LetterLock case study</a><a href="/privacy/">Privacy</a>
+      <a href="/">Home</a>${NAV.map(([h, l]) => `<a href="${h}">${l}</a>`).join('')}<a href="/work/letterlock/">LetterLock case study</a><a href="/privacy/">Privacy</a><a href="/terms/">Terms</a>
     </nav>
     <div>
       <p class="foot-label">Get in touch</p>
@@ -142,7 +143,7 @@ for (const p of pages) {
 // 3. Sitemap -------------------------------------------------------------------
 const newest = pages.reduce((m, p) => (p.updated > m ? p.updated : m), '')
 const urls = [{ loc: SITE + '/', lastmod: newest, pri: '1.0' }]
-for (const p of pages) urls.push({ loc: SITE + p.path, lastmod: p.updated, pri: p.path === '/privacy/' ? '0.3' : p.type === 'article' ? '0.7' : '0.8' })
+for (const p of pages) urls.push({ loc: SITE + p.path, lastmod: p.updated, pri: (p.path === '/privacy/' || p.path === '/terms/') ? '0.3' : p.type === 'article' ? '0.7' : '0.8' })
 fs.writeFileSync(
   path.join(dist, 'sitemap.xml'),
   `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls
