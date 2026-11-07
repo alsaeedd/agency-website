@@ -17,13 +17,22 @@ const dist = path.join(root, 'dist')
 const SITE = 'https://raltech.dev'
 
 // 1. Homepage ------------------------------------------------------------------
-const { render } = await import(pathToFileURL(path.join(root, 'dist-ssr', 'entry-server.js')).href)
+const { render, renderRalHr, renderInquire } = await import(pathToFileURL(path.join(root, 'dist-ssr', 'entry-server.js')).href)
 const indexPath = path.join(dist, 'index.html')
 let index = fs.readFileSync(indexPath, 'utf8')
 const appHtml = render()
 if (!index.includes('<div id="root"></div>')) throw new Error('prerender: empty #root not found in dist/index.html')
 index = index.replace('<div id="root"></div>', () => `<div id="root">${appHtml}</div>`)
 fs.writeFileSync(indexPath, index)
+
+// 1b. RAL HR product pages (own Vite entries, rendered the same way) ---------
+for (const [rel, fn] of [['ral-hr/index.html', renderRalHr], ['ral-hr/inquire/index.html', renderInquire]]) {
+  const p = path.join(dist, ...rel.split('/'))
+  let h = fs.readFileSync(p, 'utf8')
+  if (!h.includes('<div id="root"></div>')) throw new Error('prerender: empty #root not found in dist/' + rel)
+  h = h.replace('<div id="root"></div>', () => '<div id="root">' + fn() + '</div>')
+  fs.writeFileSync(p, h)
+}
 
 // 2. Content pages -------------------------------------------------------------
 const assets = fs.readdirSync(path.join(dist, 'assets'))
@@ -118,7 +127,7 @@ ${p.body}
     </div>
     <nav aria-label="Pages">
       <p class="foot-label">Pages</p>
-      <a href="/">Home</a>${NAV.map(([h, l]) => `<a href="${h}">${l}</a>`).join('')}<a href="/work/letterlock/">LetterLock case study</a><a href="/privacy/">Privacy</a><a href="/terms/">Terms</a>
+      <a href="/">Home</a>${NAV.map(([h, l]) => `<a href="${h}">${l}</a>`).join('')}<a href="/work/letterlock/">LetterLock case study</a><a href="/ral-hr/">RAL HR</a><a href="/privacy/">Privacy</a><a href="/terms/">Terms</a>
     </nav>
     <div>
       <p class="foot-label">Get in touch</p>
@@ -143,6 +152,7 @@ for (const p of pages) {
 // 3. Sitemap -------------------------------------------------------------------
 const newest = pages.reduce((m, p) => (p.updated > m ? p.updated : m), '')
 const urls = [{ loc: SITE + '/', lastmod: newest, pri: '1.0' }]
+urls.push({ loc: SITE + '/ral-hr/', lastmod: newest, pri: '0.9' }, { loc: SITE + '/ral-hr/inquire/', lastmod: newest, pri: '0.5' })
 for (const p of pages) urls.push({ loc: SITE + p.path, lastmod: p.updated, pri: (p.path === '/privacy/' || p.path === '/terms/') ? '0.3' : p.type === 'article' ? '0.7' : '0.8' })
 fs.writeFileSync(
   path.join(dist, 'sitemap.xml'),

@@ -7,6 +7,7 @@ const navLinks = [
   { href: "#services", text: "Services" },
   { href: "#about", text: "About" },
   { href: "#clients", text: "Clients" },
+  { href: "/ral-hr/", text: "RAL HR" },
 ];
 
 const DESKTOP_BREAKPOINT = 768;
@@ -137,6 +138,7 @@ export default function Navbar({ onContactClick, scrollToSection }: NavbarProps)
                   href={link.href}
                   data-text={link.text}
                   onClick={(e) => {
+                    if (!link.href.startsWith("#")) return;
                     e.preventDefault();
                     scrollToSection(link.href);
                   }}
@@ -190,6 +192,7 @@ export default function Navbar({ onContactClick, scrollToSection }: NavbarProps)
                 href={link.href}
                 className="navbar-mobile-link"
                 onClick={(e) => {
+                  if (!link.href.startsWith("#")) return;
                   e.preventDefault();
                   handleLinkClick(link.href);
                 }}

@@ -39,18 +39,25 @@ function perfPreload(): Plugin {
         if (!bundle) return
         const files = Object.keys(bundle)
         const fonts = files.filter((f) => CRITICAL_FONT.some((rx) => rx.test(f)))
+        // Multi-page build (homepage + /ral-hr/ pages): only the homepage's
+        // entry feeds the "/" Early Hints block, so pick its chunk and CSS.
+        const isHome = ctx.path === '/index.html'
         const entryJs = files.find((f) => {
           const c = bundle[f]
-          return c.type === 'chunk' && c.isEntry
+          return c.type === 'chunk' && c.isEntry && !!c.facadeModuleId && /src[\\/]main\.tsx$/.test(c.facadeModuleId)
         })
-        const entryCss = files.find((f) => f.endsWith('.css'))
+        const entryChunk = entryJs ? bundle[entryJs] : undefined
+        const importedCss = entryChunk && entryChunk.type === 'chunk' ? [...(entryChunk.viteMetadata?.importedCss ?? [])] : []
+        const entryCss = importedCss[0] ?? files.find((f) => f.endsWith('.css'))
 
         // Stash the Link: header lines for closeBundle to write into _headers.
-        linkHeaders = []
-        if (entryCss) linkHeaders.push(`</${entryCss}>; rel=preload; as=style`)
-        if (entryJs) linkHeaders.push(`</${entryJs}>; rel=modulepreload`)
-        for (const f of fonts) {
-          linkHeaders.push(`</${f}>; rel=preload; as=font; crossorigin`)
+        if (isHome) {
+          linkHeaders = []
+          if (entryCss) linkHeaders.push(`</${entryCss}>; rel=preload; as=style`)
+          if (entryJs) linkHeaders.push(`</${entryJs}>; rel=modulepreload`)
+          for (const f of fonts) {
+            linkHeaders.push(`</${f}>; rel=preload; as=font; crossorigin`)
+          }
         }
 
         // Inject the browser-side font preloads into <head>.
@@ -134,6 +141,13 @@ export default defineConfig(({ isSsrBuild }) => ({
     // de-duplicates rules across files.
     cssMinify: 'lightningcss',
     rollupOptions: {
+      // Multi-page: the homepage SPA plus the RAL HR product page and its
+      // inquiry flow, each a real crawlable URL (see docs/ral-hr/BUILD_PLAN.md).
+      input: isSsrBuild ? undefined : {
+        main: path.resolve(__dirname, 'index.html'),
+        ralhr: path.resolve(__dirname, 'ral-hr/index.html'),
+        ralhrInquire: path.resolve(__dirname, 'ral-hr/inquire/index.html'),
+      },
       output: {
         // Keep the heavy, rarely-changing GSAP lib in its own long-cached
         // chunk. (three was retired with the WebGL hero, so no chunk for it.)
