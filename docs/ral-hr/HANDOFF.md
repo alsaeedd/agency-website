@@ -5,7 +5,12 @@
 - Scores: CYCLE1.md (5.8 to 6.9), CYCLE2.md (6.9 to 8.0), CYCLE3.md (8.0 to 8.4).
 - Cycle 3 (RalHrPage.tsx/.css only): bento rules check (WPS columns tick + count, ladder grow, expiry ping), split bento head, pricing estimator console (big count, custom slider, presets, live plan bars, tweened monthly + yearly totals, selected card ring), founder word reveal + rule underlines + monogram signature.
 
-## Next (below 8.5)
+## Finishing round (merged to main and live 2026-11-08)
+- See CYCLE3.md "Finishing round": hero 8.8, video 8.8, closing 8.8, footer 8.8; TBT 374 to about 225 ms.
+- Video pings fixed: rail beside the phone at 1200+, stacked under the phone below 1200 (no clip, never on the video).
+- Next: TBT still about 225 ms at 390 / 4x (target 150). Try starting the hero timeline in a rAF after first paint, or split the vendor chunk. Do not regress LCP 748 ms.
+
+## Next (older notes)
 - Hero 8.3: one more beat after the toast.
 - Video 7.8: chapter chips once real timestamps exist; larger frame on desktop.
 - Closing CTA 8.0, footer 7.8.

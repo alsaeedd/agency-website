@@ -373,3 +373,69 @@
   .rh-days .hot.ok { animation: none; }
   .rh-cols span, .rh-days span, .rh-cmp-bar i, .rh-price { transition: none; }
 }
+
+/* Finishing round: hero stamp, video pings, closing track, footer */
+.rh-later { height: 220vh; }
+.rh-run-card { position: relative; }
+.rh-run-stamp { position: absolute; top: 52px; right: 18px; padding: 7px 12px 6px; border: 2px solid #7c3aed; border-radius: 8px; color: #7c3aed; background: rgba(124, 58, 237, .06); font: 700 13px/1 Inter, sans-serif; letter-spacing: .16em; text-transform: uppercase; transform: rotate(-9deg); pointer-events: none; }
+a.rh-run-toast { color: #f8f8f8; text-decoration: none; transition: box-shadow .25s, transform .25s cubic-bezier(.32, .72, 0, 1); }
+a.rh-run-toast:hover { transform: translateY(-2px); box-shadow: 0 0 0 1px #a78bfa, 0 24px 48px -14px rgba(0, 0, 0, .75); }
+.rh-run-go { display: block; margin-top: 3px; font-size: 12px; font-weight: 500; color: #c4b5fd; }
+.rh-pings { list-style: none; margin: 0; padding: 0; }
+.rh-pings li { position: absolute; z-index: 2; display: grid; grid-template-columns: 26px auto; column-gap: 10px; align-items: center; width: max-content; max-width: 230px; padding: 9px 14px 9px 9px; border-radius: 16px; background: rgba(22, 14, 39, .84); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); box-shadow: 0 0 0 1px rgba(209, 196, 233, .22), 0 20px 40px -16px rgba(0, 0, 0, .85); }
+.rh-pings i { grid-row: span 2; width: 26px; height: 26px; border-radius: 50%; display: grid; place-items: center; font-style: normal; font-size: 12px; color: #c4b5fd; background: rgba(167, 139, 250, .18); }
+.rh-pings b { font-size: 13px; font-weight: 600; line-height: 1.25; color: #f8f8f8; }
+.rh-pings span { font-size: 12px; line-height: 1.35; color: var(--color-text-secondary); }
+.rh-pings span[lang="ar"] { justify-self: start; font: 500 13px/1.4 "IBM Plex Sans Arabic", "Segoe UI", Tahoma, sans-serif; }
+/* Below 1200: a tidy stack under the phone, never on top of the video. */
+.rh-vt { position: relative; }
+.rh-pings { display: grid; gap: 8px; max-width: 340px; margin: 18px auto 0; }
+.rh-pings li { position: static; width: auto; max-width: none; }
+/* 1200+: a rail beside the phone, inside the grid gap, so nothing clips or covers. */
+@media (min-width: 1200px) {
+  .rh-video { grid-template-columns: minmax(0, 1fr) 380px; gap: 272px; }
+  .rh-video .rh-head { max-width: 520px; }
+  .rh-video .rh-phone { max-width: 380px; }
+  .rh-pings { position: absolute; top: 0; bottom: 0; right: calc(100% + 24px); width: 220px; max-width: none; margin: 0; display: block; }
+  .rh-pings li { position: absolute; right: 0; width: max-content; max-width: 220px; }
+  .rh-pings li:nth-child(1) { top: 14%; }
+  .rh-pings li:nth-child(2) { top: 42%; right: 20px; }
+  .rh-pings li:nth-child(3) { top: 70%; }
+}
+.rh-close .rh-next { position: relative; display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; max-width: 760px; margin: 48px auto; padding: 0; align-items: start; }
+.rh-close .rh-next::before { content: ""; position: absolute; top: 19px; left: 16.67%; right: 16.67%; height: 2px; border-radius: 2px; background: linear-gradient(90deg, #a78bfa, #c084fc); transform-origin: 0 50%; }
+.rh-close .rh-next li { position: relative; flex-direction: column; gap: 14px; text-align: center; font-size: 15px; line-height: 1.4; }
+.rh-close .rh-next b, .rh-close .rh-next.pre.go b { width: 40px; height: 40px; font-size: 15px; background: #a78bfa; color: #160e27; border-color: transparent; box-shadow: 0 0 0 6px var(--color-bg), 0 0 28px rgba(180, 80, 255, .55); transition: background .5s, color .5s, box-shadow .5s, border-color .5s; }
+.rh-close .rh-next.pre::before { transform: scaleX(0); }
+.rh-close .rh-next.pre b { background: var(--color-bg); color: #a78bfa; border-color: var(--color-border-active); box-shadow: 0 0 0 6px var(--color-bg); }
+.rh-close .rh-next.pre.go::before { transform: scaleX(1); transition: transform 1.5s cubic-bezier(.65, 0, .35, 1); }
+.rh-close .rh-next.pre.go li:nth-child(2) b { transition-delay: .7s; }
+.rh-close .rh-next.pre.go li:nth-child(3) b { transition-delay: 1.4s; }
+.rh-foot-grid { display: grid; grid-template-columns: 1.6fr 1fr 1fr 1fr; gap: 32px; padding-top: 16px; }
+.rh-foot .rh-foot-brand > b { display: block; font-size: 22px; font-weight: 600; letter-spacing: -.02em; color: #f8f8f8; }
+.rh-foot-brand em, .rh-foot-mark em { font-family: Newsreader, Georgia, serif; font-style: italic; font-weight: 500; }
+.rh-foot-brand p { margin: 10px 0 22px; max-width: 30ch; font-size: 14px; line-height: 1.55; }
+.rh-foot nav, .rh-foot-clock { display: flex; flex-direction: column; align-items: flex-start; }
+.rh-foot .rh-foot-k { margin: 0 0 6px; font-size: 11px; letter-spacing: .18em; text-transform: uppercase; color: rgba(209, 196, 233, .6); }
+.rh-foot nav a { padding: 7px 0; color: var(--color-text-secondary); transition: color .2s; }
+.rh-foot nav a:hover { color: #f8f8f8; }
+.rh-foot-clock b { margin: 4px 0 8px; font: italic 500 46px/1 Newsreader, Georgia, serif; letter-spacing: -.02em; color: #f8f8f8; font-variant-numeric: tabular-nums; }
+.rh-foot .rh-foot-clock span { margin: 0; font-size: 12px; }
+.rh-foot .rh-foot-mark { margin: 56px 0 20px; background-image: linear-gradient(180deg, rgba(236, 228, 255, .92) 0%, rgba(167, 139, 250, .32) 40%, rgba(167, 139, 250, .03) 50%, rgba(167, 139, 250, 0) 100%); background-size: 100% 200%; background-position: 0 0; transition: background-position 2s cubic-bezier(.19, 1, .22, 1); }
+.rh-foot .rh-foot-mark.pre { background-position: 0 100%; }
+.rh-foot .rh-foot-mark.pre.go { background-position: 0 0; }
+.rh-foot-base { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px 16px; padding-top: 20px; border-top: 1px solid var(--color-border); font-size: 12px; }
+.rh-foot .rh-foot-base span { margin: 0; }
+@media (max-width: 900px) {
+  .rh-foot-grid { grid-template-columns: 1fr 1fr; gap: 28px 20px; }
+  .rh-foot-brand { grid-column: 1 / -1; }
+}
+@media (max-width: 520px) {
+  .rh-run-stamp { top: 46px; right: 12px; font-size: 11px; padding: 6px 9px 5px; }
+  .rh-pings li { padding: 8px 12px 8px 8px; }
+  .rh-close .rh-next { gap: 8px; margin: 40px auto; }
+  .rh-close .rh-next li { font-size: 13px; }
+  .rh-foot-clock b { font-size: 40px; }
+}
+/* Prerendered HTML only: skip layout of below-the-fold sections until the client render replaces it. */
+.rh[data-ssr] main > section:not(.rh-hero), .rh[data-ssr] .rh-foot { content-visibility: auto; contain-intrinsic-size: auto 900px; }

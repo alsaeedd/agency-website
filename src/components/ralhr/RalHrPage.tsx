@@ -1,4 +1,4 @@
-import { Fragment, lazy, Suspense, useEffect, useRef, useState } from 'react'
+import { Fragment, lazy, startTransition, Suspense, useEffect, useRef, useState } from 'react'
 import { gsap } from 'gsap'
 import { calm, money, useIsoLayoutEffect } from './charts'
 import { EMPLOYER_LADDER, FAQ, PAYROLL, PRICING, SIO_RATES } from './data'
@@ -6,6 +6,9 @@ import './RalHrPage.css'
 
 const Demo = lazy(() => import('./Demo'))
 const INQUIRE = '/ral-hr/inquire/'
+// Idle scheduling: below-the-fold work waits for gaps between frames instead of one long startup task.
+const idle = (f: () => void): number => (typeof requestIdleCallback === 'function' ? requestIdleCallback(f, { timeout: 900 }) : window.setTimeout(f, 60))
+const unidle = (id: number) => { if (typeof cancelIdleCallback === 'function') cancelIdleCallback(id); else clearTimeout(id) }
 
 function DemoSlot() {
   const ref = useRef<HTMLDivElement>(null)
@@ -13,7 +16,7 @@ function DemoSlot() {
   useEffect(() => {
     const el = ref.current
     if (!el || !('IntersectionObserver' in window)) { setShow(true); return }
-    const io = new IntersectionObserver((e) => { if (e[0].isIntersecting) { setShow(true); io.disconnect() } }, { rootMargin: '600px 0px' })
+    const io = new IntersectionObserver((e) => { if (e[0].isIntersecting) { startTransition(() => setShow(true)); io.disconnect() } }, { rootMargin: '600px 0px' })
     io.observe(el)
     return () => io.disconnect()
   }, [])
@@ -47,13 +50,20 @@ function VideoTour() {
   }
   const unmute = () => { const v = ref.current; if (v) { v.muted = !v.muted; setMuted(v.muted); if (v.paused) v.play().catch(() => {}) } }
   return (
-    <div className="rh-phone">
+    <div className="rh-vt">
+      <div className="rh-phone">
       <video ref={ref} poster="/assets/ral-hr/ralhr-tour-poster.webp" muted playsInline loop preload="none"
         onPlay={() => setPlaying(true)} onPause={() => setPlaying(false)} onClick={toggle} aria-label="RAL HR video tour" />
       <div className="rh-video-ctl">
         <button type="button" onClick={toggle}>{playing ? 'Pause' : 'Play'}</button>
         <button type="button" onClick={unmute}>{muted ? 'Sound on' : 'Sound off'}</button>
       </div>
+      </div>
+      <ul className="rh-pings" aria-label="What staff see in the app">
+        <li><i>{'✓'}</i><b>Checked in, 07:58</b><span>Inside the site radius, 42 m</span></li>
+        <li><i>{'✓'}</i><b>Leave approved, 3 days</b><span>Aisha in HR, one tap</span></li>
+        <li><i>{'✓'}</i><b>Payslip ready</b><span lang="ar" dir="rtl">قسيمة راتب أكتوبر جاهزة</span></li>
+      </ul>
     </div>
   )
 }
@@ -113,6 +123,7 @@ function HeroRun() {
       <div className="rh-run-card">
         <div className="rh-run-top"><i className="rh-run-dot" />Payroll run <b>{PAYROLL.month}</b><span className="rh-run-co">Sample company, {PAYROLL.people} staff</span></div>
         <p className="rh-run-label">Net pay to the bank</p>
+        <span className="rh-run-stamp" aria-hidden="true">Approved</span>
         <p className="rh-run-big"><span className="rh-run-cur">BHD</span><span className="rh-run-num">{money(PAYROLL.net)}</span></p>
         <div className="rh-run-bars">
           <div className="rh-run-bar"><span>Gross</span><em><i style={{ width: '100%' }} /></em><span>{money(PAYROLL.gross)}</span></div>
@@ -123,7 +134,7 @@ function HeroRun() {
           {RUN_STEPS.map(([a, b]) => <li key={a} className="on"><i /><b>{a}</b><span>{b}</span></li>)}
         </ul>
       </div>
-      <div className="rh-run-toast"><i>{'✓'}</i>{PAYROLL.month.split(' ')[0]} payroll approved. {PAYROLL.people} people, BHD {money(PAYROLL.net)}.</div>
+      <a className="rh-run-toast" href="#demo"><i>{'✓'}</i><span>{PAYROLL.month.split(' ')[0]} payroll approved. {PAYROLL.people} people, BHD {money(PAYROLL.net)}.<small className="rh-run-go">Open this run in the live demo <span aria-hidden="true">{'↓'}</span></small></span></a>
     </div>
   )
 }
@@ -148,6 +159,18 @@ const NOTE: [string, boolean?][] = [
 const words = (t: string) => t.split(/(\s+)/).map((w, i) => (/^\s+$/.test(w) || !w ? w : <span key={i} className="rh-fw">{w}</span>))
 const TICKS = [5, 100, 200, 300]
 
+function Clock() {
+  const [t, setT] = useState('')
+  useEffect(() => {
+    const f = new Intl.DateTimeFormat('en-GB', { hour: '2-digit', minute: '2-digit', timeZone: 'Asia/Bahrain' })
+    const tick = () => setT(f.format(new Date()))
+    tick()
+    const id = window.setInterval(tick, 30000)
+    return () => clearInterval(id)
+  }, [])
+  return <b>{t || '--:--'}</b>
+}
+
 function Cta({ children = 'Book a demo' }: { children?: string }) {
   return <a className="rh-cta" href={INQUIRE}>{children}<span className="rh-cta-i" aria-hidden="true">↗</span></a>
 }
@@ -159,12 +182,15 @@ export default function RalHrPage() {
   const [plan, setPlan] = useState(1)
   const bento = useRef<HTMLDivElement>(null)
 
+  // Hero renders first; the rest mounts in two idle, time-sliced steps (SSR renders everything).
+  const [stage, setStage] = useState(typeof window === 'undefined' ? 2 : 0)
+
   useIsoLayoutEffect(() => {
     const el = root.current
     if (!el || calm()) return
     const ctx = gsap.context(() => {
       const tl = gsap.timeline({ defaults: { ease: 'expo.out' } })
-      tl.from('.rh-w > span', { yPercent: 112, duration: 1.1, stagger: 0.05 })
+      tl.from('.rh-hero .rh-w > span', { yPercent: 112, duration: 1.1, stagger: 0.05 })
         .from('.rh-hero-copy .rh-in', { y: 24, opacity: 0, duration: 1, stagger: 0.1 }, 0.35)
         .from('.rh-run-card', { y: 48, opacity: 0, duration: 1.3 }, 0.2)
       const num = el.querySelector<HTMLElement>('.rh-run-num')
@@ -173,11 +199,36 @@ export default function RalHrPage() {
       const steps = gsap.utils.toArray<HTMLElement>('.rh-run-steps li')
       steps.forEach((li) => li.classList.remove('on'))
       steps.forEach((li, i) => tl.call(() => li.classList.add('on'), [], 1.05 + i * 0.4))
-      tl.from('.rh-run-toast', { y: 28, opacity: 0, scale: 0.96, duration: 0.9, ease: 'back.out(1.7)' }, 1.15 + steps.length * 0.4)
-      gsap.utils.toArray<HTMLElement>('.rh-reveal').forEach((s) => {
-        gsap.from(s.querySelectorAll('.rh-in'), { y: 32, opacity: 0, duration: 1, ease: 'expo.out', stagger: 0.12,
-          scrollTrigger: { trigger: s, start: 'top 80%', once: true } })
-      })
+      // The extra beat: an approval stamp lands on the card, then the toast points into the demo.
+      const at = 1.0 + steps.length * 0.4
+      tl.from('.rh-run-stamp', { scale: 2.4, opacity: 0, duration: 0.4, ease: 'power4.in' }, at)
+        .to('.rh-run-card', { y: 4, duration: 0.07, yoyo: true, repeat: 1, ease: 'power1.inOut' }, at + 0.4)
+        .from('.rh-run-toast', { y: 28, opacity: 0, scale: 0.96, duration: 0.9, ease: 'back.out(1.7)' }, at + 0.55)
+        .from('.rh-run-go', { opacity: 0, x: -8, duration: 0.7 }, at + 1.25)
+    }, el)
+    return () => ctx.revert()
+  }, [])
+
+  useEffect(() => {
+    if (stage >= 2) return
+    const id = idle(() => startTransition(() => setStage((n) => n + 1)))
+    return () => unidle(id)
+  }, [stage])
+
+  // Below-the-fold motion: set up after everything is mounted, one idle slot per section.
+  useEffect(() => {
+    if (stage < 2) return
+    const el = root.current
+    if (!el) return
+    const hash = location.hash.slice(1)
+    if (hash) document.getElementById(hash)?.scrollIntoView()
+    if (calm()) return
+    const ctx = gsap.context(() => {}, el)
+    const jobs: (() => void)[] = gsap.utils.toArray<HTMLElement>('.rh-reveal', el).map((s) => () => {
+      gsap.from(s.querySelectorAll('.rh-in'), { y: 32, opacity: 0, duration: 1, ease: 'expo.out', stagger: 0.12,
+        scrollTrigger: { trigger: s, start: 'top 80%', once: true } })
+    })
+    jobs.push(() => {
       // Bento signature: the Bahrain rules check themselves as the grid arrives.
       const cols = gsap.utils.toArray<HTMLElement>('.rh-cols span')
       const days = gsap.utils.toArray<HTMLElement>('.rh-days span')
@@ -190,14 +241,35 @@ export default function RalHrPage() {
         .from('.rh-ladder b', { opacity: 0, y: 6, duration: 0.6, stagger: 0.1 }, 0.5)
         .from('.rh-slip em', { opacity: 0, x: -10, duration: 0.8, stagger: 0.15 }, 0.6)
       days.forEach((d, i) => bt.call(() => d.classList.add('ok'), [], 0.7 + i * 0.35))
+    }, () => {
+      // Video: the three things staff see pop out of the phone, one after another.
+      gsap.from('.rh-pings li', { opacity: 0, scale: 0.8, y: 16, duration: 0.8, stagger: 0.4, ease: 'back.out(1.6)', delay: 0.3,
+        scrollTrigger: { trigger: '.rh-phone', start: 'top 72%', once: true } })
+    }, () => {
       // Founder note: the words light up in reading order, then the four rules underline.
       gsap.timeline({ scrollTrigger: { trigger: '.rh-founder', start: 'top 72%', once: true } })
         .from('.rh-fw', { opacity: 0.14, duration: 0.5, stagger: 0.022, ease: 'power1.out' })
         .from('.rh-founder mark', { backgroundSize: '0% 2px', duration: 0.8, stagger: 0.12, ease: 'expo.out' }, '-=0.9')
         .from('.rh-swash path', { strokeDashoffset: 130, duration: 1.1, ease: 'expo.out' }, '-=0.4')
-    }, el)
-    return () => ctx.revert()
-  }, [])
+    }, () => {
+      // Closing: the headline rises like the hero, then the three steps connect and light in order.
+      const ol = el.querySelector('.rh-next')
+      ol?.classList.add('pre')
+      gsap.timeline({ scrollTrigger: { trigger: '.rh-close', start: 'top 70%', once: true } })
+        .from('.rh-close h2 .rh-w > span', { yPercent: 112, duration: 1.1, stagger: 0.07, ease: 'expo.out' })
+        .call(() => ol?.classList.add('go'), [], 0.55)
+    }, () => {
+      // Footer: the RAL HR wordmark fills from the floor up.
+      const m = el.querySelector('.rh-foot-mark')
+      if (!m) return
+      m.classList.add('pre')
+      gsap.timeline({ scrollTrigger: { trigger: m, start: 'top 96%', once: true } }).call(() => m.classList.add('go'))
+    })
+    let id = 0, i = 0
+    const next = () => { id = idle(() => { ctx.add(jobs[i++]); if (i < jobs.length) next() }) }
+    next()
+    return () => { unidle(id); ctx.revert() }
+  }, [stage])
 
   // Lit bento: the pointer brightens each tile's surface and edge (fine pointers only).
   useEffect(() => {
@@ -214,10 +286,10 @@ export default function RalHrPage() {
     const enter = () => { b.classList.add('lit') }
     b.addEventListener('pointermove', move); b.addEventListener('pointerleave', leave); b.addEventListener('pointerenter', enter)
     return () => { cancelAnimationFrame(raf); b.removeEventListener('pointermove', move); b.removeEventListener('pointerleave', leave); b.removeEventListener('pointerenter', enter) }
-  }, [])
+  }, [stage])
 
   return (
-    <div className="rh" ref={root}>
+    <div className="rh" ref={root} data-ssr={typeof window === 'undefined' ? '' : undefined}>
       <header className="rh-top">
         <a href="/" className="rh-brand">RAL <span>Technologies</span></a>
         <nav>
@@ -243,6 +315,7 @@ export default function RalHrPage() {
           <HeroRun />
         </section>
 
+        {stage >= 1 ? (<>
         <section id="demo" className="rh-section rh-demo rh-reveal">
           <div className="rh-head rh-in">
             <p className="rh-eyebrow">Live demo</p>
@@ -316,6 +389,8 @@ export default function RalHrPage() {
           <div className="rh-in"><VideoTour /></div>
         </section>
 
+        </>) : <div className="rh-later" aria-hidden="true" />}
+        {stage >= 2 && (<>
         <section id="pricing" className="rh-section rh-pricing rh-reveal">
           <div className="rh-head rh-in">
             <p className="rh-eyebrow">Pricing</p>
@@ -395,27 +470,47 @@ export default function RalHrPage() {
 
         <section className="rh-section rh-close rh-reveal">
           <p className="rh-eyebrow rh-in">Your turn</p>
-          <h2 className="rh-in">See it with <em>your own</em> payroll.</h2>
-          <ol className="rh-next rh-in">
+          <h2>{['See', 'it', 'with'].map((w) => <Fragment key={w}><Word w={w} />{' '}</Fragment>)}<em><Word w="your" />{' '}<Word w="own" /></em>{' '}<Word w="payroll." /></h2>
+          <ol className="rh-next">
             <li><b>1</b>Four quick questions, about a minute</li>
             <li><b>2</b>We talk on WhatsApp</li>
             <li><b>3</b>A demo built around your team</li>
           </ol>
           <div className="rh-in"><Cta /></div>
         </section>
+        </>)}
       </main>
-
+      {stage >= 2 && (
       <footer className="rh-foot">
-        <div className="rh-foot-row">
-          <span>© 2026 RAL Technologies, Manama</span>
-          <a href="#demo">Live demo</a>
-          <a href="#pricing">Pricing</a>
-          <a href={INQUIRE}>Book a demo</a>
-          <a href="/">raltech.dev</a>
-          <a href="mailto:info@raltech.dev">info@raltech.dev</a>
+        <div className="rh-foot-grid">
+          <div className="rh-foot-brand">
+            <b>RAL <em>HR</em></b>
+            <p>HR and payroll built around Bahrain's rules, by RAL Technologies in Manama.</p>
+            <Cta />
+          </div>
+          <nav aria-label="RAL HR">
+            <p className="rh-foot-k">Product</p>
+            <a href="#demo">Live demo</a>
+            <a href="#pricing">Pricing</a>
+            <a href="#faq">FAQ</a>
+            <a href={INQUIRE}>Book a demo</a>
+          </nav>
+          <nav aria-label="Contact">
+            <p className="rh-foot-k">Contact</p>
+            <a href="https://wa.me/97366386602" target="_blank" rel="noopener noreferrer">WhatsApp</a>
+            <a href="mailto:info@raltech.dev">info@raltech.dev</a>
+            <a href="/">raltech.dev</a>
+          </nav>
+          <div className="rh-foot-clock">
+            <p className="rh-foot-k">In Manama now</p>
+            <Clock />
+            <span>GMT+3, Sunday to Thursday</span>
+          </div>
         </div>
         <p className="rh-foot-mark" aria-hidden="true">RAL <em>HR</em></p>
+        <div className="rh-foot-base"><span>© 2026 RAL Technologies, Manama</span><span>Built in Bahrain, for Bahrain</span></div>
       </footer>
+      )}
     </div>
   )
 }
