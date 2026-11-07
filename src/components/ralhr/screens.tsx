@@ -21,7 +21,7 @@ export type Act = {
   confirmRun: () => void
   cancelRun: () => void
   checkWps: () => void
-  decide: (id: string) => void
+  decide: (id: string, ok?: boolean) => void
   checkIn: () => void
   setEosb: (years: number, basic: number) => void
   say: (step: number) => void
@@ -38,7 +38,8 @@ export function HomeScreen({ device, act }: P) {
   useEffect(() => {
     if (calm()) return
     const tick = () => {
-      if (document.hidden) return
+      const r = listRef.current?.getBoundingClientRect()
+      if (document.hidden || !r || r.bottom < 0 || r.top > window.innerHeight) return
       const next = FEED[idx.current % FEED.length]
       idx.current += 1
       setFeed((f) => [next, ...f.slice(0, 3)])
@@ -55,17 +56,17 @@ export function HomeScreen({ device, act }: P) {
     <div className="ra-screen ra-home">
       <div className="ra-greet">
         <div>
-          <p className="ra-muted">Saturday 7 November</p>
+          <p className="ra-muted">Saturday 7 November <span className="ra-chip chip-good">Payroll runs Thu 26 Nov</span></p>
           <h3 className="ra-h">Good morning, Aisha.</h3>
         </div>
         <button className="ra-btn ra-btn-primary" data-g="review" onClick={() => act.go('leave')}>Review approvals</button>
       </div>
       <div className="ra-kpis">
         {KPIS.map((k) => (
-          <div className={`ra-kpi tone-${k.tone}`} key={k.key}>
+          <div className={`ra-kpi tone-${k.tone} k-${k.key}`} key={k.key}>
             <p className="ra-kpi-label">{k.label}</p>
-            <p className="ra-kpi-num"><CountUp value={k.value} prefix={k.prefix} /></p>
-            <p className="ra-kpi-note">{k.note}</p>
+            <p className="ra-kpi-num">{k.prefix && <small className="ra-kpi-unit">{k.prefix.trim()}</small>}<CountUp value={k.value} /></p>
+            <p className="ra-kpi-note">{'delta' in k && <span className="ra-delta">▲ {k.delta}</span>}{k.note}</p>
             <Spark data={k.spark} tone={k.tone} />
           </div>
         ))}
@@ -77,7 +78,7 @@ export function HomeScreen({ device, act }: P) {
             {EXPIRING.map((e) => (
               <li key={e.who}>
                 <span><b>{e.who}</b><span className="ra-muted"> {e.what}</span></span>
-                <span className={`ra-chip ${e.days <= 30 ? 'chip-warn' : ''}`}>{e.days} days</span>
+                <span className={`ra-chip ${e.days <= 14 ? 'chip-bad' : e.days <= 30 ? 'chip-warn' : ''}`}>{e.days} days</span>
               </li>
             ))}
           </ul>
@@ -214,6 +215,13 @@ function WfRow({ label, value, start, width, minus, net }: { label: string; valu
 export function LeaveScreen({ s, act }: P) {
   const waiting = APPROVALS.filter((a) => !s.decided.includes(a.id))
   const b = LEAVE_BALANCE
+  // Approval moment: the card stamps, then lifts away before the list updates.
+  const out = (e: React.MouseEvent<HTMLElement>, id: string, ok: boolean) => {
+    const card = e.currentTarget.closest<HTMLElement>('.ra-approval')
+    if (!card || calm()) { act.decide(id, ok); return }
+    card.classList.add(ok ? 'go-ok' : 'go-no')
+    gsap.to(card, { autoAlpha: 0, y: -10, scale: 0.97, duration: 0.4, delay: 0.45, ease: 'power3.in', onComplete: () => act.decide(id, ok) })
+  }
   return (
     <div className="ra-screen ra-leave">
       <div className="ra-greet">
@@ -244,8 +252,8 @@ export function LeaveScreen({ s, act }: P) {
               <li className="you">2. {a.stage2}, you</li>
             </ol>
             <div className="ra-dialog-actions">
-              <button className="ra-btn ra-btn-ghost" onClick={() => act.decide(a.id)}>Reject</button>
-              <button className="ra-btn ra-btn-primary" data-g={`approve-${a.id}`} onClick={() => act.decide(a.id)}>Approve</button>
+              <button className="ra-btn ra-btn-ghost" onClick={(e) => out(e, a.id, false)}>Reject</button>
+              <button className="ra-btn ra-btn-primary" data-g={`approve-${a.id}`} onClick={(e) => out(e, a.id, true)}>Approve</button>
             </div>
           </article>
         ))}

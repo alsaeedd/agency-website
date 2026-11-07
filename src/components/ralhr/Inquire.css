@@ -104,6 +104,28 @@
 .iqx .iq-alt { align-items: center; }
 .iqx .iq-alt .iq-back { text-decoration: none; padding: 0; margin-right: auto; font-size: 14px; }
 
+/* Cycle 2: the message assembles, then a clear "sent" moment */
+.iqx-typing { display: inline-flex; gap: 6px; padding: 18px 20px; border-radius: 18px 18px 4px 18px; background: #2b1b3d; border: 1px solid rgba(167, 139, 250, .28); }
+.iqx-typing i { width: 8px; height: 8px; border-radius: 50%; background: #d1c4e9; opacity: .4; animation: iqx-dot 1s infinite; }
+.iqx-typing i:nth-child(2) { animation-delay: .15s; }
+.iqx-typing i:nth-child(3) { animation-delay: .3s; }
+@keyframes iqx-dot { 30% { opacity: 1; transform: translateY(-4px); } 60% { opacity: .4; transform: none; } }
+.iqx-pop { animation: iqx-pop .65s cubic-bezier(.19, 1, .22, 1); transform-origin: 100% 100%; }
+@keyframes iqx-pop { from { opacity: 0; transform: scale(.7) translateY(14px); } }
+.iqx-meta.sent { opacity: 1; }
+.iqx-meta.sent svg { stroke: #c4b5fd; }
+.iqx-sent { display: flex; gap: 14px; align-items: flex-start; margin-top: 24px; padding: 16px 18px; border-radius: 18px; border: 1px solid rgba(167, 139, 250, .35); background: linear-gradient(135deg, rgba(167, 139, 250, .16), rgba(43, 27, 61, .4)); animation: iqx-pop .6s cubic-bezier(.19, 1, .22, 1); transform-origin: 50% 0; }
+.iqx-sent svg { width: 40px; height: 40px; flex: none; fill: none; stroke: #c4b5fd; stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+.iqx-sent circle { opacity: .55; stroke-dasharray: 114; stroke-dashoffset: 114; animation: iqx-draw .7s .1s cubic-bezier(.19, 1, .22, 1) forwards; }
+.iqx-sent path { stroke-dasharray: 26; stroke-dashoffset: 26; animation: iqx-draw .5s .45s cubic-bezier(.19, 1, .22, 1) forwards; }
+@keyframes iqx-draw { to { stroke-dashoffset: 0; } }
+.iqx-sent strong { display: block; font-size: 16px; font-weight: 600; margin-bottom: 4px; color: var(--color-text); }
+.iqx-sent p { font-size: 14px; line-height: 1.5; color: var(--color-text-secondary); }
+@media (prefers-reduced-motion: reduce) {
+  .iqx-pop, .iqx-sent, .iqx-typing i { animation: none; }
+  .iqx-sent circle, .iqx-sent path { animation: none; stroke-dashoffset: 0; }
+}
+
 /* Nav */
 .iqx-nav { margin-top: 32px; padding-top: 24px; border-top: 1px solid var(--color-border); }
 .iqx-enter { margin-left: auto; font-size: 12px; color: var(--color-text-secondary); opacity: .55; }

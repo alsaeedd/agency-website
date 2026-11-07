@@ -151,6 +151,49 @@
 .rh-foot a { padding: 10px 0; }
 .rh a:focus-visible, .rh button:focus-visible, .dv button:focus-visible, .rh video:focus-visible { outline: 2px solid #a78bfa; outline-offset: 3px; }
 
+/* ---------- Cycle 2: video stats, split FAQ, closing footer ---------- */
+.rh-vstats { display: grid; grid-template-columns: repeat(3, auto); justify-content: start; gap: 12px 40px; margin: 8px 0 32px; }
+.rh-vstats div { display: grid; gap: 8px; align-content: start; }
+.rh-vstats dt { font: italic 500 clamp(40px, 4.4vw, 56px)/1 Newsreader, Georgia, serif; letter-spacing: -.02em; color: #f8f8f8; }
+.rh-vstats dt[lang="ar"] { font: 600 clamp(34px, 3.6vw, 46px)/1.1 "IBM Plex Sans Arabic", "Segoe UI", Tahoma, sans-serif; }
+.rh-vstats dd { margin: 0; max-width: 16ch; font-size: 13px; line-height: 1.4; color: var(--color-text-secondary); }
+.rh-faqsec { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 64px; align-items: start; }
+.rh-faqsec .rh-head { position: sticky; top: 110px; margin-bottom: 0; }
+.rh-faqsec .rh-head > p:not(.rh-eyebrow) { margin-bottom: 28px; }
+.rh-faqsec h2 em { font-family: Newsreader, Georgia, serif; font-style: italic; font-weight: 500; letter-spacing: -.02em; color: #d1c4e9; padding-right: .06em; }
+.rh-faq { max-width: none; border-top: 1px solid var(--color-border); }
+.rh-faq-item { border-bottom: 1px solid var(--color-border); }
+.rh-faq-item h3 { margin: 0; font: inherit; }
+.rh-faq-item button { width: 100%; display: grid; grid-template-columns: 44px 1fr 24px; align-items: baseline; gap: 12px; padding: 24px 0; background: none; border: 0; text-align: left; cursor: pointer; color: var(--color-text); font: 500 18px/1.4 Inter, sans-serif; }
+.rh-faq-q { transition: color .3s; }
+.rh-faq-item button:hover .rh-faq-q { color: #fff; }
+.rh-faq-n { font: italic 500 24px/1 Newsreader, Georgia, serif; color: rgba(167, 139, 250, .55); transition: color .3s; }
+.rh-faq-item.open .rh-faq-n { color: #a78bfa; }
+.rh-faq-x { position: relative; width: 16px; height: 16px; align-self: center; justify-self: end; }
+.rh-faq-x::before, .rh-faq-x::after { content: ""; position: absolute; top: 7px; left: 0; width: 16px; height: 2px; border-radius: 1px; background: #a78bfa; transition: transform .5s cubic-bezier(.19, 1, .22, 1); }
+.rh-faq-x::after { transform: rotate(90deg); }
+.rh-faq-item.open .rh-faq-x::after { transform: rotate(0deg); }
+.rh-faq-item.open .rh-faq-x::before { transform: rotate(180deg); }
+.rh-faq-a { overflow: hidden; }
+.rh-faq-a p { padding: 0 40px 26px 56px; font-size: 16px; line-height: 1.65; color: var(--color-text-secondary); }
+.rh-foot { display: block; overflow: hidden; }
+.rh-foot-row { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 24px; }
+.rh-foot-row span { margin-right: auto; }
+.rh-foot-mark { margin-top: 48px; text-align: center; white-space: nowrap; font: 700 clamp(84px, 18vw, 260px)/.82 Inter, sans-serif; letter-spacing: -.06em; color: transparent; background: linear-gradient(180deg, rgba(209, 196, 233, .24), rgba(209, 196, 233, 0) 88%); -webkit-background-clip: text; background-clip: text; user-select: none; }
+.rh-foot-mark em { font-family: Newsreader, Georgia, serif; font-style: italic; font-weight: 500; letter-spacing: -.03em; }
+@media (max-width: 900px) {
+  .rh-faqsec { grid-template-columns: 1fr; gap: 32px; }
+  .rh-faqsec .rh-head { position: static; }
+  .rh-faq-item button { grid-template-columns: 34px 1fr 20px; padding: 20px 0; font-size: 16px; }
+  .rh-faq-a p { padding: 0 0 22px 46px; font-size: 15px; }
+  .rh-foot-row span { flex: 1 1 100%; margin-bottom: 4px; }
+}
+@media (max-width: 600px) {
+  .rh-vstats { grid-template-columns: repeat(3, 1fr); gap: 12px 16px; }
+  .rh-vstats dt { font-size: 34px; }
+  .rh-vstats dt[lang="ar"] { font-size: 28px; }
+}
+
 /* Cycle 1: hero signature, lit bento, live pricing, closing moment */
 .rh main { counter-reset: sec; }
 .rh-section .rh-head .rh-eyebrow::before { counter-increment: sec; content: "0" counter(sec); margin-right: 10px; padding-right: 10px; border-right: 1px solid var(--color-border-active); color: var(--color-text-secondary); }

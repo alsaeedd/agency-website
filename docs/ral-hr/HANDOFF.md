@@ -4,10 +4,15 @@
 - v1 live since 2026-11-07 (deploy 5075717d). Cycle 1 of 3 done on feature/ral-hr-cycle1, merged to main (see git log). Scores and critique: docs/ral-hr/CYCLE1.md (5.8 to 6.9 average).
 - Cycle 1 added (RalHrPage.tsx/.css only): hero payroll run card (count-up, waterfall bars, ticking checks, toast), per-word masked headline, lit bento torch, payslip tile full row, pricing team slider with live totals, big closing CTA with next steps, numbered eyebrows, demo halo, founder quote mark.
 
-## Next (cycle 2)
-- Demo internals: KPI readability in web mode, device switcher Flip morph polish, sidebar to bottom tab bar choreography.
-- Inquiry send-step payoff moment.
-- Video, FAQ and footer layout variety.
+## Cycle 2 (done, merged to main)
+- Scores and critique: docs/ral-hr/CYCLE2.md (6.9 to 8.0 average).
+- Demo: readable KPIs (canvas 1040 web / 700 tablet), native phone shell (status bar, icon tab bar, large titles), sliding indicators, tab-change stagger, radius Flip morph, tour captions, press ring, toast stack, approval stamps.
+- Inquiry: typing dots to bubble pop, sent card after WhatsApp tap. FAQ: split layout, serif numerals, GSAP accordion (component Faq in RalHrPage.tsx). Footer: links + wordmark. Video: serif numeral row.
+
+## Next (cycle 3)
+- Bento, founder note and pricing need a signature moment each (all below 8.5).
+- Video chapter chips only once real timestamps exist.
+- Section head rhythm still repeats on hero/bento/pricing.
 
 ## Still open
 - Tablet and web demo modes at 390 wide are tiny by nature (phone mode is the default there).
