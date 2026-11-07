@@ -1,7 +1,7 @@
-import { lazy, Suspense, useEffect, useRef, useState } from 'react'
+import { Fragment, lazy, Suspense, useEffect, useRef, useState } from 'react'
 import { gsap } from 'gsap'
-import { calm, useIsoLayoutEffect } from './charts'
-import { EMPLOYER_LADDER, FAQ, PRICING, SIO_RATES } from './data'
+import { calm, money, useIsoLayoutEffect } from './charts'
+import { EMPLOYER_LADDER, FAQ, PAYROLL, PRICING, SIO_RATES } from './data'
 import './RalHrPage.css'
 
 const Demo = lazy(() => import('./Demo'))
@@ -58,6 +58,41 @@ function VideoTour() {
   )
 }
 
+const HEAD = ['HR', 'and', 'payroll', 'that', 'already', 'knows']
+const RUN_STEPS: [string, string][] = [
+  ['Gross pay worked out', 'BHD ' + money(PAYROLL.gross)],
+  ['SIO and deductions taken', '− BHD ' + money(PAYROLL.deductions)],
+  ['WPS file checked', PAYROLL.people + ' of ' + PAYROLL.people + ' rows pass'],
+  ['Approved, ready for the bank', 'Aisha, HR'],
+]
+const NET_PCT = (PAYROLL.net / PAYROLL.gross) * 100
+
+function Word({ w }: { w: string }) {
+  return <span className="rh-w"><span>{w}</span></span>
+}
+
+/* Hero signature: a payroll run that counts, cascades and approves itself in the first 3 seconds. */
+function HeroRun() {
+  return (
+    <div className="rh-run" role="img" aria-label={'Sample payroll run, ' + PAYROLL.month + ': ' + PAYROLL.people + ' people, BHD ' + money(PAYROLL.net) + ' net, WPS file passes'}>
+      <div className="rh-run-card">
+        <div className="rh-run-top"><i className="rh-run-dot" />Payroll run <b>{PAYROLL.month}</b><span className="rh-run-co">Sample company, {PAYROLL.people} staff</span></div>
+        <p className="rh-run-label">Net pay to the bank</p>
+        <p className="rh-run-big"><span className="rh-run-cur">BHD</span><span className="rh-run-num">{money(PAYROLL.net)}</span></p>
+        <div className="rh-run-bars">
+          <div className="rh-run-bar"><span>Gross</span><em><i style={{ width: '100%' }} /></em><span>{money(PAYROLL.gross)}</span></div>
+          <div className="rh-run-bar ded"><span>Deductions</span><em><i style={{ width: (100 - NET_PCT) + '%', marginLeft: NET_PCT + '%' }} /></em><span>{'−'}{money(PAYROLL.deductions)}</span></div>
+          <div className="rh-run-bar net"><span>Net</span><em><i style={{ width: NET_PCT + '%' }} /></em><span>{money(PAYROLL.net)}</span></div>
+        </div>
+        <ul className="rh-run-steps">
+          {RUN_STEPS.map(([a, b]) => <li key={a} className="on"><i /><b>{a}</b><span>{b}</span></li>)}
+        </ul>
+      </div>
+      <div className="rh-run-toast"><i>{'✓'}</i>{PAYROLL.month.split(' ')[0]} payroll approved. {PAYROLL.people} people, BHD {money(PAYROLL.net)}.</div>
+    </div>
+  )
+}
+
 function Cta({ children = 'Book a demo' }: { children?: string }) {
   return <a className="rh-cta" href={INQUIRE}>{children}<span className="rh-cta-i" aria-hidden="true">↗</span></a>
 }
@@ -65,18 +100,47 @@ function Cta({ children = 'Book a demo' }: { children?: string }) {
 export default function RalHrPage() {
   const root = useRef<HTMLDivElement>(null)
   const [ar, setAr] = useState(false)
+  const [team, setTeam] = useState(40)
+  const bento = useRef<HTMLDivElement>(null)
 
   useIsoLayoutEffect(() => {
     const el = root.current
     if (!el || calm()) return
     const ctx = gsap.context(() => {
-      gsap.from('.rh-hero .rh-in', { y: 28, opacity: 0, duration: 1.1, ease: 'expo.out', stagger: 0.12 })
+      const tl = gsap.timeline({ defaults: { ease: 'expo.out' } })
+      tl.from('.rh-w > span', { yPercent: 112, duration: 1.1, stagger: 0.05 })
+        .from('.rh-hero-copy .rh-in', { y: 24, opacity: 0, duration: 1, stagger: 0.1 }, 0.35)
+        .from('.rh-run-card', { y: 48, opacity: 0, duration: 1.3 }, 0.2)
+      const num = el.querySelector<HTMLElement>('.rh-run-num')
+      if (num) { const o = { v: 0 }; num.textContent = '0'; tl.to(o, { v: PAYROLL.net, duration: 2, onUpdate: () => { num.textContent = money(o.v) } }, 0.55) }
+      tl.from('.rh-run-bar i', { scaleX: 0, transformOrigin: '0 50%', duration: 1.1, stagger: 0.18 }, 0.7)
+      const steps = gsap.utils.toArray<HTMLElement>('.rh-run-steps li')
+      steps.forEach((li) => li.classList.remove('on'))
+      steps.forEach((li, i) => tl.call(() => li.classList.add('on'), [], 1.05 + i * 0.4))
+      tl.from('.rh-run-toast', { y: 28, opacity: 0, scale: 0.96, duration: 0.9, ease: 'back.out(1.7)' }, 1.15 + steps.length * 0.4)
       gsap.utils.toArray<HTMLElement>('.rh-reveal').forEach((s) => {
         gsap.from(s.querySelectorAll('.rh-in'), { y: 32, opacity: 0, duration: 1, ease: 'expo.out', stagger: 0.12,
           scrollTrigger: { trigger: s, start: 'top 80%', once: true } })
       })
     }, el)
     return () => ctx.revert()
+  }, [])
+
+  // Lit bento: the pointer brightens each tile's surface and edge (fine pointers only).
+  useEffect(() => {
+    const b = bento.current
+    if (!b || calm() || !window.matchMedia('(pointer: fine)').matches) return
+    const tiles = Array.from(b.querySelectorAll<HTMLElement>('.rh-tile'))
+    let raf = 0, x = 0, y = 0
+    const paint = () => {
+      raf = 0
+      for (const t of tiles) { const r = t.getBoundingClientRect(); t.style.setProperty('--mx', (x - r.left) + 'px'); t.style.setProperty('--my', (y - r.top) + 'px') }
+    }
+    const move = (e: PointerEvent) => { x = e.clientX; y = e.clientY; if (!raf) raf = requestAnimationFrame(paint) }
+    const leave = () => { b.classList.remove('lit') }
+    const enter = () => { b.classList.add('lit') }
+    b.addEventListener('pointermove', move); b.addEventListener('pointerleave', leave); b.addEventListener('pointerenter', enter)
+    return () => { cancelAnimationFrame(raf); b.removeEventListener('pointermove', move); b.removeEventListener('pointerleave', leave); b.removeEventListener('pointerenter', enter) }
   }, [])
 
   return (
@@ -93,14 +157,17 @@ export default function RalHrPage() {
 
       <main>
         <section className="rh-hero">
-          <p className="rh-eyebrow rh-in">RAL HR, built in Bahrain</p>
-          <h1 className="rh-in">HR and payroll that already knows <em>Bahrain.</em></h1>
-          <p className="rh-sub rh-in">WPS files, SIO and end of service, done right. Ask RAL in Arabic or English. From BD 1 per employee a month.</p>
-          <div className="rh-hero-ctas rh-in">
-            <Cta />
-            <a className="rh-ghost" href="#demo">Try the live demo</a>
+          <div className="rh-hero-copy">
+            <p className="rh-eyebrow rh-in">RAL HR, built in Bahrain</p>
+            <h1>{HEAD.map((w) => <Fragment key={w}><Word w={w} />{' '}</Fragment>)}<em><Word w="Bahrain." /></em></h1>
+            <p className="rh-sub rh-in">WPS files, SIO and end of service, done right. Ask RAL in Arabic or English. From BD 1 per employee a month.</p>
+            <div className="rh-hero-ctas rh-in">
+              <Cta />
+              <a className="rh-ghost" href="#demo">Try the live demo</a>
+            </div>
+            <p className="rh-meta rh-in">Web, tablet and the iOS & Android app</p>
           </div>
-          <p className="rh-meta rh-in">Web, tablet and the iOS & Android app</p>
+          <HeroRun />
         </section>
 
         <section id="demo" className="rh-section rh-demo rh-reveal">
@@ -117,7 +184,7 @@ export default function RalHrPage() {
             <p className="rh-eyebrow">Bahrain rules, built in</p>
             <h2>The parts other HR tools leave to Excel.</h2>
           </div>
-          <div className="rh-bento">
+          <div className="rh-bento" ref={bento}>
             <article className="rh-tile rh-t-wps rh-in">
               <h3>WPS file, in the exact LMRA format</h3>
               <p>All 10 columns, every row checked before you download. You upload it to your bank as usual.</p>
@@ -174,12 +241,18 @@ export default function RalHrPage() {
             <p className="rh-eyebrow">Pricing</p>
             <h2>Per employee, per month. That is it.</h2>
           </div>
+          <div className="rh-est rh-in">
+            <label htmlFor="rh-team">Your team</label>
+            <input id="rh-team" type="range" min={5} max={300} step={5} value={team} onChange={(e) => setTeam(+e.target.value)} />
+            <output htmlFor="rh-team"><b>{team}</b> people</output>
+          </div>
           <div className="rh-prices">
             {PRICING.map((p, i) => (
               <article key={p.name} className={`rh-price rh-in${i === 1 ? ' pop' : ''}`}>
                 <h3>{p.name}</h3>
                 <p className="rh-amt"><b>BD {p.price}</b> / employee / month</p>
                 <p className="rh-small">{p.blurb}</p>
+                <p className="rh-calc"><b>BD {money(team * p.price)}</b> a month for {team} people</p>
                 <ul>{p.items.map((it) => <li key={it}>{it}</li>)}</ul>
                 <a className={i === 1 ? 'rh-cta' : 'rh-ghost'} href={INQUIRE}>Talk to us</a>
               </article>
@@ -205,8 +278,13 @@ export default function RalHrPage() {
         </section>
 
         <section className="rh-section rh-close rh-reveal">
-          <h2 className="rh-in">See it with your own payroll.</h2>
-          <p className="rh-in">Four quick questions, then we talk on WhatsApp.</p>
+          <p className="rh-eyebrow rh-in">Your turn</p>
+          <h2 className="rh-in">See it with <em>your own</em> payroll.</h2>
+          <ol className="rh-next rh-in">
+            <li><b>1</b>Four quick questions, about a minute</li>
+            <li><b>2</b>We talk on WhatsApp</li>
+            <li><b>3</b>A demo built around your team</li>
+          </ol>
           <div className="rh-in"><Cta /></div>
         </section>
       </main>
