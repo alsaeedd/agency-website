@@ -58,6 +58,41 @@ function VideoTour() {
   )
 }
 
+// Accordion with a real height tween (details/summary cannot animate closed).
+function Faq() {
+  const [open, setOpen] = useState(0)
+  const panels = useRef<(HTMLDivElement | null)[]>([])
+  const toggle = (i: number) => {
+    const next = open === i ? -1 : i
+    const move = (el: HTMLDivElement | null | undefined, show: boolean) => {
+      if (!el) return
+      if (calm()) gsap.set(el, { height: show ? 'auto' : 0 })
+      else gsap.to(el, { height: show ? 'auto' : 0, duration: 0.55, ease: 'expo.out', overwrite: true })
+    }
+    if (open >= 0) move(panels.current[open], false)
+    if (next >= 0) move(panels.current[next], true)
+    setOpen(next)
+  }
+  return (
+    <div className="rh-faq">
+      {FAQ.map((f, i) => (
+        <div key={f.q} className={`rh-faq-item rh-in${open === i ? ' open' : ''}`}>
+          <h3>
+            <button type="button" id={`faqb-${i}`} aria-expanded={open === i} aria-controls={`faqp-${i}`} onClick={() => toggle(i)}>
+              <span className="rh-faq-n tnum">{String(i + 1).padStart(2, '0')}</span>
+              <span className="rh-faq-q">{f.q}</span>
+              <span className="rh-faq-x" aria-hidden="true" />
+            </button>
+          </h3>
+          <div className="rh-faq-a" id={`faqp-${i}`} role="region" aria-labelledby={`faqb-${i}`} ref={(el) => { panels.current[i] = el }} style={{ height: i === 0 ? 'auto' : 0 }}>
+            <p>{f.a}</p>
+          </div>
+        </div>
+      ))}
+    </div>
+  )
+}
+
 const HEAD = ['HR', 'and', 'payroll', 'that', 'already', 'knows']
 const RUN_STEPS: [string, string][] = [
   ['Gross pay worked out', 'BHD ' + money(PAYROLL.gross)],
@@ -231,6 +266,11 @@ export default function RalHrPage() {
             <p className="rh-eyebrow">On your phone</p>
             <h2>Staff check in, ask for leave and get payslips.</h2>
             <p>The iOS & Android app covers the daily things: GPS check-in inside a site radius, leave requests, payslips and approvals. Managers approve from anywhere.</p>
+            <dl className="rh-vstats">
+              <div><dt>2</dt><dd>apps, iOS and Android</dd></div>
+              <div><dt>1 tap</dt><dd>to approve a leave request</dd></div>
+              <div><dt lang="ar">عربي</dt><dd>payslips in Arabic and English</dd></div>
+            </dl>
             <Cta>Get a walkthrough</Cta>
           </div>
           <div className="rh-in"><VideoTour /></div>
@@ -268,13 +308,14 @@ export default function RalHrPage() {
           </blockquote>
         </section>
 
-        <section id="faq" className="rh-section rh-reveal">
-          <div className="rh-head rh-in"><p className="rh-eyebrow">FAQ</p><h2>Straight answers.</h2></div>
-          <div className="rh-faq">
-            {FAQ.map((f) => (
-              <details key={f.q} className="rh-in"><summary>{f.q}</summary><p>{f.a}</p></details>
-            ))}
+        <section id="faq" className="rh-section rh-faqsec rh-reveal">
+          <div className="rh-head rh-in">
+            <p className="rh-eyebrow">FAQ</p>
+            <h2>Straight <em>answers.</em></h2>
+            <p>Anything not covered here, ask us directly. We answer on WhatsApp.</p>
+            <Cta>Ask a question</Cta>
           </div>
+          <Faq />
         </section>
 
         <section className="rh-section rh-close rh-reveal">
@@ -290,9 +331,15 @@ export default function RalHrPage() {
       </main>
 
       <footer className="rh-foot">
-        <span>© 2026 RAL Technologies, Manama</span>
-        <a href="/">raltech.dev</a>
-        <a href="mailto:info@raltech.dev">info@raltech.dev</a>
+        <div className="rh-foot-row">
+          <span>© 2026 RAL Technologies, Manama</span>
+          <a href="#demo">Live demo</a>
+          <a href="#pricing">Pricing</a>
+          <a href={INQUIRE}>Book a demo</a>
+          <a href="/">raltech.dev</a>
+          <a href="mailto:info@raltech.dev">info@raltech.dev</a>
+        </div>
+        <p className="rh-foot-mark" aria-hidden="true">RAL <em>HR</em></p>
       </footer>
     </div>
   )

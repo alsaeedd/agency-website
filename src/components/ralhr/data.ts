@@ -10,10 +10,10 @@ export const COMPANY = {
 }
 
 export const KPIS = [
-  { key: 'headcount', label: 'Headcount', value: 98, prefix: '', suffix: '', note: '10 departments', tone: 'plain', spark: [88, 89, 91, 91, 93, 94, 96, 98] },
+  { key: 'headcount', label: 'Headcount', value: 98, prefix: '', suffix: '', note: '10 departments', delta: '2', tone: 'plain', spark: [88, 89, 91, 91, 93, 94, 96, 98] },
   { key: 'pending', label: 'Approvals waiting', value: 4, prefix: '', suffix: '', note: '2 leave, 2 letters', tone: 'warn', spark: [6, 3, 5, 2, 4, 3, 5, 4] },
   { key: 'expiring', label: 'Documents expiring', value: 3, prefix: '', suffix: '', note: 'Next: 12 days', tone: 'warn', spark: [1, 2, 1, 3, 2, 4, 2, 3] },
-  { key: 'net', label: 'October net pay', value: 111295, prefix: 'BHD ', suffix: '', note: '98 people paid', tone: 'good', spark: [104, 105, 107, 106, 108, 109, 110, 111] },
+  { key: 'net', label: 'October net pay', value: 111295, prefix: 'BHD ', suffix: '', note: '98 people paid', delta: '1.2%', tone: 'good', spark: [104, 105, 107, 106, 108, 109, 110, 111] },
 ] as const
 
 export const DEPARTMENTS = [

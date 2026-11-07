@@ -1,5 +1,6 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { gsap } from 'gsap'
+import { calm as calmMotion } from './charts'
 import './RalHrPage.css'
 import './Inquire.css'
 
@@ -88,6 +89,8 @@ function Estimate({ value }: { value: number }) {
 
 export default function Inquire({ onClose }: { onClose?: () => void } = {}) {
   const [step, setStep] = useState(0)
+  const [typing, setTyping] = useState(false)
+  const [sent, setSent] = useState(false)
   const [a, setA] = useState<Answers>(EMPTY)
   const [msg, setMsg] = useState('')
   const [copied, setCopied] = useState(false)
@@ -124,7 +127,7 @@ export default function Inquire({ onClose }: { onClose?: () => void } = {}) {
     fit()
     window.addEventListener('resize', fit)
     return () => window.removeEventListener('resize', fit)
-  }, [msg, step])
+  }, [msg, step, typing])
 
   const set = (p: Partial<Answers>) => setA((v) => ({ ...v, ...p }))
   const toggle = (m: string) => set({ modules: a.modules.includes(m) ? a.modules.filter((x) => x !== m) : [...a.modules, m] })
@@ -135,7 +138,10 @@ export default function Inquire({ onClose }: { onClose?: () => void } = {}) {
   const next = () => {
     if (step >= total) return
     if (!ok) { setTried(true); return }
-    if (step === total - 1) { setMsg(compose(a)); setCopied(false) }
+    if (step === total - 1) {
+      setMsg(compose(a)); setCopied(false); setSent(false)
+      if (!calmMotion()) { setTyping(true); window.setTimeout(() => setTyping(false), 1100) }
+    }
     go(step + 1)
   }
   const back = () => { if (step > 0) go(step - 1) }
@@ -294,14 +300,23 @@ export default function Inquire({ onClose }: { onClose?: () => void } = {}) {
                 <span><strong>RAL Technologies</strong><small><i aria-hidden="true" />Manama, Bahrain</small></span>
               </div>
               <div className="iqx-chat-body">
-                <div className="iqx-bubble">
+                {typing ? <div className="iqx-typing" aria-label="Writing your message"><i /><i /><i /></div> : <div className="iqx-bubble iqx-pop">
                   <textarea ref={bubble} value={msg} rows={3} onChange={(e) => { setMsg(e.target.value); setCopied(false) }} aria-label="Your WhatsApp message" spellCheck />
-                  <span className="iqx-meta">{stamp}<svg viewBox="0 0 18 12" aria-hidden="true"><path d="M1 6.5l3 3 6-7M7 9.5l1 1 6-8" /></svg></span>
-                </div>
+                  <span className={`iqx-meta${sent ? ' sent' : ''}`}>{stamp}<svg viewBox="0 0 18 12" aria-hidden="true"><path d="M1 6.5l3 3 6-7M7 9.5l1 1 6-8" /></svg></span>
+                </div>}
               </div>
             </div>
+            {sent && (
+              <div className="iqx-sent" role="status">
+                <svg viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="18" /><path d="M12 20.5l5.5 5.5L28 15" /></svg>
+                <div>
+                  <strong>WhatsApp is open with your message.</strong>
+                  <p>Press send there and we reply in that same chat. If it did not open, copy the message or email it instead.</p>
+                </div>
+              </div>
+            )}
             <div className="iqx-send" data-rise>
-              <a className="rh-cta" href={WA + encodeURIComponent(msg)} target="_blank" rel="noopener" aria-disabled={!msg.trim()}>Send on WhatsApp<span className="rh-cta-i" aria-hidden="true">↗</span></a>
+              <a className="rh-cta" href={WA + encodeURIComponent(msg)} target="_blank" rel="noopener" aria-disabled={!msg.trim()} onClick={() => setSent(true)}>{sent ? 'Open WhatsApp again' : 'Send on WhatsApp'}<span className="rh-cta-i" aria-hidden="true">↗</span></a>
               <a className="rh-ghost" href={`mailto:info@raltech.dev?subject=${encodeURIComponent(`RAL HR demo${a.company.trim() ? `: ${a.company.trim()}` : ''}`)}&body=${encodeURIComponent(msg)}`}>Email it instead</a>
             </div>
             <div className="iq-alt" data-rise>
