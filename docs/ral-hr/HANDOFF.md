@@ -13,12 +13,15 @@
   - Hit targets: top nav links, footer links and video Play/Sound buttons enlarged; "Sound on" no longer wraps on phone.
   - Keyboard focus ring (#a78bfa) on all .rh / .dv links, buttons, video.
 
-## Not checked or still open
-1. Inquiry flow: a helper agent is rewriting Inquire.tsx + Inquire.css (plan step, BHD estimate, WhatsApp sentence). After it lands: step through all steps at 390 and 1440, check the final preview and that the wa.me href decodes to the preview text. v1 showed a big empty gap between the step body and the Next button on both widths.
-2. Ask RAL tab (web mode): the empty state leaves a large blank area; consider seeding one example exchange or centring the suggestion chips.
-3. Tablet and web modes at 390 wide are tiny by nature (phone mode is the default there, which is right).
-4. Home page navbar "RAL HR" link and home visuals not re-verified in this pass.
-5. Merge to main per MEMORY (fetch first, --no-ff) only when the owner says go. Do not push.
+## Shipped (2026-11-07)
+- Final QA commit 93c7320: Ask RAL tab seeded with a "Yesterday" conversation (no blank area), inquiry step gap removed (Next sits 32px under content on every step), company trailing dot no longer doubles, SSR-safe layout effect in Inquire.
+- Merged to main as c3273cd (--no-ff), pushed. Cloudflare Pages raltech-prod deployment 5075717d, live.
+- Live checks (headless Chromium, 1440 and 390): /, /ral-hr/, /ral-hr/inquire/ all 200, 0 console errors, video tour plays (readyState 4), Ask RAL demo responds, navbar RAL HR link lands on /ral-hr/, wa.me goes to 97366386602 with the natural sentence, mailto fallback carries the same text. curl /ral-hr/ returns the prerendered title.
+- Home hero and navbar match the old prod pixel for pixel apart from the cycling word.
+
+## Still open
+- Tablet and web demo modes at 390 wide are tiny by nature (phone mode is the default there).
+- eslint has no flat config in this repo, so `npm run lint` does not run.
 
 ## Gotchas
 - The Playwright MCP browser is shared with other agents (it got navigated to hr.raltech.dev mid-run). For QA use an isolated script: playwright-core in the scratchpad + `%LOCALAPPDATA%/ms-playwright/chromium-1243/chrome-win64/chrome.exe`, and serve a private copy of dist (`vite preview --outDir <copy> --port 4318`), since other agents rebuild dist.
