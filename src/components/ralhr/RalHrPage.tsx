@@ -50,16 +50,18 @@ function VideoTour() {
   }
   const unmute = () => { const v = ref.current; if (v) { v.muted = !v.muted; setMuted(v.muted); if (v.paused) v.play().catch(() => {}) } }
   return (
-    <div className="rh-phone">
+    <div className="rh-vt">
+      <div className="rh-phone">
       <video ref={ref} poster="/assets/ral-hr/ralhr-tour-poster.webp" muted playsInline loop preload="none"
         onPlay={() => setPlaying(true)} onPause={() => setPlaying(false)} onClick={toggle} aria-label="RAL HR video tour" />
       <div className="rh-video-ctl">
         <button type="button" onClick={toggle}>{playing ? 'Pause' : 'Play'}</button>
         <button type="button" onClick={unmute}>{muted ? 'Sound on' : 'Sound off'}</button>
       </div>
+      </div>
       <ul className="rh-pings" aria-label="What staff see in the app">
         <li><i>{'✓'}</i><b>Checked in, 07:58</b><span>Inside the site radius, 42 m</span></li>
-        <li><i>{'✓'}</i><b>Leave approved, 3 days</b><span>Aisha, HR, approved in one tap</span></li>
+        <li><i>{'✓'}</i><b>Leave approved, 3 days</b><span>Aisha in HR, one tap</span></li>
         <li><i>{'✓'}</i><b>Payslip ready</b><span lang="ar" dir="rtl">قسيمة راتب أكتوبر جاهزة</span></li>
       </ul>
     </div>

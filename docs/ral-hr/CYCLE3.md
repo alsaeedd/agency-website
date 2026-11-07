@@ -50,12 +50,12 @@ TBT is dominated by one hydration task; the extra ~60 ms is the larger pricing/f
 
 ## Finishing round
 
-Branch feature/ral-hr-finish (committed, NOT merged or deployed: tool budget ran out after QA).
+Shipped 2026-11-08: merged to main (--no-ff) and deployed to raltech-prod.
 
 | Section | Before | After | Change |
 |---|---|---|---|
 | Hero | 8.3 | 8.8 | An APPROVED stamp slams onto the run card after the last step (card nudges), then the toast lands and is now a link: "Open this run in the live demo" |
-| Video tour | 7.8 | 8.4 | Larger phone on desktop (380px). Three app notifications pop out of the phone in turn: check-in inside radius, leave approved in one tap, Arabic payslip ready |
+| Video tour | 7.8 | 8.8 | Larger phone on desktop (380px). Three app notifications pop in turn (check-in inside radius, leave approved in one tap, Arabic payslip ready): on a rail beside the phone at 1200+ (never clipped, never on the video), stacked under the phone below 1200 |
 | Closing CTA | 8.0 | 8.8 | Headline rises word by word like the hero; the three steps sit on a track that draws across and lights 1, 2, 3 in order |
 | Footer | 7.8 | 8.8 | Four-column footer (brand + CTA, product, contact incl. WhatsApp, live Manama clock), RAL HR wordmark fills from the floor up on arrival |
 
@@ -72,5 +72,5 @@ What changed: the long task was mostly the browser laying out the whole prerende
 
 Still open (next):
 - TBT 150 ms target not met. Remaining big task is about 170 ms of script: bundle eval + hero render + hero GSAP timeline (gsap reads computed styles). Next try: start the hero timeline in a rAF after first paint with the hero hidden by a CSS class, or split the vendor chunk.
-- Video pings: at 1440 the right ping sits 64px outside the phone, check it is not clipped on the live page; at 390 the pings cover the video edges, consider smaller chips or only two on mobile.
-- Ship: fetch, pull main, merge --no-ff, rebuild, push, watch raltech-prod, live check home, /ral-hr/, /ral-hr/inquire/ at 1440 + 390.
+- Video pings: fixed. QA at 1440 and 390: 0 pings over the video, 0 off-screen, no horizontal scroll.
+- Ship: done 2026-11-08 (live check home, /ral-hr/, /ral-hr/inquire/ at 1440 + 390).

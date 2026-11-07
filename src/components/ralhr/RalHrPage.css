@@ -387,16 +387,20 @@ a.rh-run-toast:hover { transform: translateY(-2px); box-shadow: 0 0 0 1px #a78bf
 .rh-pings b { font-size: 13px; font-weight: 600; line-height: 1.25; color: #f8f8f8; }
 .rh-pings span { font-size: 12px; line-height: 1.35; color: var(--color-text-secondary); }
 .rh-pings span[lang="ar"] { justify-self: start; font: 500 13px/1.4 "IBM Plex Sans Arabic", "Segoe UI", Tahoma, sans-serif; }
-.rh-pings li:nth-child(1) { top: 11%; left: -6px; }
-.rh-pings li:nth-child(2) { top: 41%; right: -6px; }
-.rh-pings li:nth-child(3) { top: 69%; left: -6px; }
+/* Below 1200: a tidy stack under the phone, never on top of the video. */
+.rh-vt { position: relative; }
+.rh-pings { display: grid; gap: 8px; max-width: 340px; margin: 18px auto 0; }
+.rh-pings li { position: static; width: auto; max-width: none; }
+/* 1200+: a rail beside the phone, inside the grid gap, so nothing clips or covers. */
 @media (min-width: 1200px) {
-  .rh-video { grid-template-columns: minmax(0, 1fr) 400px; gap: 120px; }
+  .rh-video { grid-template-columns: minmax(0, 1fr) 380px; gap: 272px; }
   .rh-video .rh-head { max-width: 520px; }
   .rh-video .rh-phone { max-width: 380px; }
-  .rh-pings li:nth-child(1) { left: -96px; }
-  .rh-pings li:nth-child(2) { right: -64px; }
-  .rh-pings li:nth-child(3) { left: -72px; }
+  .rh-pings { position: absolute; top: 0; bottom: 0; right: calc(100% + 24px); width: 220px; max-width: none; margin: 0; display: block; }
+  .rh-pings li { position: absolute; right: 0; width: max-content; max-width: 220px; }
+  .rh-pings li:nth-child(1) { top: 14%; }
+  .rh-pings li:nth-child(2) { top: 42%; right: 20px; }
+  .rh-pings li:nth-child(3) { top: 70%; }
 }
 .rh-close .rh-next { position: relative; display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; max-width: 760px; margin: 48px auto; padding: 0; align-items: start; }
 .rh-close .rh-next::before { content: ""; position: absolute; top: 19px; left: 16.67%; right: 16.67%; height: 2px; border-radius: 2px; background: linear-gradient(90deg, #a78bfa, #c084fc); transform-origin: 0 50%; }
@@ -428,7 +432,7 @@ a.rh-run-toast:hover { transform: translateY(-2px); box-shadow: 0 0 0 1px #a78bf
 }
 @media (max-width: 520px) {
   .rh-run-stamp { top: 46px; right: 12px; font-size: 11px; padding: 6px 9px 5px; }
-  .rh-pings li { max-width: 205px; padding: 8px 12px 8px 8px; }
+  .rh-pings li { padding: 8px 12px 8px 8px; }
   .rh-close .rh-next { gap: 8px; margin: 40px auto; }
   .rh-close .rh-next li { font-size: 13px; }
   .rh-foot-clock b { font-size: 40px; }
