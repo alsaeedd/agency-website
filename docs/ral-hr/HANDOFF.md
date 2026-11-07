@@ -5,7 +5,11 @@
 - Scores: CYCLE1.md (5.8 to 6.9), CYCLE2.md (6.9 to 8.0), CYCLE3.md (8.0 to 8.4).
 - Cycle 3 (RalHrPage.tsx/.css only): bento rules check (WPS columns tick + count, ladder grow, expiry ping), split bento head, pricing estimator console (big count, custom slider, presets, live plan bars, tweened monthly + yearly totals, selected card ring), founder word reveal + rule underlines + monogram signature.
 
-## Next (below 8.5)
+## Finishing round (branch feature/ral-hr-finish, committed, UNSHIPPED)
+- See CYCLE3.md "Finishing round": hero 8.8, video 8.4, closing 8.8, footer 8.8; TBT 374 to about 225 ms.
+- To do: check video pings (clip at 1440, clutter at 390), then ship per CYCLE3.md. QA preview: kill port 4318 first (stale preview served old builds once).
+
+## Next (older notes)
 - Hero 8.3: one more beat after the toast.
 - Video 7.8: chapter chips once real timestamps exist; larger frame on desktop.
 - Closing CTA 8.0, footer 7.8.

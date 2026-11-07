@@ -47,3 +47,30 @@ TBT is dominated by one hydration task; the extra ~60 ms is the larger pricing/f
 - Hero 8.3: first 5 s are fine, needs one more beat (e.g. the toast linking into the demo).
 - Video 7.8: chapter chips once real timestamps exist; frame larger on desktop.
 - Closing CTA 8.0 and footer 7.8: no change this cycle.
+
+## Finishing round
+
+Branch feature/ral-hr-finish (committed, NOT merged or deployed: tool budget ran out after QA).
+
+| Section | Before | After | Change |
+|---|---|---|---|
+| Hero | 8.3 | 8.8 | An APPROVED stamp slams onto the run card after the last step (card nudges), then the toast lands and is now a link: "Open this run in the live demo" |
+| Video tour | 7.8 | 8.4 | Larger phone on desktop (380px). Three app notifications pop out of the phone in turn: check-in inside radius, leave approved in one tap, Arabic payslip ready |
+| Closing CTA | 8.0 | 8.8 | Headline rises word by word like the hero; the three steps sit on a track that draws across and lights 1, 2, 3 in order |
+| Footer | 7.8 | 8.8 | Four-column footer (brand + CTA, product, contact incl. WhatsApp, live Manama clock), RAL HR wordmark fills from the floor up on arrival |
+
+Perf (390x844, 4x CPU, local preview, 2 runs each):
+
+| Metric | Before | After |
+|---|---|---|
+| TBT (load + scroll) | 365 / 384 ms | 218 / 231 ms |
+| Longest task | 321 / 326 ms | 195 / 202 ms |
+| LCP | 872 / 888 ms | 748 / 748 ms |
+| CLS | 0.0002 | 0.0002 |
+
+What changed: the long task was mostly the browser laying out the whole prerendered page (about 260 ms of Layout at 4x). Prerendered HTML now carries data-ssr, and below-the-fold sections get content-visibility: auto only in that phase. The client then renders the hero first and mounts the rest in two idle, time-sliced transitions; below-fold GSAP setup runs one section per idle slot. The Demo mount is a transition too.
+
+Still open (next):
+- TBT 150 ms target not met. Remaining big task is about 170 ms of script: bundle eval + hero render + hero GSAP timeline (gsap reads computed styles). Next try: start the hero timeline in a rAF after first paint with the hero hidden by a CSS class, or split the vendor chunk.
+- Video pings: at 1440 the right ping sits 64px outside the phone, check it is not clipped on the live page; at 390 the pings cover the video edges, consider smaller chips or only two on mobile.
+- Ship: fetch, pull main, merge --no-ff, rebuild, push, watch raltech-prod, live check home, /ral-hr/, /ral-hr/inquire/ at 1440 + 390.
