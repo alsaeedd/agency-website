@@ -48,5 +48,5 @@ Transform/opacity only (frame morph via Flip transforms while content is hidden)
 - [x] Demo: switcher, 6 tabs, ghost tour, count-ups, charts
 - [x] Inquiry flow with WhatsApp preview + email fallback
 - [x] Entry link from main site (navbar link, no restyle)
-- [ ] Visual QA at 1440 and 390 (not started, next agent)
+- [x] Visual QA pass 1 at 1440, 820 and 390 (see HANDOFF.md for open items)
 - [ ] Polish pass: copy self-audit, spotlight bento, toast stack refinement

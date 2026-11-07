@@ -1,23 +1,27 @@
 # RAL HR page: handoff
 
-## Done (v1 committed, build + prerender clean)
-- /ral-hr/ and /ral-hr/inquire/ are Vite multi-page entries (vite.config.ts input map), SSR-prerendered by scripts/prerender.mjs (renderRalHr, renderInquire in src/entry-server.tsx). Sitemap and static footer updated.
-- Own title, meta, canonical, OG, JSON-LD in ral-hr/index.html and ral-hr/inquire/index.html.
-- Page: src/components/ralhr/RalHrPage.tsx + RalHrPage.css (hero, live demo, Bahrain-rules bento, video tour, pricing BD 1/2/3, founder note, FAQ, close, footer).
-- Demo: Demo.tsx + Demo.css + screens.tsx + charts.tsx + data.ts. Lazy-loaded near view (own 48KB chunk). Web/tablet/phone switcher with Flip, 6 tabs, ghost cursor tour.
-- Video: public/assets/ral-hr/ralhr-tour.mp4 (4MB, 540w, faststart) + ralhr-tour-poster.webp. src set at 50% visible, pauses offscreen, no autoplay when calm() or saveData.
-- Inquiry: src/components/ralhr/Inquire.tsx (styles in RalHrPage.css, .iq-*). 4 steps, editable preview, wa.me link, copy, mailto fallback, sessionStorage.
-- Main-site entry: Navbar.tsx gets "RAL HR" link; click handler now skips preventDefault for non-# hrefs.
+## Done
+- v1 committed (af5f933): /ral-hr/ and /ral-hr/inquire/ as Vite multi-page entries, SSR-prerendered (scripts/prerender.mjs, src/entry-server.tsx). Page in src/components/ralhr/ (RalHrPage, Demo, screens, charts, data, Inquire).
+- Visual QA pass 1 (1440x900, 390x844, 820x1180), isolated headless Chromium on a private dist copy:
+  - 0 console errors or warnings on both pages, all three widths.
+  - No horizontal overflow (scrollWidth equals clientWidth at 390, 820, 1440) on /ral-hr/ and /ral-hr/inquire/.
+  - Demo: web, tablet, phone modes and all 6 tabs render cleanly; ghost cursor tour runs.
+- Fixes in RalHrPage.css (QA commit):
+  - Video tour was cropped at the sides (CSS said 540/1170, file is 540x960). Now 540/960.
+  - h2 text-wrap: balance (killed the "flow." orphan on the demo heading).
+  - Anchor targets get scroll-margin-top under the sticky bar.
+  - Hit targets: top nav links, footer links and video Play/Sound buttons enlarged; "Sound on" no longer wraps on phone.
+  - Keyboard focus ring (#a78bfa) on all .rh / .dv links, buttons, video.
 
-## Next
-1. Visual QA with Playwright at 1440 and 390 (not done yet): `npx vite preview`, check /ral-hr/ demo scaling per device, ghost tour, Ask RAL tab layout, bento on mobile, phone video frame, inquire steps.
-2. Fix whatever QA finds (likely: Ask RAL height on phone, bento ladder sizing, story chips scroll on mobile).
-3. Polish pass: copy self-audit vs PRODUCT_BRIEF claims, toast refinement.
-4. Then merge to main per MEMORY (fetch first, --no-ff) when owner approves. Do not push from this branch without the go-ahead.
+## Not checked or still open
+1. Inquiry flow: a helper agent is rewriting Inquire.tsx + Inquire.css (plan step, BHD estimate, WhatsApp sentence). After it lands: step through all steps at 390 and 1440, check the final preview and that the wa.me href decodes to the preview text. v1 showed a big empty gap between the step body and the Next button on both widths.
+2. Ask RAL tab (web mode): the empty state leaves a large blank area; consider seeding one example exchange or centring the suggestion chips.
+3. Tablet and web modes at 390 wide are tiny by nature (phone mode is the default there, which is right).
+4. Home page navbar "RAL HR" link and home visuals not re-verified in this pass.
+5. Merge to main per MEMORY (fetch first, --no-ff) only when the owner says go. Do not push.
 
 ## Gotchas
-- The coordinator's helper was told to build src/components/ralhr/inquire/ and ralhr-marketing.mp4. Both were already done here (Inquire.tsx, ralhr-tour.mp4). Pick one; current wiring uses mine.
-- Use the Write tool, not multi-file Bash heredocs, for files with Arabic or apostrophes.
-- The SSR "useLayoutEffect does nothing on the server" warnings come from existing homepage components, not ralhr (which uses useIsoLayoutEffect).
-- Early Hints Link headers are only emitted for /index.html (perfPreload isHome guard); keep it that way.
-- No em dashes anywhere (grep checked clean).
+- The Playwright MCP browser is shared with other agents (it got navigated to hr.raltech.dev mid-run). For QA use an isolated script: playwright-core in the scratchpad + `%LOCALAPPDATA%/ms-playwright/chromium-1243/chrome-win64/chrome.exe`, and serve a private copy of dist (`vite preview --outDir <copy> --port 4318`), since other agents rebuild dist.
+- Element screenshots show the sticky top bar over section headings; that is a screenshot artefact, not a bug.
+- Use the Write tool for files with Arabic or apostrophes. No em dashes anywhere.
+- Early Hints Link headers only for /index.html (perfPreload isHome guard); keep it.
