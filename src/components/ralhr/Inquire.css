@@ -3,7 +3,7 @@
 .iqx h1:focus { outline: none; }
 .iqx h1 em { font-family: Newsreader, Georgia, serif; font-style: italic; font-weight: 500; letter-spacing: -.02em; color: #d1c4e9; padding-right: .06em; }
 .iqx-eyebrow { font-size: 11px; font-weight: 500; letter-spacing: .22em; text-transform: uppercase; color: #a78bfa; margin-bottom: 14px; }
-.iqx-stage { min-height: 360px; }
+.iqx-stage { min-height: 0; }
 
 /* Progress: five labelled segments */
 .iqx-progress { display: flex; align-items: flex-end; gap: 16px; margin-bottom: clamp(36px, 6vw, 56px); }
@@ -105,7 +105,7 @@
 .iqx .iq-alt .iq-back { text-decoration: none; padding: 0; margin-right: auto; font-size: 14px; }
 
 /* Nav */
-.iqx-nav { margin-top: 40px; padding-top: 24px; border-top: 1px solid var(--color-border); }
+.iqx-nav { margin-top: 32px; padding-top: 24px; border-top: 1px solid var(--color-border); }
 .iqx-enter { margin-left: auto; font-size: 12px; color: var(--color-text-secondary); opacity: .55; }
 .iqx-enter kbd { font: 500 11px/1 Inter, sans-serif; padding: 4px 7px; border-radius: 6px; border: 1px solid var(--color-border-active); margin-left: 4px; }
 .iqx .iq-next.soft { opacity: .45; }

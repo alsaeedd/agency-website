@@ -60,7 +60,7 @@ function compose(a: Answers): string {
   const plan = p ? `on the ${p.id} plan` : 'and not sure on the plan yet'
   const time = TIMES.find((t) => t.id === a.time)?.phrase || 'hoping to start soon'
   const lines = [
-    `Hi RAL, I'm ${a.name.trim()} from ${a.company.trim()}.`,
+    `Hi RAL, I'm ${a.name.trim()} from ${a.company.trim().replace(/\.+$/, '')}.`,
     `We're ${people}, ${needs} ${plan}, ${time}.`,
   ]
   if (p) lines.push(`Your calculator put that at about ${bd(monthly(headcount(a), p.id))} a month before setup.`)
@@ -68,6 +68,7 @@ function compose(a: Answers): string {
   return lines.join(' ')
 }
 
+const useIsoLayoutEffect = typeof window !== 'undefined' ? useLayoutEffect : useEffect
 const reduced = () => typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches
 
 function Estimate({ value }: { value: number }) {
@@ -100,7 +101,7 @@ export default function Inquire({ onClose }: { onClose?: () => void } = {}) {
   useEffect(() => { try { sessionStorage.setItem(KEY, JSON.stringify(a)) } catch { /* private mode */ } }, [a])
 
   // Step entrance: blur-rise stagger, direction aware. Reduced motion just shows it.
-  useLayoutEffect(() => {
+  useIsoLayoutEffect(() => {
     const el = stage.current
     if (!el) return
     const items = el.querySelectorAll<HTMLElement>('[data-rise]')
@@ -116,7 +117,7 @@ export default function Inquire({ onClose }: { onClose?: () => void } = {}) {
   }, [step])
 
   // Keep the editable bubble sized to its text, at any width.
-  useLayoutEffect(() => {
+  useIsoLayoutEffect(() => {
     const t = bubble.current
     if (!t) return
     const fit = () => { t.style.height = 'auto'; t.style.height = `${t.scrollHeight}px` }

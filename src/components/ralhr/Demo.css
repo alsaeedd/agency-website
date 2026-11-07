@@ -221,7 +221,9 @@
 .ra-ask-head { display: flex; justify-content: space-between; align-items: baseline; }
 .ra-ask-head b { font-size: 18px; }
 .ra-ask-body { overflow-y: auto; display: flex; flex-direction: column; gap: 10px; padding: 4px 2px; min-height: 0; scrollbar-width: none; }
-.ra-ask-hello { margin: auto; text-align: center; max-width: 340px; font-size: 15px; }
+.ra-ask-day { align-self: center; font-size: 11px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--ra-ink-3); padding: 3px 10px; border-radius: 999px; background: var(--ra-card); border: 1px solid var(--ra-rule); }
+.ra-ask-body > .ra-ask-day:first-child { margin-top: auto; }
+.ra-ask-hint { align-self: center; text-align: center; max-width: 340px; font-size: 13px; }
 .ra-msg { max-width: 78%; padding: 10px 14px; border-radius: 16px; font-size: 14px; }
 .ra-msg.me { align-self: flex-end; background: var(--ra-teal); color: #fff; border-bottom-right-radius: 4px; }
 .ra-msg.ral { align-self: flex-start; background: var(--ra-card); border: 1px solid var(--ra-rule); border-bottom-left-radius: 4px; }

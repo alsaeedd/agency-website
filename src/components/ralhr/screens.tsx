@@ -366,6 +366,15 @@ export const ASK_PROMPTS = [
   'زيد يوم',
 ]
 
+const HISTORY: Msg[] = [
+  { from: 'me', text: 'When does my November payslip come out?' },
+  { from: 'ral', text: 'Thursday 26 November. Your net pay is BD 1,240.500 after SIO, paid by WPS to your NBB account.', src: 'Payroll calendar 2026' },
+  { from: 'me', text: 'شنو أسوي إذا جوازي بينتهي؟', dir: 'rtl' },
+  { from: 'ral', text: 'جوازك ينتهي في ٣ مارس ٢٠٢٧. ارفع صورة الجواز الجديد في المستندات، والموارد البشرية تجدد التأشيرة.', dir: 'rtl', src: 'Documents and expiry' },
+  { from: 'me', text: 'who approves my leave?' },
+  { from: 'ral', text: 'Khalid Al Zayani, Finance Manager. He usually replies within a day.', src: 'Org chart' },
+]
+
 function conversation(step: number): Msg[] {
   const m: Msg[] = []
   if (step >= 1) m.push({ from: 'me', text: ASK_PROMPTS[0] }, { from: 'ral', text: 'You have 18 annual leave days left: 30 a year, 9 used, 3 waiting for approval.', src: 'Leave balance 2026' })
@@ -391,12 +400,15 @@ export function AskScreen({ s, act }: P) {
     <div className="ra-screen ra-ask">
       <div className="ra-ask-head"><b>Ask RAL</b><span className="ra-muted">Mohammed Kanoo, Finance</span></div>
       <div className="ra-ask-body" ref={bodyRef}>
-        {msgs.length === 0 && (
-          <div className="ra-ask-hello">
-            <p>Ask about your leave, payslip, holidays, manager or policies.</p>
-            <p className="ra-muted">Arabic, Arabizi or English.</p>
+        <p className="ra-ask-day">Yesterday</p>
+        {HISTORY.map((m, i) => (
+          <div key={`h${i}`} className={`ra-msg ${m.from}`} dir={m.dir}>
+            <p>{m.text}</p>
+            {m.src && <p className="ra-src" dir="ltr">Source: {m.src}</p>}
           </div>
-        )}
+        ))}
+        <p className="ra-ask-day">Today</p>
+        {msgs.length === 0 && <p className="ra-ask-hint ra-muted">Ask about your leave, payslip, holidays, manager or policies. Arabic, Arabizi or English.</p>}
         {msgs.map((m, i) => (
           <div key={i} className={`ra-msg ${m.from}`} dir={m.dir}>
             <p>{m.text}</p>
