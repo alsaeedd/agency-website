@@ -128,6 +128,26 @@ function HeroRun() {
   )
 }
 
+/* Tweened money figure for the pricing console. */
+function Tween({ v }: { v: number }) {
+  const [shown, setShown] = useState(v)
+  const cur = useRef(v)
+  useEffect(() => {
+    if (calm()) { cur.current = v; setShown(v); return }
+    const o = { x: cur.current }
+    const t = gsap.to(o, { x: v, duration: 0.6, ease: 'expo.out', onUpdate: () => { cur.current = o.x; setShown(o.x) } })
+    return () => { t.kill() }
+  }, [v])
+  return <>{money(shown)}</>
+}
+
+const NOTE: [string, boolean?][] = [
+  ['Payroll in Bahrain has its own rules: '], ['the WPS file', true], [', '], ['SIO', true], [', '], ['end of service', true], [', '], ['Arabic payslips', true],
+  ['. Most HR tools treat them as an afterthought. I built RAL HR so they are the starting point, and so your team can just ask when they need something.'],
+]
+const words = (t: string) => t.split(/(\s+)/).map((w, i) => (/^\s+$/.test(w) || !w ? w : <span key={i} className="rh-fw">{w}</span>))
+const TICKS = [5, 100, 200, 300]
+
 function Cta({ children = 'Book a demo' }: { children?: string }) {
   return <a className="rh-cta" href={INQUIRE}>{children}<span className="rh-cta-i" aria-hidden="true">↗</span></a>
 }
@@ -136,6 +156,7 @@ export default function RalHrPage() {
   const root = useRef<HTMLDivElement>(null)
   const [ar, setAr] = useState(false)
   const [team, setTeam] = useState(40)
+  const [plan, setPlan] = useState(1)
   const bento = useRef<HTMLDivElement>(null)
 
   useIsoLayoutEffect(() => {
@@ -157,6 +178,23 @@ export default function RalHrPage() {
         gsap.from(s.querySelectorAll('.rh-in'), { y: 32, opacity: 0, duration: 1, ease: 'expo.out', stagger: 0.12,
           scrollTrigger: { trigger: s, start: 'top 80%', once: true } })
       })
+      // Bento signature: the Bahrain rules check themselves as the grid arrives.
+      const cols = gsap.utils.toArray<HTMLElement>('.rh-cols span')
+      const days = gsap.utils.toArray<HTMLElement>('.rh-days span')
+      cols.concat(days).forEach((c) => c.classList.remove('ok'))
+      const bt = gsap.timeline({ defaults: { ease: 'expo.out' }, scrollTrigger: { trigger: '.rh-bento', start: 'top 72%', once: true } })
+      cols.forEach((c, i) => bt.call(() => c.classList.add('ok'), [], 0.35 + i * 0.07))
+      const wn = el.querySelector<HTMLElement>('.rh-wps-n')
+      if (wn) { const o = { v: 0 }; wn.textContent = '0'; bt.to(o, { v: cols.length, duration: 0.07 * cols.length, ease: 'none', onUpdate: () => { wn.textContent = String(Math.round(o.v)) } }, 0.35) }
+      bt.from('.rh-ladder i', { scaleY: 0, transformOrigin: '50% 100%', duration: 1.1, stagger: 0.1 }, 0.3)
+        .from('.rh-ladder b', { opacity: 0, y: 6, duration: 0.6, stagger: 0.1 }, 0.5)
+        .from('.rh-slip em', { opacity: 0, x: -10, duration: 0.8, stagger: 0.15 }, 0.6)
+      days.forEach((d, i) => bt.call(() => d.classList.add('ok'), [], 0.7 + i * 0.35))
+      // Founder note: the words light up in reading order, then the four rules underline.
+      gsap.timeline({ scrollTrigger: { trigger: '.rh-founder', start: 'top 72%', once: true } })
+        .from('.rh-fw', { opacity: 0.14, duration: 0.5, stagger: 0.022, ease: 'power1.out' })
+        .from('.rh-founder mark', { backgroundSize: '0% 2px', duration: 0.8, stagger: 0.12, ease: 'expo.out' }, '-=0.9')
+        .from('.rh-swash path', { strokeDashoffset: 130, duration: 1.1, ease: 'expo.out' }, '-=0.4')
     }, el)
     return () => ctx.revert()
   }, [])
@@ -215,17 +253,19 @@ export default function RalHrPage() {
         </section>
 
         <section className="rh-section rh-reveal">
-          <div className="rh-head rh-in">
+          <div className="rh-head rh-head-split rh-in">
             <p className="rh-eyebrow">Bahrain rules, built in</p>
             <h2>The parts other HR tools leave to Excel.</h2>
+            <p>WPS, SIO, expiry dates and Arabic payslips are the core of RAL HR, not add-ons. Each one is checked before anything reaches your bank or your staff.</p>
           </div>
           <div className="rh-bento" ref={bento}>
             <article className="rh-tile rh-t-wps rh-in">
               <h3>WPS file, in the exact LMRA format</h3>
               <p>All 10 columns, every row checked before you download. You upload it to your bank as usual.</p>
               <div className="rh-cols" aria-hidden="true">
-                {['CPR', 'Name', 'IBAN', 'Bank', 'Basic', 'Allow.', 'Deduct.', 'Total', 'Month', 'Ref'].map((c) => <span key={c}>{c}</span>)}
+                {['CPR', 'Name', 'IBAN', 'Bank', 'Basic', 'Allow.', 'Deduct.', 'Total', 'Month', 'Ref'].map((c) => <span key={c} className="ok">{c}</span>)}
               </div>
+              <p className="rh-wps-status"><i aria-hidden="true" /><span><b className="rh-wps-n">10</b> of 10 columns valid, {PAYROLL.people} rows checked</span></p>
             </article>
             <article className="rh-tile rh-t-sio rh-in">
               <h3>SIO, worked out every month</h3>
@@ -233,14 +273,14 @@ export default function RalHrPage() {
               <p className="rh-small">Bahraini employer share, rising each year</p>
               <div className="rh-ladder" aria-label="Employer SIO 16% in 2024 rising to 20% in 2028">
                 {EMPLOYER_LADDER.map((l) => (
-                  <div key={l.y}><i style={{ height: `${(l.r - 12) * 10}px` }} /><b>{l.r}%</b><span>{l.y}</span></div>
+                  <div key={l.y}><b>{l.r}%</b><i style={{ height: ((l.r - 12) * 10) + 'px' }} /><span>{l.y}</span></div>
                 ))}
               </div>
             </article>
             <article className="rh-tile rh-t-exp rh-in">
               <h3>Expiry alerts at 90, 30 and 7 days</h3>
               <p>CPRs, visas, passports and work permits. Nobody finds out at the airport.</p>
-              <div className="rh-days"><span>90</span><span>30</span><span className="hot">7</span></div>
+              <div className="rh-days"><span className="ok">90<small>days</small></span><span className="ok">30<small>days</small></span><span className="ok hot">7<small>days</small></span></div>
             </article>
             <article className="rh-tile rh-t-lang rh-in">
               <h3>Arabic and English, every screen</h3>
@@ -276,23 +316,52 @@ export default function RalHrPage() {
           <div className="rh-in"><VideoTour /></div>
         </section>
 
-        <section id="pricing" className="rh-section rh-reveal">
+        <section id="pricing" className="rh-section rh-pricing rh-reveal">
           <div className="rh-head rh-in">
             <p className="rh-eyebrow">Pricing</p>
             <h2>Per employee, per month. That is it.</h2>
+            <p>Set your headcount and every plan updates live, so you see the real monthly number before we talk.</p>
           </div>
           <div className="rh-est rh-in">
-            <label htmlFor="rh-team">Your team</label>
-            <input id="rh-team" type="range" min={5} max={300} step={5} value={team} onChange={(e) => setTeam(+e.target.value)} />
-            <output htmlFor="rh-team"><b>{team}</b> people</output>
+            <div className="rh-est-team">
+              <label htmlFor="rh-team">Your team</label>
+              <output htmlFor="rh-team" className="rh-est-n"><b>{team}</b>people</output>
+              <input id="rh-team" type="range" min={5} max={300} step={5} value={team} aria-valuetext={team + ' people'}
+                style={{ backgroundSize: 'calc(15px + (100% - 30px) * ' + ((team - 5) / 295) + ') 100%, auto' }}
+                onChange={(e) => setTeam(+e.target.value)} />
+              <div className="rh-ticks" aria-hidden="true">{TICKS.map((n) => <span key={n} style={{ left: ((n - 5) / 295 * 100) + '%' }}>{n}</span>)}</div>
+              <div className="rh-presets" role="group" aria-label="Quick team sizes">
+                {[10, 25, 50, 100, 250].map((n) => <button type="button" key={n} className={team === n ? 'on' : ''} aria-pressed={team === n} onClick={() => setTeam(n)}>{n}</button>)}
+              </div>
+            </div>
+            <div className="rh-est-cost">
+              <p className="rh-est-k">Monthly cost by plan</p>
+              <ul className="rh-cmp">
+                {PRICING.map((p, i) => (
+                  <li key={p.name}>
+                    <button type="button" className={plan === i ? 'on' : ''} aria-pressed={plan === i} onClick={() => setPlan(i)}>
+                      <span className="rh-cmp-name">{p.name}<em>BD {p.price} / person</em></span>
+                      <span className="rh-cmp-bar" aria-hidden="true"><i style={{ width: (team * p.price / 9) + '%' }} /></span>
+                      <b>BD <Tween v={team * p.price} /></b>
+                    </button>
+                  </li>
+                ))}
+              </ul>
+              <div className="rh-est-total" aria-live="polite">
+                <div>
+                  <span className="rh-est-k">{PRICING[plan].name}, {team} people</span>
+                  <p className="rh-est-big"><small>BD</small><Tween v={team * PRICING[plan].price} /><span>a month</span></p>
+                </div>
+                <p className="rh-est-yr"><b>BD <Tween v={team * PRICING[plan].price * 12} /></b> a year<br />plus a one-time setup fee</p>
+              </div>
+            </div>
           </div>
           <div className="rh-prices">
             {PRICING.map((p, i) => (
-              <article key={p.name} className={`rh-price rh-in${i === 1 ? ' pop' : ''}`}>
+              <article key={p.name} className={'rh-price rh-in' + (i === 1 ? ' pop' : '') + (plan === i ? ' sel' : '')}>
                 <h3>{p.name}</h3>
                 <p className="rh-amt"><b>BD {p.price}</b> / employee / month</p>
                 <p className="rh-small">{p.blurb}</p>
-                <p className="rh-calc"><b>BD {money(team * p.price)}</b> a month for {team} people</p>
                 <ul>{p.items.map((it) => <li key={it}>{it}</li>)}</ul>
                 <a className={i === 1 ? 'rh-cta' : 'rh-ghost'} href={INQUIRE}>Talk to us</a>
               </article>
@@ -302,9 +371,15 @@ export default function RalHrPage() {
         </section>
 
         <section className="rh-section rh-founder rh-reveal">
-          <blockquote className="rh-in">
-            <p>Payroll in Bahrain has its own rules: the WPS file, SIO, end of service, Arabic payslips. Most HR tools treat them as an afterthought. I built RAL HR so they are the starting point, and so your team can just ask when they need something.</p>
-            <footer>Suhaib, RAL Technologies, Manama</footer>
+          <blockquote>
+            <p>{NOTE.map(([t, m], i) => (m ? <mark key={i}>{words(t)}</mark> : <Fragment key={i}>{words(t)}</Fragment>))}</p>
+            <footer className="rh-in">
+              <span className="rh-mono" aria-hidden="true">S</span>
+              <span>
+                <b>Suhaib<svg className="rh-swash" viewBox="0 0 130 10" aria-hidden="true"><path d="M2 7 C 34 1, 70 10, 128 3" /></svg></b>
+                <small>Founder, RAL Technologies, Manama</small>
+              </span>
+            </footer>
           </blockquote>
         </section>
 
