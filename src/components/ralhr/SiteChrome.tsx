@@ -23,8 +23,24 @@ export default function SiteChrome({ children }: { children: ReactNode }) {
     ScrollTrigger.defaults({ fastScrollEnd: true, preventOverlaps: true })
     const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches
     const lenis = !reduced && !coarse
-      ? new Lenis({ lerp: 0.085, smoothWheel: true, syncTouch: false, anchors: { offset: -88 } })
+      ? new Lenis({ lerp: 0.085, smoothWheel: true, syncTouch: false })
       : null
+    // Same-page anchors (calendar days, section index, pills). Lenis's own
+    // anchors option measures from its cached scroll, which goes stale after a
+    // native scroll (keyboard focus, find-in-page), so the jump overshot. Resync
+    // from the real scroll position first, then glide to the target below the
+    // fixed navbar. Touch devices (no Lenis) keep native anchors + scroll-margin.
+    const onAnchor = (e: MouseEvent) => {
+      if (!lenis || e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return
+      const a = (e.target as Element | null)?.closest?.('a[href^="#"]') as HTMLAnchorElement | null
+      const el = a && a.hash.length > 1 ? document.getElementById(decodeURIComponent(a.hash.slice(1))) : null
+      if (!a || !el) return
+      e.preventDefault()
+      lenis.scrollTo(window.scrollY, { immediate: true, force: true })
+      lenis.scrollTo(el.getBoundingClientRect().top + window.scrollY - 88, { force: true })
+      history.pushState(null, '', a.hash)
+    }
+    window.addEventListener('click', onAnchor)
     const tick = (t: number) => lenis?.raf(t * 1000)
     gsap.ticker.add(tick)
     gsap.ticker.lagSmoothing(0)
@@ -34,9 +50,19 @@ export default function SiteChrome({ children }: { children: ReactNode }) {
     return () => {
       if (typeof cancelIdleCallback === 'function') cancelIdleCallback(id); else clearTimeout(id)
       gsap.ticker.remove(tick)
+      window.removeEventListener('click', onAnchor)
       lenis?.destroy()
     }
   }, [coarse])
+  // Keep the floating contact button off the footer links: hide it while the footer is on screen.
+  useEffect(() => {
+    const foot = document.querySelector('footer.footer')
+    if (!foot || !('IntersectionObserver' in window)) return
+    const root = document.documentElement
+    const io = new IntersectionObserver(([e]) => root.classList.toggle('rh-foot-in', e.isIntersecting))
+    io.observe(foot)
+    return () => { io.disconnect(); root.classList.remove('rh-foot-in') }
+  }, [])
 
   return (
     <>

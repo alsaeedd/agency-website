@@ -36,7 +36,7 @@ const TOUR: { tab: TabId; steps: string[] }[] = [
   { tab: 'payroll', steps: ['pay-compute', 'pay-review', 'pay-fix', 'pay-approve', 'pay-confirm', 'pay-wps'] },
   { tab: 'leave', steps: ['leave-ok-noor', 'leave-sel-suresh', 'leave-ok-suresh'] },
   { tab: 'people', steps: ['person-3', 'to-eos'] },
-  { tab: 'ask', steps: ['ask-0', 'ask-1'] },
+  { tab: 'ask', steps: ['ask-0', 'ask-2'] },
 ]
 const CAPTION: Record<string, [string, string]> = {
   'pay-compute': ['Computing October for 98 people', 'احتساب أكتوبر لـ98 موظفًا'],
@@ -50,8 +50,8 @@ const CAPTION: Record<string, [string, string]> = {
   'leave-ok-suresh': ['Maintenance drops to minimum cover', 'الصيانة تصل إلى الحد الأدنى للتغطية'],
   'person-3': ["Opening Rajesh's profile and payslip", 'فتح ملف راجيش وقسيمة راتبه'],
   'to-eos': ['Working out his end of service', 'احتساب مكافأة نهاية خدمته'],
-  'ask-0': ['Asking about SIO in English', 'سؤال عن التأمينات بالإنجليزية'],
-  'ask-1': ['Asking about leave in Arabic', 'سؤال عن الإجازة بالعربية'],
+  'ask-0': ['Asking for the payroll total in English', 'سؤال عن مجموع الرواتب بالإنجليزية'],
+  'ask-2': ['Asking about leave in Arabic', 'سؤال عن الإجازة بالعربية'],
 }
 
 const RAJESH = byName('Rajesh Kumar').id

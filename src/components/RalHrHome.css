@@ -1,4 +1,6 @@
-/* ===== RAL HR on the home page: our own product, shown working ===== */
+/* ===== RAL HR on the home page: our own product, shown working =====
+   Story, top to bottom: the promise (left) beside the four facts (right),
+   then the live payday window as the one big moment, then the offer. */
 .hrh {
   position: relative;
   isolation: isolate;
@@ -26,110 +28,155 @@
     linear-gradient(180deg, #170f2a 0%, #110a1f 100%);
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1.08fr);
-  gap: clamp(2.25rem, 4.5vw, 4.5rem);
+  grid-template-columns: minmax(0, 1fr) minmax(0, 0.92fr);
+  grid-template-areas:
+    "head facts"
+    "stage stage"
+    "offer offer";
+  column-gap: clamp(2.5rem, 6vw, 6rem);
   align-items: center;
 }
 
 .hrh-ambient {
   position: absolute;
   z-index: -1;
-  right: -10%;
-  bottom: -30%;
-  width: 70%;
-  aspect-ratio: 1;
-  background: radial-gradient(closest-side, rgba(180, 80, 255, 0.16), transparent 70%);
+  left: 50%;
+  top: 38%;
+  width: 80%;
+  aspect-ratio: 1.6;
+  transform: translateX(-50%);
+  background: radial-gradient(closest-side, rgba(180, 80, 255, 0.14), transparent 70%);
   pointer-events: none;
 }
 
-/* ── Copy column ─────────────────────────────────────────── */
-.hrh-copy {
+/* ── The promise ─────────────────────────────────────────── */
+.hrh-head {
+  grid-area: head;
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  align-items: flex-start;
+  gap: 1.1rem;
   min-width: 0;
 }
 
 .hrh-title {
   font-size: clamp(2.2rem, 4.6vw, 3.9rem);
   max-width: 13ch;
-  line-height: 1.04;
-  padding-bottom: 0.06em;
+  line-height: 1.06;
+  padding-bottom: 0.08em;
   text-wrap: balance;
 }
 
 .hrh-intro {
-  max-width: 46ch;
-  opacity: 0.85;
+  max-width: 44ch;
+  opacity: 0.88;
+  text-wrap: pretty;
 }
 
+/* ── The four facts: figure first, so the data reads at a glance ── */
 .hrh-facts {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 1.4rem 2rem;
-  margin: 1rem 0 0;
+  grid-area: facts;
+  margin: 0;
+  min-width: 0;
 }
 
 .hrh-fact {
-  border-top: 1px solid var(--color-border-active);
-  padding-top: 0.85rem;
+  display: grid;
+  grid-template-columns: 5.6rem minmax(0, 1fr);
+  grid-template-rows: auto auto;
+  column-gap: 1.25rem;
+  padding: 1.05rem 0;
+}
+.hrh-fact + .hrh-fact { border-top: 1px solid var(--color-border); }
+
+.hrh-fact dt { display: contents; }
+
+.hrh-fig {
+  grid-row: 1 / span 2;
+  align-self: center;
+  font-size: 1.7rem;
+  font-weight: 600;
+  letter-spacing: -0.035em;
+  line-height: 1;
+  color: #c4b5fd;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
 }
 
-.hrh-fact dt {
-  font-size: 0.95rem;
+.hrh-fact-t {
+  font-size: 0.98rem;
   font-weight: 600;
   letter-spacing: -0.01em;
   color: var(--color-text);
-  margin-bottom: 0.35rem;
 }
 
 .hrh-fact dd {
-  margin: 0;
-  font-size: 0.86rem;
-  line-height: 1.55;
+  margin: 0.25rem 0 0;
+  font-size: 0.88rem;
+  line-height: 1.5;
   color: var(--color-text-secondary);
-  opacity: 0.82;
+  opacity: 0.85;
+  text-wrap: pretty;
 }
 
+/* ── The live payday window ─────────────────────────────── */
+.hrh-stage {
+  grid-area: stage;
+  min-width: 0;
+  margin: clamp(2.5rem, 5vw, 4rem) 0 0;
+}
+.hrh-pd { position: relative; }
+.hrh-shell {
+  height: clamp(460px, 44vw, 600px);
+  margin-top: 58px;
+  border-radius: 18px;
+  background: linear-gradient(180deg, #120c20, #0c0715);
+  box-shadow: 0 0 0 1px rgba(209, 196, 233, 0.16), 0 0 0 7px rgba(22, 14, 39, 0.7), 0 0 0 8px rgba(209, 196, 233, 0.1);
+}
+
+.hrh-caption {
+  margin: 2.75rem 0 0;
+  text-align: center;
+  font-size: 0.82rem;
+  line-height: 1.5;
+  color: var(--color-text-secondary);
+  opacity: 0.8;
+  text-wrap: balance;
+}
+.hrh-caption strong { font-weight: 500; color: var(--color-text); }
+
+/* ── The offer ──────────────────────────────────────────── */
 .hrh-offer {
+  grid-area: offer;
   display: flex;
   flex-wrap: wrap;
   align-items: center;
+  justify-content: space-between;
   gap: 1.25rem 2rem;
-  margin-top: 1.5rem;
+  margin-top: clamp(2.5rem, 4.5vw, 3.5rem);
+  padding-top: clamp(1.75rem, 3vw, 2.25rem);
+  border-top: 1px solid var(--color-border);
 }
 
 .hrh-price {
-  display: grid;
-  grid-template-columns: auto auto;
-  grid-template-rows: auto auto;
-  column-gap: 0.6rem;
-  align-items: end;
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 0.2rem 0.6rem;
   margin: 0;
   line-height: 1.1;
 }
-
-.hrh-price-from {
-  grid-column: 1 / -1;
-  font-size: 0.78rem;
+.hrh-price-from,
+.hrh-price-per {
+  font-size: 0.9rem;
   color: var(--color-text-secondary);
-  opacity: 0.75;
 }
-
 .hrh-price-num {
-  font-size: 2.1rem;
+  font-size: clamp(2rem, 3vw, 2.5rem);
   font-weight: 600;
   letter-spacing: -0.03em;
   color: var(--color-text);
   font-variant-numeric: tabular-nums;
-}
-
-.hrh-price-per {
-  font-size: 0.85rem;
-  color: var(--color-text-secondary);
-  padding-bottom: 0.35rem;
-  max-width: 11ch;
-  line-height: 1.25;
 }
 
 .hrh-ctas {
@@ -143,6 +190,7 @@
   display: inline-flex;
   align-items: center;
   gap: 0.8rem;
+  min-height: 2.95rem;
   padding: 0.42rem 0.42rem 0.42rem 1.25rem;
   border-radius: 999px;
   font-size: 0.92rem;
@@ -151,6 +199,7 @@
   white-space: nowrap;
   text-decoration: none;
   touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
   transition:
     transform 0.5s var(--ease-out-expo),
     background-color 0.4s var(--ease-out-expo),
@@ -169,8 +218,7 @@
 
 .hrh-btn:hover .hrh-btn-icon { transform: translate(2px, -1px) scale(1.05); }
 .hrh-btn:active { transform: scale(0.98); }
-.hrh-btn:focus-visible,
-.hrh-replay:focus-visible {
+.hrh-btn:focus-visible {
   outline: 2px solid #a78bfa;
   outline-offset: 3px;
 }
@@ -190,37 +238,26 @@
 .hrh-btn--ghost .hrh-btn-icon { background: rgba(255, 255, 255, 0.08); }
 .hrh-btn--ghost:hover { border-color: rgba(167, 139, 250, 0.55); }
 
-/* ── Product stage ──────────────────────────────────────── */
-.hrh-stage {
-  min-width: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
-
-.hrh-caption {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
-  margin-top: 2.5rem;
-  font-size: 0.75rem;
-  color: var(--color-text-secondary);
-  opacity: 0.75;
-}
-
 /* ── Responsive ─────────────────────────────────────────── */
-@media (max-width: 1100px) {
-  /* Single column: the live run sits right under the intro so the product
-     moment lands early, then the facts and the offer follow. */
-  .hrh-core { grid-template-columns: minmax(0, 1fr); row-gap: 1rem; }
-  .hrh-copy { display: contents; }
-  .hrh-copy > .eyebrow { order: 1; }
-  .hrh-title { order: 2; max-width: 16ch; }
-  .hrh-intro { order: 3; }
-  .hrh-stage { order: 4; max-width: 640px; width: 100%; margin: 1.25rem 0 1.5rem; }
-  .hrh-facts { order: 5; }
-  .hrh-offer { order: 6; }
+@media (max-width: 1023px) {
+  /* One column: the live window lands right after the promise,
+     then the facts as a 2 x 2 grid, then the offer. */
+  .hrh-core {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas: "head" "stage" "facts" "offer";
+  }
+  .hrh-title { max-width: 16ch; }
+  .hrh-stage { margin-top: clamp(1.75rem, 4vw, 2.5rem); }
+  .hrh-caption { margin-top: 2.25rem; }
+  .hrh-facts {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0 2rem;
+    margin-top: 2.5rem;
+  }
+  .hrh-fact { grid-template-columns: 4.6rem minmax(0, 1fr); border-top: 1px solid var(--color-border); }
+  .hrh-fig { font-size: 1.45rem; }
+  .hrh-offer { margin-top: 2rem; }
 }
 
 @media (max-width: 600px) {
@@ -229,34 +266,17 @@
     border-radius: calc(1.5rem - 0.35rem);
     padding: 1.6rem 1.15rem 1.4rem;
   }
-  .hrh-facts { grid-template-columns: minmax(0, 1fr); gap: 1rem; }
-  .hrh-offer { flex-direction: column; align-items: flex-start; }
-  .hrh-ctas { width: 100%; flex-direction: column; }
+  .hrh-facts { grid-template-columns: minmax(0, 1fr); margin-top: 2rem; }
+  .hrh-fact { padding: 0.95rem 0; column-gap: 1rem; }
+  .hrh-caption { text-align: start; }
+  .hrh-offer { flex-direction: column; align-items: stretch; }
+  .hrh-ctas { flex-direction: column; }
   .hrh-btn { justify-content: space-between; }
-  .hrh-caption { margin-top: 2.75rem; flex-wrap: wrap; }
 }
+
+@media (max-width: 520px) { .hrh-shell { height: 640px; } }
 
 @media (prefers-reduced-motion: reduce) {
   .hrh-btn,
   .hrh-btn-icon { transition: none; }
 }
-
-/* v2: the RAL HR hero window (shared Payday component), full width under the copy. */
-.hrh .hrh-core { display: grid; grid-template-columns: minmax(0, 1fr) auto; grid-template-areas: "eb eb" "title title" "intro offer" "stage stage" "facts facts"; column-gap: clamp(32px, 5vw, 80px); row-gap: 0; align-items: end; }
-.hrh .hrh-copy { display: contents; }
-.hrh .hrh-copy > .eyebrow { grid-area: eb; order: 0; justify-self: start; }
-.hrh .hrh-title { grid-area: title; order: 0; }
-.hrh .hrh-intro { grid-area: intro; order: 0; }
-.hrh .hrh-offer { grid-area: offer; order: 0; margin-top: 0; }
-.hrh .hrh-facts { grid-area: facts; order: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 24px; margin-top: 0; }
-.hrh .hrh-stage { grid-area: stage; order: 0; max-width: none; width: 100%; min-height: 0; margin: clamp(40px, 5vw, 64px) 0 clamp(36px, 4vw, 56px); }
-.hrh-pd { position: relative; }
-.hrh-shell { height: clamp(460px, 44vw, 600px); margin-top: 58px; border-radius: 18px; background: linear-gradient(180deg, #120c20, #0c0715);
-  box-shadow: 0 0 0 1px rgba(209, 196, 233, .16), 0 0 0 7px rgba(22, 14, 39, .7), 0 0 0 8px rgba(209, 196, 233, .1); }
-.hrh .hrh-caption { margin-top: 3rem; }
-@media (max-width: 900px) {
-  .hrh .hrh-core { grid-template-columns: minmax(0, 1fr); grid-template-areas: "eb" "title" "intro" "stage" "facts" "offer"; }
-  .hrh .hrh-facts { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .hrh .hrh-offer { margin-top: 2rem; }
-}
-@media (max-width: 520px) { .hrh .hrh-facts { grid-template-columns: minmax(0, 1fr); } .hrh-shell { height: 640px; } }

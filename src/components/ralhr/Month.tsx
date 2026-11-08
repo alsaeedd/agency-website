@@ -80,29 +80,43 @@ function Leave() {
 }
 
 const QA = [
-  { q: 'كم يوم إجازة باقي لي؟', a: 'باقي لك 18 يوم إجازة سنوية. آخر إجازة أخذتها كانت في أغسطس.' },
-  { q: 'When does my work permit expire?', a: 'On 20 November, 12 days from now. HR already has a reminder, so you do not need to do anything yet.' },
-  { q: 'abi shahadat ratib lil bank', a: 'تم. طلبت لك شهادة راتب بالإنجليزي للبنك، وبتوصلك في التطبيق خلال يوم عمل.' },
+  { q: 'When does my work permit expire?', a: 'On 20 November, 12 days from now. HR already has a reminder, so you do not need to do anything yet.', src: 'Your documents' },
+  { q: 'كم يوم إجازة باقي لي؟', a: 'باقي لك 18 يوم إجازة سنوية. آخر إجازة أخذتها كانت في أغسطس.', src: 'Leave balance' },
+  { q: 'abi shahadat ratib lil bank', a: 'تم. طلبت لك شهادة راتب بالإنجليزي للبنك، وبتوصلك في التطبيق خلال يوم عمل.', src: 'Letter requests' },
 ]
 const isAr = (s: string) => /[؀-ۿ]/.test(s)
+type Msg = { me: boolean; t: string; src?: string }
+// Seeded with one full exchange so the card never sits empty before a visitor taps.
+const SEED: Msg[] = [
+  { me: false, t: 'هلا! اسألني عن إجازتك أو راتبك أو أي ورقة تحتاجها.' },
+  { me: true, t: QA[0].q },
+  { me: false, t: QA[0].a, src: QA[0].src },
+]
 
 function Ask() {
-  const [log, setLog] = useState([{ me: false, t: 'هلا! اسألني عن إجازتك أو راتبك أو أي ورقة تحتاجها.' }])
+  const [log, setLog] = useState<Msg[]>(SEED)
   const [busy, setBusy] = useState(false)
+  const [asked, setAsked] = useState<number[]>([0])
   const ask = (i: number) => {
     if (busy) return
+    setAsked((a) => (a.includes(i) ? a : [...a, i]))
     setLog((l) => [...l.slice(-2), { me: true, t: QA[i].q }])
     setBusy(true)
-    window.setTimeout(() => { setLog((l) => [...l, { me: false, t: QA[i].a }]); setBusy(false) }, calm() ? 0 : 900)
+    window.setTimeout(() => { setLog((l) => [...l, { me: false, t: QA[i].a, src: QA[i].src }]); setBusy(false) }, calm() ? 0 : 900)
   }
   return (
     <div className="mu mu-chat">
       <div className="mu-bar"><b>Ask RAL</b><span>Demo answers</span></div>
       <div className="mu-log" aria-live="polite">
-        {log.map((m, i) => <p key={i + m.t} className={'mu-msg' + (m.me ? ' me' : '')} dir={isAr(m.t) ? 'rtl' : 'ltr'} lang={isAr(m.t) ? 'ar' : 'en'}>{m.t}</p>)}
+        {log.map((m, i) => (
+          <p key={i + m.t} className={'mu-msg' + (m.me ? ' me' : '')} dir={isAr(m.t) ? 'rtl' : 'ltr'} lang={isAr(m.t) ? 'ar' : 'en'}>
+            {m.t}{m.src && <small className="mu-src" dir="ltr" lang="en">From: {m.src}</small>}
+          </p>
+        ))}
         {busy && <p className="mu-msg typing" aria-label="Ask RAL is typing"><i /><i /><i /></p>}
       </div>
-      <div className="mu-chips">{QA.map((x, i) => <button key={x.q} type="button" dir="auto" onClick={() => ask(i)} disabled={busy}>{x.q}</button>)}</div>
+      <p className="mu-try">Try one, in any language:</p>
+      <div className="mu-chips">{QA.map((x, i) => <button key={x.q} type="button" dir="auto" className={asked.includes(i) ? 'done' : undefined} onClick={() => ask(i)} disabled={busy}>{x.q}</button>)}</div>
     </div>
   )
 }
