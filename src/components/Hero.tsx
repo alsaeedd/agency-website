@@ -287,7 +287,7 @@ export default function Hero({ onContactClick, onExploreRalHr }: HeroProps) {
   };
 
   return (
-    <section className="hero" ref={sectionRef}>
+    <section className="hero" id="home" ref={sectionRef}>
       <div className="hero-aurora" ref={auroraRef} aria-hidden="true" />
       <div className="hero-aurora hero-aurora-2" ref={aurora2Ref} aria-hidden="true" />
       <div className="hero-beams" aria-hidden="true" />

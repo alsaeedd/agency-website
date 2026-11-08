@@ -301,13 +301,13 @@ export const PRICING = [
     name: 'Starter',
     price: 1,
     blurb: 'The legal must-haves.',
-    items: ['Ask RAL', 'Payroll + WPS file', 'SIO + end of service', 'Leave + attendance', 'Records + expiry alerts', 'Audit log'],
+    items: ['Ask RAL', 'Payroll + WPS file', 'SIO + end of service', 'Leave + attendance', 'Org chart + documents hub', 'Records + expiry alerts', 'Audit log'],
   },
   {
     name: 'Professional',
     price: 2,
     blurb: 'Starter, plus the HR department.',
-    items: ['Org chart + documents hub', 'Self-service', 'Hiring + onboarding', 'Reviews', 'Service desk', 'E-signature', 'Benefits, rosters, travel'],
+    items: ['Self-service', 'Hiring + onboarding', 'Reviews', 'Service desk', 'E-signature', 'Benefits, rosters, travel'],
   },
   {
     name: 'Premium',

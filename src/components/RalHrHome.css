@@ -8,7 +8,7 @@
      their own padding, so a full section padding here stacked into a tall
      empty band. Keep only a small breath around the panel. */
   padding: clamp(0.75rem, 2vw, 1.5rem) 0 clamp(1rem, 2.5vw, 2rem);
-  scroll-margin-top: 72px;
+  scroll-margin-top: 102px;
   background: var(--color-bg);
 }
 

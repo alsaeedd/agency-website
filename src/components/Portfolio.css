@@ -1,7 +1,7 @@
 /* ===== Portfolio ===== */
 .portfolio {
   padding: 5rem 0 6rem;
-  scroll-margin-top: 72px;
+  scroll-margin-top: 102px;
   position: relative;
   background: var(--color-bg);
   overflow: hidden;

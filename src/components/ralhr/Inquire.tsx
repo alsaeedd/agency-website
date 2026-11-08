@@ -16,8 +16,8 @@ const SIZES = [
 const MODULES = ['Payroll + WPS', 'SIO + end of service', 'Leave + attendance', 'Ask RAL', 'Documents + expiry alerts', 'Hiring + onboarding', 'Reviews', 'Phone app for staff']
 const PRO_MODULES = ['Hiring + onboarding', 'Reviews']
 const PLANS = [
-  { id: 'Starter', rate: 1, base: 15, line: 'The legal must-haves', has: 'Payroll + WPS, SIO + end of service, leave + attendance, records + expiry alerts, Ask RAL' },
-  { id: 'Professional', rate: 2, base: 35, line: 'Starter plus the HR department', has: 'Hiring, onboarding, reviews, self-service, documents hub, e-signature, rosters' },
+  { id: 'Starter', rate: 1, base: 15, line: 'The legal must-haves', has: 'Payroll + WPS, SIO + end of service, leave + attendance, org chart + documents hub, records + expiry alerts, Ask RAL' },
+  { id: 'Professional', rate: 2, base: 35, line: 'Starter plus the HR department', has: 'Hiring, onboarding, reviews, self-service, e-signature, rosters' },
   { id: 'Premium', rate: 3, base: 90, line: 'Professional plus the big-company controls', has: 'Analytics export, pay equity, contractors + HSE, enforced SSO, legal hold' },
 ]
 const TIMES = [

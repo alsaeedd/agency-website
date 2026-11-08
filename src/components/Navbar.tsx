@@ -4,6 +4,7 @@ import logoMain from "../../assets/logo_main.png";
 import "./Navbar.css";
 
 const navLinks = [
+  { href: "#home", text: "Home" },
   { href: "#services", text: "Services" },
   { href: "#about", text: "About" },
   { href: "#clients", text: "Clients" },

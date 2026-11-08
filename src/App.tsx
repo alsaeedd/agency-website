@@ -46,13 +46,15 @@ function App() {
   const scrollToSection = (selector: string) => {
     const el = document.querySelector(selector) as HTMLElement | null;
     if (el) {
+      // Land the section just below the fixed navbar (102px today), measured so it never drifts.
+      const nav = (document.querySelector(".navbar") as HTMLElement | null)?.offsetHeight ?? 102;
       window.dispatchEvent(
         new CustomEvent("ral:nav-scroll", { detail: { selector } }),
       );
       if (lenisRef.current) {
-        lenisRef.current.scrollTo(el, { offset: -80, immediate: false });
+        lenisRef.current.scrollTo(el, { offset: -nav, immediate: false });
       } else {
-        const top = el.getBoundingClientRect().top + window.scrollY - 80;
+        const top = el.getBoundingClientRect().top + window.scrollY - nav;
         window.scrollTo({ top, behavior: "smooth" });
       }
     }

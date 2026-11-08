@@ -5,7 +5,7 @@
   align-items: center;
   justify-content: center;
   padding: var(--space-section) 0;
-  scroll-margin-top: 72px;
+  scroll-margin-top: 102px;
   position: relative;
   background: var(--color-surface);
   color: var(--color-text);
