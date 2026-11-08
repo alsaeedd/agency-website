@@ -29,7 +29,7 @@ export function CountUp({ value, prefix = '', suffix = '', decimals = 0, duratio
     const t = gsap.to(o, { v: value, duration, ease: 'expo.out', onUpdate: () => out(o.v), onComplete: () => { prev.current = value } })
     return () => { t.kill(); prev.current = o.v }
   }, [value, prefix, suffix, decimals, duration])
-  return <span ref={ref} className={`tnum ${className}`}>{prefix}{money(value, decimals)}{suffix}</span>
+  return <span ref={ref} className={`tnum ${className}`}>{prefix + money(value, decimals) + suffix}</span>
 }
 
 export function Spark({ data, tone = 'plain' }: { data: readonly number[]; tone?: string }) {

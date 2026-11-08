@@ -9,6 +9,7 @@ import Services from "./components/Services";
 import About from "./components/About";
 import Clients from "./components/Clients";
 import Portfolio from "./components/Portfolio";
+import RalHrHome from "./components/RalHrHome";
 import CTA from "./components/CTA";
 import Footer from "./components/Footer";
 import Interlude from "./components/Interlude";
@@ -157,7 +158,10 @@ function App() {
       {chromeReady && <ContactCircle onClick={openContact} />}
       <Navbar onContactClick={openContact} scrollToSection={scrollToSection} />
       <main>
-        <Hero onContactClick={openContact} />
+        <Hero
+          onContactClick={openContact}
+          onExploreRalHr={() => scrollToSection("#ral-hr")}
+        />
         <Services />
         <About />
         <Interlude
@@ -183,6 +187,7 @@ function App() {
         />
         <Clients />
         <Portfolio />
+        <RalHrHome />
         <Interlude
           eyebrow={
             <>

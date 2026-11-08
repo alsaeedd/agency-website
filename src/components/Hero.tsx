@@ -1,11 +1,12 @@
 import { useEffect, useRef } from "react";
 import { gsap } from "gsap";
 import bhCoatOfArms from "../../assets/bh-coat-of-arms.svg";
-import HeroStatus from "./ui/HeroStatus";
 import "./Hero.css";
 
 interface HeroProps {
   onContactClick: () => void;
+  /** Smooth-scroll to the home RAL HR section (Lenis-aware). */
+  onExploreRalHr?: () => void;
 }
 
 const tickerItems = [
@@ -50,7 +51,7 @@ const buildPhrase = (text: string, accentClass?: string): JSX.Element[] => {
   });
 };
 
-export default function Hero({ onContactClick }: HeroProps) {
+export default function Hero({ onContactClick, onExploreRalHr }: HeroProps) {
   const sectionRef = useRef<HTMLElement>(null);
   const ctaRef = useRef<HTMLButtonElement>(null);
   const auroraRef = useRef<HTMLDivElement>(null);
@@ -306,14 +307,26 @@ export default function Hero({ onContactClick }: HeroProps) {
       </div>
 
       <div className="hero-inner">
-        <div className="hero-label" data-hero-anim>
-          <span className="live-dot" aria-hidden="true" />
+        <a
+          className="hero-label hero-label--link"
+          href="#ral-hr"
+          data-hero-anim
+          onClick={(e) => {
+            if (onExploreRalHr) {
+              e.preventDefault();
+              onExploreRalHr();
+            }
+          }}
+        >
+          <span className="hero-label-new">New</span>
           <img src={bhCoatOfArms} alt="" className="hero-label-crest" />
           <span>
-            Bahrain&nbsp;·&nbsp;GMT+3
-            <span className="hero-label-tail">&nbsp;·&nbsp;<HeroStatus /></span>
+            RAL HR
+            <span className="hero-label-long">, HR and payroll for Bahrain</span>
+            <span className="hero-label-short">, payroll for Bahrain</span>
           </span>
-        </div>
+          <span className="hero-label-arrow" aria-hidden="true">→</span>
+        </a>
 
         <h1
           className="hero-title"

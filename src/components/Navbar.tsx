@@ -15,6 +15,12 @@ const DESKTOP_BREAKPOINT = 768;
 interface NavbarProps {
   onContactClick: () => void;
   scrollToSection: (selector: string) => void;
+  /** Prefix for "#section" links on pages other than home, e.g. "/". */
+  linkBase?: string;
+  /** Link shown as the current page. */
+  activeHref?: string;
+  /** Keep the bar visible at the top of the page (product pages). */
+  showAtTop?: boolean;
 }
 
 /**
@@ -24,7 +30,7 @@ interface NavbarProps {
  * outside-to-close, scrolled-state class at >80px scroll. Adapted to RAL's
  * purple/violet aesthetic + integrated with our scrollToSection prop.
  */
-export default function Navbar({ onContactClick, scrollToSection }: NavbarProps) {
+export default function Navbar({ onContactClick, scrollToSection, linkBase = "", activeHref, showAtTop = false }: NavbarProps) {
   const navRef = useRef<HTMLElement>(null);
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
@@ -34,9 +40,9 @@ export default function Navbar({ onContactClick, scrollToSection }: NavbarProps)
   // than a continuous transform - only updates when crossing the threshold.
   useEffect(() => {
     if (!navRef.current) return;
-    gsap.set(navRef.current, { yPercent: -100, opacity: 0 });
+    if (!showAtTop) gsap.set(navRef.current, { yPercent: -100, opacity: 0 });
 
-    let visible = false;
+    let visible = showAtTop;
     let scrolledLocal = false;
 
     const onScroll = () => {
@@ -51,7 +57,7 @@ export default function Navbar({ onContactClick, scrollToSection }: NavbarProps)
           duration: 0.6,
           ease: "expo.out",
         });
-      } else if (y <= 60 && visible) {
+      } else if (y <= 60 && visible && !showAtTop) {
         visible = false;
         gsap.to(navRef.current, {
           yPercent: -100,
@@ -122,7 +128,7 @@ export default function Navbar({ onContactClick, scrollToSection }: NavbarProps)
   return (
     <>
       <header
-        className={`navbar${scrolled ? " nav-scrolled" : ""}`}
+        className={`navbar${scrolled ? " nav-scrolled" : ""}${showAtTop ? " nav-solid" : ""}`}
         ref={navRef}
       >
         <div className="container">
@@ -135,10 +141,12 @@ export default function Navbar({ onContactClick, scrollToSection }: NavbarProps)
               {navLinks.map((link) => (
                 <a
                   key={link.href}
-                  href={link.href}
+                  href={link.href.startsWith("#") ? linkBase + link.href : link.href}
+                  className={link.href === activeHref ? "is-active" : undefined}
+                  aria-current={link.href === activeHref ? "page" : undefined}
                   data-text={link.text}
                   onClick={(e) => {
-                    if (!link.href.startsWith("#")) return;
+                    if (!link.href.startsWith("#") || linkBase) return;
                     e.preventDefault();
                     scrollToSection(link.href);
                   }}
@@ -189,10 +197,11 @@ export default function Navbar({ onContactClick, scrollToSection }: NavbarProps)
             {navLinks.map((link) => (
               <a
                 key={link.href}
-                href={link.href}
-                className="navbar-mobile-link"
+                href={link.href.startsWith("#") ? linkBase + link.href : link.href}
+                className={"navbar-mobile-link" + (link.href === activeHref ? " is-active" : "")}
+                aria-current={link.href === activeHref ? "page" : undefined}
                 onClick={(e) => {
-                  if (!link.href.startsWith("#")) return;
+                  if (!link.href.startsWith("#") || linkBase) return;
                   e.preventDefault();
                   handleLinkClick(link.href);
                 }}
