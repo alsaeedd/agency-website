@@ -149,3 +149,7 @@ button.pd-tr.sel { background: rgba(167, 139, 250, .14); box-shadow: inset 3px 0
 @keyframes pd-land { 0% { text-shadow: 0 0 0 rgba(180, 80, 255, 0); } 30% { text-shadow: 0 0 42px rgba(180, 80, 255, .9); } 100% { text-shadow: 0 0 18px rgba(180, 80, 255, .3); } }
 .pd--compact { margin: 0 auto; max-width: none; }
 @media (prefers-reduced-motion: reduce) { .pd-frame::after, .pd[data-step="5"] .pd-big { animation: none !important; } }
+/* Outside the product page (home), global button styles do not set colour or alignment. */
+.pd button { color: inherit; font-family: inherit; }
+.pd-tr { color: var(--color-text); text-align: start; }
+.pd-th > span:first-child { justify-self: start; text-align: start; }
