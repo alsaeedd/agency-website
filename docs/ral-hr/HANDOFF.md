@@ -1,31 +1,20 @@
-# RAL HR page: handoff
+# RAL HR integrated rebuild: HANDOFF (branch feature/ral-hr-integrated)
 
-## State
-- Live at https://raltech.dev/ral-hr/ since 2026-11-07. Three improvement cycles done, all merged to main (see git log).
-- Scores: CYCLE1.md (5.8 to 6.9), CYCLE2.md (6.9 to 8.0), CYCLE3.md (8.0 to 8.4).
-- Cycle 3 (RalHrPage.tsx/.css only): bento rules check (WPS columns tick + count, ladder grow, expiry ping), split bento head, pricing estimator console (big count, custom slider, presets, live plan bars, tweened monthly + yearly totals, selected card ring), founder word reveal + rule underlines + monogram signature.
+## Done
+- /ral-hr/ and /ral-hr/inquire/ now sit inside the main site chrome: `src/components/ralhr/SiteChrome.tsx` (real Navbar with `linkBase="/"`, `activeHref="/ral-hr/"`, `showAtTop`; Footer, Contact modal, ContactCircle, CursorFollower on fine pointers, NavLoader, Lenis, bg-blobs). The product page's own top menu is deleted.
+- Navbar: 3 optional props (linkBase, activeHref, showAtTop) that change nothing when left out, plus CSS for the active-link dot. Home page behaves as before.
+- New hero `Payday.tsx`: a real HTML app window that runs a Bahrain payday on its own (8 staff stream in, gross/SIO/net counters, steps, Approved stamp, WPS rows, phone notification). "Take the controls", then click any row to see that person's payslip. EN/عربي flips the app to RTL. Web/Tablet/Phone FLIP morph (desktop only). Layout uses container queries.
+- `Month.tsx`: "October at a Bahrain company", 5 chapters, each with a live mini UI (CPR/IBAN checks + SIO by nationality, approving leave on a phone, Ask RAL chat in Arabic/English/Arabizi, WPS 10-column check, end of service slider).
+- Rules strip (8%, 1%+3%, 18% ladder, 10/10, عربي), app video, pricing (slider, odometer roll, 3 plans), FAQ (details). The closing payoff is a WhatsApp composer, prefilled from the pricing headcount plus topic chips, going to wa.me/97366386602, with a form link to /ral-hr/inquire/.
+- Founder note and the "Suhaib" quote are fully removed (JSX, GSAP, CSS). The inquiry `.iq` base CSS moved into Inquire.css.
+- SSR prerender wraps both pages in SiteChrome (entry-server.tsx). Build is green.
 
-## Finishing round (merged to main and live 2026-11-08)
-- See CYCLE3.md "Finishing round": hero 8.8, video 8.8, closing 8.8, footer 8.8; TBT 374 to about 225 ms.
-- Video pings fixed: rail beside the phone at 1200+, stacked under the phone below 1200 (no clip, never on the video).
-- Next: TBT still about 225 ms at 390 / 4x (target 150). Try starting the hero timeline in a rAF after first paint, or split the vendor chunk. Do not regress LCP 748 ms.
+## Verified
+- `npm run build` exit 0, prerender ok. Playwright at 1440 + 390: no console errors, no horizontal overflow. Arabic + tablet morph screenshot looks right.
+- Last fixes (hero word spacing, tighter hero, section index tracking, RTL minus signs) are built but NOT re-screenshotted.
 
-## Next (older notes)
-- Hero 8.3: one more beat after the toast.
-- Video 7.8: chapter chips once real timestamps exist; larger frame on desktop.
-- Closing CTA 8.0, footer 7.8.
-- Perf: TBT 374 ms at 390 / 4x CPU, one ~320 ms hydration task. Idle rAF is the GSAP core ticker only.
-
-## Still open
-- Tablet and web demo modes at 390 wide are tiny by nature (phone mode is the default there).
-- eslint has no flat config in this repo, so `npm run lint` does not run.
-
-## Gotchas
-- Source files use CRLF. Scripted edits must normalise line endings first.
-- Bash heredocs with quotes or backslashes break in this shell: write files with the Write tool.
-- The Playwright MCP browser is shared. For QA use playwright-core in the scratchpad + `%LOCALAPPDATA%/ms-playwright/chromium-1243/chrome-win64/chrome.exe`, and serve a private dist copy (`vite preview --outDir <copy> --port 4318`). Restart preview after every rebuild (it caches the file list).
-- Video only loads at 50% visible: scroll the video element itself, not the section, when testing at 390.
-- Never set textContent on React-owned nodes for count-ups; use the Tween component (state driven).
-- Element screenshots show the sticky top bar over headings; artefact, not a bug.
-- Use the Write tool for files with Arabic or apostrophes. No em dashes anywhere.
-- Early Hints Link headers only for /index.html (perfPreload isHome guard); keep it.
+## Left (next agent)
+1. Full Demo (Demo.tsx/screens.tsx) is only restyled dark through CSS vars. The owner wants it to be the centrepiece with richer Bahrain data: more staff, leave balances that update, payroll totals that flow, an Ask RAL typed answer with a mini chart, smoother screen transitions. Screenshot the #demo section first.
+2. Screenshot 768 and the #demo, #app, #pricing, #talk sections. Check the month numeral size on mobile.
+3. Measure TBT (Lighthouse mobile) against the 225 ms target. The hero timeline makes about 20 React state updates.
+4. Run the web-design-guidelines review. When merging: main has 0cf33b2 (founder note removal), so take this branch's RalHrPage.tsx/.css whole.

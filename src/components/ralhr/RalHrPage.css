@@ -39,13 +39,13 @@
 @media (min-width: 1360px) { .hp-index { display: flex; } }
 
 /* ---------- Hero ---------- */
-.hp-hero { position: relative; padding: clamp(120px, 14vw, 168px) 16px 0; text-align: center; }
+.hp-hero { position: relative; padding: clamp(112px, 11vw, 140px) 16px 0; text-align: center; }
 .hp-hero::before { content: ""; position: absolute; inset: 22% -10% auto; height: 70%; z-index: -1; pointer-events: none;
   background: radial-gradient(50% 50% at 50% 50%, rgba(140, 60, 240, .32), transparent 70%); }
 .hp-hero-copy { max-width: 980px; margin: 0 auto; }
-.hp-h1 { font-size: clamp(46px, 8vw, 112px); line-height: .98; letter-spacing: -.045em; font-weight: 600; }
+.hp-h1 { font-size: clamp(44px, 6.6vw, 92px); line-height: .98; letter-spacing: -.045em; font-weight: 600; }
 .hp-line { display: block; }
-.hp-line.serif { font-weight: 400; padding-bottom: .06em; color: #e4d9fb; text-shadow: 0 0 60px rgba(180, 80, 255, .45); }
+.hp-line.serif { font-weight: 400; padding-bottom: .06em; color: #e4d9fb; }
 .hp-w { display: inline-block; overflow: hidden; vertical-align: top; padding-bottom: .08em; margin-bottom: -.08em; }
 .hp-w > span { display: inline-block; }
 .hp-sub { max-width: 620px; margin: 26px auto 0; font-size: clamp(17px, 1.5vw, 20px); line-height: 1.55; color: var(--ink2); text-wrap: pretty; }
@@ -56,7 +56,7 @@
 .hp-proof b { font-size: 18px; font-weight: 600; color: var(--color-text); letter-spacing: -.01em; }
 
 /* ---------- Payday app (hero) ---------- */
-.pd { margin: clamp(48px, 6vw, 72px) auto 0; max-width: 1200px; }
+.pd { margin: clamp(36px, 4vw, 52px) auto 0; max-width: 1200px; }
 .pd-tools { display: flex; justify-content: center; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 18px; }
 .pd-seg { display: inline-flex; padding: 4px; border-radius: 999px; background: rgba(22, 14, 39, .8); border: 1px solid var(--line2); }
 .pd-seg button { border: 0; background: none; padding: 9px 16px; border-radius: 999px; font-size: 13px; font-weight: 500; color: var(--ink2); transition: background .35s var(--e), color .35s; }
@@ -450,3 +450,6 @@ button.pd-tr.sel { background: rgba(167, 139, 250, .14); box-shadow: inset 3px 0
 @media (prefers-reduced-motion: reduce) {
   .pd-tr, .pd-wps li, .pd-stamp, .pd-note, .od-s, .pd-bars em i { transition: none !important; }
 }
+
+/* RTL: keep minus signs on the left of amounts */
+.pd-c-s, .pd-bars .ded b, .pd-slip .ded dd { unicode-bidi: plaintext; }

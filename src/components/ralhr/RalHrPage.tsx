@@ -11,19 +11,19 @@ const INQUIRE = '/ral-hr/inquire/'
 const WA = 'https://wa.me/97366386602?text='
 const idle = (f: () => void): number => (typeof requestIdleCallback === 'function' ? requestIdleCallback(f, { timeout: 900 }) : window.setTimeout(f, 60))
 const unidle = (id: number) => { if (typeof cancelIdleCallback === 'function') cancelIdleCallback(id); else clearTimeout(id) }
-const words = (t: string) => t.split(' ').map((w, i) => <span key={i} className="hp-w"><span>{w}</span> </span>)
+const words = (t: string) => t.split(' ').flatMap((w, i) => [i ? ' ' : '', <span key={i} className="hp-w"><span>{w}</span></span>])
 
 const INDEX: [string, string][] = [['payday', 'Payday'], ['month', 'A month'], ['demo', 'Full demo'], ['rules', 'The rules'], ['app', 'The app'], ['pricing', 'Pricing'], ['questions', 'Questions'], ['talk', 'Talk to us']]
 
 // Subtle in-page index (desktop only), never a second header.
-function SectionIndex() {
+function SectionIndex({ ready }: { ready: boolean }) {
   const [on, setOn] = useState('payday')
   useEffect(() => {
     if (!('IntersectionObserver' in window)) return
     const io = new IntersectionObserver((es) => es.forEach((e) => { if (e.isIntersecting) setOn(e.target.id) }), { rootMargin: '-45% 0px -50% 0px' })
     INDEX.forEach(([id]) => { const el = document.getElementById(id); if (el) io.observe(el) })
     return () => io.disconnect()
-  }, [])
+  }, [ready])
   return (
     <nav className="hp-index" aria-label="On this page">
       {INDEX.map(([id, l]) => <a key={id} href={'#' + id} className={on === id ? 'on' : ''} aria-current={on === id ? 'true' : undefined}><i />{l}</a>)}
@@ -262,7 +262,7 @@ export default function RalHrPage() {
 
   return (
     <div className="rh hp" ref={root}>
-      <SectionIndex />
+      <SectionIndex ready={stage >= 1} />
       <main>
         <section id="payday" className="hp-hero">
           <div className="hp-hero-copy">
