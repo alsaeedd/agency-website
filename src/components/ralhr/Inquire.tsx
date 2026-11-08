@@ -16,9 +16,9 @@ const SIZES = [
   { id: '200+', guess: 250, phrase: 'over 200 people' },
 ]
 const PLANS = [
-  { id: 'Starter', rate: 1, base: 15, line: 'The legal must-haves', has: 'Payroll + WPS, SIO + end of service, leave + attendance, org chart + documents hub, records + expiry alerts, Ask RAL' },
-  { id: 'Professional', rate: 2, base: 35, line: 'Starter plus the HR department', has: 'Hiring, onboarding, reviews, self-service, e-signature, rosters' },
-  { id: 'Premium', rate: 3, base: 90, line: 'Professional plus the big-company controls', has: 'Analytics export, pay equity, contractors + HSE, enforced SSO, legal hold' },
+  { id: 'Starter', rate: 1, base: 15, line: 'The operational must-haves', has: 'Payroll + WPS, SIO + end of service, leave + attendance, org chart + documents hub, records + expiry alerts, Ask RAL, enforced SSO' },
+  { id: 'Professional', rate: 2, base: 35, line: 'Starter plus the HR department', has: 'Hiring, onboarding, reviews, e-signature, benefits, rosters, travel' },
+  { id: 'Premium', rate: 3, base: 90, line: 'Professional plus the big-company controls', has: 'Analytics export, pay equity, contractors + HSE, fleet, legal hold' },
 ]
 const TIMES = [
   { id: 'This month', phrase: 'hoping to start this month' },
@@ -155,6 +155,8 @@ export default function Inquire({ onClose }: { onClose?: () => void } = {}) {
       setMsg(compose(a)); setCopied(false); setSent(false)
       if (!calmMotion()) { setTyping(true); window.setTimeout(() => setTyping(false), 1100) }
     }
+    // Arriving at the plan step with picks and no plan: start on the cheapest plan that covers them.
+    if (step === 1 && !a.plan && a.modules.length) set({ plan: tierName(fitTier(a.modules)) })
     go(step + 1)
   }
   const back = () => { if (step > 0) go(step - 1) }
@@ -236,7 +238,7 @@ export default function Inquire({ onClose }: { onClose?: () => void } = {}) {
                 <button key={p.id} type="button" role="radio" aria-checked={a.plan === p.id} className={`iqx-plan${a.plan === p.id ? ' on' : ''}`} onClick={() => set({ plan: p.id })}>
                   <span className="iqx-plan-head">
                     <strong>{p.id}</strong>
-                    {a.modules.length > 0 && p.id === fit && <span className="iqx-fit">Fits your picks</span>}
+                    {a.modules.length > 0 && p.id === fit && <span className="iqx-fit">Cheapest for your picks</span>}
                   </span>
                   <span className="iqx-plan-price">BD {p.rate}<small> / employee / month</small></span>
                   <span className="iqx-plan-line">{p.line}</span>

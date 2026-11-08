@@ -6,7 +6,19 @@ import Payday from './Payday'
 import { Month, Rules } from './Month'
 import './RalHrPage.css'
 import ModulePicker from './ModulePicker'
-import { fitTier, STR as MSTR, tierName, toQuery } from './modules'
+import { CATEGORIES, fitTier, STR as MSTR, tierName, toQuery, type Tier } from './modules'
+
+// Plan cards list their own tier's modules, top six first; Professional and Premium build on the tier below.
+const PLAN_MODS = ([0, 1, 2] as Tier[]).map((tier) => CATEGORIES.flatMap((c) => c.mods).filter((x) => x.tier === tier))
+const TOP = 6
+
+function waText(plan: number, team: number, mods: string[]) {
+  const x = PRICING[plan]
+  const lines = [MSTR.waHi.en, '', `${MSTR.waPlan.en}: ${x.name} (BD ${x.price} ${MSTR.waPer.en})`, `${MSTR.waTeam.en}: ${team} ${MSTR.waPeople.en}`, `${MSTR.waPrice.en}: BD ${money(team * x.price)} ${MSTR.waMonth.en}`]
+  const rows = CATEGORIES.map((c) => { const on = c.mods.filter((m) => mods.includes(m.id)); return on.length ? `- ${c.name.en}: ${on.map((m) => m.name.en + (m.status === 'soon' ? ` (${MSTR.msgSoon.en})` : '')).join(', ')}` : '' }).filter(Boolean)
+  if (rows.length) lines.push('', `${MSTR.msgHead.en} (${mods.length}):`, ...rows)
+  return lines.join('\n')
+}
 
 const Demo = lazy(() => import('./Demo'))
 const INQUIRE = '/ral-hr/inquire/'
@@ -101,10 +113,12 @@ function Odometer({ value }: { value: number }) {
 
 function Pricing({ team, setTeam, plan, setPlan }: { team: number; setTeam: (n: number) => void; plan: number; setPlan: (n: number) => void }) {
   const p = PRICING[plan]
-  const [picking, setPicking] = useState(false)
+  const [helping, setHelping] = useState(false)
   const [mods, setMods] = useState<string[]>([])
+  const [open, setOpen] = useState<number | null>(null)
   const fit = fitTier(mods)
-  const showFit = () => { setPlan(fit); document.querySelector('.hp-plans')?.scrollIntoView({ behavior: calm() ? 'auto' : 'smooth', block: 'center' }) }
+  const onMods = (ids: string[]) => { setMods(ids); if (ids.length) setPlan(fitTier(ids)) }
+  const sentMods = helping ? mods : []
   const [draft, setDraft] = useState<string | null>(null) // typed text while editing, so the box can be cleared
   const onType = (v: string) => {
     const t = v.replace(/\D/g, '').slice(0, 6)
@@ -119,57 +133,81 @@ function Pricing({ team, setTeam, plan, setPlan }: { team: number; setTeam: (n: 
         <h2 className="hp-in">One price per person. <span className="serif">That is it.</span></h2>
         <p className="hp-in">Slide to your headcount and pick a plan. You see your real monthly number before we even talk.</p>
       </div>
-      <div className="hp-price hp-in">
-        <div className="hp-price-ctl">
-          <label htmlFor="hp-team" className="hp-k">Your team</label>
-          <p className="hp-price-team">
-            <input className="hp-team-num tnum" type="text" inputMode="numeric" aria-label="Team size, type any number" value={shown}
-              style={{ width: `calc(${Math.max(shown.length, 1)}ch + 4px)` }} onFocus={(e) => e.target.select()}
-              onChange={(e) => onType(e.target.value)} onBlur={() => setDraft(null)} onKeyDown={(e) => { if (e.key === 'Enter') e.currentTarget.blur() }} />
-            people
-            <span className="hp-team-hint">{team > 300 ? 'Custom team size' : 'More than 300? Tap the number and type yours.'}</span>
-          </p>
-          <input id="hp-team" type="range" min={5} max={300} step={5} value={Math.min(team, 300)} aria-valuetext={team + ' people'}
-            style={{ backgroundSize: ((Math.min(team, 300) - 5) / 295) * 100 + '% 100%' }} onChange={(e) => { setDraft(null); setTeam(+e.target.value) }} />
-          <div className="hp-ticks" aria-hidden="true"><span>5</span><span>100</span><span>200</span><span>300</span></div>
-          <div className="hp-presets" role="group" aria-label="Quick team sizes">
-            {[10, 25, 50, 100, 250].map((n) => <button key={n} type="button" aria-pressed={team === n} onClick={() => { setDraft(null); setTeam(n) }}>{n}</button>)}
+      <div className="hp-step hp-in">
+        <div className="hp-step-head">
+          <h3><i className="tnum">1</i>{MSTR.step1.en}</h3>
+          <div className="hp-mode" role="group" aria-label={MSTR.step1.en}>
+            <button type="button" aria-pressed={!helping} onClick={() => setHelping(false)}>{MSTR.modeKnow.en}</button>
+            <button type="button" aria-pressed={helping} onClick={() => setHelping(true)}>{MSTR.modeHelp.en}</button>
           </div>
         </div>
-        <div className="hp-price-out" aria-live="polite">
-          <p className="hp-eq"><span><b className="tnum">{team}</b> people</span><i aria-hidden="true">×</i><span><b className="tnum">BD {p.price}</b> {p.name}</span><i aria-hidden="true">=</i></p>
-          <p className="hp-big"><small>BD</small><Odometer value={team * p.price} /><span>a month</span></p>
-          <p className="hp-yr">BD {money(team * p.price * 12)} a year, plus a one-time setup fee.</p>
-          <p className="hp-day">That is about <b className="tnum">{Math.round(p.price * 1000 / 30)} fils</b> per person, per day.</p>
-        </div>
-      </div>
-      <div className="hp-plans">
-        {PRICING.map((x, i) => (
-          <article key={x.name} className={'hp-plan hp-in' + (i === plan ? ' on' : '')} onClick={() => setPlan(i)}>
-            <button type="button" className="hp-plan-pick" aria-pressed={i === plan} onClick={(e) => { e.stopPropagation(); setPlan(i) }}>
-              <b>{x.name}</b>{i === 1 && <em>Most teams</em>}<span className="hp-plan-tab-price tnum">BD {x.price}</span>
-            </button>
-            <p className="hp-plan-price"><b className="tnum">BD {x.price}</b> per person, per month</p>
-            <p className="hp-plan-blurb">{x.blurb}</p>
-            <ul>{x.items.map((it) => <li key={it}>{it}</li>)}</ul>
-            <p className="hp-plan-total">Your team: <b className="tnum">BD {money(team * x.price)}</b> a month</p>
-          </article>
-        ))}
-      </div>
-      <div className={'hp-fine hp-in' + (picking ? ' open' : '')}>
-        <p className="hp-fine-lead"><b>Built to your requirements.</b> Every plan is customizable: tell us which modules you need and we set RAL HR up the way your company works.</p>
-        <button type="button" className="hp-fine-cta" aria-expanded={picking} aria-controls={picking ? 'hp-pick' : undefined} onClick={() => setPicking((v) => !v)}>
-          {picking ? MSTR.close.en : MSTR.choose.en}<span className="hp-fine-chev" aria-hidden="true" />
-        </button>
-        {picking && (
-          <div className="hp-fine-pick" id="hp-pick">
-            <ModulePicker id="hp-mp" value={mods} onChange={setMods} />
-            <div className="hp-fine-go">
-              {mods.length > 0 && fit !== plan && <button type="button" className="hp-fine-plan" onClick={showFit}>{MSTR.seePlan.en}: <b>{tierName(fit)}</b></button>}
-              <a className="rh-cta" href={INQUIRE + toQuery(mods)}>{mods.length ? MSTR.continue.en : MSTR.continueNone.en}<span className="rh-cta-i" aria-hidden="true">→</span></a>
-            </div>
+        {helping ? (
+          <div className="hp-help">
+            <p className="hp-help-lead">{MSTR.helpLead.en}</p>
+            <ModulePicker id="hp-mp" value={mods} onChange={onMods} />
+            <p className="hp-help-fit" aria-live="polite">
+              {mods.length ? <>{MSTR.cheapest.en}: <b>{tierName(fit)}</b> <span className="tnum">BD {PRICING[fit].price}</span></> : MSTR.pickSome.en}
+            </p>
+          </div>
+        ) : (
+          <div className="hp-plans">
+            {PRICING.map((x, i) => {
+              const list = PLAN_MODS[i]
+              const all = open === i
+              const shownMods = all ? list : list.slice(0, TOP)
+              return (
+                <article key={x.name} className={'hp-plan' + (i === plan ? ' on' : '')} onClick={() => setPlan(i)}>
+                  <button type="button" className="hp-plan-pick" aria-pressed={i === plan} onClick={(e) => { e.stopPropagation(); setPlan(i) }}>
+                    <b>{x.name}</b>{i === 1 && <em>Most teams</em>}<span className="hp-plan-tab-price tnum">BD {x.price}</span>
+                  </button>
+                  <p className="hp-plan-price"><b className="tnum">BD {x.price}</b> per person, per month</p>
+                  <p className="hp-plan-blurb">{x.blurb}</p>
+                  {i > 0 && <p className="hp-plan-plus">{(i === 1 ? MSTR.plusStarter : MSTR.plusPro).en}</p>}
+                  <ul>{shownMods.map((m) => <li key={m.id}>{m.name.en}{m.status === 'soon' && <span className="hp-plan-soon">{MSTR.soonTag.en}</span>}</li>)}</ul>
+                  {list.length > TOP && (
+                    <button type="button" className="hp-plan-more" aria-expanded={all} onClick={(e) => { e.stopPropagation(); setOpen(all ? null : i) }}>
+                      {all ? MSTR.less.en : `+ ${list.length - TOP} ${MSTR.more.en}`}
+                    </button>
+                  )}
+                </article>
+              )
+            })}
           </div>
         )}
+      </div>
+      <div className="hp-step hp-in">
+        <div className="hp-step-head"><h3><i className="tnum">2</i>{MSTR.step2.en}</h3></div>
+        <div className="hp-price">
+          <div className="hp-price-ctl">
+            <label htmlFor="hp-team" className="hp-k">Your team</label>
+            <p className="hp-price-team">
+              <input className="hp-team-num tnum" type="text" inputMode="numeric" aria-label="Team size, type any number" value={shown}
+                style={{ width: `calc(${Math.max(shown.length, 1)}ch + 4px)` }} onFocus={(e) => e.target.select()}
+                onChange={(e) => onType(e.target.value)} onBlur={() => setDraft(null)} onKeyDown={(e) => { if (e.key === 'Enter') e.currentTarget.blur() }} />
+              people
+              <span className="hp-team-hint">{team > 300 ? 'Custom team size' : 'More than 300? Tap the number and type yours.'}</span>
+            </p>
+            <input id="hp-team" type="range" min={5} max={300} step={5} value={Math.min(team, 300)} aria-valuetext={team + ' people'}
+              style={{ backgroundSize: ((Math.min(team, 300) - 5) / 295) * 100 + '% 100%' }} onChange={(e) => { setDraft(null); setTeam(+e.target.value) }} />
+            <div className="hp-ticks" aria-hidden="true"><span>5</span><span>100</span><span>200</span><span>300</span></div>
+            <div className="hp-presets" role="group" aria-label="Quick team sizes">
+              {[10, 25, 50, 100, 250].map((n) => <button key={n} type="button" aria-pressed={team === n} onClick={() => { setDraft(null); setTeam(n) }}>{n}</button>)}
+            </div>
+          </div>
+          <div className="hp-price-out" aria-live="polite">
+            <p className="hp-eq"><span><b className="tnum">{team}</b> people</span><i aria-hidden="true">×</i><span><b className="tnum">BD {p.price}</b> {p.name}</span><i aria-hidden="true">=</i></p>
+            <p className="hp-big"><small>BD</small><Odometer value={team * p.price} /><span>a month</span></p>
+            <p className="hp-yr">BD {money(team * p.price * 12)} a year, plus a one-time setup fee.</p>
+            <p className="hp-day">That is about <b className="tnum">{Math.round(p.price * 1000 / 30)} fils</b> per person, per day.</p>
+            <div className="hp-book">
+              <a className="rh-cta" href={WA + encodeURIComponent(waText(plan, team, sentMods))} target="_blank" rel="noopener">{MSTR.book.en}<span className="rh-cta-i" aria-hidden="true">↗</span></a>
+              <small>{MSTR.bookNote.en} <a href={INQUIRE + toQuery(sentMods)}>{MSTR.guided.en}</a></small>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div className="hp-fine hp-in">
+        <p className="hp-fine-lead"><b>Built to your requirements.</b> Every plan is customizable: tell us which modules you need and we set RAL HR up the way your company works.</p>
         <ul className="hp-fine-perks">
           <li>Ask RAL in every plan</li>
           <li>Managers and admins at no extra cost</li>
