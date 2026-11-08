@@ -152,11 +152,6 @@ function Tween({ v }: { v: number }) {
   return <>{money(shown)}</>
 }
 
-const NOTE: [string, boolean?][] = [
-  ['Payroll in Bahrain has its own rules: '], ['the WPS file', true], [', '], ['SIO', true], [', '], ['end of service', true], [', '], ['Arabic payslips', true],
-  ['. Most HR tools treat them as an afterthought. I built RAL HR so they are the starting point, and so your team can just ask when they need something.'],
-]
-const words = (t: string) => t.split(/(\s+)/).map((w, i) => (/^\s+$/.test(w) || !w ? w : <span key={i} className="rh-fw">{w}</span>))
 const TICKS = [5, 100, 200, 300]
 
 function Clock() {
@@ -245,12 +240,6 @@ export default function RalHrPage() {
       // Video: the three things staff see pop out of the phone, one after another.
       gsap.from('.rh-pings li', { opacity: 0, scale: 0.8, y: 16, duration: 0.8, stagger: 0.4, ease: 'back.out(1.6)', delay: 0.3,
         scrollTrigger: { trigger: '.rh-phone', start: 'top 72%', once: true } })
-    }, () => {
-      // Founder note: the words light up in reading order, then the four rules underline.
-      gsap.timeline({ scrollTrigger: { trigger: '.rh-founder', start: 'top 72%', once: true } })
-        .from('.rh-fw', { opacity: 0.14, duration: 0.5, stagger: 0.022, ease: 'power1.out' })
-        .from('.rh-founder mark', { backgroundSize: '0% 2px', duration: 0.8, stagger: 0.12, ease: 'expo.out' }, '-=0.9')
-        .from('.rh-swash path', { strokeDashoffset: 130, duration: 1.1, ease: 'expo.out' }, '-=0.4')
     }, () => {
       // Closing: the headline rises like the hero, then the three steps connect and light in order.
       const ol = el.querySelector('.rh-next')
@@ -445,18 +434,6 @@ export default function RalHrPage() {
           <p className="rh-note rh-in">Ask RAL is in every plan. No per-user fee for managers or admins. A one-time setup fee sized to your company. Hosted by RAL, or on your own server.</p>
         </section>
 
-        <section className="rh-section rh-founder rh-reveal">
-          <blockquote>
-            <p>{NOTE.map(([t, m], i) => (m ? <mark key={i}>{words(t)}</mark> : <Fragment key={i}>{words(t)}</Fragment>))}</p>
-            <footer className="rh-in">
-              <span className="rh-mono" aria-hidden="true">S</span>
-              <span>
-                <b>Suhaib<svg className="rh-swash" viewBox="0 0 130 10" aria-hidden="true"><path d="M2 7 C 34 1, 70 10, 128 3" /></svg></b>
-                <small>Founder, RAL Technologies, Manama</small>
-              </span>
-            </footer>
-          </blockquote>
-        </section>
 
         <section id="faq" className="rh-section rh-faqsec rh-reveal">
           <div className="rh-head rh-in">
