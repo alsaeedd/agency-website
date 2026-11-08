@@ -41,15 +41,6 @@ function DemoSlot() {
     io.observe(el)
     return () => io.disconnect()
   }, [])
-  // Keep the floating contact button off the demo's phone frame while the demo is on screen.
-  useEffect(() => {
-    const el = ref.current
-    if (!el || !('IntersectionObserver' in window)) return
-    const root = document.documentElement
-    const io = new IntersectionObserver(([e]) => root.classList.toggle('hp-demo-in', e.isIntersecting), { threshold: 0.12 })
-    io.observe(el)
-    return () => { io.disconnect(); root.classList.remove('hp-demo-in') }
-  }, [])
   const fallback = <div className="hp-demo-fallback">Loading the full demo</div>
   return <div ref={ref}>{show ? <Suspense fallback={fallback}><Demo /></Suspense> : fallback}</div>
 }

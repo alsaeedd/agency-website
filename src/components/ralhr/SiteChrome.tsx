@@ -5,7 +5,6 @@ import Lenis from 'lenis'
 import Navbar from '../Navbar'
 import Footer from '../Footer'
 import Contact from '../Contact'
-import ContactCircle from '../ContactCircle'
 import CursorFollower from '../CursorFollower'
 import NavLoader from '../NavLoader'
 
@@ -54,15 +53,6 @@ export default function SiteChrome({ children }: { children: ReactNode }) {
       lenis?.destroy()
     }
   }, [coarse])
-  // Keep the floating contact button off the footer links: hide it while the footer is on screen.
-  useEffect(() => {
-    const foot = document.querySelector('footer.footer')
-    if (!foot || !('IntersectionObserver' in window)) return
-    const root = document.documentElement
-    const io = new IntersectionObserver(([e]) => root.classList.toggle('rh-foot-in', e.isIntersecting))
-    io.observe(foot)
-    return () => { io.disconnect(); root.classList.remove('rh-foot-in') }
-  }, [])
 
   return (
     <>
@@ -72,7 +62,6 @@ export default function SiteChrome({ children }: { children: ReactNode }) {
         <div className="bg-blob bg-blob-3" />
       </div>
       {ready && !coarse && <CursorFollower />}
-      {ready && <ContactCircle onClick={openContact} />}
       <Navbar
         onContactClick={openContact}
         scrollToSection={(s) => { window.location.href = '/' + s }}

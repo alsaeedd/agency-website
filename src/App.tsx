@@ -13,7 +13,6 @@ import RalHrHome from "./components/RalHrHome";
 import CTA from "./components/CTA";
 import Footer from "./components/Footer";
 import Interlude from "./components/Interlude";
-import ContactCircle from "./components/ContactCircle";
 import CursorFollower from "./components/CursorFollower";
 import Contact from "./components/Contact";
 import Preloader from "./components/Preloader";
@@ -157,7 +156,6 @@ function App() {
         <div className="bg-blob bg-blob-3" />
       </div>
       {chromeReady && !isCoarse && <CursorFollower />}
-      {chromeReady && <ContactCircle onClick={openContact} />}
       <Navbar onContactClick={openContact} scrollToSection={scrollToSection} />
       <main>
         <Hero
