@@ -128,7 +128,7 @@ export default function Navbar({ onContactClick, scrollToSection, linkBase = "",
   return (
     <>
       <header
-        className={`navbar${scrolled ? " nav-scrolled" : ""}`}
+        className={`navbar${scrolled ? " nav-scrolled" : ""}${showAtTop ? " nav-solid" : ""}`}
         ref={navRef}
       >
         <div className="container">
