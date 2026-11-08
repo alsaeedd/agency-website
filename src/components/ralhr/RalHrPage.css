@@ -181,7 +181,7 @@
 .hp-rule-n { font-size: clamp(56px, 6.5vw, 92px); line-height: .9; font-weight: 600; letter-spacing: -.05em; background: linear-gradient(180deg, #fff, #b9a6e8); -webkit-background-clip: text; background-clip: text; color: transparent; }
 .hp-rule-n small { font-size: .45em; letter-spacing: -.02em; }
 .hp-rule-n em { font-style: normal; font-weight: 300; padding: 0 .12em; opacity: .6; }
-.hp-rule-n.ar { font-family: "Segoe UI", Tahoma, "Noto Sans Arabic", sans-serif; letter-spacing: 0; font-weight: 700; }
+.hp-rule-n.ar { font-family: "Segoe UI", Tahoma, "Noto Sans Arabic", sans-serif; letter-spacing: 0; font-weight: 700; line-height: 1.35; padding-bottom: .08em; }
 .hp-rule p { font-size: 15px; line-height: 1.55; color: var(--ink2); max-width: 300px; }
 .hp-rule-wide p { margin-top: 18px; }
 .hp-ladder { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; height: 170px; align-items: end; }
