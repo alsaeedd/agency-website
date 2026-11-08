@@ -364,7 +364,6 @@
 
 /* ================= Polish v3: one moment per section ================= */
 /* The floating contact button steps aside while the demo is on screen. */
-.hp-demo-in .contact-circle, .rh-foot-in .contact-circle { opacity: 0; visibility: hidden; pointer-events: none; transition: opacity .3s, visibility 0s .3s; }
 
 /* Month: October at a glance */
 .hp-ch { scroll-margin-top: 110px; }
