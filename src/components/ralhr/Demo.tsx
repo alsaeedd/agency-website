@@ -34,30 +34,30 @@ const PHONE_TABS: TabId[] = ['home', 'people', 'payroll', 'leave', 'ask']
 const TOUR: { tab: TabId; steps: string[] }[] = [
   { tab: 'home', steps: [] },
   { tab: 'payroll', steps: ['pay-compute', 'pay-review', 'pay-fix', 'pay-approve', 'pay-confirm', 'pay-wps'] },
-  { tab: 'leave', steps: ['leave-ok-noor', 'leave-sel-suresh', 'leave-ok-suresh'] },
+  { tab: 'leave', steps: ['leave-ok-noor', 'leave-sel-yasser', 'leave-ok-yasser'] },
   { tab: 'people', steps: ['person-3', 'to-eos'] },
   { tab: 'ask', steps: ['ask-0', 'ask-2'] },
 ]
 const CAPTION: Record<string, [string, string]> = {
   'pay-compute': ['Computing October for 98 people', 'احتساب أكتوبر لـ98 موظفًا'],
   'pay-review': ['Running the checks before approval', 'تشغيل الفحوصات قبل الاعتماد'],
-  'pay-fix': ["Fixing Arun's IBAN from the HR record", 'تصحيح آيبان أرون من سجل الموارد البشرية'],
+  'pay-fix': ["Fixing Omar's IBAN from the HR record", 'تصحيح آيبان عمر من سجل الموارد البشرية'],
   'pay-approve': ['Approving: money moves only on a second tap', 'الاعتماد: لا تتحرك الأموال إلا بنقرة ثانية'],
   'pay-confirm': ['Second approver signs off', 'المعتمِد الثاني يوقّع'],
   'pay-wps': ['Building the WPS file row by row', 'بناء ملف WPS صفًا صفًا'],
   'leave-ok-noor': ["Approving Noor's 3 days", 'الموافقة على 3 أيام لنور'],
-  'leave-sel-suresh': ["Opening Suresh's trip home", 'فتح طلب سوريش للسفر'],
-  'leave-ok-suresh': ['Maintenance drops to minimum cover', 'الصيانة تصل إلى الحد الأدنى للتغطية'],
-  'person-3': ["Opening Rajesh's profile and payslip", 'فتح ملف راجيش وقسيمة راتبه'],
+  'leave-sel-yasser': ["Opening Yasser's trip home", 'فتح طلب ياسر للسفر'],
+  'leave-ok-yasser': ['Maintenance drops to minimum cover', 'الصيانة تصل إلى الحد الأدنى للتغطية'],
+  'person-3': ["Opening Mahmoud's profile and payslip", 'فتح ملف محمود وقسيمة راتبه'],
   'to-eos': ['Working out his end of service', 'احتساب مكافأة نهاية خدمته'],
   'ask-0': ['Asking for the payroll total in English', 'سؤال عن مجموع الرواتب بالإنجليزية'],
   'ask-2': ['Asking about leave in Arabic', 'سؤال عن الإجازة بالعربية'],
 }
 
-const RAJESH = byName('Rajesh Kumar').id
+const MAHMOUD = byName('Mahmoud Fathy').id
 const INITIAL: DemoState = {
   pay: 0, ibanFixed: false, confirm: false, decided: {}, sel: 'noor', person: byName('Mohammed Kanoo').id, profileOpen: false,
-  q: '', dept: 'all', eosWho: RAJESH, eosYears: 12.5, asks: [],
+  q: '', dept: 'all', eosWho: MAHMOUD, eosYears: 12.5, asks: [],
 }
 
 type Token = { dead: boolean }
@@ -101,7 +101,7 @@ export default function Demo({ lang: langProp }: { lang?: Lang } = {}) {
   const act: Act = {
     compute: () => patch({ pay: 1 }),
     review: () => patch({ pay: 2 }),
-    fixIban: () => { patch({ ibanFixed: true }); flash("Arun Pillai's IBAN updated from his HR record", 'تم تحديث آيبان أرون بيلاي من سجل الموارد البشرية') },
+    fixIban: () => { patch({ ibanFixed: true }); flash("Omar Khatib's IBAN updated from his HR record", 'تم تحديث آيبان عمر الخطيب من سجل الموارد البشرية') },
     askApprove: () => patch({ confirm: true }),
     cancel: () => patch({ confirm: false }),
     confirm: () => { patch({ confirm: false, pay: 3 }); flash(`October payroll approved, ${ROSTER.length} people, ${bd(TOTALS.net, 'en')}`, `اعتُمدت رواتب أكتوبر، ${ROSTER.length} موظفًا، ${bd(TOTALS.net, 'ar')}`) },

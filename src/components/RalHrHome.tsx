@@ -75,7 +75,10 @@ export default function RalHrHome() {
                 <span>Our own product</span>
               </span>
               <h2 id="hrh-title" className="section-heading hrh-title hrh-anim">
-                HR and payroll, <span className="serif-accent">built for Bahrain.</span>
+                <span className="hrh-name">RAL HR</span>
+                <span className="hrh-sub">
+                  HR and payroll, <span className="serif-accent">built for Bahrain.</span>
+                </span>
               </h2>
               <p className="section-intro hrh-intro hrh-anim">
                 We build software for clients. RAL HR is our own product: HR and payroll for Bahrain

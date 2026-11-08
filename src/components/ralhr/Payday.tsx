@@ -14,12 +14,12 @@ type Dev = 'web' | 'tablet' | 'phone'
 const STAFF = [
   { en: 'Mohammed Kanoo', ar: 'محمد كانو', role: ['Accountant', 'محاسب'], bh: true, gross: 1003, cpr: '8907•••41', iban: 'BH67 •••• 0042' },
   { en: 'Fatima Janahi', ar: 'فاطمة جناحي', role: ['HR Officer', 'موارد بشرية'], bh: true, gross: 720, cpr: '9104•••27', iban: 'BH29 •••• 1180' },
-  { en: 'Rajesh Kumar', ar: 'راجيش كومار', role: ['Technician', 'فني'], bh: false, gross: 480, cpr: '7812•••90', iban: 'BH03 •••• 7715' },
+  { en: 'Mahmoud Fathy', ar: 'محمود فتحي', role: ['Technician', 'فني'], bh: false, gross: 480, cpr: '7812•••90', iban: 'BH03 •••• 7715' },
   { en: 'Noor Al Sayed', ar: 'نور السيد', role: ['Site Supervisor', 'مشرفة موقع'], bh: true, gross: 860, cpr: '9302•••58', iban: 'BH84 •••• 2261' },
-  { en: 'Arun Pillai', ar: 'أرون بيلاي', role: ['Electrician', 'كهربائي'], bh: false, gross: 425, cpr: '8203•••15', iban: 'BH51 •••• 3309' },
-  { en: 'Priya Reddy', ar: 'بريا ريدي', role: ['Accountant', 'محاسبة'], bh: false, gross: 690, cpr: '9011•••62', iban: 'BH12 •••• 4470' },
+  { en: 'Omar Khatib', ar: 'عمر الخطيب', role: ['Electrician', 'كهربائي'], bh: false, gross: 425, cpr: '8203•••15', iban: 'BH51 •••• 3309' },
+  { en: 'Rania Haddad', ar: 'رانيا حداد', role: ['Accountant', 'محاسبة'], bh: false, gross: 690, cpr: '9011•••62', iban: 'BH12 •••• 4470' },
   { en: 'Hassan Kanoo', ar: 'حسن كانو', role: ['Ops Manager', 'مدير عمليات'], bh: true, gross: 1240, cpr: '8605•••03', iban: 'BH40 •••• 9934' },
-  { en: 'Joseph Fernandes', ar: 'جوزيف فرنانديز', role: ['Driver', 'سائق'], bh: false, gross: 395, cpr: '8812•••77', iban: 'BH95 •••• 5108' },
+  { en: 'Tarek Mansour', ar: 'طارق منصور', role: ['Driver', 'سائق'], bh: false, gross: 395, cpr: '8812•••77', iban: 'BH95 •••• 5108' },
 ].map((s) => {
   const sio = Math.round(s.gross * (s.bh ? 0.08 : 0.01) * 1000) / 1000
   return { ...s, sio, net: s.gross - sio }

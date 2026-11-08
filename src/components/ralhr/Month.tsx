@@ -157,7 +157,7 @@ function Eos() {
   const oldPct = r.total ? (r.oldAmt / r.total) * 100 : 0
   return (
     <div className="mu">
-      <div className="mu-bar"><b>Final settlement</b><span>Rajesh Kumar, expat</span></div>
+      <div className="mu-bar"><b>Final settlement</b><span>Mahmoud Fathy, expat</span></div>
       <label className="mu-range"><span>Years of service <b className="tnum">{y}</b></span>
         <input type="range" min={1} max={20} step={0.5} value={y} onChange={(e) => setY(+e.target.value)} style={{ backgroundSize: ((y - 1) / 19) * 100 + '% 100%' }} />
       </label>
@@ -229,7 +229,7 @@ export function Month() {
         <Ch n="25" day="Sunday 25 October" title="Payday, and a WPS file your bank accepts." ui={<Wps />}>
           Payroll runs with SIO worked out for every Bahraini and expat. Then RAL HR builds the LMRA salary file and checks all 10 columns on every row. You upload it to your bank as usual. We never touch the money.
         </Ch>
-        <Ch n="31" day="Saturday 31 October" title="Rajesh leaves. His gratuity is ready." ui={<Eos />}>
+        <Ch n="31" day="Saturday 31 October" title="Mahmoud leaves. His gratuity is ready." ui={<Eos />}>
           End of service is worked out for you, split between the old rules and the monthly SIO payments that started in March 2024. Slide the years and watch it update.
         </Ch>
       </div>
