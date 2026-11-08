@@ -14,7 +14,7 @@
 - Last fixes (hero word spacing, tighter hero, section index tracking, RTL minus signs) are built but NOT re-screenshotted.
 
 ## Left (next agent)
-1. Full Demo (Demo.tsx/screens.tsx) is only restyled dark through CSS vars. The owner wants it to be the centrepiece with richer Bahrain data: more staff, leave balances that update, payroll totals that flow, an Ask RAL typed answer with a mini chart, smoother screen transitions. Screenshot the #demo section first.
+1. Demo rebuilt (a4b7c73): `data.ts` holds a seeded 98-person roster for Bahrain Horizon Facilities (fils integers, SIO split, allowances, WPS, leave, attendance, EOS); totals close exactly to the hero's PAYROLL (gross 118,460, deductions 7,165, net 111,295). `screens.tsx` has Home, People+payslip, Payroll (4 steps, IBAN fix, stamp, WPS rows), Leave (approve/reject moves balance, calendar, cover), EOS slider, Ask RAL (streamed EN/AR answers with mini table/bars). `Demo.tsx` adds EN/عربي (full RTL), Web/Tablet/Phone (tab bar on phone, rail on tablet), ghost-cursor tour. Build green. Left: eyeball every tab at 768 and in Arabic, tune spacing, check phone profile push and modal heights.
 2. Screenshot 768 and the #demo, #app, #pricing, #talk sections. Check the month numeral size on mobile.
 3. Measure TBT (Lighthouse mobile) against the 225 ms target. The hero timeline makes about 20 React state updates.
 4. Run the web-design-guidelines review. When merging: main has 0cf33b2 (founder note removal), so take this branch's RalHrPage.tsx/.css whole.
