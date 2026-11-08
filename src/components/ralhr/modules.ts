@@ -3,6 +3,7 @@
 // Status and tier come from the RAL HR repo (platform/Modules.java gates, the web router, docs/32 gap register)
 // mapped onto the public PRICING tiers in data.ts. Full table: docs/ral-hr/MODULES.md.
 import { PRICING } from './data'
+import { isAr } from './t'
 
 export type T = { en: string; ar: string }
 export type Status = 'live' | 'demo' | 'soon'
@@ -103,8 +104,8 @@ export const cleanIds = (ids: unknown): string[] => Array.isArray(ids) ? [...new
 
 /** Lowest plan that covers every pick (the highest tier among them). */
 export const fitTier = (ids: string[]): Tier => ids.reduce<Tier>((acc, id) => Math.max(acc, BY_ID.get(id)?.tier ?? 0) as Tier, 0)
-export const tierName = (x: Tier) => PRICING[x].name
-export const TIER_AR: Record<Tier, string> = { 0: 'الأساسية', 1: 'الاحترافية', 2: 'المميزة' }
+export const tierName = (x: Tier) => (isAr() ? TIER_AR[x] : PRICING[x].name)
+export const TIER_AR: Record<Tier, string> = { 0: 'الأساسية', 1: 'الاحترافية', 2: 'المتميزة' }
 
 /** Query string key that carries picks from the pricing box into the inquiry. */
 export const QS = 'modules'

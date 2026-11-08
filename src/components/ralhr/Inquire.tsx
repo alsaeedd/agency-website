@@ -1,4 +1,7 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'react'
+import { localePath } from '../../i18n'
+import { ralHrLang as lg } from './t'
+import { t } from './t'
 import { gsap } from 'gsap'
 import { calm as calmMotion } from './charts'
 import './RalHrPage.css'
@@ -78,9 +81,9 @@ function moduleLines(ids: string[]): string {
   if (!ids.length) return ''
   const rows = CATEGORIES.map((c) => {
     const on = c.mods.filter((x) => ids.includes(x.id))
-    return on.length ? `- ${c.name.en}: ${on.map((x) => x.name.en + (x.status === 'soon' ? ` (${MSTR.msgSoon.en})` : '')).join(', ')}` : ''
+    return on.length ? `- ${c.name[lg()]}: ${on.map((x) => x.name[lg()] + (x.status === 'soon' ? ` (${MSTR.msgSoon[lg()]})` : '')).join(', ')}` : ''
   }).filter(Boolean)
-  return [`${MSTR.msgHead.en} (${ids.length}):`, ...rows].join('\n')
+  return [`${MSTR.msgHead[lg()]} (${ids.length}):`, ...rows].join('\n')
 }
 
 const useIsoLayoutEffect = typeof window !== 'undefined' ? useLayoutEffect : useEffect
@@ -188,8 +191,8 @@ export default function Inquire({ onClose }: { onClose?: () => void } = {}) {
   return (
     <div className="rh">
       {onClose
-        ? <header className="rh-top"><a href="/ral-hr/" className="rh-brand">RAL <span>HR</span></a><button type="button" className="rh-top-cta iqx-close" onClick={onClose}>Close</button></header>
-        : <a className="iqx-back" href="/ral-hr/"><span aria-hidden="true">{'\u2190'} </span>Back to RAL HR</a>}
+        ? <header className="rh-top"><a href={localePath(lg(), "/ral-hr/")} className="rh-brand">{t("RAL")} <span>{t("HR")}</span></a><button type="button" className="rh-top-cta iqx-close" onClick={onClose}>{t("Close")}</button></header>
+        : <a className="iqx-back" href={localePath(lg(), "/ral-hr/")}><span aria-hidden="true" className="rh-flip">{'\u2190'} </span>{t("Back to RAL HR")}</a>}
       <main className="iq iqx">
         <div className="iqx-progress" aria-label={step < total ? `Step ${shown} of ${total}` : 'Ready to send'}>
           <ol>
@@ -205,69 +208,69 @@ export default function Inquire({ onClose }: { onClose?: () => void } = {}) {
 
         <div ref={stage} className="iqx-stage" key={step}>
           {step === 0 && (<>
-            <p className="iqx-eyebrow" data-rise>Let's size it up</p>
-            <h1 tabIndex={-1} data-rise>How many people <em>work with you?</em></h1>
-            <p className="iq-lead" data-rise>Pricing is per employee, so this is the number that matters most.</p>
-            <div className="iqx-chips" data-rise role="radiogroup" aria-label="Team size">
+            <p className="iqx-eyebrow" data-rise>{t("Let's size it up")}</p>
+            <h1 tabIndex={-1} data-rise>{t("How many people")} <em>{t("work with you?")}</em></h1>
+            <p className="iq-lead" data-rise>{t("Pricing is per employee, so this is the number that matters most.")}</p>
+            <div className="iqx-chips" data-rise role="radiogroup" aria-label={t("Team size")}>
               {SIZES.map((s) => (
                 <button key={s.id} type="button" role="radio" aria-checked={a.size === s.id} className={`iqx-chip${a.size === s.id ? ' on' : ''}`} onClick={() => set({ size: s.id, count: '' })}>{s.id}</button>
               ))}
             </div>
             {a.size && (
               <label className="iqx-exact" data-rise>
-                <span>Know the exact number? <small>Optional, it sharpens the estimate.</small></span>
-                <input inputMode="numeric" pattern="[0-9]*" placeholder={`About ${SIZES.find((s) => s.id === a.size)?.guess}`} value={a.count} onChange={(e) => set({ count: e.target.value.replace(/\D/g, '').slice(0, 5) })} name="headcount" autoComplete="off" aria-label="Exact headcount" />
+                <span>{t("Know the exact number?")} <small>{t("Optional, it sharpens the estimate.")}</small></span>
+                <input inputMode="numeric" pattern="[0-9]*" placeholder={`About ${SIZES.find((s) => s.id === a.size)?.guess}`} value={a.count} onChange={(e) => set({ count: e.target.value.replace(/\D/g, '').slice(0, 5) })} name="headcount" autoComplete="off" aria-label={t("Exact headcount")} />
               </label>
             )}
             {err(!a.size, 'Pick the closest range to carry on.')}
           </>)}
 
           {step === 1 && (<>
-            <p className="iqx-eyebrow" data-rise>What hurts today</p>
-            <h1 tabIndex={-1} data-rise>What do you <em>need most?</em></h1>
-            <p className="iq-lead" data-rise>Pick as many as you like. Not sure yet? Skip it, we'll work it out together.</p>
+            <p className="iqx-eyebrow" data-rise>{t("What hurts today")}</p>
+            <h1 tabIndex={-1} data-rise>{t("What do you")} <em>{t("need most?")}</em></h1>
+            <p className="iq-lead" data-rise>{t("Pick as many as you like. Not sure yet? Skip it, we'll work it out together.")}</p>
             <div data-rise><ModulePicker id="iq-mp" value={a.modules} onChange={(modules) => set({ modules })} animate={false} /></div>
           </>)}
 
           {step === 2 && (<>
-            <p className="iqx-eyebrow" data-rise>No per-user fees</p>
-            <h1 tabIndex={-1} data-rise>Which plan <em>feels right?</em></h1>
-            <p className="iq-lead" data-rise>Ask RAL comes in every plan. You can add or drop modules later.</p>
-            <div className="iqx-plans" data-rise role="radiogroup" aria-label="Plan">
+            <p className="iqx-eyebrow" data-rise>{t("No per-user fees")}</p>
+            <h1 tabIndex={-1} data-rise>{t("Which plan")} <em>{t("feels right?")}</em></h1>
+            <p className="iq-lead" data-rise>{t("Ask RAL comes in every plan. You can add or drop modules later.")}</p>
+            <div className="iqx-plans" data-rise role="radiogroup" aria-label={t("Plan")}>
               {PLANS.map((p) => (
                 <button key={p.id} type="button" role="radio" aria-checked={a.plan === p.id} className={`iqx-plan${a.plan === p.id ? ' on' : ''}`} onClick={() => set({ plan: p.id })}>
                   <span className="iqx-plan-head">
                     <strong>{p.id}</strong>
                     {a.modules.length > 0 && p.id === fit && <span className="iqx-fit">Cheapest for your picks</span>}
                   </span>
-                  <span className="iqx-plan-price">BD {p.rate}<small> / employee / month</small></span>
+                  <span className="iqx-plan-price">BD {p.rate}<small> {t("/ employee / month")}</small></span>
                   <span className="iqx-plan-line">{p.line}</span>
                   <span className="iqx-plan-has">{p.has}</span>
                   <span className="iqx-plan-est">{bd(monthly(n, p.id))} a month for {exact(a) ? '' : 'about '}{n} people</span>
                 </button>
               ))}
               <button type="button" role="radio" aria-checked={a.plan === UNSURE} className={`iqx-plan iqx-plan-unsure${a.plan === UNSURE ? ' on' : ''}`} onClick={() => set({ plan: UNSURE })}>
-                <strong>Help me choose</strong>
-                <span className="iqx-plan-line">Tell us your setup and we'll suggest the smallest plan that does the job.</span>
+                <strong>{t("Help me choose")}</strong>
+                <span className="iqx-plan-line">{t("Tell us your setup and we'll suggest the smallest plan that does the job.")}</span>
               </button>
             </div>
             <div className={`iqx-total${planOf(a.plan) ? ' live' : ''}`} data-rise aria-live="polite">
-              <span className="iqx-total-label"><i aria-hidden="true" />Live estimate</span>
+              <span className="iqx-total-label"><i aria-hidden="true" />{t("Live estimate")}</span>
               {planOf(a.plan) ? (<>
                 <span className="iqx-total-sum">{exact(a) ? '' : 'About '}{n} people <span aria-hidden="true">×</span> BD {planOf(a.plan)!.rate}</span>
-                <span className="iqx-total-val"><Estimate value={monthly(n, a.plan)} /><small> / month</small></span>
+                <span className="iqx-total-val"><Estimate value={monthly(n, a.plan)} /><small> {t("/ month")}</small></span>
                 {n * planOf(a.plan)!.rate < planOf(a.plan)!.base && <span className="iqx-total-note">{a.plan} starts at {bd(planOf(a.plan)!.base)} a month.</span>}
-              </>) : <span className="iqx-total-sum">Pick a plan to see your monthly number.</span>}
-              <span className="iqx-total-fine">Plus a one-time setup fee sized to your company. Final price agreed with you.</span>
+              </>) : <span className="iqx-total-sum">{t("Pick a plan to see your monthly number.")}</span>}
+              <span className="iqx-total-fine">{t("Plus a one-time setup fee sized to your company. Final price agreed with you.")}</span>
             </div>
             {err(!a.plan, 'Choose a plan, or let us help you choose.')}
           </>)}
 
           {step === 3 && (<>
-            <p className="iqx-eyebrow" data-rise>No pressure</p>
-            <h1 tabIndex={-1} data-rise>When would you like <em>to start?</em></h1>
-            <p className="iq-lead" data-rise>It shapes how we plan your setup. Exploring is a perfectly good answer.</p>
-            <div className="iqx-chips" data-rise role="radiogroup" aria-label="Timeline">
+            <p className="iqx-eyebrow" data-rise>{t("No pressure")}</p>
+            <h1 tabIndex={-1} data-rise>{t("When would you like")} <em>{t("to start?")}</em></h1>
+            <p className="iq-lead" data-rise>{t("It shapes how we plan your setup. Exploring is a perfectly good answer.")}</p>
+            <div className="iqx-chips" data-rise role="radiogroup" aria-label={t("Timeline")}>
               {TIMES.map((t) => (
                 <button key={t.id} type="button" role="radio" aria-checked={a.time === t.id} className={`iqx-chip${a.time === t.id ? ' on' : ''}`} onClick={() => set({ time: t.id })}>{t.id}</button>
               ))}
@@ -276,37 +279,37 @@ export default function Inquire({ onClose }: { onClose?: () => void } = {}) {
           </>)}
 
           {step === 4 && (<>
-            <p className="iqx-eyebrow" data-rise>Last step</p>
-            <h1 tabIndex={-1} data-rise>Who should we <em>talk to?</em></h1>
-            <p className="iq-lead" data-rise>Nothing is sent until you press send. You'll see the exact message first.</p>
+            <p className="iqx-eyebrow" data-rise>{t("Last step")}</p>
+            <h1 tabIndex={-1} data-rise>{t("Who should we")} <em>{t("talk to?")}</em></h1>
+            <p className="iq-lead" data-rise>{t("Nothing is sent until you press send. You'll see the exact message first.")}</p>
             <div className="iqx-fields" data-rise>
-              <label className={tried && !nameOk(a) ? 'bad' : ''}>Your name
-                <input data-autofocus value={a.name} onChange={(e) => set({ name: e.target.value })} name="name" autoComplete="name" placeholder="Ahmed" />
+              <label className={tried && !nameOk(a) ? 'bad' : ''}>{t("Your name")}
+                <input data-autofocus value={a.name} onChange={(e) => set({ name: e.target.value })} name="name" autoComplete="name" placeholder={t("Ahmed")} />
                 {err(!nameOk(a), 'We need a name to say hello.')}
               </label>
-              <label className={tried && !companyOk(a) ? 'bad' : ''}>Company
-                <input value={a.company} onChange={(e) => set({ company: e.target.value })} name="company" autoComplete="organization" placeholder="Gulf Foods W.L.L." />
+              <label className={tried && !companyOk(a) ? 'bad' : ''}>{t("Company")}
+                <input value={a.company} onChange={(e) => set({ company: e.target.value })} name="company" autoComplete="organization" placeholder={t("Gulf Foods W.L.L.")} />
                 {err(!companyOk(a), 'Which company is this for?')}
               </label>
-              <label className={tried && !phoneOk(a) ? 'bad' : ''}>Phone <small>Optional</small>
-                <input type="tel" value={a.phone} onChange={(e) => set({ phone: e.target.value })} name="phone" autoComplete="tel" placeholder="+973 3xxx xxxx" />
+              <label className={tried && !phoneOk(a) ? 'bad' : ''}>{t("Phone")} <small>{t("Optional")}</small>
+                <input type="tel" value={a.phone} onChange={(e) => set({ phone: e.target.value })} name="phone" autoComplete="tel" placeholder={t("+973 3xxx xxxx")} />
                 {err(!phoneOk(a), 'That number looks a little short.')}
               </label>
             </div>
           </>)}
 
           {step === 5 && (<>
-            <p className="iqx-eyebrow" data-rise>Ready when you are</p>
-            <h1 tabIndex={-1} data-rise>Here is your <em>message.</em></h1>
-            <p className="iq-lead" data-rise>Tap the bubble to change anything. It goes straight to our WhatsApp, from your own phone.</p>
+            <p className="iqx-eyebrow" data-rise>{t("Ready when you are")}</p>
+            <h1 tabIndex={-1} data-rise>{t("Here is your")} <em>{t("message.")}</em></h1>
+            <p className="iq-lead" data-rise>{t("Tap the bubble to change anything. It goes straight to our WhatsApp, from your own phone.")}</p>
             <div className="iqx-chat" data-rise>
               <div className="iqx-chat-head">
                 <span className="iqx-avatar" aria-hidden="true">R</span>
-                <span><strong>RAL Technologies</strong><small><i aria-hidden="true" />Manama, Bahrain</small></span>
+                <span><strong>{t("RAL Technologies")}</strong><small><i aria-hidden="true" />{t("Manama, Bahrain")}</small></span>
               </div>
               <div className="iqx-chat-body">
-                {typing ? <div className="iqx-typing" aria-label="Writing your message"><i /><i /><i /></div> : <div className="iqx-bubble iqx-pop">
-                  <textarea ref={bubble} value={msg} rows={3} onChange={(e) => { setMsg(e.target.value); setCopied(false) }} aria-label="Your WhatsApp message" spellCheck />
+                {typing ? <div className="iqx-typing" aria-label={t("Writing your message")}><i /><i /><i /></div> : <div className="iqx-bubble iqx-pop">
+                  <textarea ref={bubble} value={msg} rows={3} onChange={(e) => { setMsg(e.target.value); setCopied(false) }} aria-label={t("Your WhatsApp message")} spellCheck />
                   <span className={`iqx-meta${sent ? ' sent' : ''}`}>{stamp}<svg viewBox="0 0 18 12" aria-hidden="true"><path d="M1 6.5l3 3 6-7M7 9.5l1 1 6-8" /></svg></span>
                 </div>}
               </div>
@@ -315,27 +318,27 @@ export default function Inquire({ onClose }: { onClose?: () => void } = {}) {
               <div className="iqx-sent" role="status">
                 <svg viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="18" /><path d="M12 20.5l5.5 5.5L28 15" /></svg>
                 <div>
-                  <strong>WhatsApp is open with your message.</strong>
-                  <p>Press send there and we reply in that same chat. If it did not open, copy the message or email it instead.</p>
+                  <strong>{t("WhatsApp is open with your message.")}</strong>
+                  <p>{t("Press send there and we reply in that same chat. If it did not open, copy the message or email it instead.")}</p>
                 </div>
               </div>
             )}
             <div className="iqx-send" data-rise>
               <a className="rh-cta" href={WA + encodeURIComponent(msg)} target="_blank" rel="noopener" aria-disabled={!msg.trim()} onClick={() => setSent(true)}>{sent ? 'Open WhatsApp again' : 'Send on WhatsApp'}<span className="rh-cta-i" aria-hidden="true">↗</span></a>
-              <a className="rh-ghost" href={`mailto:info@raltech.dev?subject=${encodeURIComponent(`RAL HR demo${a.company.trim() ? `: ${a.company.trim()}` : ''}`)}&body=${encodeURIComponent(msg)}`}>Email it instead</a>
+              <a className="rh-ghost" href={`mailto:info@raltech.dev?subject=${encodeURIComponent(`RAL HR demo${a.company.trim() ? `: ${a.company.trim()}` : ''}`)}&body=${encodeURIComponent(msg)}`}>{t("Email it instead")}</a>
             </div>
             <div className="iq-alt" data-rise>
-              <button type="button" className="iq-back" onClick={back}>Back</button>
+              <button type="button" className="iq-back" onClick={back}>{t("Back")}</button>
               <button type="button" onClick={copy}>{copied ? 'Copied' : 'Copy message'}</button>
-              <button type="button" onClick={() => { setMsg(compose(a)); setCopied(false) }}>Reset to my answers</button>
+              <button type="button" onClick={() => { setMsg(compose(a)); setCopied(false) }}>{t("Reset to my answers")}</button>
             </div>
           </>)}
         </div>
 
         {step < total && (
           <div className="iq-nav iqx-nav">
-            {step > 0 ? <button type="button" className="iq-back" onClick={back}>Back</button> : <span />}
-            <span className="iqx-enter" aria-hidden="true">press <kbd>Enter</kbd></span>
+            {step > 0 ? <button type="button" className="iq-back" onClick={back}>{t("Back")}</button> : <span />}
+            <span className="iqx-enter" aria-hidden="true">{t("press")} <kbd>{t("Enter")}</kbd></span>
             <button type="button" className={`rh-cta iq-next${ok ? '' : ' soft'}`} aria-disabled={!ok} onClick={next}>
               {step === total - 1 ? 'Preview message' : step === 1 && !a.modules.length ? 'Skip for now' : 'Next'}<span className="rh-cta-i" aria-hidden="true">→</span>
             </button>

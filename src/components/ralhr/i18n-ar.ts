@@ -452,6 +452,11 @@ export const AR: Record<string, string> = {
   'The old labour law and the new SIO scheme, both worked out.': 'وفق قانون العمل القديم ونظام التأمينات الجديد، كلاهما محسوب.',
   'On every screen': 'على كل شاشة',
   "Web and iOS & Android. Ask RAL answers your team's questions.": 'الويب وiOS & Android. ويجيب Ask RAL عن أسئلة فريقك.',
+  // ---------- Added with the module picker / wiring pass ----------
+  "BD {0} a year, plus a one-time setup fee.": "{0} د.ب سنويًا، مع رسوم تجهيز لمرة واحدة.",
+  "{0} fils": "{0} فلس",
+  "BD {0} a month": "{0} د.ب شهريًا",
+  "The operational must-haves.": "الأساسيات التشغيلية.",
 }
 
 export const META_AR = {

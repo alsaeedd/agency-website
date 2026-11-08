@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
+import { t as tr, isAr } from './t'
 import { gsap } from 'gsap'
 import { calm, money, useIsoLayoutEffect } from './charts'
 import { PAYROLL } from './data'
@@ -49,7 +50,7 @@ const cur = (l: Lang, s: string) => (l === 'ar' ? s + ' د.ب' : 'BD ' + s)
 const ini = (n: string) => n.split(' ').map((w) => w[0]).slice(0, 2).join('')
 
 export default function Payday({ compact = false, waitForView = false, lite = false }: { compact?: boolean; waitForView?: boolean; lite?: boolean }) {
-  const [lang, setLang] = useState<Lang>('en')
+  const [lang, setLang] = useState<Lang>(isAr() ? 'ar' : 'en')
   const [dev, setDev] = useState<Dev>('web')
   const [rows, setRows] = useState(STAFF.length)
   const [step, setStep] = useState(5)
@@ -128,12 +129,12 @@ export default function Payday({ compact = false, waitForView = false, lite = fa
 
   return (
     <div className={'pd' + (compact ? ' pd--compact' : '')} data-dev={dev} data-step={step}>
-      <div className="pd-tools" role="toolbar" aria-label="Demo controls">
-        {!compact && <div className="pd-seg pd-devs" role="group" aria-label="Device">
+      <div className="pd-tools" role="toolbar" aria-label={tr("Demo controls")}>
+        {!compact && <div className="pd-seg pd-devs" role="group" aria-label={tr("Device")}>
           {DEVS.map(([d, l]) => <button key={d} type="button" aria-pressed={dev === d} onClick={() => toDev(d)}>{l}</button>)}
         </div>}
-        <div className="pd-seg" role="group" aria-label="Language">
-          <button type="button" aria-pressed={lang === 'en'} onClick={() => setLang('en')}>English</button>
+        <div className="pd-seg" role="group" aria-label={tr("Language")}>
+          <button type="button" aria-pressed={lang === 'en'} onClick={() => setLang('en')}>{tr("English")}</button>
           <button type="button" lang="ar" aria-pressed={lang === 'ar'} onClick={() => setLang('ar')}>عربي</button>
         </div>
         <button type="button" className={'pd-ctl' + (live ? '' : ' run')} onClick={live ? play : take}>

@@ -591,12 +591,25 @@
 .hp-help-fit { margin: 0; padding: 14px 18px; border-radius: 16px; background: linear-gradient(120deg, rgba(124, 77, 255, .18), rgba(22, 14, 39, .5)); box-shadow: inset 0 0 0 1px rgba(167, 139, 250, .3); font-size: 15px; color: var(--ink2); }
 .hp-help-fit b { color: var(--color-text); font-weight: 600; margin: 0 6px; }
 .hp-help-fit span { color: var(--v2); }
-.hp-book { margin-top: 22px; display: grid; justify-items: start; gap: 10px; }
-.hp-book small { font-size: 12.5px; color: var(--ink2); line-height: 1.5; }
-.hp-book small a { color: var(--v2); text-decoration: underline; text-underline-offset: 3px; }
+/* Pricing CTA row. Own class: it used to reuse .hp-book (the white closing
+   pill), which painted a big white glow behind the button and the hint. */
+.hp-bookrow { position: relative; margin-top: 22px; display: grid; justify-items: start; gap: 10px; }
+.hp-bookrow small { font-size: 12.5px; color: var(--ink2); line-height: 1.5; }
+.hp-bookrow small a { color: var(--v2); text-decoration: underline; text-underline-offset: 3px; }
 @media (max-width: 640px) {
   .hp-mode { width: 100%; }
   .hp-mode button { flex: 1; padding: 0 10px; min-height: 44px; }
-  .hp-book { justify-items: stretch; }
-  .hp-book .rh-cta { justify-content: space-between; }
+  .hp-bookrow { justify-items: stretch; }
+  .hp-bookrow .rh-cta { justify-content: space-between; }
 }
+
+/* RTL (Arabic /ar/ral-hr/ pages): numbers, the odometer and the price
+   equation stay left-to-right; directional arrows mirror; pill paddings swap. */
+html[dir="rtl"] .od, html[dir="rtl"] .hp-eq b, html[dir="rtl"] .tnum { direction: ltr; unicode-bidi: isolate; }
+html[dir="rtl"] .rh-flip, html[dir="rtl"] .rh-cta-i { display: inline-block; transform: scaleX(-1); }
+html[dir="rtl"] .rh-cta { padding: 8px 22px 8px 8px; }
+html[dir="rtl"] .hp-book { padding: 10px 30px 10px 10px; }
+html[dir="rtl"] .hp-book:hover .hp-book-i { transform: translateX(-3px) rotate(8deg) scale(1.05); }
+html[dir="rtl"] .hp-book-sheen { transform: translateX(100%); }
+html[dir="rtl"] .hp-book:hover .hp-book-sheen { transform: translateX(-100%); }
+@media (max-width: 420px) { html[dir="rtl"] .hp-book { padding-left: 10px; padding-right: 22px; } }

@@ -1,4 +1,7 @@
 import { lazy, startTransition, Suspense, useEffect, useRef, useState } from 'react'
+import { localePath } from '../../i18n'
+import { ralHrLang as lg } from './t'
+import { t } from './t'
 import { gsap } from 'gsap'
 import { calm, money, useIsoLayoutEffect } from './charts'
 import { FAQ, PRICING } from './data'
@@ -14,14 +17,15 @@ const TOP = 6
 
 function waText(plan: number, team: number, mods: string[]) {
   const x = PRICING[plan]
-  const lines = [MSTR.waHi.en, '', `${MSTR.waPlan.en}: ${x.name} (BD ${x.price} ${MSTR.waPer.en})`, `${MSTR.waTeam.en}: ${team} ${MSTR.waPeople.en}`, `${MSTR.waPrice.en}: BD ${money(team * x.price)} ${MSTR.waMonth.en}`]
-  const rows = CATEGORIES.map((c) => { const on = c.mods.filter((m) => mods.includes(m.id)); return on.length ? `- ${c.name.en}: ${on.map((m) => m.name.en + (m.status === 'soon' ? ` (${MSTR.msgSoon.en})` : '')).join(', ')}` : '' }).filter(Boolean)
-  if (rows.length) lines.push('', `${MSTR.msgHead.en} (${mods.length}):`, ...rows)
+  const lines = [MSTR.waHi[lg()], '', `${MSTR.waPlan[lg()]}: ${t(x.name)} (${t('BD {0}', x.price)} ${MSTR.waPer[lg()]})`, `${MSTR.waTeam[lg()]}: ${team} ${MSTR.waPeople[lg()]}`, `${MSTR.waPrice[lg()]}: ${t('BD {0}', money(team * x.price))} ${MSTR.waMonth[lg()]}`]
+  const rows = CATEGORIES.map((c) => { const on = c.mods.filter((m) => mods.includes(m.id)); return on.length ? `- ${c.name[lg()]}: ${on.map((m) => m.name[lg()] + (m.status === 'soon' ? ` (${MSTR.msgSoon[lg()]})` : '')).join(', ')}` : '' }).filter(Boolean)
+  if (rows.length) lines.push('', `${MSTR.msgHead[lg()]} (${mods.length}):`, ...rows)
   return lines.join('\n')
 }
 
 const Demo = lazy(() => import('./Demo'))
 const INQUIRE = '/ral-hr/inquire/'
+const inquireHref = () => localePath(lg(), INQUIRE)
 const WA = 'https://wa.me/97338218181?text='
 const idle = (f: () => void): number => (typeof requestIdleCallback === 'function' ? requestIdleCallback(f, { timeout: 900 }) : window.setTimeout(f, 60))
 const unidle = (id: number) => { if (typeof cancelIdleCallback === 'function') cancelIdleCallback(id); else clearTimeout(id) }
@@ -39,7 +43,7 @@ function SectionIndex({ ready }: { ready: boolean }) {
     return () => io.disconnect()
   }, [ready])
   return (
-    <nav className="hp-index" aria-label="On this page">
+    <nav className="hp-index" aria-label={t("On this page")}>
       {INDEX.map(([id, l]) => <a key={id} href={'#' + id} className={on === id ? 'on' : ''} aria-current={on === id ? 'true' : undefined}><i />{l}</a>)}
     </nav>
   )
@@ -55,8 +59,8 @@ function DemoSlot() {
     io.observe(el)
     return () => io.disconnect()
   }, [])
-  const fallback = <div className="hp-demo-fallback">Loading the full demo</div>
-  return <div ref={ref}>{show ? <Suspense fallback={fallback}><Demo /></Suspense> : fallback}</div>
+  const fallback = <div className="hp-demo-fallback">{t("Loading the full demo")}</div>
+  return <div ref={ref}>{show ? <Suspense fallback={fallback}><Demo lang={lg()} /></Suspense> : fallback}</div>
 }
 
 function VideoTour() {
@@ -82,17 +86,17 @@ function VideoTour() {
       <div className="hp-phone">
         <div className="hp-vframe">
           <video ref={ref} poster="/assets/ral-hr/ralhr-tour-poster.webp" width={720} height={1280} muted playsInline loop preload="none"
-            onPlay={() => setPlaying(true)} onPause={() => setPlaying(false)} onClick={toggle} aria-label="RAL HR app video tour" />
+            onPlay={() => setPlaying(true)} onPause={() => setPlaying(false)} onClick={toggle} aria-label={t("RAL HR app video tour")} />
         </div>
         <div className="hp-video-ctl">
           <button type="button" onClick={toggle}>{playing ? 'Pause' : 'Play'}</button>
           <button type="button" onClick={sound}>{muted ? 'Sound on' : 'Sound off'}</button>
         </div>
       </div>
-      <ul className="hp-pings" aria-label="What staff see in the app">
-        <li><i aria-hidden="true">✓</i><b>Checked in, 07:58</b><span>Inside the site radius, 42 m</span></li>
-        <li><i aria-hidden="true">✓</i><b>Leave approved, 3 days</b><span>Aisha in HR, one tap</span></li>
-        <li><i aria-hidden="true">✓</i><b>Payslip ready</b><span lang="ar" dir="rtl">قسيمة راتب أكتوبر جاهزة</span></li>
+      <ul className="hp-pings" aria-label={t("What staff see in the app")}>
+        <li><i aria-hidden="true">✓</i><b>{t("Checked in, 07:58")}</b><span>{t("Inside the site radius, 42 m")}</span></li>
+        <li><i aria-hidden="true">✓</i><b>{t("Leave approved, 3 days")}</b><span>{t("Aisha in HR, one tap")}</span></li>
+        <li><i aria-hidden="true">✓</i><b>{t("Payslip ready")}</b><span lang="ar" dir="rtl">قسيمة راتب أكتوبر جاهزة</span></li>
       </ul>
     </div>
   )
@@ -129,24 +133,24 @@ function Pricing({ team, setTeam, plan, setPlan }: { team: number; setTeam: (n: 
   return (
     <section id="pricing" className="hp-sec hp-rv">
       <div className="hp-head">
-        <p className="hp-eyebrow hp-in">Pricing</p>
-        <h2 className="hp-in">One price per person. <span className="serif">That is it.</span></h2>
-        <p className="hp-in">Slide to your headcount and pick a plan. You see your real monthly number before we even talk.</p>
+        <p className="hp-eyebrow hp-in">{t("Pricing")}</p>
+        <h2 className="hp-in">{t("One price per person.")} <span className="serif">{t("That is it.")}</span></h2>
+        <p className="hp-in">{t("Slide to your headcount and pick a plan. You see your real monthly number before we even talk.")}</p>
       </div>
       <div className="hp-step hp-in">
         <div className="hp-step-head">
-          <h3><i className="tnum">1</i>{MSTR.step1.en}</h3>
-          <div className="hp-mode" role="group" aria-label={MSTR.step1.en}>
-            <button type="button" aria-pressed={!helping} onClick={() => setHelping(false)}>{MSTR.modeKnow.en}</button>
-            <button type="button" aria-pressed={helping} onClick={() => setHelping(true)}>{MSTR.modeHelp.en}</button>
+          <h3><i className="tnum">1</i>{MSTR.step1[lg()]}</h3>
+          <div className="hp-mode" role="group" aria-label={MSTR.step1[lg()]}>
+            <button type="button" aria-pressed={!helping} onClick={() => setHelping(false)}>{MSTR.modeKnow[lg()]}</button>
+            <button type="button" aria-pressed={helping} onClick={() => setHelping(true)}>{MSTR.modeHelp[lg()]}</button>
           </div>
         </div>
         {helping ? (
           <div className="hp-help">
-            <p className="hp-help-lead">{MSTR.helpLead.en}</p>
+            <p className="hp-help-lead">{MSTR.helpLead[lg()]}</p>
             <ModulePicker id="hp-mp" value={mods} onChange={onMods} />
             <p className="hp-help-fit" aria-live="polite">
-              {mods.length ? <>{MSTR.cheapest.en}: <b>{tierName(fit)}</b> <span className="tnum">BD {PRICING[fit].price}</span></> : MSTR.pickSome.en}
+              {mods.length ? <>{MSTR.cheapest[lg()]}: <b>{tierName(fit)}</b> <span className="tnum">{t('BD {0}', PRICING[fit].price)}</span></> : MSTR.pickSome[lg()]}
             </p>
           </div>
         ) : (
@@ -158,15 +162,15 @@ function Pricing({ team, setTeam, plan, setPlan }: { team: number; setTeam: (n: 
               return (
                 <article key={x.name} className={'hp-plan' + (i === plan ? ' on' : '')} onClick={() => setPlan(i)}>
                   <button type="button" className="hp-plan-pick" aria-pressed={i === plan} onClick={(e) => { e.stopPropagation(); setPlan(i) }}>
-                    <b>{x.name}</b>{i === 1 && <em>Most teams</em>}<span className="hp-plan-tab-price tnum">BD {x.price}</span>
+                    <b>{t(x.name)}</b>{i === 1 && <em>{t("Most teams")}</em>}<span className="hp-plan-tab-price tnum">{t('BD {0}', x.price)}</span>
                   </button>
-                  <p className="hp-plan-price"><b className="tnum">BD {x.price}</b> per person, per month</p>
-                  <p className="hp-plan-blurb">{x.blurb}</p>
-                  {i > 0 && <p className="hp-plan-plus">{(i === 1 ? MSTR.plusStarter : MSTR.plusPro).en}</p>}
-                  <ul>{shownMods.map((m) => <li key={m.id}>{m.name.en}{m.status === 'soon' && <span className="hp-plan-soon">{MSTR.soonTag.en}</span>}</li>)}</ul>
+                  <p className="hp-plan-price"><b className="tnum">{t('BD {0}', x.price)}</b> {t("per person, per month")}</p>
+                  <p className="hp-plan-blurb">{t(x.blurb)}</p>
+                  {i > 0 && <p className="hp-plan-plus">{(i === 1 ? MSTR.plusStarter : MSTR.plusPro)[lg()]}</p>}
+                  <ul>{shownMods.map((m) => <li key={m.id}>{m.name[lg()]}{m.status === 'soon' && <span className="hp-plan-soon">{MSTR.soonTag[lg()]}</span>}</li>)}</ul>
                   {list.length > TOP && (
                     <button type="button" className="hp-plan-more" aria-expanded={all} onClick={(e) => { e.stopPropagation(); setOpen(all ? null : i) }}>
-                      {all ? MSTR.less.en : `+ ${list.length - TOP} ${MSTR.more.en}`}
+                      {all ? MSTR.less[lg()] : `+ ${list.length - TOP} ${MSTR.more[lg()]}`}
                     </button>
                   )}
                 </article>
@@ -176,42 +180,42 @@ function Pricing({ team, setTeam, plan, setPlan }: { team: number; setTeam: (n: 
         )}
       </div>
       <div className="hp-step hp-in">
-        <div className="hp-step-head"><h3><i className="tnum">2</i>{MSTR.step2.en}</h3></div>
+        <div className="hp-step-head"><h3><i className="tnum">2</i>{MSTR.step2[lg()]}</h3></div>
         <div className="hp-price">
           <div className="hp-price-ctl">
-            <label htmlFor="hp-team" className="hp-k">Your team</label>
+            <label htmlFor="hp-team" className="hp-k">{t("Your team")}</label>
             <p className="hp-price-team">
-              <input className="hp-team-num tnum" type="text" inputMode="numeric" aria-label="Team size, type any number" value={shown}
+              <input className="hp-team-num tnum" type="text" inputMode="numeric" aria-label={t("Team size, type any number")} value={shown}
                 style={{ width: `calc(${Math.max(shown.length, 1)}ch + 4px)` }} onFocus={(e) => e.target.select()}
                 onChange={(e) => onType(e.target.value)} onBlur={() => setDraft(null)} onKeyDown={(e) => { if (e.key === 'Enter') e.currentTarget.blur() }} />
-              people
+             {t(" people")}
               <span className="hp-team-hint">{team > 300 ? 'Custom team size' : 'More than 300? Tap the number and type yours.'}</span>
             </p>
             <input id="hp-team" type="range" min={5} max={300} step={5} value={Math.min(team, 300)} aria-valuetext={team + ' people'}
               style={{ backgroundSize: ((Math.min(team, 300) - 5) / 295) * 100 + '% 100%' }} onChange={(e) => { setDraft(null); setTeam(+e.target.value) }} />
             <div className="hp-ticks" aria-hidden="true"><span>5</span><span>100</span><span>200</span><span>300</span></div>
-            <div className="hp-presets" role="group" aria-label="Quick team sizes">
+            <div className="hp-presets" role="group" aria-label={t("Quick team sizes")}>
               {[10, 25, 50, 100, 250].map((n) => <button key={n} type="button" aria-pressed={team === n} onClick={() => { setDraft(null); setTeam(n) }}>{n}</button>)}
             </div>
           </div>
           <div className="hp-price-out" aria-live="polite">
-            <p className="hp-eq"><span><b className="tnum">{team}</b> people</span><i aria-hidden="true">×</i><span><b className="tnum">BD {p.price}</b> {p.name}</span><i aria-hidden="true">=</i></p>
-            <p className="hp-big"><small>BD</small><Odometer value={team * p.price} /><span>a month</span></p>
-            <p className="hp-yr">BD {money(team * p.price * 12)} a year, plus a one-time setup fee.</p>
-            <p className="hp-day">That is about <b className="tnum">{Math.round(p.price * 1000 / 30)} fils</b> per person, per day.</p>
-            <div className="hp-book">
-              <a className="rh-cta" href={WA + encodeURIComponent(waText(plan, team, sentMods))} target="_blank" rel="noopener">{MSTR.book.en}<span className="rh-cta-i" aria-hidden="true">↗</span></a>
-              <small>{MSTR.bookNote.en} <a href={INQUIRE + toQuery(sentMods)}>{MSTR.guided.en}</a></small>
+            <p className="hp-eq"><span><b className="tnum">{team}</b>{t(" people")}</span><i aria-hidden="true">×</i><span><b className="tnum">{t('BD {0}', p.price)}</b> {t(p.name)}</span><i aria-hidden="true">=</i></p>
+            <p className="hp-big"><small>{t("BD")}</small><Odometer value={team * p.price} /><span>{t("a month")}</span></p>
+            <p className="hp-yr">{t('BD {0} a year, plus a one-time setup fee.', money(team * p.price * 12))}</p>
+            <p className="hp-day">{t("That is about")} <b className="tnum">{t('{0} fils', Math.round(p.price * 1000 / 30))}</b> {t("per person, per day.")}</p>
+            <div className="hp-bookrow">
+              <a className="rh-cta" href={WA + encodeURIComponent(waText(plan, team, sentMods))} target="_blank" rel="noopener">{MSTR.book[lg()]}<span className="rh-cta-i" aria-hidden="true">↗</span></a>
+              <small>{MSTR.bookNote[lg()]} <a href={inquireHref() + toQuery(sentMods)}>{MSTR.guided[lg()]}</a></small>
             </div>
           </div>
         </div>
       </div>
       <div className="hp-fine hp-in">
-        <p className="hp-fine-lead"><b>Built to your requirements.</b> Every plan is customizable: tell us which modules you need and we set RAL HR up the way your company works.</p>
+        <p className="hp-fine-lead"><b>{t("Built to your requirements.")}</b> {t("Every plan is customizable: tell us which modules you need and we set RAL HR up the way your company works.")}</p>
         <ul className="hp-fine-perks">
-          <li>Ask RAL in every plan</li>
-          <li>Managers and admins at no extra cost</li>
-          <li>RAL's secure cloud or your own server</li>
+          <li>{t("Ask RAL in every plan")}</li>
+          <li>{t("Managers and admins at no extra cost")}</li>
+          <li>{t("RAL's secure cloud or your own server")}</li>
         </ul>
       </div>
     </section>
@@ -222,14 +226,14 @@ function Faq() {
   return (
     <section id="questions" className="hp-sec hp-rv hp-faq">
       <div className="hp-head">
-        <p className="hp-eyebrow hp-in">Questions</p>
-        <h2 className="hp-in">The things people <span className="serif">ask us first.</span></h2>
+        <p className="hp-eyebrow hp-in">{t("Questions")}</p>
+        <h2 className="hp-in">{t("The things people")} <span className="serif">{t("ask us first.")}</span></h2>
       </div>
       <div className="hp-faq-list">
         {FAQ.map((f, i) => (
           <details key={f.q} className="hp-in" open={i === 0} {...{ name: 'hp-faq' }}>
-            <summary>{f.q}<i aria-hidden="true" /></summary>
-            <p>{f.a}</p>
+            <summary>{t(f.q)}<i aria-hidden="true" /></summary>
+            <p>{t(f.a)}</p>
           </details>
         ))}
       </div>
@@ -247,9 +251,9 @@ function Closing({ team, plan }: { team: number; plan: number }) {
   const [sent, setSent] = useState(false)
   const box = useRef<HTMLDivElement>(null)
   const out = useRef<HTMLSpanElement>(null)
-  const list = picked.length ? picked.map((x) => x.toLowerCase().replace('sio', 'SIO').replace('wps', 'WPS').replace('excel', 'Excel').replace('arabic', 'Arabic')).join(', ') : 'getting payroll right'
+  const list = lg() === 'ar' ? (picked.length ? picked.map((x) => t(x)).join('، ') : t('getting payroll right')) : picked.length ? picked.map((x) => x.toLowerCase().replace('sio', 'SIO').replace('wps', 'WPS').replace('excel', 'Excel').replace('arabic', 'Arabic')).join(', ') : 'getting payroll right'
   const monthly = money(team * p.price)
-  const msg = `Hi RAL, I would like to book a RAL HR demo. We are a team of ${team} in Bahrain, looking at the ${p.name} plan (about BD ${monthly} a month). What matters most to us: ${list}.`
+  const msg = t('Hi RAL, I would like to book a RAL HR demo. We are a team of {0} in Bahrain, looking at the {1} plan (about BD {2} a month). What matters most to us: {3}.', team, t(p.name), monthly, list)
   const msgRef = useRef(msg)
   msgRef.current = msg
   const mail = `mailto:${EMAIL}?subject=${encodeURIComponent(`RAL HR demo, team of ${team}`)}&body=${encodeURIComponent(msg)}`
@@ -281,41 +285,41 @@ function Closing({ team, plan }: { team: number; plan: number }) {
     <section id="talk" className="hp-close hp-rv">
       <div className="hp-close-glow" aria-hidden="true" />
       <div className="hp-close-copy">
-        <h2 className="hp-in">See your own payday <span className="serif">before you pay a single fils.</span></h2>
-        <p className="hp-in">Book a demo on WhatsApp. We load your team and salary structure, run a payday in Arabic and English, and show you the WPS file your bank will see.</p>
-        <dl className="hp-close-sum hp-in" aria-label="Your demo request">
-          <div><dt>Team</dt><dd className="tnum">{team} people</dd></div>
-          <div><dt>Plan</dt><dd>{p.name}</dd></div>
-          <div><dt>Estimate</dt><dd className="tnum">BD {monthly} a month</dd></div>
-          <a href="#pricing">Change</a>
+        <h2 className="hp-in">{t("See your own payday")} <span className="serif">{t("before you pay a single fils.")}</span></h2>
+        <p className="hp-in">{t("Book a demo on WhatsApp. We load your team and salary structure, run a payday in Arabic and English, and show you the WPS file your bank will see.")}</p>
+        <dl className="hp-close-sum hp-in" aria-label={t("Your demo request")}>
+          <div><dt>{t("Team")}</dt><dd className="tnum">{team} people</dd></div>
+          <div><dt>{t("Plan")}</dt><dd>{t(p.name)}</dd></div>
+          <div><dt>{t("Estimate")}</dt><dd className="tnum">{t('BD {0} a month', monthly)}</dd></div>
+          <a href="#pricing">{t("Change")}</a>
         </dl>
       </div>
       <div className="hp-wa hp-in" ref={box}>
         <div className="hp-wa-top">
           <span className="hp-wa-av">R</span>
-          <span><b>RAL Technologies</b><small>WhatsApp, +973 3821 8181</small></span>
+          <span><b>{t("RAL Technologies")}</b><small>{t("WhatsApp, +973 3821 8181")}</small></span>
           <span className="live-dot" aria-hidden="true" />
         </div>
         <div className="hp-wa-body">
-          <p className="hp-wa-in">Hi! Tell us a little about your team and we will take it from there.</p>
+          <p className="hp-wa-in">{t("Hi! Tell us a little about your team and we will take it from there.")}</p>
           <p className="hp-wa-out">{typing ? <><span ref={out} /><span className="hp-caret" aria-hidden="true" /></> : msg}</p>
         </div>
-        <p className="hp-wa-q">Add what matters most to you</p>
-        <div className="hp-wa-topics" role="group" aria-label="What matters most to you">
+        <p className="hp-wa-q">{t("Add what matters most to you")}</p>
+        <div className="hp-wa-topics" role="group" aria-label={t("What matters most to you")}>
           {TOPICS.map((x) => <button key={x} type="button" aria-pressed={picked.includes(x)} onClick={() => toggle(x)}>{x}</button>)}
         </div>
       </div>
       <div className="hp-close-act hp-in">
         <a className={'hp-book' + (sent ? ' sent' : '')} href={WA + encodeURIComponent(msg)} target="_blank" rel="noopener noreferrer" onClick={() => setSent(true)}>
           <span className="hp-book-sheen" aria-hidden="true" />
-          <span className="hp-book-t"><b>{sent ? 'Opening WhatsApp' : 'Book a demo'}</b><small>On WhatsApp, your message is ready</small></span>
+          <span className="hp-book-t"><b>{sent ? t('Opening WhatsApp') : t('Book a demo')}</b><small>{t("On WhatsApp, your message is ready")}</small></span>
           <span className="hp-book-i" aria-hidden="true">
             {sent
               ? <svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="#f8f8f8" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" /></svg>
               : <svg viewBox="0 0 24 24"><path d={WA_ICON} /></svg>}
           </span>
         </a>
-        <p className="hp-close-alt">Not on WhatsApp? Email <a href={mail}>{EMAIL}</a> or use the <a href={INQUIRE}>two minute form</a>.</p>
+        <p className="hp-close-alt">{t("Not on WhatsApp? Email")} <a href={mail}>{EMAIL}</a> {t("or use the")} <a href={inquireHref()}>{t("two minute form")}</a>.</p>
       </div>
     </section>
   )
@@ -383,20 +387,20 @@ export default function RalHrPage() {
       <main>
         <section id="payday" className="hp-hero">
           <div className="hp-hero-copy">
-            <p className="hp-eyebrow hp-fade"><span className="live-dot" aria-hidden="true" /> RAL HR · HR and payroll, made in Bahrain</p>
+            <p className="hp-eyebrow hp-fade"><span className="live-dot" aria-hidden="true" /> {t("RAL HR · HR and payroll, made in Bahrain")}</p>
             <h1 className="hp-h1"><span className="hp-line">{words('Payday in Bahrain,')}</span><span className="hp-line serif">{words('sorted before lunch.')}</span></h1>
-            <p className="hp-sub hp-fade">Payroll, SIO, the WPS file and end of service, done right and checked for you. Your team gets an app in Arabic and English. From BD 1 per person a month.</p>
+            <p className="hp-sub hp-fade">{t("Payroll, SIO, the WPS file and end of service, done right and checked for you. Your team gets an app in Arabic and English. From BD 1 per person a month.")}</p>
             <div className="hp-ctas hp-fade">
-              <a className="rh-cta" href="#talk">Book a demo<span className="rh-cta-i" aria-hidden="true">↗</span></a>
-              <a className="rh-ghost" href="#pricing">See pricing</a>
+              <a className="rh-cta" href="#talk">{t("Book a demo")}<span className="rh-cta-i" aria-hidden="true">↗</span></a>
+              <a className="rh-ghost" href="#pricing">{t("See pricing")}</a>
             </div>
           </div>
           <Payday />
           <ul className="hp-proof hp-fade">
-            <li><b className="tnum">10/10</b>WPS columns checked</li>
-            <li><b className="tnum">8% · 1% · 3%</b>SIO, worked out</li>
-            <li><b lang="ar">عربي</b>and English, every screen</li>
-            <li><b>iOS & Android</b>app for your staff</li>
+            <li><b className="tnum">10/10</b>{t("WPS columns checked")}</li>
+            <li><b className="tnum">8% · 1% · 3%</b>{t("SIO, worked out")}</li>
+            <li><b lang="ar">عربي</b>{t("and English, every screen")}</li>
+            <li><b>{t("iOS & Android")}</b>{t("app for your staff")}</li>
           </ul>
         </section>
         {stage >= 1 && (
@@ -404,24 +408,24 @@ export default function RalHrPage() {
             <Month />
             <section id="demo" className="hp-sec hp-rv hp-demo">
               <div className="hp-head">
-                <p className="hp-eyebrow hp-in">The full demo</p>
-                <h2 className="hp-in">Now try the whole app. <span className="serif">Nothing to install.</span></h2>
-                <p className="hp-in">Dashboard, payroll, leave, attendance, end of service and Ask RAL, with a full demo company inside. Switch between web, tablet and phone.</p>
+                <p className="hp-eyebrow hp-in">{t("The full demo")}</p>
+                <h2 className="hp-in">{t("Now try the whole app.")} <span className="serif">{t("Nothing to install.")}</span></h2>
+                <p className="hp-in">{t("Dashboard, payroll, leave, attendance, end of service and Ask RAL, with a full demo company inside. Switch between web, tablet and phone.")}</p>
               </div>
               <div className="hp-in"><DemoSlot /></div>
             </section>
             <Rules />
             <section id="app" className="hp-sec hp-rv hp-app">
               <div className="hp-head">
-                <p className="hp-eyebrow hp-in">The app</p>
-                <h2 className="hp-in">In every pocket. <span className="serif">iOS & Android.</span></h2>
-                <p className="hp-in">Staff check in, ask for leave and open payslips in Arabic or English. Managers approve from the same app. No training day needed.</p>
+                <p className="hp-eyebrow hp-in">{t("The app")}</p>
+                <h2 className="hp-in">{t("In every pocket.")} <span className="serif">{t("iOS & Android.")}</span></h2>
+                <p className="hp-in">{t("Staff check in, ask for leave and open payslips in Arabic or English. Managers approve from the same app. No training day needed.")}</p>
               </div>
               <VideoTour />
-              <ul className="hp-app-notes hp-in" aria-label="App at a glance">
-                <li><b>Check-in that counts</b>Only inside your site radius, with the time on record.</li>
-                <li><b>Arabic or English</b>Each person picks their language. Payslips follow.</li>
-                <li><b>Approvals in one tap</b>Leave and letter requests land with the right manager.</li>
+              <ul className="hp-app-notes hp-in" aria-label={t("App at a glance")}>
+                <li><b>{t("Check-in that counts")}</b>{t("Only inside your site radius, with the time on record.")}</li>
+                <li><b>{t("Arabic or English")}</b>{t("Each person picks their language. Payslips follow.")}</li>
+                <li><b>{t("Approvals in one tap")}</b>{t("Leave and letter requests land with the right manager.")}</li>
               </ul>
             </section>
             <Pricing team={team} setTeam={setTeam} plan={plan} setPlan={setPlan} />

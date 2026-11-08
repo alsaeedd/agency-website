@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
+import { ralHrLang as lg } from './t'
 import { gsap } from 'gsap'
 import { ALL_MODS, CATEGORIES, fitTier, STR, tierName, type Status } from './modules'
 import './ModulePicker.css'
@@ -32,17 +33,17 @@ export default function ModulePicker({ value, onChange, animate = true, id = 'mp
   const fit = tierName(fitTier(value))
 
   return (
-    <div ref={root} className="mp" role="group" aria-label={STR.pickerLabel.en}>
+    <div ref={root} className="mp" role="group" aria-label={STR.pickerLabel[lg()]}>
       <div className="mp-bar">
         <p className="mp-count" aria-live="polite">
           {value.length
-            ? <><b className="tnum">{value.length}</b> {STR.of.en} {ALL_MODS.length} {STR.modules.en} {STR.picked.en}<span className="mp-fit" title={STR.fitsHelp.en}>{STR.fits.en} <b>{fit}</b></span></>
-            : STR.nonePicked.en}
+            ? <><b className="tnum">{value.length}</b> {STR.of[lg()]} {ALL_MODS.length} {STR.modules[lg()]} {STR.picked[lg()]}<span className="mp-fit" title={STR.fitsHelp[lg()]}>{STR.fits[lg()]} <b>{fit}</b></span></>
+            : STR.nonePicked[lg()]}
         </p>
-        <ul className="mp-legend" aria-label={STR.statusKey.en}>
-          {STATUSES.map((s) => <li key={s} className={'mp-st mp-st-' + s} title={STR.statusHelp[s].en}><i aria-hidden="true" />{STR.status[s].en}</li>)}
+        <ul className="mp-legend" aria-label={STR.statusKey[lg()]}>
+          {STATUSES.map((s) => <li key={s} className={'mp-st mp-st-' + s} title={STR.statusHelp[s][lg()]}><i aria-hidden="true" />{STR.status[s][lg()]}</li>)}
         </ul>
-        {value.length > 0 && <button type="button" className="mp-clear" onClick={() => onChange([])}>{STR.clearAll.en}</button>}
+        {value.length > 0 && <button type="button" className="mp-clear" onClick={() => onChange([])}>{STR.clearAll[lg()]}</button>}
       </div>
 
       <div className="mp-cats">
@@ -57,14 +58,14 @@ export default function ModulePicker({ value, onChange, animate = true, id = 'mp
               <div className="mp-cat-head">
                 <button type="button" className="mp-cat-toggle" aria-expanded={isOpen} aria-controls={listId} onClick={() => flip(c.id)}>
                   <span className="mp-cat-title">
-                    <span id={listId + '-h'}>{c.name.en}</span>
-                    <small>{c.blurb.en}</small>
+                    <span id={listId + '-h'}>{c.name[lg()]}</span>
+                    <small>{c.blurb[lg()]}</small>
                   </span>
-                  <span className="mp-cat-n tnum" aria-label={`${n} ${STR.of.en} ${ids.length} ${STR.picked.en}`}>{n}/{ids.length}</span>
+                  <span className="mp-cat-n tnum" aria-label={`${n} ${STR.of[lg()]} ${ids.length} ${STR.picked[lg()]}`}>{n}/{ids.length}</span>
                   <span className="mp-chev" aria-hidden="true" />
                 </button>
                 <button type="button" className="mp-all" aria-pressed={all} onClick={() => setCat(ids, !all)}>
-                  {all ? STR.clearCat.en : STR.selectAll.en}<span className="sr-only"> {c.name.en}</span>
+                  {all ? STR.clearCat[lg()] : STR.selectAll[lg()]}<span className="sr-only"> {c.name[lg()]}</span>
                 </button>
               </div>
               <div className="mp-list" id={listId}>
@@ -74,11 +75,11 @@ export default function ModulePicker({ value, onChange, animate = true, id = 'mp
                     <button key={x.id} type="button" aria-pressed={on} className={'mp-mod' + (on ? ' on' : '') + ' is-' + x.status} onClick={() => toggle(x.id)}>
                       <span className="mp-tick" aria-hidden="true"><svg viewBox="0 0 16 16"><path d="M3.5 8.5l3 3 6-7" /></svg></span>
                       <span className="mp-body">
-                        <b>{x.name.en}</b>
-                        <small>{x.note.en}</small>
+                        <b>{x.name[lg()]}</b>
+                        <small>{x.note[lg()]}</small>
                         <span className="mp-meta">
-                          <span className={'mp-tier t' + x.tier}>{STR.inPlan.en} {tierName(x.tier)}</span>
-                          <span className={'mp-st mp-st-' + x.status}><i aria-hidden="true" />{STR.status[x.status].en}</span>
+                          <span className={'mp-tier t' + x.tier}>{STR.inPlan[lg()]} {tierName(x.tier)}</span>
+                          <span className={'mp-st mp-st-' + x.status}><i aria-hidden="true" />{STR.status[x.status][lg()]}</span>
                         </span>
                       </span>
                     </button>

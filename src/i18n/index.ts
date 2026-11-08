@@ -15,7 +15,7 @@ export const detectLang = (): Lang =>
 
 // English paths that have an Arabic mirror at /ar<path>. Keep in sync with
 // content/pages-ar.mjs (scripts/prerender.mjs fails the build if they drift).
-export const AR_PATHS = ["/"];
+export const AR_PATHS = ["/", "/ral-hr/", "/ral-hr/inquire/"];
 
 const bare = (p: string) => p.split("#")[0].split("?")[0];
 
