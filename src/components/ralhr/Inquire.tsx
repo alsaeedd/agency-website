@@ -201,7 +201,7 @@ export default function Inquire({ onClose }: { onClose?: () => void } = {}) {
             {a.size && (
               <label className="iqx-exact" data-rise>
                 <span>Know the exact number? <small>Optional, it sharpens the estimate.</small></span>
-                <input inputMode="numeric" pattern="[0-9]*" placeholder={`About ${SIZES.find((s) => s.id === a.size)?.guess}`} value={a.count} onChange={(e) => set({ count: e.target.value.replace(/\D/g, '').slice(0, 5) })} aria-label="Exact headcount" />
+                <input inputMode="numeric" pattern="[0-9]*" placeholder={`About ${SIZES.find((s) => s.id === a.size)?.guess}`} value={a.count} onChange={(e) => set({ count: e.target.value.replace(/\D/g, '').slice(0, 5) })} name="headcount" autoComplete="off" aria-label="Exact headcount" />
               </label>
             )}
             {err(!a.size, 'Pick the closest range to carry on.')}
@@ -273,15 +273,15 @@ export default function Inquire({ onClose }: { onClose?: () => void } = {}) {
             <p className="iq-lead" data-rise>Nothing is sent until you press send. You'll see the exact message first.</p>
             <div className="iqx-fields" data-rise>
               <label className={tried && !nameOk(a) ? 'bad' : ''}>Your name
-                <input data-autofocus value={a.name} onChange={(e) => set({ name: e.target.value })} autoComplete="name" placeholder="Ahmed" />
+                <input data-autofocus value={a.name} onChange={(e) => set({ name: e.target.value })} name="name" autoComplete="name" placeholder="Ahmed" />
                 {err(!nameOk(a), 'We need a name to say hello.')}
               </label>
               <label className={tried && !companyOk(a) ? 'bad' : ''}>Company
-                <input value={a.company} onChange={(e) => set({ company: e.target.value })} autoComplete="organization" placeholder="Gulf Foods W.L.L." />
+                <input value={a.company} onChange={(e) => set({ company: e.target.value })} name="company" autoComplete="organization" placeholder="Gulf Foods W.L.L." />
                 {err(!companyOk(a), 'Which company is this for?')}
               </label>
               <label className={tried && !phoneOk(a) ? 'bad' : ''}>Phone <small>Optional</small>
-                <input type="tel" value={a.phone} onChange={(e) => set({ phone: e.target.value })} autoComplete="tel" placeholder="+973 3xxx xxxx" />
+                <input type="tel" value={a.phone} onChange={(e) => set({ phone: e.target.value })} name="phone" autoComplete="tel" placeholder="+973 3xxx xxxx" />
                 {err(!phoneOk(a), 'That number looks a little short.')}
               </label>
             </div>

@@ -136,7 +136,7 @@
 
 .mu-cols { list-style: none; padding: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-bottom: 14px; }
 .mu-cols li { display: flex; gap: 8px; align-items: center; padding: 8px 10px; border-radius: 10px; font-size: 13px; color: rgba(209, 196, 233, .5); background: rgba(209, 196, 233, .04); transition: background .3s, color .3s; }
-.mu-cols li i { width: 18px; height: 18px; border-radius: 50%; flex: none; display: grid; place-items: center; font-style: normal; font-size: 10px; font-weight: 700; border: 1px solid var(--line2); transition: all .3s; }
+.mu-cols li i { width: 18px; height: 18px; border-radius: 50%; flex: none; display: grid; place-items: center; font-style: normal; font-size: 10px; font-weight: 700; border: 1px solid var(--line2); transition: border-color .3s, border-width .3s, background-color .3s, color .3s; }
 .mu-cols li.ok { color: var(--color-text); background: rgba(159, 227, 196, .07); }
 .mu-cols li.ok i { border-color: transparent; background: rgba(159, 227, 196, .2); color: var(--good); }
 .mu-file { display: flex; gap: 12px; align-items: center; padding: 12px; border-radius: 14px; border: 1px dashed var(--line2); margin-bottom: 12px; transition: border-color .4s, background .4s; }
@@ -212,7 +212,7 @@
 .hp-price-team { margin: 8px 0 22px; font-size: 18px; color: var(--ink2); }
 .hp-price-team b { font-size: 44px; font-weight: 600; color: var(--color-text); letter-spacing: -.03em; margin-right: 6px; }
 .hp-presets { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 22px; }
-.hp-presets button { border: 1px solid var(--line2); background: none; border-radius: 999px; padding: 8px 14px; font-size: 13px; color: var(--ink2); transition: all .25s; }
+.hp-presets button { border: 1px solid var(--line2); background: none; border-radius: 999px; padding: 8px 14px; font-size: 13px; color: var(--ink2); transition: border-color .25s, border-width .25s, background-color .25s, color .25s; }
 .hp-presets button[aria-pressed="true"] { background: #f8f8f8; color: #160e27; border-color: #f8f8f8; }
 .hp-price-out { position: relative; background: radial-gradient(90% 120% at 100% 0%, rgba(140, 60, 240, .25), transparent 60%), #120b20 !important; display: flex; flex-direction: column; justify-content: center; }
 .hp-big { display: flex; align-items: baseline; gap: 12px; margin: 10px 0 12px; font-size: clamp(64px, 9vw, 128px); font-weight: 600; letter-spacing: -.05em; line-height: 1; }
@@ -229,7 +229,7 @@
 .hp-plan:hover { transform: translateY(-3px); }
 .hp-plan.on { background: linear-gradient(180deg, rgba(124, 77, 255, .16), rgba(22, 14, 39, .7)); box-shadow: 0 0 0 1px rgba(167, 139, 250, .6), 0 30px 60px -30px rgba(140, 60, 240, .6); }
 .hp-plan-pick { display: flex; align-items: center; gap: 10px; border: 0; background: none; padding: 0; font-size: 20px; font-weight: 600; }
-.hp-plan-pick::before { content: ""; width: 18px; height: 18px; border-radius: 50%; border: 2px solid var(--line2); transition: all .3s; }
+.hp-plan-pick::before { content: ""; width: 18px; height: 18px; border-radius: 50%; border: 2px solid var(--line2); transition: border-color .3s, border-width .3s, background-color .3s, color .3s; }
 .hp-plan.on .hp-plan-pick::before { border: 5px solid var(--v); }
 .hp-plan-pick em { font-style: normal; font-size: 11px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; padding: 4px 9px; border-radius: 999px; background: rgba(167, 139, 250, .2); color: var(--v2); }
 .hp-plan-price { margin: 14px 0 4px; font-size: 14px; color: var(--ink2); }
@@ -275,7 +275,7 @@
 @keyframes hp-blink { 50% { opacity: 0; } }
 .hp-wa-q { font-size: 12px; color: var(--ink2); margin-bottom: 8px; }
 .hp-wa-topics { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 16px; }
-.hp-wa-topics button { border: 1px solid var(--line2); background: none; border-radius: 999px; padding: 8px 12px; font-size: 13px; color: var(--ink2); transition: all .25s; }
+.hp-wa-topics button { border: 1px solid var(--line2); background: none; border-radius: 999px; padding: 8px 12px; font-size: 13px; color: var(--ink2); transition: border-color .25s, border-width .25s, background-color .25s, color .25s; }
 .hp-wa-topics button[aria-pressed="true"] { background: rgba(167, 139, 250, .2); border-color: rgba(167, 139, 250, .6); color: var(--color-text); }
 
 /* ---------- Responsive ---------- */
@@ -433,4 +433,90 @@
   .hp-faq summary { grid-template-columns: 30px 1fr 22px; gap: 12px; padding: 18px 16px; }
   .hp-faq summary > span { width: 30px; height: 30px; }
   .hp-faq details p { padding: 0 18px 20px 58px; }
+}
+
+/* ---------- Cycle 4: rhythm, states, readability ---------- */
+/* Rules: the 18% hero leads, so the bento packs with no empty cells (2+1 then 3 at 1024+, full row then 2x2 below). */
+.hp-rule-wide { order: -1; }
+.hp-rule p { font-size: 15.5px; color: #e4dbf5; }
+.hp-ladder b { font-variant-numeric: tabular-nums; }
+/* Press and focus states for every control on the page */
+.rh-cta, .rh-ghost, .hp-plan, .hp-faq summary, .hp-wa-topics button { -webkit-tap-highlight-color: transparent; }
+.rh-cta:active, .rh-ghost:active, .hp-wa-topics button:active { transform: scale(.97); }
+.hp-plan:active { transform: translateY(1px) scale(.995); }
+.hp-sec :is(a, button, summary, input, [tabindex]):focus-visible,
+.hp-hero :is(a, button):focus-visible,
+.hp-close :is(a, button, input, textarea):focus-visible { outline: 2px solid #a78bfa; outline-offset: 3px; border-radius: 12px; }
+.hp-faq summary { transition: color .3s var(--e); }
+.hp-faq summary:hover { color: #fff; }
+.hp-faq summary:hover i::before, .hp-faq summary:hover i::after { background: #c4b5fd; }
+.hp-faq details p { color: #e0d6f2; }
+/* Month: the day label sits clear of the ghost number and reads as a label, not decoration */
+.hp-ch-day { position: relative; display: inline-block; padding: 6px 12px; border-radius: 999px; background: rgba(167, 139, 250, .12); box-shadow: 0 0 0 1px rgba(167, 139, 250, .22); }
+/* App pings: readable at a glance */
+.hp-pings b { font-size: 15px; }
+.hp-pings span { font-size: 13.5px; color: #ddd2f0; }
+/* Pricing plan list: more air, readable ticks */
+.hp-plan ul { gap: 10px; font-size: 14.5px; }
+@media (max-width: 700px) {
+  .hp-plan ul { grid-template-columns: 1fr 1fr; column-gap: 12px; font-size: 13.5px; }
+  .hp-plan { padding: 22px 20px; }
+  .hp-faq summary { padding-block: 20px; min-height: 56px; }
+  .rh-cta, .rh-ghost { min-height: 48px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .rh-cta:active, .rh-ghost:active, .hp-plan:active, .hp-wa-topics button:active { transform: none; }
+}
+
+/* ---------- Cycle 4 round 2: Ask RAL seeded, pricing math, plan tabs, app notes ---------- */
+.mu-chat .mu-log { min-height: 0; }
+.mu-src { display: block; margin-top: 6px; font: 500 11px/1.3 Inter, sans-serif; letter-spacing: .04em; color: var(--v2); opacity: .9; }
+.mu-try { margin: 0 0 8px; font-size: 12px; color: var(--ink2); }
+.mu-chips button { min-height: 40px; touch-action: manipulation; }
+.mu-chips button.done { border-color: rgba(167, 139, 250, .35); color: var(--ink2); }
+
+.hp-eq { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; font-size: 14px; color: var(--ink2); }
+.hp-eq span { padding: 6px 12px; border-radius: 999px; background: rgba(209, 196, 233, .07); box-shadow: 0 0 0 1px var(--line2); }
+.hp-eq b { margin-right: 4px; font-weight: 600; color: var(--color-text); }
+.hp-eq i { font-style: normal; font-size: 18px; color: var(--v); }
+.hp-day { margin-top: 6px; font-size: 14px; color: var(--ink2); }
+.hp-day b { font-weight: 600; color: var(--color-text); }
+#hp-team { height: 10px; border-radius: 5px; touch-action: pan-y; }
+#hp-team::-webkit-slider-thumb { width: 30px; height: 30px; transition: transform .3s var(--e), box-shadow .3s; }
+#hp-team::-moz-range-thumb { width: 30px; height: 30px; transition: transform .3s var(--e), box-shadow .3s; }
+#hp-team:hover::-webkit-slider-thumb { box-shadow: 0 0 0 8px rgba(167, 139, 250, .3), 0 4px 12px rgba(0, 0, 0, .5); }
+#hp-team:active::-webkit-slider-thumb { transform: scale(1.18); cursor: grabbing; box-shadow: 0 0 0 12px rgba(167, 139, 250, .28), 0 6px 18px rgba(0, 0, 0, .5); }
+#hp-team:active::-moz-range-thumb { transform: scale(1.18); cursor: grabbing; }
+.hp-ticks { display: flex; justify-content: space-between; margin-top: 12px; font-size: 11px; color: var(--ink2); opacity: .7; font-variant-numeric: tabular-nums; }
+.hp-plan-tab-price { display: none; }
+
+.hp-app-notes { list-style: none; max-width: 980px; margin: clamp(36px, 5vw, 64px) auto 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); border-top: 1px solid var(--line); }
+.hp-app-notes li { padding: 22px 24px 0 0; font-size: 14px; line-height: 1.55; color: var(--ink2); }
+.hp-app-notes li + li { padding-left: 24px; border-left: 1px solid var(--line); }
+.hp-app-notes b { display: block; margin-bottom: 4px; font-size: 15px; font-weight: 600; color: var(--color-text); }
+
+@media (max-width: 768px) {
+  .hp-app-notes { grid-template-columns: minmax(0, 1fr); border-top: 0; }
+  .hp-app-notes li, .hp-app-notes li + li { padding: 16px 0; border-left: 0; border-top: 1px solid var(--line); }
+}
+/* Phones: the three plans become tabs; only the chosen plan is open. */
+@media (max-width: 699px) {
+  .hp-plans { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 4px; padding: 6px; }
+  .hp-plan { display: contents; }
+  .hp-plan > * { grid-column: 1 / -1; }
+  .hp-plan:not(.on) > :not(.hp-plan-pick) { display: none; }
+  .hp-plan .hp-plan-pick { grid-row: 1; grid-column: auto; min-height: 68px; padding: 10px 12px; border-radius: 22px; flex-direction: column; align-items: flex-start; justify-content: center; gap: 2px; font-size: 15px; text-align: start; transition: background-color .3s, box-shadow .3s; }
+  .hp-plan-pick::before { display: none; }
+  .hp-plan-pick em { order: 3; padding: 2px 6px; font-size: 9px; }
+  .hp-plan-tab-price { display: block; font-size: 13px; font-weight: 500; color: var(--ink2); }
+  .hp-plan.on .hp-plan-pick { background: linear-gradient(180deg, rgba(124, 77, 255, .42), rgba(76, 29, 149, .3)); box-shadow: inset 0 1px 0 rgba(255, 255, 255, .12), 0 0 0 1px rgba(167, 139, 250, .6); }
+  .hp-plan.on .hp-plan-tab-price { color: var(--color-text); }
+  .hp-plan.on > :not(.hp-plan-pick) { padding-inline: 14px; animation: pd-in .45s var(--e); }
+  .hp-plan.on .hp-plan-price { margin-top: 18px; }
+  .hp-plan.on .hp-plan-total { margin-bottom: 12px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hp-plan.on > * { animation: none; }
+  #hp-team::-webkit-slider-thumb { transition: none; }
+  #hp-team::-moz-range-thumb { transition: none; }
 }
