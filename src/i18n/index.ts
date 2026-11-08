@@ -15,7 +15,19 @@ export const detectLang = (): Lang =>
 
 // English paths that have an Arabic mirror at /ar<path>. Keep in sync with
 // content/pages-ar.mjs (scripts/prerender.mjs fails the build if they drift).
-export const AR_PATHS = ["/"];
+export const AR_PATHS = [
+  "/",
+  "/insights/",
+  "/insights/replace-spreadsheets-with-a-custom-system/",
+  "/insights/where-ai-automation-pays-off/",
+  "/insights/fair-game-board-hex-maths/",
+  "/insights/wps-payroll-bahrain-guide/",
+  "/insights/sio-contributions-explained/",
+  "/insights/hr-document-expiry-tracking/",
+  "/insights/ai-assistant-for-hr/",
+  "/insights/choosing-an-hr-system-bahrain/",
+  "/insights/website-for-local-business-bahrain/"
+];
 
 const bare = (p: string) => p.split("#")[0].split("?")[0];
 
