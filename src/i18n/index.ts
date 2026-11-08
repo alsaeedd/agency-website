@@ -26,7 +26,7 @@ export const AR_PATHS = [
   "/insights/hr-document-expiry-tracking/",
   "/insights/ai-assistant-for-hr/",
   "/insights/choosing-an-hr-system-bahrain/",
-  "/insights/website-for-local-business-bahrain/",
+  "/insights/website-for-local-business-bahrain/"
 ];
 
 const bare = (p: string) => p.split("#")[0].split("?")[0];
