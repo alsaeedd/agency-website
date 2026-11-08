@@ -7,6 +7,8 @@ import Footer from '../Footer'
 import Contact from '../Contact'
 import CursorFollower from '../CursorFollower'
 import NavLoader from '../NavLoader'
+import { localePath } from '../../i18n'
+import { ralHrLang } from './t'
 
 // The main site's own chrome around the RAL HR pages: same navbar (anchor
 // links point back to the homepage, RAL HR marked current), footer, contact
@@ -64,9 +66,9 @@ export default function SiteChrome({ children }: { children: ReactNode }) {
       {ready && !coarse && <CursorFollower />}
       <Navbar
         onContactClick={openContact}
-        scrollToSection={(s) => { window.location.href = '/' + s }}
-        linkBase="/"
-        activeHref="/ral-hr/"
+        scrollToSection={(s) => { window.location.href = localePath(ralHrLang(), '/') + s }}
+        linkBase={localePath(ralHrLang(), '/')}
+        activeHref={localePath(ralHrLang(), '/ral-hr/')}
         showAtTop
       />
       {children}

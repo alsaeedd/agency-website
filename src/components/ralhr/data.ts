@@ -300,20 +300,20 @@ export const PRICING = [
   {
     name: 'Starter',
     price: 1,
-    blurb: 'The legal must-haves.',
-    items: ['Ask RAL', 'Payroll + WPS file', 'SIO + end of service', 'Leave + attendance', 'Org chart + documents hub', 'Records + expiry alerts', 'Audit log'],
+    blurb: 'The operational must-haves.',
+    items: ['Ask RAL', 'Payroll + WPS file', 'SIO + end of service', 'Leave + attendance', 'Org chart + documents hub', 'Records + expiry alerts', 'Audit log', 'Enforced SSO'],
   },
   {
     name: 'Professional',
     price: 2,
     blurb: 'Starter, plus the HR department.',
-    items: ['Self-service', 'Hiring + onboarding', 'Reviews', 'Service desk', 'E-signature', 'Benefits, rosters, travel'],
+    items: ['Hiring + onboarding', 'Reviews', 'E-signature', 'Benefits, rosters, travel'],
   },
   {
     name: 'Premium',
     price: 3,
     blurb: 'Professional, plus control at scale.',
-    items: ['Analytics export', 'Compensation + pay equity', 'Contractors + HSE', 'Enforced SSO', 'Legal hold'],
+    items: ['Analytics export', 'Compensation + pay equity', 'Contractors + HSE', 'Legal hold'],
   },
 ]
 

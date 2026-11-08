@@ -24,7 +24,8 @@ const AR_PATHS = JSON.parse(
   fs.readFileSync(path.join(root, 'src', 'i18n', 'index.ts'), 'utf8').match(/export const AR_PATHS = (\[[^\]]*\])/)[1].replace(/'/g, '"'),
 )
 const AR_SET = new Set(AR_PATHS)
-for (const p of AR_PATHS) if (p !== '/' && !arPages.some((a) => a.path === '/ar' + p)) throw new Error(`prerender: AR_PATHS has ${p} but content/pages-ar.mjs has no /ar${p}`)
+const SPA_AR = new Set(['/', '/ral-hr/', '/ral-hr/inquire/'])
+for (const p of AR_PATHS) if (!SPA_AR.has(p) && !arPages.some((a) => a.path === '/ar' + p)) throw new Error(`prerender: AR_PATHS has ${p} but content/pages-ar.mjs has no /ar${p}`)
 for (const a of arPages) if (!AR_SET.has(a.path.replace(/^\/ar/, ''))) throw new Error(`prerender: ${a.path} missing from AR_PATHS in src/i18n/index.ts`)
 const alternates = (enPath) =>
   `<link rel="alternate" hreflang="en" href="${SITE}${enPath}" />\n<link rel="alternate" hreflang="ar" href="${SITE}/ar${enPath}" />\n<link rel="alternate" hreflang="x-default" href="${SITE}${enPath}" />`
@@ -78,12 +79,30 @@ fs.writeFileSync(
 )
 
 // 1b. RAL HR product pages (own Vite entries, rendered the same way) ---------
-for (const [rel, fn] of [['ral-hr/index.html', renderRalHr], ['ral-hr/inquire/index.html', renderInquire]]) {
+// Each also gets an Arabic twin at /ar/ral-hr/... (lang=ar dir=rtl, META_AR).
+const metaSrc = fs.readFileSync(path.join(root, 'src', 'components', 'ralhr', 'i18n-ar.ts'), 'utf8')
+const META_AR = new Function('return ' + metaSrc.slice(metaSrc.indexOf('export const META_AR = ') + 23).trim().replace(/;?\s*$/, ''))()
+for (const [rel, fn, enPath, meta] of [['ral-hr/index.html', renderRalHr, '/ral-hr/', META_AR.ralhr], ['ral-hr/inquire/index.html', renderInquire, '/ral-hr/inquire/', META_AR.inquire]]) {
   const p = path.join(dist, ...rel.split('/'))
-  let h = fs.readFileSync(p, 'utf8')
-  if (!h.includes('<div id="root"></div>')) throw new Error('prerender: empty #root not found in dist/' + rel)
-  h = h.replace('<div id="root"></div>', () => '<div id="root">' + fn() + '</div>')
-  fs.writeFileSync(p, h)
+  const src = fs.readFileSync(p, 'utf8')
+  if (!src.includes('<div id="root"></div>')) throw new Error('prerender: empty #root not found in dist/' + rel)
+  fs.writeFileSync(p, src.replace('</head>', alternates(enPath) + '\n</head>').replace('<div id="root"></div>', () => '<div id="root">' + fn('en') + '</div>'))
+  const ar = must(src, '<html lang="en">', 'dist/' + rel)
+    .replace('<html lang="en">', '<html lang="ar" dir="rtl">')
+    .replace(/<title>[^<]*<\/title>/, `<title>${meta.title}</title>`)
+    .replace(/(<meta\s+name="description"\s+content=")[^"]*"/, (_, a) => a + attr(meta.description) + '"')
+    .replace(/(<meta\s+property="og:description"\s+content=")[^"]*"/, (_, a) => a + attr(meta.description) + '"')
+    .replace(/(<meta\s+name="twitter:description"\s+content=")[^"]*"/, (_, a) => a + attr(meta.description) + '"')
+    .replace(/(<meta\s+property="og:title"\s+content=")[^"]*"/, (_, a) => a + attr(meta.title) + '"')
+    .replace(/(<meta\s+name="twitter:title"\s+content=")[^"]*"/, (_, a) => a + attr(meta.title) + '"')
+    .replace(`<link rel="canonical" href="${SITE}${enPath}" />`, `<link rel="canonical" href="${SITE}/ar${enPath}" />`)
+    .replace(`<meta property="og:url" content="${SITE}${enPath}" />`, `<meta property="og:url" content="${SITE}/ar${enPath}" />`)
+    .replace('content="en_US"', 'content="ar_AR"')
+    .replace('</head>', alternates(enPath) + '\n<link rel="preload" href="/fonts/plex-arabic-600.woff2" as="font" type="font/woff2" crossorigin />\n</head>')
+    .replace('<div id="root"></div>', () => '<div id="root">' + fn('ar') + '</div>')
+  must(ar, `href="${SITE}/ar${enPath}"`, 'dist/ar/' + rel)
+  fs.mkdirSync(path.join(dist, 'ar', ...rel.split('/').slice(0, -1)), { recursive: true })
+  fs.writeFileSync(path.join(dist, 'ar', ...rel.split('/')), ar)
 }
 
 // 2. Content pages -------------------------------------------------------------
@@ -129,7 +148,7 @@ function footer(ar, lp) {
     </div>
     <nav aria-label="${L.pages}">
       <p class="foot-label">${L.pages}</p>
-      <a href="${lp('/')}">${L.home}</a>${NAV.map(([h, l]) => `<a href="${lp(h)}">${ar ? NAV_AR[l] : l}</a>`).join('')}<a href="${lp('/work/letterlock/')}">${L.ll}</a><a href="/ral-hr/">RAL HR</a><a href="${lp('/privacy/')}">${L.privacy}</a><a href="${lp('/terms/')}">${L.terms}</a>
+      <a href="${lp('/')}">${L.home}</a>${NAV.map(([h, l]) => `<a href="${lp(h)}">${ar ? NAV_AR[l] : l}</a>`).join('')}<a href="${lp('/work/letterlock/')}">${L.ll}</a><a href="${lp('/ral-hr/')}">RAL HR</a><a href="${lp('/privacy/')}">${L.privacy}</a><a href="${lp('/terms/')}">${L.terms}</a>
     </nav>
     <div>
       <p class="foot-label">${L.touch}</p>
@@ -228,6 +247,7 @@ const newest = pages.reduce((m, p) => (p.updated > m ? p.updated : m), '')
 const urls = [{ loc: SITE + '/', lastmod: newest, pri: '1.0' }]
 urls.push({ loc: SITE + '/ral-hr/', lastmod: newest, pri: '0.9' }, { loc: SITE + '/ral-hr/inquire/', lastmod: newest, pri: '0.5' })
 urls.push({ loc: SITE + '/ar/', lastmod: newest, pri: '1.0' })
+urls.push({ loc: SITE + '/ar/ral-hr/', lastmod: newest, pri: '0.9' }, { loc: SITE + '/ar/ral-hr/inquire/', lastmod: newest, pri: '0.5' })
 for (const p of arPages) urls.push({ loc: SITE + p.path, lastmod: p.updated, pri: '0.7' })
 for (const p of pages) urls.push({ loc: SITE + p.path, lastmod: p.updated, pri: (p.path === '/privacy/' || p.path === '/terms/') ? '0.3' : p.type === 'article' ? '0.7' : '0.8' })
 fs.writeFileSync(

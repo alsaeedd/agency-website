@@ -557,3 +557,59 @@
 @media (prefers-reduced-motion: reduce) {
   .hp-faq details::details-content, .hp-faq summary i { transition: none; }
 }
+
+/* Module picker inside the "Built to your requirements" box */
+.hp-fine-cta { border: 0; cursor: pointer; font-family: inherit; min-height: 44px; }
+.hp-fine-cta:focus-visible { outline: 2px solid var(--v); outline-offset: 3px; }
+.hp-fine-chev { width: 7px; height: 7px; margin-left: 4px; border-right: 1.5px solid currentColor; border-bottom: 1.5px solid currentColor; transform: rotate(-45deg); transition: transform .35s cubic-bezier(.19, 1, .22, 1); }
+.hp-fine.open .hp-fine-chev { transform: rotate(-135deg) translate(-2px, -2px); }
+.hp-fine-pick { grid-column: 1 / -1; display: grid; gap: 16px; min-width: 0; }
+.hp-fine-go { display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-end; gap: 12px; }
+.hp-fine-plan { min-height: 44px; padding: 0 18px; border-radius: 999px; border: 1px solid var(--line2); background: none; color: var(--color-text); font: 500 14px/1 Inter, sans-serif; cursor: pointer; transition: border-color .25s; }
+.hp-fine-plan:hover { border-color: var(--v); }
+.hp-fine-plan b { color: var(--v2); font-weight: 600; }
+.hp-fine-plan:focus-visible { outline: 2px solid var(--v); outline-offset: 3px; }
+@media (max-width: 760px) { .hp-fine-go { justify-content: stretch; } .hp-fine-go > * { flex: 1 1 100%; justify-content: center; } }
+@media (prefers-reduced-motion: reduce) { .hp-fine-chev { transition: none; } }
+
+/* Pricing flow: 1 choose plan (or modules), 2 size team, then book */
+.hp-step { margin-top: 36px; }
+.hp-step-head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 14px 24px; margin-bottom: 18px; }
+.hp-step-head h3 { display: flex; align-items: center; gap: 12px; margin: 0; font-size: clamp(18px, 1.6vw, 21px); font-weight: 600; letter-spacing: -.02em; }
+.hp-step-head h3 i { font-style: normal; width: 28px; height: 28px; border-radius: 50%; display: grid; place-items: center; font-size: 13px; background: rgba(167, 139, 250, .16); color: var(--v2); box-shadow: inset 0 0 0 1px rgba(167, 139, 250, .35); }
+.hp-mode { display: inline-flex; padding: 4px; border-radius: 999px; background: rgba(12, 7, 21, .6); box-shadow: inset 0 0 0 1px var(--line); }
+.hp-mode button { min-height: 40px; padding: 0 16px; border: 0; border-radius: 999px; background: none; color: var(--ink2); font: 500 13.5px/1 Inter, sans-serif; cursor: pointer; transition: background .3s, color .3s; }
+.hp-mode button[aria-pressed="true"] { background: var(--color-text); color: #160e27; }
+.hp-mode button:focus-visible, .hp-plan-more:focus-visible { outline: 2px solid var(--v); outline-offset: 2px; }
+.hp-step .hp-plans { margin-top: 0; }
+.hp-plan-plus { margin: 14px 0 -4px; font-size: 12px; letter-spacing: .06em; text-transform: uppercase; color: var(--v2); opacity: .85; }
+.hp-plan-soon { margin-left: 8px; padding: 1px 7px; border-radius: 999px; font-size: 10.5px; border: 1px dashed rgba(196, 181, 253, .5); color: var(--v2); vertical-align: 1px; }
+.hp-plan-more { margin-top: 10px; min-height: 44px; padding: 0 2px; border: 0; background: none; color: var(--v2); font: 500 13.5px/1 Inter, sans-serif; cursor: pointer; }
+.hp-plan-more:hover { color: var(--color-text); }
+.hp-help { display: grid; gap: 14px; }
+.hp-help-lead { margin: 0; font-size: 15px; color: var(--ink2); }
+.hp-help-fit { margin: 0; padding: 14px 18px; border-radius: 16px; background: linear-gradient(120deg, rgba(124, 77, 255, .18), rgba(22, 14, 39, .5)); box-shadow: inset 0 0 0 1px rgba(167, 139, 250, .3); font-size: 15px; color: var(--ink2); }
+.hp-help-fit b { color: var(--color-text); font-weight: 600; margin: 0 6px; }
+.hp-help-fit span { color: var(--v2); }
+/* Pricing CTA row. Own class: it used to reuse .hp-book (the white closing
+   pill), which painted a big white glow behind the button and the hint. */
+.hp-bookrow { position: relative; margin-top: 22px; display: grid; justify-items: start; gap: 10px; }
+.hp-bookrow small { font-size: 12.5px; color: var(--ink2); line-height: 1.5; }
+.hp-bookrow small a { color: var(--v2); text-decoration: underline; text-underline-offset: 3px; }
+@media (max-width: 640px) {
+  .hp-mode { width: 100%; }
+  .hp-mode button { flex: 1; padding: 0 10px; min-height: 44px; }
+  .hp-bookrow { justify-items: stretch; }
+  .hp-bookrow .rh-cta { justify-content: space-between; }
+}
+
+/* RTL (Arabic /ar/ral-hr/ pages): numbers, the odometer and the price
+   equation stay left-to-right; directional arrows mirror; pill paddings swap. */
+html[dir="rtl"] .od, html[dir="rtl"] .hp-eq b, html[dir="rtl"] .tnum { direction: ltr; unicode-bidi: isolate; }
+html[dir="rtl"] .rh-flip, html[dir="rtl"] .rh-cta-i { display: inline-block; transform: scaleX(-1); }
+html[dir="rtl"] .rh-cta { padding: 8px 22px 8px 8px; }
+html[dir="rtl"] .hp-book { padding: 10px 30px 10px 10px; }
+html[dir="rtl"] .hp-book:hover .hp-book-i { transform: translateX(-3px) rotate(8deg) scale(1.05); }
+html[dir="rtl"] .hp-book-sheen { transform: translateX(100%); }
+html[dir="rtl"] .hp-book:hover .hp-book-sheen { transform: translateX(-100%); }
+@media (max-width: 420px) { html[dir="rtl"] .hp-book { padding-left: 10px; padding-right: 22px; } }

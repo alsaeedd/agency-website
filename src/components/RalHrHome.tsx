@@ -1,8 +1,9 @@
 import { lazy, Suspense, useEffect, useRef, useState } from "react";
+import { t } from './ralhr/t'
 import { gsap } from "gsap";
 import { revealUp, isWeakDevice } from "../lib/reveal";
 import "./RalHrHome.css";
-import { useLang } from "../i18n";
+import { useLang, localePath } from "../i18n";
 
 // Home-page showcase for RAL HR, our own product. It reuses the product page's
 // hero window (Payday) so home and /ral-hr/ read as one site. Nothing runs at
@@ -89,7 +90,7 @@ export default function RalHrHome() {
                 <span>{L.eyebrow}</span>
               </span>
               <h2 id="hrh-title" className="section-heading hrh-title hrh-anim">
-                <span className="hrh-name">RAL HR</span>
+                <span className="hrh-name">{t("RAL HR")}</span>
                 <span className="hrh-sub">
                   {L.sub}<span className="serif-accent">{L.accent}</span>
                 </span>
@@ -133,11 +134,11 @@ export default function RalHrHome() {
                 <span className="hrh-price-per">{L.per}</span>
               </p>
               <div className="hrh-ctas">
-                <a className="hrh-btn hrh-btn--primary" href="/ral-hr/">
+                <a className="hrh-btn hrh-btn--primary" href={localePath(lang, "/ral-hr/")}>
                   <span>{L.explore}</span>
                   <span className="hrh-btn-icon" aria-hidden="true">→</span>
                 </a>
-                <a className="hrh-btn hrh-btn--ghost" href="/ral-hr/#demo">
+                <a className="hrh-btn hrh-btn--ghost" href={localePath(lang, "/ral-hr/") + "#demo"}>
                   <span>{L.demo}</span>
                   <span className="hrh-btn-icon" aria-hidden="true">↗</span>
                 </a>
