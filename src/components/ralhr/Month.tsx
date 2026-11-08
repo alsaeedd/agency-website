@@ -160,9 +160,28 @@ function Eos() {
   )
 }
 
+const EVENTS: Record<number, string> = { 1: 'Starts', 9: 'Leave', 14: 'Ask RAL', 25: 'Payday', 31: 'Leaves' }
+// October 2026 at a glance: the five chapter days are lit and jump to their chapter.
+function Cal() {
+  return (
+    <ol className="hp-cal hp-in" aria-label="October 2026">
+      {Array.from({ length: 31 }, (_, i) => {
+        const d = i + 1, ev = EVENTS[d], wd = (d + 3) % 7
+        return (
+          <li key={d} className={wd >= 5 ? 'we' : undefined}>
+            {ev
+              ? <a href={'#oct-' + String(d).padStart(2, '0')} className={d === 25 ? 'pay' : undefined} aria-label={d + ' October: ' + ev}>{d}<small>{ev}</small></a>
+              : <span aria-hidden="true">{d}</span>}
+          </li>
+        )
+      })}
+    </ol>
+  )
+}
+
 function Ch({ n, day, title, children, ui }: { n: string; day: string; title: string; children: ReactNode; ui: ReactNode }) {
   return (
-    <article className="hp-ch hp-rv">
+    <article className="hp-ch hp-rv" id={'oct-' + n}>
       <div className="hp-ch-copy">
         <span className="hp-ch-n" aria-hidden="true">{n}</span>
         <p className="hp-ch-day hp-in">{day}</p>
@@ -182,6 +201,7 @@ export function Month() {
         <h2 className="hp-in">October at a Bahrain company. <span className="serif">Every chore, handled.</span></h2>
         <p className="hp-in">Follow one month at our demo company: 98 people across Seef, Sitra and Juffair. Everything below is live. Type in it, tap it, slide it.</p>
       </div>
+      <div className="hp-rv"><Cal /></div>
       <div className="hp-chs">
         <Ch n="01" day="Thursday 1 October" title="Fatima starts today." ui={<Onboard />}>
           Add a new starter with her CPR and IBAN. RAL HR checks both as you type, sets up her leave, SIO and WPS details, and her app invite is on her phone before lunch.

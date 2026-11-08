@@ -41,6 +41,15 @@ function DemoSlot() {
     io.observe(el)
     return () => io.disconnect()
   }, [])
+  // Keep the floating contact button off the demo's phone frame while the demo is on screen.
+  useEffect(() => {
+    const el = ref.current
+    if (!el || !('IntersectionObserver' in window)) return
+    const root = document.documentElement
+    const io = new IntersectionObserver(([e]) => root.classList.toggle('hp-demo-in', e.isIntersecting), { threshold: 0.12 })
+    io.observe(el)
+    return () => { io.disconnect(); root.classList.remove('hp-demo-in') }
+  }, [])
   const fallback = <div className="hp-demo-fallback">Loading the full demo</div>
   return <div ref={ref}>{show ? <Suspense fallback={fallback}><Demo /></Suspense> : fallback}</div>
 }
@@ -115,7 +124,7 @@ function Pricing({ team, setTeam, plan, setPlan }: { team: number; setTeam: (n: 
           </div>
         </div>
         <div className="hp-price-out" aria-live="polite">
-          <p className="hp-k">{p.name}, {team} people</p>
+          <p className="hp-k">{team} people × BD {p.price}, {p.name}</p>
           <p className="hp-big"><small>BD</small><Odometer value={team * p.price} /><span>a month</span></p>
           <p className="hp-yr">BD {money(team * p.price * 12)} a year, plus a one-time setup fee</p>
         </div>
@@ -278,6 +287,7 @@ export default function RalHrPage() {
         if (n) gsap.from(n, { yPercent: 35, opacity: 0, duration: 1.5, ease: 'expo.out', scrollTrigger: { trigger: s, start: 'top 78%', once: true } })
       })
       gsap.from('.hp-ladder i', { scaleY: 0, transformOrigin: '50% 100%', duration: 1.2, stagger: 0.1, ease: 'expo.out', scrollTrigger: { trigger: '.hp-ladder', start: 'top 85%', once: true } })
+      gsap.from('.hp-cal a', { opacity: 0, duration: 0.9, stagger: 0.12, ease: 'expo.out', scrollTrigger: { trigger: '.hp-cal', start: 'top 85%', once: true } })
       gsap.from('.hp-pings li', { opacity: 0, scale: 0.85, y: 16, duration: 0.8, stagger: 0.15, ease: 'back.out(1.6)', delay: 0.3, scrollTrigger: { trigger: '.hp-phone', start: 'top 72%', once: true } })
     }, el)
     return () => ctx.revert()

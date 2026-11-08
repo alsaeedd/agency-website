@@ -122,16 +122,16 @@
 .ra-hello h2 { font-size: 24px; font-weight: 650; letter-spacing: -.02em; }
 .ra-hello p { color: var(--ra-ink-3); font-size: 14px; margin-top: 2px; }
 .ra-kpis { display: grid; grid-template-columns: 1fr 1fr 1fr 1.8fr; gap: 12px; }
-.ra-kpi { text-align: start; display: flex; flex-direction: column; gap: 6px; padding: 16px; border-radius: 16px; background: var(--ra-card); border: 1px solid var(--ra-rule); min-width: 0; transition: border-color .3s, transform .2s var(--ra-ease); }
+.ra-kpi { container-type: inline-size; text-align: start; display: flex; flex-direction: column; gap: 6px; padding: 16px; border-radius: 16px; background: var(--ra-card); border: 1px solid var(--ra-rule); min-width: 0; transition: border-color .3s, transform .2s var(--ra-ease); }
 button.ra-kpi:hover { border-color: var(--ra-rule-2); transform: translateY(-2px); }
 .ra-kpi-l { font-size: 13px; color: var(--ra-ink-3); display: flex; align-items: center; gap: 8px; }
-.ra-kpi-v { font-size: 32px; font-weight: 700; letter-spacing: -.03em; line-height: 1.1; white-space: nowrap; }
+.ra-kpi-v { font-size: min(32px, 20cqi); font-variant-numeric: tabular-nums; max-width: 100%; font-weight: 700; letter-spacing: -.03em; line-height: 1.1; white-space: nowrap; }
 .ra-kpi-v small { font-size: 16px; color: var(--ra-ink-3); font-weight: 500; }
 .ra-kpi-n { font-size: 13px; color: var(--ra-ink-2); }
 .ra-kpi-n.up { color: var(--ra-good); }
 .ra-kpi.warn .ra-kpi-v { color: var(--ra-warn); }
 .ra-kpi.hero { background: linear-gradient(140deg, rgba(124, 58, 237, .35), rgba(26, 18, 48, .9) 70%); border-color: rgba(167, 139, 250, .35); }
-.ra-kpi.hero .ra-kpi-v { font-size: 28px; }
+.ra-kpi.hero .ra-kpi-v { font-size: clamp(18px, 11.5cqi, 36px); }
 .ra-chip { font-style: normal; font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 999px; background: rgba(209, 196, 233, .14); color: var(--ra-ink-2); }
 .ra-chip.s3, .ra-chip.s4 { background: var(--ra-good-soft); color: var(--ra-good); }
 .ra-meter { display: block; height: 6px; border-radius: 3px; background: rgba(209, 196, 233, .08); overflow: hidden; margin-top: 4px; }
@@ -263,7 +263,7 @@ button.ra-kpi:hover { border-color: var(--ra-rule-2); transform: translateY(-2px
 .ra-modal-in { width: min(400px, 88%); padding: 24px; border-radius: 20px; background: var(--ra-card-2); border: 1px solid var(--ra-rule-2); box-shadow: 0 30px 80px -20px rgba(0, 0, 0, .7); display: grid; gap: 10px; animation: ra-pop .45s var(--ra-ease) both; }
 @keyframes ra-pop { from { opacity: 0; transform: translateY(12px) scale(.97); } }
 .ra-modal-in h3 { font-size: 18px; }
-.ra-modal-v { font-size: 30px; font-weight: 700; letter-spacing: -.02em; }
+.ra-modal-v { font-size: clamp(22px, 6.5vw, 30px); font-variant-numeric: tabular-nums; overflow-wrap: anywhere; font-weight: 700; letter-spacing: -.02em; }
 .ra-modal-in p { font-size: 14px; color: var(--ra-ink-2); }
 .ra-modal-b { display: flex; justify-content: flex-end; gap: 10px; margin-top: 8px; }
 
@@ -411,8 +411,8 @@ button.ra-kpi:hover { border-color: var(--ra-rule-2); transform: translateY(-2px
 .ra-phone .ra-hello h2 { font-size: 20px; }
 .ra-phone .ra-kpis { grid-template-columns: 1fr 1fr; gap: 10px; }
 .ra-phone .ra-kpi.hero { grid-column: 1 / -1; order: -1; }
-.ra-phone .ra-kpi-v { font-size: 30px; }
-.ra-phone .ra-kpi.hero .ra-kpi-v { font-size: 32px; }
+.ra-phone .ra-kpi-v { font-size: min(30px, 20cqi); }
+.ra-phone .ra-kpi.hero .ra-kpi-v { font-size: clamp(20px, 11.5cqi, 34px); }
 .ra-phone .ra-kpi-l { font-size: 14px; }
 .ra-phone .ra-grid2, .ra-phone .ra-pgrid, .ra-phone .ra-sum, .ra-phone .ra-split { grid-template-columns: 1fr; }
 .ra-phone .ra-depts { display: none; }
@@ -473,3 +473,10 @@ button.ra-kpi:hover { border-color: var(--ra-rule-2); transform: translateY(-2px
 @media (prefers-reduced-motion: reduce) {
   .dv *, .dv *::before, .dv *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
 }
+
+/* Big money figures always fit their card (EN and AR, every size) */
+.ra-sum > div { container-type: inline-size; }
+.ra-sum .v { font-size: clamp(16px, 11.5cqi, 26px); font-variant-numeric: tabular-nums; }
+.ra-sum .v.dim { font-size: min(18px, 11cqi); }
+.ra-phone .ra-sum > div.net .v { font-size: clamp(18px, 11.5cqi, 26px); }
+.ra-eos-total .v, .ra-net .v, .ra-bal p b, .ra-ring-v b { font-variant-numeric: tabular-nums; }
