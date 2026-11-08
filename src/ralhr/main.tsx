@@ -10,9 +10,11 @@ import '@fontsource/inter/latin-700.css'
 import '@fontsource/newsreader/latin-400-italic.css'
 import '@fontsource/newsreader/latin-500-italic.css'
 import '../index.css'
+import '../App.css'
 import { applyDeviceTierToDocument } from '../lib/deviceProfile'
 import RalHrPage from '../components/ralhr/RalHrPage'
 import Inquire from '../components/ralhr/Inquire'
+import SiteChrome from '../components/ralhr/SiteChrome'
 
 // One entry for both RAL HR pages; the prerendered HTML is replaced by the
 // client render (same no-hydration pattern as the homepage).
@@ -20,5 +22,5 @@ applyDeviceTierToDocument()
 gsap.registerPlugin(ScrollTrigger)
 const isInquire = /^\/ral-hr\/inquire/.test(window.location.pathname)
 createRoot(document.getElementById('root')!).render(
-  <StrictMode>{isInquire ? <Inquire /> : <RalHrPage />}</StrictMode>,
+  <StrictMode><SiteChrome>{isInquire ? <Inquire /> : <RalHrPage />}</SiteChrome></StrictMode>,
 )

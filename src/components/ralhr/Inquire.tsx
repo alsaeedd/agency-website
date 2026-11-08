@@ -172,12 +172,9 @@ export default function Inquire({ onClose }: { onClose?: () => void } = {}) {
 
   return (
     <div className="rh">
-      <header className="rh-top">
-        <a href="/ral-hr/" className="rh-brand">RAL <span>HR</span></a>
-        {onClose
-          ? <button type="button" className="rh-top-cta iqx-close" onClick={onClose}>Close</button>
-          : <a className="rh-top-cta" href="/ral-hr/">Back to RAL HR</a>}
-      </header>
+      {onClose
+        ? <header className="rh-top"><a href="/ral-hr/" className="rh-brand">RAL <span>HR</span></a><button type="button" className="rh-top-cta iqx-close" onClick={onClose}>Close</button></header>
+        : <a className="iqx-back" href="/ral-hr/"><span aria-hidden="true">{'\u2190'} </span>Back to RAL HR</a>}
       <main className="iq iqx">
         <div className="iqx-progress" aria-label={step < total ? `Step ${shown} of ${total}` : 'Ready to send'}>
           <ol>
