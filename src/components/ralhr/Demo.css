@@ -121,7 +121,7 @@
 /* ---------- home ---------- */
 .ra-hello h2 { font-size: 24px; font-weight: 650; letter-spacing: -.02em; }
 .ra-hello p { color: var(--ra-ink-3); font-size: 14px; margin-top: 2px; }
-.ra-kpis { display: grid; grid-template-columns: 1fr 1fr 1fr 1.5fr; gap: 12px; }
+.ra-kpis { display: grid; grid-template-columns: 1fr 1fr 1fr 1.8fr; gap: 12px; }
 .ra-kpi { text-align: start; display: flex; flex-direction: column; gap: 6px; padding: 16px; border-radius: 16px; background: var(--ra-card); border: 1px solid var(--ra-rule); min-width: 0; transition: border-color .3s, transform .2s var(--ra-ease); }
 button.ra-kpi:hover { border-color: var(--ra-rule-2); transform: translateY(-2px); }
 .ra-kpi-l { font-size: 13px; color: var(--ra-ink-3); display: flex; align-items: center; gap: 8px; }
@@ -131,7 +131,7 @@ button.ra-kpi:hover { border-color: var(--ra-rule-2); transform: translateY(-2px
 .ra-kpi-n.up { color: var(--ra-good); }
 .ra-kpi.warn .ra-kpi-v { color: var(--ra-warn); }
 .ra-kpi.hero { background: linear-gradient(140deg, rgba(124, 58, 237, .35), rgba(26, 18, 48, .9) 70%); border-color: rgba(167, 139, 250, .35); }
-.ra-kpi.hero .ra-kpi-v { font-size: 30px; }
+.ra-kpi.hero .ra-kpi-v { font-size: 28px; }
 .ra-chip { font-style: normal; font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 999px; background: rgba(209, 196, 233, .14); color: var(--ra-ink-2); }
 .ra-chip.s3, .ra-chip.s4 { background: var(--ra-good-soft); color: var(--ra-good); }
 .ra-meter { display: block; height: 6px; border-radius: 3px; background: rgba(209, 196, 233, .08); overflow: hidden; margin-top: 4px; }
