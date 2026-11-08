@@ -858,3 +858,41 @@ html:not([data-tier="high"]) .hero-aurora-2 {
   .hero-cta { padding: 0.65rem 1.1rem !important; font-size: 0.82rem !important; }
   .hero-stats { display: none !important; }
 }
+
+/* ===== Hero label as a link to RAL HR (discovery hook) ===== */
+.hero-label--link {
+  text-decoration: none;
+  cursor: pointer;
+  transition:
+    border-color 0.45s var(--ease-out-expo),
+    color 0.45s var(--ease-out-expo);
+}
+.hero-label--link:hover {
+  border-color: rgba(167, 139, 250, 0.5);
+  color: var(--color-text);
+}
+.hero-label--link:focus-visible {
+  outline: 2px solid #a78bfa;
+  outline-offset: 3px;
+}
+.hero-label-new {
+  padding: 0.18rem 0.5rem;
+  border-radius: 100px;
+  background: rgba(167, 139, 250, 0.22);
+  color: #ede9fe;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+}
+.hero-label-arrow {
+  display: inline-block;
+  letter-spacing: 0;
+  transition: transform 0.45s var(--ease-out-expo);
+}
+.hero-label--link:hover .hero-label-arrow { transform: translateX(3px); }
+.hero-label-short { display: none; }
+@media (max-width: 480px) {
+  .hero-label--link { letter-spacing: 0.14em; }
+  .hero-label-long { display: none; }
+  .hero-label-short { display: inline; }
+  .hero-label--link .hero-label-crest { display: none; }
+}
