@@ -78,7 +78,7 @@ export default function RalHrHome() {
                 HR and payroll, <span className="serif-accent">built for Bahrain.</span>
               </h2>
               <p className="section-intro hrh-intro hrh-anim">
-                We build software for clients. RAL HR is the one we built for ourselves: payroll for Bahrain
+                We build software for clients. RAL HR is our own product: HR and payroll for Bahrain
                 companies still working in Excel and fixing rejected WPS files by hand.
               </p>
             </header>
