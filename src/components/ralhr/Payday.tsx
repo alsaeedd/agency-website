@@ -144,7 +144,7 @@ export default function Payday({ compact = false, waitForView = false, lite = fa
 
       <div className="pd-stage">
         <div className="pd-frame" ref={frame} data-dev={dev}>
-          <div className="pd-chrome" aria-hidden="true"><i /><i /><i /><span>RAL HR · Payroll</span></div>
+          <div className="pd-chrome" aria-hidden="true"><i /><i /><i /><span>{lang === 'ar' ? 'RAL HR · الرواتب' : 'RAL HR · Payroll'}</span></div>
           <div className="pd-app" dir={lang === 'ar' ? 'rtl' : 'ltr'} lang={lang}>
             <aside className="pd-side" aria-hidden="true">
               <p className="pd-logo"><b>RAL</b> HR</p>
