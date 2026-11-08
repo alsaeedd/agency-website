@@ -462,6 +462,7 @@ export function EosScreen({ s, act, lang }: P) {
 
 /* ================= Ask RAL ================= */
 export const ASK_CHIPS: { q: string; l: Lang; a: number }[] = [
+  { q: 'How much is payroll this month?', l: 'en', a: 6 },
   { q: 'How much SIO are we paying for October?', l: 'en', a: 0 },
   { q: 'كم يوم إجازة باقي لنور السيد؟', l: 'ar', a: 1 },
   { q: 'Who is off the week of 15 November?', l: 'en', a: 2 },
@@ -471,6 +472,7 @@ export const ASK_CHIPS: { q: string; l: Lang; a: number }[] = [
 export function matchAsk(q: string): number {
   const t = q.toLowerCase()
   if (/sio|تأمين|تامين|insurance/.test(t)) return 0
+  if (/payroll|pay ?bill|salar|wage|gross|net pay|total pay|paying (staff|everyone)|رواتب|راتب|الأجور|أجور|اجور|rawatib|ratib/.test(t)) return 6
   if (/noor|نور|balance|رصيد/.test(t)) return 1
   if (/off|week|away|غياب|أسبوع|اسبوع|who/.test(t)) return 2
   if (/overtime|اضافي|إضافي|ساعات/.test(t)) return 3
@@ -517,7 +519,19 @@ function answer(a: number, l: Lang, s: DemoState): Ans {
       bars: [[x('Art. 116', 'المادة 116'), r.oldAmt, fmt(r.oldAmt)], [x('SIO scheme', 'نظام التأمينات'), r.newAmt, fmt(r.newAmt)]],
     }
   }
-  return { text: x('I answer from your own payroll, leave and attendance records. Try SIO, a leave balance, who is off, overtime or end of service.', 'أجيب من سجلات الرواتب والإجازات والحضور لديك. جرّب: التأمينات، رصيد إجازة، من في إجازة، العمل الإضافي أو نهاية الخدمة.') }
+  if (a === 6) {
+    const pct = (v: number) => `${((v / TOTALS.gross) * 100).toFixed(1)}%`
+    const ded = TOTALS.sio + TOTALS.advance
+    const up = TOTALS.net - TOTALS.septNet
+    const top = deptTotals().sort((m, n) => n.gross - m.gross).slice(0, 4)
+    return {
+      text: x(`October payroll is BD ${fmt(TOTALS.gross)} gross for ${ROSTER.length} people. After BD ${fmt(ded)} in staff SIO and salary advances, BD ${fmt(TOTALS.net)} goes to the bank on payday, BD ${fmt(up)} more than September.`,
+        `رواتب أكتوبر ${fmt(TOTALS.gross)} د.ب إجمالًا لـ${ROSTER.length} موظفًا. بعد خصم ${fmt(ded)} د.ب للتأمينات والسلف، يُحوَّل ${fmt(TOTALS.net)} د.ب إلى البنك يوم الراتب، بزيادة ${fmt(up)} د.ب عن سبتمبر.`),
+      table: [[x('Gross pay', 'إجمالي الرواتب'), fmt(TOTALS.gross), '100%'], [x('Deductions', 'الخصومات'), fmt(ded), pct(ded)], [x('Net to bank', 'الصافي للبنك'), fmt(TOTALS.net), pct(TOTALS.net)]],
+      bars: top.map((d) => [deptName(d.d, l), d.gross, fmt(d.gross, 0)] as [string, number, string]),
+    }
+  }
+  return { text: x('I answer from your own payroll, leave and attendance records. Try payroll totals, SIO, a leave balance, who is off, overtime or end of service.', 'أجيب من سجلات الرواتب والإجازات والحضور لديك. جرّب: مجموع الرواتب، التأمينات، رصيد إجازة، من في إجازة، العمل الإضافي أو نهاية الخدمة.') }
 }
 
 function Stream({ text, live, onDone }: { text: string; live: boolean; onDone: () => void }) {
@@ -551,12 +565,14 @@ function Answer({ a, l, s, live }: { a: number; l: Lang; s: DemoState; live: boo
       {done && ans.table && (
         <div className="ra-mini">
           {a === 0 && <div className="ra-tr th"><span /><span>{x('Staff', 'الموظف')}</span><span>{x('Company', 'الشركة')}</span></div>}
+          {a === 6 && <div className="ra-tr th"><span /><span>{x('BD', 'د.ب')}</span><span>{x('Of gross', 'من الإجمالي')}</span></div>}
           {ans.table.map((r) => <div key={r[0]} className="ra-tr cx"><b>{r[0]}</b><span className="tnum">{r[1]}</span><span className="tnum">{r[2]}</span></div>)}
         </div>
       )}
       {done && ans.bars && (
         <ul className="ra-mbars">{ans.bars.map((b) => <li key={b[0]} className="cx"><span>{b[0]}</span><span className="ra-bar"><i className="gx" style={{ '--w': b[1] / max } as React.CSSProperties} /></span><b className="tnum">{b[2]}</b></li>)}</ul>
       )}
+      {done && a === 6 && <small className="ra-src">{x(`From: October payroll run, ${ROSTER.length} people. Biggest departments by gross pay`, `المصدر: مسير رواتب أكتوبر، ${ROSTER.length} موظفًا. أكبر الأقسام حسب إجمالي الرواتب`)}</small>}
       {done && a === 4 && <small className="ra-src">{x('From: Labour Law 2012 Art. 116, SIO Resolution 2024', 'المصدر: قانون العمل 2012 المادة 116، قرار التأمينات 2024')}</small>}
     </div>
   )
