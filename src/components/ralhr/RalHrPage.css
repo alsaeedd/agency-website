@@ -432,3 +432,36 @@
   .hp-faq summary > span { width: 30px; height: 30px; }
   .hp-faq details p { padding: 0 18px 20px 58px; }
 }
+
+/* ---------- Cycle 4: rhythm, states, readability ---------- */
+/* Rules: the 18% hero leads, so the bento packs with no empty cells (2+1 then 3 at 1024+, full row then 2x2 below). */
+.hp-rule-wide { order: -1; }
+.hp-rule p { font-size: 15.5px; color: #e4dbf5; }
+.hp-ladder b { font-variant-numeric: tabular-nums; }
+/* Press and focus states for every control on the page */
+.rh-cta, .rh-ghost, .hp-plan, .hp-faq summary, .hp-wa-topics button { -webkit-tap-highlight-color: transparent; }
+.rh-cta:active, .rh-ghost:active, .hp-wa-topics button:active { transform: scale(.97); }
+.hp-plan:active { transform: translateY(1px) scale(.995); }
+.hp-sec :is(a, button, summary, input, [tabindex]):focus-visible,
+.hp-hero :is(a, button):focus-visible,
+.hp-close :is(a, button, input, textarea):focus-visible { outline: 2px solid #a78bfa; outline-offset: 3px; border-radius: 12px; }
+.hp-faq summary { transition: color .3s var(--e); }
+.hp-faq summary:hover { color: #fff; }
+.hp-faq summary:hover i::before, .hp-faq summary:hover i::after { background: #c4b5fd; }
+.hp-faq details p { color: #e0d6f2; }
+/* Month: the day label sits clear of the ghost number and reads as a label, not decoration */
+.hp-ch-day { position: relative; display: inline-block; padding: 6px 12px; border-radius: 999px; background: rgba(167, 139, 250, .12); box-shadow: 0 0 0 1px rgba(167, 139, 250, .22); }
+/* App pings: readable at a glance */
+.hp-pings b { font-size: 15px; }
+.hp-pings span { font-size: 13.5px; color: #ddd2f0; }
+/* Pricing plan list: more air, readable ticks */
+.hp-plan ul { gap: 10px; font-size: 14.5px; }
+@media (max-width: 700px) {
+  .hp-plan ul { grid-template-columns: 1fr 1fr; column-gap: 12px; font-size: 13.5px; }
+  .hp-plan { padding: 22px 20px; }
+  .hp-faq summary { padding-block: 20px; min-height: 56px; }
+  .rh-cta, .rh-ghost { min-height: 48px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .rh-cta:active, .rh-ghost:active, .hp-plan:active, .hp-wa-topics button:active { transform: none; }
+}
