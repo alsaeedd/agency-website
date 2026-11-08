@@ -42,6 +42,7 @@ h1 { margin: 0 0 1.25rem; font-size: clamp(2rem, 6vw, 3.25rem); line-height: 1.0
 .prose ul, .prose ol { padding-left: 1.25rem; }
 .prose li { margin: 0.4rem 0; }
 .prose strong { color: var(--text); font-weight: 600; }
+.prose a { overflow-wrap: anywhere; }
 .prose .tag { margin: -0.25rem 0 0.5rem; font-size: 0.8rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-2); }
 .facts { list-style: none; padding: 0 !important; display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 0.75rem; }
 .facts li { margin: 0; padding: 1rem; background: var(--surface); border: 1px solid var(--border); border-radius: 14px; color: var(--text-2); }
