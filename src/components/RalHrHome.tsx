@@ -49,7 +49,7 @@ export default function RalHrHome() {
       const d = weak ? 0.6 : 1;
 
       revealUp(qa(".hrh-anim"), {
-        trigger: q(".hrh-copy"),
+        trigger: q(".hrh-title"),
         start: "top 80%",
         stagger: 0.12,
       });
@@ -154,7 +154,7 @@ export default function RalHrHome() {
               <div className="hrh-offer hrh-anim">
                 <p className="hrh-price">
                   <span className="hrh-price-from">From</span>
-                  <span className="hrh-price-num">BD 1</span>
+                  <span className="hrh-price-num">BD 1</span>
                   <span className="hrh-price-per">per employee a month</span>
                 </p>
                 <div className="hrh-ctas">
@@ -208,7 +208,7 @@ export default function RalHrHome() {
                         </dd>
                       </div>
                       <div className="hrh-row">
-                        <dt>SIO, employee share</dt>
+                        <dt>Employee SIO</dt>
                         <dd className="hrh-minus">
                           <span className="hrh-cur">−&nbsp;BHD</span>
                           <span data-to={RUN.sio}>{fmt(RUN.sio)}</span>
@@ -236,7 +236,11 @@ export default function RalHrHome() {
                   </div>
                 </div>
 
-                <div className="hrh-phone" aria-label="Phone notification: payslip ready">
+                <div
+                  className="hrh-phone"
+                  role="img"
+                  aria-label="Phone notification from RAL HR: payslip ready, November net pay BD 712.480"
+                >
                   <div className="hrh-screen">
                     <span className="hrh-island" aria-hidden="true" />
                     <span className="hrh-time" aria-hidden="true">9:41</span>
@@ -248,7 +252,7 @@ export default function RalHrHome() {
                         <span className="hrh-now">now</span>
                       </div>
                       <strong>Payslip ready</strong>
-                      <span>Your November net pay is BD 712.480</span>
+                      <span>Your November net pay is BD 712.480</span>
                     </div>
                   </div>
                 </div>
