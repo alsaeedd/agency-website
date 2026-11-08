@@ -5,13 +5,14 @@ import { renderToString } from "react-dom/server";
 import App from "./App";
 import RalHrPage from "./components/ralhr/RalHrPage";
 import Inquire from "./components/ralhr/Inquire";
+import SiteChrome from "./components/ralhr/SiteChrome";
 
 export function render(): string {
   return renderToString(<App />);
 }
 export function renderRalHr(): string {
-  return renderToString(<RalHrPage />);
+  return renderToString(<SiteChrome><RalHrPage /></SiteChrome>);
 }
 export function renderInquire(): string {
-  return renderToString(<Inquire />);
+  return renderToString(<SiteChrome><Inquire /></SiteChrome>);
 }

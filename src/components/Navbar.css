@@ -362,3 +362,8 @@ html[data-tier="high"] .navbar-mobile-backdrop {
   .burger-line { transition-duration: 0.15s; }
   .navbar-mobile-content { transform: none; }
 }
+
+/* Current page marker (product pages pass activeHref). */
+.navbar-nav a.is-active { position: relative; color: var(--color-text); }
+.navbar-nav a.is-active::before { content: ""; position: absolute; left: 50%; bottom: -4px; width: 4px; height: 4px; margin-left: -2px; border-radius: 50%; background: #a78bfa; box-shadow: 0 0 10px rgba(180, 80, 255, .8); }
+.navbar-mobile-link.is-active { color: #a78bfa; }
