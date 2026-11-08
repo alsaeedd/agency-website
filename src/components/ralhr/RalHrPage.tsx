@@ -75,8 +75,10 @@ function VideoTour() {
   return (
     <div className="hp-vt hp-in">
       <div className="hp-phone">
-        <video ref={ref} poster="/assets/ral-hr/ralhr-tour-poster.webp" muted playsInline loop preload="none"
-          onPlay={() => setPlaying(true)} onPause={() => setPlaying(false)} onClick={toggle} aria-label="RAL HR app video tour" />
+        <div className="hp-vframe">
+          <video ref={ref} poster="/assets/ral-hr/ralhr-tour-poster.webp" width={720} height={1280} muted playsInline loop preload="none"
+            onPlay={() => setPlaying(true)} onPause={() => setPlaying(false)} onClick={toggle} aria-label="RAL HR app video tour" />
+        </div>
         <div className="hp-video-ctl">
           <button type="button" onClick={toggle}>{playing ? 'Pause' : 'Play'}</button>
           <button type="button" onClick={sound}>{muted ? 'Sound on' : 'Sound off'}</button>
