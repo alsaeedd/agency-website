@@ -1,7 +1,7 @@
 # RAL HR end-to-end checklist
 
-Local run: `npm run build && npx vite preview --port 4673`, Playwright. Status: PASS, FAIL, TODO (not yet run).
-Round 1 ran the interactions at 1440 only (EN, plus the demo in AR). The 768 and 390 sweeps are still TODO.
+Local run: `npm run build && npx vite preview --port 4675`, Playwright. Status: PASS, FAIL, TODO (not yet run).
+Rounds 1 and 2 ran the interactions at 1440 (EN, plus the demo in AR). The 768 and 390 layout sweeps (EN + AR) are still TODO.
 
 ## Video tour (/ral-hr/)
 | Item | 1440 | 768 | 390 |
@@ -29,25 +29,25 @@ Round 1 ran the interactions at 1440 only (EN, plus the demo in AR). The 768 and
 | Side section index (8 links, #payday first) | PASS |
 | Hero payday take over + Run payday again | PASS |
 | Web / Tablet / Phone switch | PASS |
-| October calendar day buttons land on their chapter | FAIL: only oct-14 lands (top 88). After 3 s: oct-01 at 1833, oct-09 at 1285, oct-25 at -1583, oct-31 at -3817 |
+| October calendar day buttons land on their chapter | PASS (round 2 fix): 01, 09, 14, 25, 31 all land at top 88, h3 below the navbar (nav bottom 102, h3 259), from the calendar, from sequential clicks and via keyboard Enter. Root cause: Lenis `anchors` measured from its cached scroll, stale after a native scroll; SiteChrome now resyncs Lenis from window.scrollY before the glide |
 | Demo tabs Home, People, Payroll, Leave, End of service, Ask RAL render | PASS |
-| Payroll: Compute payroll step renders totals | PASS (steps 2 to 4, IBAN fix, WPS: TODO) |
-| People + payslip | TODO |
-| Leave approve / decline updates the balance | TODO (test selector timed out, not yet triaged) |
+| Payroll: Compute, Review (5 checks), Approve disabled until IBAN fix, fix gives 98 of 98 IBANs, confirm modal (BD 111,295.000, second approver), Approved stamp, WPS file (WPS_BHF_2026-10.csv, 98 records) | PASS |
+| People: search "Rajesh", open profile, payslip 320 + 130 + 30 = 480 gross, SIO 1% -4.800, net BD 475.200 | PASS |
+| Leave approve / decline: queue badge, balance, team cover update (decline restores 7 days 19 to 26, cover +1 per day; approve keeps the previewed 18/30 and cover) | PASS (round 1 timeout was the test: non-exact "Approve" matched other buttons) |
 | End of service: slider and person switch change the figures | PASS |
-| Ask RAL EN + AR chips and a typed question | TODO (typed input selector timed out) |
+| Ask RAL typed questions EN + AR: answer streams in (text grows over ~1 s), SIO gives a table, leave balance and overtime (AR) give mini bars, "who is off" gives a table, AR answers dir=rtl | PASS (round 1 timeout was the test: the input has no type attr). Note: "How much is payroll this month?" gets the generic fallback, there is no payroll total intent (product gap, not a bug) |
 | Demo in Arabic: all 6 tabs, dir=rtl, no clipped leaf text at 1440 | PASS |
 | Pricing: 135 people x BD 1/2/3 = 135/270/405, yearly = x12, plan cards match | PASS (no minimums exist in data.ts) |
 | Closing CTA wa.me/97366386602 text reflects team, plan and monthly total | PASS |
 | Email mailto with subject "RAL HR demo, team of N" | PASS |
 | FAQ open / close (first item open by default) | PASS |
 | Footer links (pages, mailto, wa.me, socials) | PASS |
-| Zero console / page errors in all runs so far | PASS |
+| Zero console / page errors in all runs so far (rounds 1 and 2) | PASS |
 
 ## /ral-hr/inquire/
 | Item | Result |
 |---|---|
-| Full flow through to the WhatsApp link + email fallback | TODO |
+| Full flow: team 135, needs, Professional, timing, name/company/phone. Empty name/company keeps step 5 and flags 2 fields. Message composed (BD 270 a month), WhatsApp link wa.me/97366386602?text=..., opens WhatsApp, CTA becomes "Open WhatsApp again", mailto info@raltech.dev subject "RAL HR demo: Gulf Foods W.L.L.". Answers persist across reloads (draft restore) | PASS |
 
 ## Layout sweeps (768, 390; EN + AR)
 | Item | Result |
