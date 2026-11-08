@@ -135,7 +135,7 @@ export const pages = [
   <li><strong>Legal entity:</strong> RAL SOFTWARE SERVICES, registered in the Kingdom of Bahrain (CR No. 196651-1)</li>
   <li><strong>Address:</strong> Flat 10, Building 2975, Road 7543, Block 575, Kingdom of Bahrain</li>
   <li><strong>Email:</strong> <a href="mailto:info@raltech.dev">info@raltech.dev</a></li>
-  <li><strong>WhatsApp:</strong> <a href="https://wa.me/97366386602">+973 6638 6602</a></li>
+  <li><strong>WhatsApp:</strong> <a href="https://wa.me/97338218181">+973 3821 8181</a></li>
 </ul>
 <p>Want to work with us? Start on the <a href="/contact/">Contact</a> page, or read about our <a href="/services/">services</a>.</p>
 `,
@@ -146,7 +146,7 @@ export const pages = [
     path: '/contact/',
     title: 'Contact RAL Technologies',
     description:
-      'Talk to RAL Technologies about a website, system, app or AI automation. Email info@raltech.dev or WhatsApp +973 6638 6602. Based in Bahrain, GMT+3.',
+      'Talk to RAL Technologies about a website, system, app or AI automation. Email info@raltech.dev or WhatsApp +973 3821 8181. Based in Bahrain, GMT+3.',
     eyebrow: 'Contact',
     h1: 'So, what are <span class="serif">we cooking?</span>',
     lead:
@@ -155,7 +155,7 @@ export const pages = [
     body: `
 <h2>Reach us directly</h2>
 <ul>
-  <li><strong>WhatsApp:</strong> <a href="https://wa.me/97366386602">+973 6638 6602</a>. The fastest way to reach us.</li>
+  <li><strong>WhatsApp:</strong> <a href="https://wa.me/97338218181">+973 3821 8181</a>. The fastest way to reach us.</li>
   <li><strong>Email:</strong> <a href="mailto:info@raltech.dev">info@raltech.dev</a></li>
   <li><strong>Time zone:</strong> Bahrain, GMT+3.</li>
 </ul>

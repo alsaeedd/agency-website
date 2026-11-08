@@ -88,7 +88,7 @@ Navbar → Hero → About (dark) → Services → Portfolio → CTA (dark) → F
 
 ## Business Details
 - Email: info@raltech.dev
-- WhatsApp: +973 6638 6602
+- WhatsApp: +973 3821 8181
 - Domain: raltech.dev
 - Socials: Instagram @raltechh, TikTok @raltechh, LinkedIn /company/raltechh
 - Budget currency: BHD

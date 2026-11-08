@@ -5,7 +5,7 @@
 - Navbar: 3 optional props (linkBase, activeHref, showAtTop) that change nothing when left out, plus CSS for the active-link dot. Home page behaves as before.
 - New hero `Payday.tsx`: a real HTML app window that runs a Bahrain payday on its own (8 staff stream in, gross/SIO/net counters, steps, Approved stamp, WPS rows, phone notification). "Take the controls", then click any row to see that person's payslip. EN/عربي flips the app to RTL. Web/Tablet/Phone FLIP morph (desktop only). Layout uses container queries.
 - `Month.tsx`: "October at a Bahrain company", 5 chapters, each with a live mini UI (CPR/IBAN checks + SIO by nationality, approving leave on a phone, Ask RAL chat in Arabic/English/Arabizi, WPS 10-column check, end of service slider).
-- Rules strip (8%, 1%+3%, 18% ladder, 10/10, عربي), app video, pricing (slider, odometer roll, 3 plans), FAQ (details). The closing payoff is a WhatsApp composer, prefilled from the pricing headcount plus topic chips, going to wa.me/97366386602, with a form link to /ral-hr/inquire/.
+- Rules strip (8%, 1%+3%, 18% ladder, 10/10, عربي), app video, pricing (slider, odometer roll, 3 plans), FAQ (details). The closing payoff is a WhatsApp composer, prefilled from the pricing headcount plus topic chips, going to wa.me/97338218181, with a form link to /ral-hr/inquire/.
 - Founder note and the "Suhaib" quote are fully removed (JSX, GSAP, CSS). The inquiry `.iq` base CSS moved into Inquire.css.
 - SSR prerender wraps both pages in SiteChrome (entry-server.tsx). Build is green.
 

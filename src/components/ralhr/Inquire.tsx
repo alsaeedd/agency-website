@@ -4,7 +4,7 @@ import { calm as calmMotion } from './charts'
 import './RalHrPage.css'
 import './Inquire.css'
 
-const WA = 'https://wa.me/97366386602?text='
+const WA = 'https://wa.me/97338218181?text='
 const KEY = 'ralhr-inquire'
 
 const SIZES = [

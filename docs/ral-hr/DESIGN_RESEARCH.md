@@ -93,7 +93,7 @@ Every pattern below fits our constraints: React 18 + TS + Vite, vanilla CSS vari
 ### 16. Inquiry flow that feels like a conversation and ends in WhatsApp (Typeform pacing, Cal.com routing)
 - **What:** 4 one-tap questions, each on its own screen, then a preview of the exact WhatsApp message before sending.
 - **Why:** Preview-before-send is the trust move: no black-box form, the visitor sees what we will read. Multi-step + a qualifying question is backed by CXL (+20%).
-- **Build:** Steps: team size (chips: 1-10 / 11-50 / 51-200 / 200+), what hurts most (multi-select: leave, payroll, attendance, documents, hiring), timeline (this month / this quarter / exploring), name + company (one text step). Progress as "2 of 4", back keeps answers (state in one `useReducer`, mirrored to `sessionStorage` in try/catch). Final screen renders a chat-bubble preview, then a big "Send on WhatsApp" button: `https://wa.me/97366386602?text=${encodeURIComponent(msg)}`. Slide transitions `x:24 -> 0`, 0.4s `expo.out`. Enter key advances. No email field required.
+- **Build:** Steps: team size (chips: 1-10 / 11-50 / 51-200 / 200+), what hurts most (multi-select: leave, payroll, attendance, documents, hiring), timeline (this month / this quarter / exploring), name + company (one text step). Progress as "2 of 4", back keeps answers (state in one `useReducer`, mirrored to `sessionStorage` in try/catch). Final screen renders a chat-bubble preview, then a big "Send on WhatsApp" button: `https://wa.me/97338218181?text=${encodeURIComponent(msg)}`. Slide transitions `x:24 -> 0`, 0.4s `expo.out`. Enter key advances. No email field required.
 
 ## Recommended architecture: product page (`/hr`)
 | # | Section | Centrepiece | Patterns |

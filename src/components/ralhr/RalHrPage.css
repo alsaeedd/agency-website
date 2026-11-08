@@ -211,6 +211,9 @@
 .hp-price > div { background: #120b20; padding: clamp(24px, 3.4vw, 44px); }
 .hp-price-team { margin: 8px 0 22px; font-size: 18px; color: var(--ink2); }
 .hp-price-team b { font-size: 44px; font-weight: 600; color: var(--color-text); letter-spacing: -.03em; margin-right: 6px; }
+.hp-team-num { font: inherit; font-size: 44px; font-weight: 600; line-height: 1.1; color: var(--color-text); letter-spacing: -.03em; margin-right: 8px; padding: 0 0 2px; background: none; border: 0; border-bottom: 2px dashed rgba(167, 139, 250, .45); border-radius: 0; outline: none; cursor: text; transition: border-color .25s; }
+.hp-team-num:hover, .hp-team-num:focus { border-bottom-color: var(--v); border-bottom-style: solid; }
+.hp-team-hint { display: block; margin-top: 6px; font-size: 12px; color: var(--ink2); opacity: .85; }
 .hp-presets { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 22px; }
 .hp-presets button { border: 1px solid var(--line2); background: none; border-radius: 999px; padding: 8px 14px; font-size: 13px; color: var(--ink2); transition: border-color .25s, border-width .25s, background-color .25s, color .25s; }
 .hp-presets button[aria-pressed="true"] { background: #f8f8f8; color: #160e27; border-color: #f8f8f8; }

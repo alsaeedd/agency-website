@@ -8,7 +8,7 @@ import './RalHrPage.css'
 
 const Demo = lazy(() => import('./Demo'))
 const INQUIRE = '/ral-hr/inquire/'
-const WA = 'https://wa.me/97366386602?text='
+const WA = 'https://wa.me/97338218181?text='
 const idle = (f: () => void): number => (typeof requestIdleCallback === 'function' ? requestIdleCallback(f, { timeout: 900 }) : window.setTimeout(f, 60))
 const unidle = (id: number) => { if (typeof cancelIdleCallback === 'function') cancelIdleCallback(id); else clearTimeout(id) }
 const words = (t: string) => t.split(' ').flatMap((w, i) => [i ? ' ' : '', <span key={i} className="hp-w"><span>{w}</span></span>])
@@ -108,6 +108,13 @@ function Odometer({ value }: { value: number }) {
 
 function Pricing({ team, setTeam, plan, setPlan }: { team: number; setTeam: (n: number) => void; plan: number; setPlan: (n: number) => void }) {
   const p = PRICING[plan]
+  const [draft, setDraft] = useState<string | null>(null) // typed text while editing, so the box can be cleared
+  const onType = (v: string) => {
+    const t = v.replace(/\D/g, '').slice(0, 6)
+    setDraft(t)
+    if (+t >= 1) setTeam(+t)
+  }
+  const shown = draft ?? String(team)
   return (
     <section id="pricing" className="hp-sec hp-rv">
       <div className="hp-head">
@@ -118,12 +125,18 @@ function Pricing({ team, setTeam, plan, setPlan }: { team: number; setTeam: (n: 
       <div className="hp-price hp-in">
         <div className="hp-price-ctl">
           <label htmlFor="hp-team" className="hp-k">Your team</label>
-          <p className="hp-price-team"><b className="tnum">{team}</b> people</p>
-          <input id="hp-team" type="range" min={5} max={300} step={5} value={team} aria-valuetext={team + ' people'}
-            style={{ backgroundSize: ((team - 5) / 295) * 100 + '% 100%' }} onChange={(e) => setTeam(+e.target.value)} />
+          <p className="hp-price-team">
+            <input className="hp-team-num tnum" type="text" inputMode="numeric" aria-label="Team size, type any number" value={shown}
+              style={{ width: `calc(${Math.max(shown.length, 1)}ch + 4px)` }} onFocus={(e) => e.target.select()}
+              onChange={(e) => onType(e.target.value)} onBlur={() => setDraft(null)} onKeyDown={(e) => { if (e.key === 'Enter') e.currentTarget.blur() }} />
+            people
+            <span className="hp-team-hint">{team > 300 ? 'Custom team size' : 'More than 300? Tap the number and type yours.'}</span>
+          </p>
+          <input id="hp-team" type="range" min={5} max={300} step={5} value={Math.min(team, 300)} aria-valuetext={team + ' people'}
+            style={{ backgroundSize: ((Math.min(team, 300) - 5) / 295) * 100 + '% 100%' }} onChange={(e) => { setDraft(null); setTeam(+e.target.value) }} />
           <div className="hp-ticks" aria-hidden="true"><span>5</span><span>100</span><span>200</span><span>300</span></div>
           <div className="hp-presets" role="group" aria-label="Quick team sizes">
-            {[10, 25, 50, 100, 250].map((n) => <button key={n} type="button" aria-pressed={team === n} onClick={() => setTeam(n)}>{n}</button>)}
+            {[10, 25, 50, 100, 250].map((n) => <button key={n} type="button" aria-pressed={team === n} onClick={() => { setDraft(null); setTeam(n) }}>{n}</button>)}
           </div>
         </div>
         <div className="hp-price-out" aria-live="polite">
@@ -234,7 +247,7 @@ function Closing({ team, plan }: { team: number; plan: number }) {
       <div className="hp-wa hp-in" ref={box}>
         <div className="hp-wa-top">
           <span className="hp-wa-av">R</span>
-          <span><b>RAL Technologies</b><small>WhatsApp, +973 6638 6602</small></span>
+          <span><b>RAL Technologies</b><small>WhatsApp, +973 3821 8181</small></span>
           <span className="live-dot" aria-hidden="true" />
         </div>
         <div className="hp-wa-body">

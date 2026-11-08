@@ -47,14 +47,14 @@ export default function Footer({ onContactClick }: FooterProps) {
                 </svg>
               </a>
               <a
-                href="https://wa.me/97366386602"
+                href="https://wa.me/97338218181"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="footer-contact-row"
               >
                 <span className="footer-contact-text">
                   <span className="footer-contact-type">WhatsApp</span>
-                  <span className="footer-contact-val">+973 6638 6602</span>
+                  <span className="footer-contact-val">+973 3821 8181</span>
                 </span>
                 <svg
                   className="footer-arrow"
@@ -140,7 +140,7 @@ export default function Footer({ onContactClick }: FooterProps) {
               </svg>
             </a>
             <a
-              href="https://wa.me/97366386602"
+              href="https://wa.me/97338218181"
               target="_blank"
               rel="noopener noreferrer"
               aria-label="WhatsApp"
