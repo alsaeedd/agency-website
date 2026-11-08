@@ -146,7 +146,15 @@ function Pricing({ team, setTeam, plan, setPlan }: { team: number; setTeam: (n: 
           </article>
         ))}
       </div>
-      <p className="hp-note hp-in">Ask RAL is in every plan. Managers and admins cost nothing extra. Hosted by RAL in a secure cloud, or on your own server.</p>
+      <div className="hp-fine hp-in">
+        <p className="hp-fine-lead"><b>Built to your requirements.</b> Every plan is customizable: tell us which modules you need and we set RAL HR up the way your company works.</p>
+        <a className="hp-fine-cta" href="/ral-hr/inquire/">Choose your modules <span aria-hidden="true">→</span></a>
+        <ul className="hp-fine-perks">
+          <li>Ask RAL in every plan</li>
+          <li>Managers and admins at no extra cost</li>
+          <li>RAL's secure cloud or your own server</li>
+        </ul>
+      </div>
     </section>
   )
 }
@@ -299,7 +307,7 @@ export default function RalHrPage() {
     const ctx = gsap.context(() => {
       gsap.utils.toArray<HTMLElement>('.hp-rv').forEach((s) => {
         const items = s.querySelectorAll('.hp-in')
-        if (items.length) gsap.from(items, { y: 36, opacity: 0, duration: 1.1, ease: 'expo.out', stagger: 0.12, scrollTrigger: { trigger: s, start: 'top 80%', once: true } })
+        if (items.length) gsap.from(items, { y: 36, opacity: 0, duration: 1.1, ease: 'expo.out', stagger: 0.12, clearProps: 'transform,translate,opacity', scrollTrigger: { trigger: s, start: 'top 80%', once: true } })
         const n = s.querySelector('.hp-ch-n')
         if (n) gsap.from(n, { yPercent: 35, opacity: 0, duration: 1.5, ease: 'expo.out', scrollTrigger: { trigger: s, start: 'top 78%', once: true } })
       })

@@ -37,7 +37,7 @@ export default function SiteChrome({ children }: { children: ReactNode }) {
       if (!a || !el) return
       e.preventDefault()
       lenis.scrollTo(window.scrollY, { immediate: true, force: true })
-      lenis.scrollTo(el.getBoundingClientRect().top + window.scrollY - 88, { force: true })
+      lenis.scrollTo(el.getBoundingClientRect().top + window.scrollY - ((document.querySelector(".navbar") as HTMLElement | null)?.offsetHeight ?? 102), { force: true })
       history.pushState(null, '', a.hash)
     }
     window.addEventListener('click', onAnchor)

@@ -1,7 +1,7 @@
 /* ===== Services - 2x2 big icon card grid ===== */
 .services {
   padding: var(--space-section) 0;
-  scroll-margin-top: 72px;
+  scroll-margin-top: 102px;
   position: relative;
   background: var(--color-bg);
   color: var(--color-text);
