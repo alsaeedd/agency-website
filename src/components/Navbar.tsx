@@ -171,7 +171,7 @@ export default function Navbar({ onContactClick, scrollToSection, linkBase = "",
               {navLinks.map((link) => (
                 <a
                   key={link.href}
-                  href={link.href.startsWith("#") ? linkBase + link.href : link.href}
+                  href={link.href.startsWith("#") ? (linkBase && localePath(lang, linkBase)) + link.href : localePath(lang, link.href)}
                   className={link.href === activeHref ? "is-active" : undefined}
                   aria-current={link.href === activeHref ? "page" : undefined}
                   data-text={label(link.text)}
@@ -228,7 +228,7 @@ export default function Navbar({ onContactClick, scrollToSection, linkBase = "",
             {navLinks.map((link) => (
               <a
                 key={link.href}
-                href={link.href.startsWith("#") ? linkBase + link.href : link.href}
+                href={link.href.startsWith("#") ? (linkBase && localePath(lang, linkBase)) + link.href : localePath(lang, link.href)}
                 className={"navbar-mobile-link" + (link.href === activeHref ? " is-active" : "")}
                 aria-current={link.href === activeHref ? "page" : undefined}
                 onClick={(e) => {
