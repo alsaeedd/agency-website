@@ -2,13 +2,35 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import { gsap } from "gsap";
 import logoMain from "../../assets/logo_main.png";
 import "./Contact.css";
+import { useLang } from "../i18n";
+
+const CONTACT_T = {
+  en: { ...{
+  "title": "So, what're we cooking?",
+  "w": [
+    "So,",
+    "what're",
+    "we",
+    "cooking?"
+  ]
+}, dialog: "Contact RAL Technologies", close: "Close", social: "RAL Technologies on social media", side: "Let's build something great.", sideDesc: "Two quick details and we'll pick this up on WhatsApp.", ok: "Off to WhatsApp.", okDesc: "Your message is prefilled. Just hit send on the chat that opened. If WhatsApp didn't pop up, use the button below.", manual: "Open WhatsApp manually", subtitle: "Three lines, then we move to WhatsApp.", interested: "I'm interested in", name: "Your name", namePh: "What should we call you?", notes: "Project notes", notesPh: "A few lines on what you're building, the goal, or anything you have in mind...", submit: "Continue on WhatsApp", handoff: "WhatsApp opens with your message prefilled. Just hit send on your end.", waHi: "Hi RAL Technologies, I'd like to chat about a project.", waName: "Name:", waLooking: "Looking for:", waNotes: "Project notes:", waSent: "Sent from raltech.dev", sep: ", " },
+  ar: { ...{
+  "title": "إذن، ماذا سنبني معًا؟",
+  "w": [
+    "إذن،",
+    "ماذا",
+    "سنبني",
+    "معًا؟"
+  ]
+}, dialog: "تواصل مع RAL Technologies", close: "إغلاق", social: "RAL Technologies على وسائل التواصل", side: "لنبنِ شيئًا رائعًا.", sideDesc: "تفصيلان سريعان، ثم نكمل الحديث على واتساب.", ok: "إلى واتساب.", okDesc: "رسالتك جاهزة مسبقًا. اضغط إرسال في المحادثة التي فُتحت. وإن لم يظهر واتساب، استخدم الزر أدناه.", manual: "افتح واتساب يدويًا", subtitle: "ثلاثة أسطر، ثم ننتقل إلى واتساب.", interested: "أنا مهتم بـ", name: "اسمك", namePh: "بماذا نناديك؟", notes: "تفاصيل المشروع", notesPh: "بضعة أسطر عمّا تبنيه، أو هدفك، أو أي فكرة في بالك...", submit: "أكمل على واتساب", handoff: "يُفتح واتساب ورسالتك جاهزة. فقط اضغط إرسال.", waHi: "مرحبًا RAL Technologies، أودّ الحديث عن مشروع.", waName: "الاسم:", waLooking: "أبحث عن:", waNotes: "تفاصيل المشروع:", waSent: "أُرسلت من raltech.dev", sep: "، " },
+};
 
 const services = [
-  { id: "site-scratch", label: "Site from scratch" },
-  { id: "system-from-scratch", label: "System from scratch" },
-  { id: "ai-agents", label: "AI agents" },
-  { id: "cloud-deployment-only", label: "Cloud deployment only" },
-  { id: "other", label: "Something else" },
+  { id: "site-scratch", label: "Site from scratch", ar: "موقع من الصفر" },
+  { id: "system-from-scratch", label: "System from scratch", ar: "نظام من الصفر" },
+  { id: "ai-agents", label: "AI agents", ar: "وكلاء ذكاء اصطناعي" },
+  { id: "cloud-deployment-only", label: "Cloud deployment only", ar: "نشر سحابي فقط" },
+  { id: "other", label: "Something else", ar: "شيء آخر" },
 ];
 
 const WHATSAPP_NUMBER = "97338218181";
@@ -19,6 +41,8 @@ interface ContactProps {
 }
 
 export default function Contact({ isOpen, onClose }: ContactProps) {
+  const lang = useLang();
+  const L = CONTACT_T[lang];
   const [selectedServices, setSelectedServices] = useState<string[]>([]);
   const [name, setName] = useState("");
   const [message, setMessage] = useState("");
@@ -69,7 +93,7 @@ export default function Contact({ isOpen, onClose }: ContactProps) {
         const sidebarEls = sidebarRef.current.querySelectorAll(
           ".contact-sidebar-anim",
         );
-        gsap.set(sidebarEls, { x: -30, opacity: 0 });
+        gsap.set(sidebarEls, { x: lang === "ar" ? 30 : -30, opacity: 0 });
       }
 
       const tl = gsap.timeline();
@@ -231,21 +255,21 @@ export default function Contact({ isOpen, onClose }: ContactProps) {
 
   const buildWhatsAppUrl = () => {
     const interestedIn = selectedServices
-      .map((id) => services.find((s) => s.id === id)?.label)
+      .map((id) => services.find((s) => s.id === id)?.[lang === "ar" ? "ar" : "label"])
       .filter(Boolean)
-      .join(", ");
+      .join(L.sep);
 
     const lines: string[] = [
-      "Hi RAL Technologies, I'd like to chat about a project.",
+      L.waHi,
       "",
-      `Name: ${name.trim()}`,
+      `${L.waName} ${name.trim()}`,
     ];
 
     if (interestedIn) {
-      lines.push(`Looking for: ${interestedIn}`);
+      lines.push(`${L.waLooking} ${interestedIn}`);
     }
 
-    lines.push("", "Project notes:", message.trim(), "", "Sent from raltech.dev");
+    lines.push("", L.waNotes, message.trim(), "", L.waSent);
 
     const text = lines.join("\n");
     return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(text)}`;
@@ -272,12 +296,12 @@ export default function Contact({ isOpen, onClose }: ContactProps) {
   if (!isVisible) return null;
 
   return (
-    <div className="contact-overlay" ref={overlayRef} role="dialog" aria-modal="true" aria-label="Contact RAL Technologies">
+    <div className="contact-overlay" ref={overlayRef} role="dialog" aria-modal="true" aria-label={L.dialog}>
       <button
         className="contact-close"
         onClick={handleClose}
         ref={closeButtonRef}
-        aria-label="Close"
+        aria-label={L.close}
       >
         <svg
           viewBox="0 0 24 24"
@@ -301,10 +325,10 @@ export default function Contact({ isOpen, onClose }: ContactProps) {
           />
           <div className="contact-sidebar-body">
             <h2 className="contact-sidebar-heading contact-sidebar-anim">
-              Let's build something great.
+              {L.side}
             </h2>
             <p className="contact-sidebar-desc contact-sidebar-anim">
-              Two quick details and we'll pick this up on WhatsApp.
+              {L.sideDesc}
             </p>
           </div>
           <div className="contact-sidebar-links contact-sidebar-anim">
@@ -341,10 +365,10 @@ export default function Contact({ isOpen, onClose }: ContactProps) {
               >
                 <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" />
               </svg>
-              +973 3821 8181
+              <span dir="ltr">+973 3821 8181</span>
             </a>
 
-            <div className="contact-sidebar-social" aria-label="RAL Technologies on social media">
+            <div className="contact-sidebar-social" aria-label={L.social}>
               <a
                 href="https://instagram.com/raltechh"
                 target="_blank"
@@ -410,10 +434,9 @@ export default function Contact({ isOpen, onClose }: ContactProps) {
                     <path d="M.057 24l1.687-6.163a11.867 11.867 0 0 1-1.587-5.946C.16 5.335 5.495 0 12.05 0a11.817 11.817 0 0 1 8.413 3.488 11.824 11.824 0 0 1 3.48 8.414c-.003 6.557-5.338 11.892-11.893 11.892a11.9 11.9 0 0 1-5.688-1.448L.057 24zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z" />
                   </svg>
                 </div>
-                <div className="contact-success-header">Off to WhatsApp.</div>
+                <div className="contact-success-header">{L.ok}</div>
                 <p>
-                  Your message is prefilled. Just hit send on the chat that
-                  opened. If WhatsApp didn't pop up, use the button below.
+                  {L.okDesc}
                 </p>
                 {waUrl && (
                   <a
@@ -425,23 +448,23 @@ export default function Contact({ isOpen, onClose }: ContactProps) {
                     <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
                       <path d="M.057 24l1.687-6.163a11.867 11.867 0 0 1-1.587-5.946C.16 5.335 5.495 0 12.05 0a11.817 11.817 0 0 1 8.413 3.488 11.824 11.824 0 0 1 3.48 8.414c-.003 6.557-5.338 11.892-11.893 11.892a11.9 11.9 0 0 1-5.688-1.448L.057 24zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z" />
                     </svg>
-                    <span>Open WhatsApp manually</span>
+                    <span>{L.manual}</span>
                   </a>
                 )}
               </div>
             ) : (
               <>
                 <div className="contact-header">
-                  <h1 className="contact-title" aria-label="So, what're we cooking?">
-                    <span className="wmask"><span className="wmask-in">So,</span></span>{" "}
-                    <span className="wmask"><span className="wmask-in">what're</span></span>{" "}
-                    <span className="wmask"><span className="wmask-in">we</span></span>{" "}
+                  <h1 className="contact-title" aria-label={L.title}>
+                    <span className="wmask"><span className="wmask-in">{L.w[0]}</span></span>{" "}
+                    <span className="wmask"><span className="wmask-in">{L.w[1]}</span></span>{" "}
+                    <span className="wmask"><span className="wmask-in">{L.w[2]}</span></span>{" "}
                     <span className="wmask">
-                      <span className="wmask-in serif-accent contact-title-accent">cooking?</span>
+                      <span className="wmask-in serif-accent contact-title-accent">{L.w[3]}</span>
                     </span>
                   </h1>
                   <p className="contact-subtitle" ref={subtitleRef}>
-                    Three lines, then we move to WhatsApp.
+                    {L.subtitle}
                   </p>
                 </div>
 
@@ -451,7 +474,7 @@ export default function Contact({ isOpen, onClose }: ContactProps) {
                   ref={formGroupsRef}
                 >
                   <div className="contact-section">
-                    <span className="contact-eyebrow">I'm interested in</span>
+                    <span className="contact-eyebrow">{L.interested}</span>
                     <div className="contact-checkboxes">
                       {services.map((service) => (
                         <label key={service.id} className="contact-checkbox">
@@ -463,7 +486,7 @@ export default function Contact({ isOpen, onClose }: ContactProps) {
                           <span className="contact-checkbox-box">
                             <span className="contact-checkbox-border" />
                             <span className="contact-checkbox-label">
-                              {service.label}
+                              {lang === "ar" ? service.ar : service.label}
                             </span>
                           </span>
                         </label>
@@ -472,12 +495,12 @@ export default function Contact({ isOpen, onClose }: ContactProps) {
                   </div>
 
                   <div className="contact-section">
-                    <span className="contact-eyebrow">Your name</span>
+                    <span className="contact-eyebrow">{L.name}</span>
                     <div className="contact-input">
                       <input
                         type="text"
                         name="name"
-                        placeholder="What should we call you?"
+                        placeholder={L.namePh}
                         value={name}
                         onChange={(e) => setName(e.target.value)}
                         autoComplete="name"
@@ -488,11 +511,11 @@ export default function Contact({ isOpen, onClose }: ContactProps) {
                   </div>
 
                   <div className="contact-section">
-                    <span className="contact-eyebrow">Project notes</span>
+                    <span className="contact-eyebrow">{L.notes}</span>
                     <div className="contact-input">
                       <textarea
                         name="message"
-                        placeholder="A few lines on what you're building, the goal, or anything you have in mind..."
+                        placeholder={L.notesPh}
                         value={message}
                         onChange={(e) => {
                           setMessage(e.target.value);
@@ -514,10 +537,10 @@ export default function Contact({ isOpen, onClose }: ContactProps) {
                       <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
                         <path d="M.057 24l1.687-6.163a11.867 11.867 0 0 1-1.587-5.946C.16 5.335 5.495 0 12.05 0a11.817 11.817 0 0 1 8.413 3.488 11.824 11.824 0 0 1 3.48 8.414c-.003 6.557-5.338 11.892-11.893 11.892a11.9 11.9 0 0 1-5.688-1.448L.057 24zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z" />
                       </svg>
-                      <span>Continue on WhatsApp</span>
+                      <span>{L.submit}</span>
                     </button>
                     <p className="contact-handoff-note">
-                      WhatsApp opens with your message prefilled. Just hit send on your end.
+                      {L.handoff}
                     </p>
                   </div>
                 </form>

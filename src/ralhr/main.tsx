@@ -11,6 +11,7 @@ import '@fontsource/newsreader/latin-400-italic.css'
 import '@fontsource/newsreader/latin-500-italic.css'
 import '../index.css'
 import '../App.css'
+import '../i18n/rtl.css'
 import { applyDeviceTierToDocument } from '../lib/deviceProfile'
 import RalHrPage from '../components/ralhr/RalHrPage'
 import Inquire from '../components/ralhr/Inquire'
@@ -20,7 +21,7 @@ import SiteChrome from '../components/ralhr/SiteChrome'
 // client render (same no-hydration pattern as the homepage).
 applyDeviceTierToDocument()
 gsap.registerPlugin(ScrollTrigger)
-const isInquire = /^\/ral-hr\/inquire/.test(window.location.pathname)
+const isInquire = /^(\/ar)?\/ral-hr\/inquire/.test(window.location.pathname)
 createRoot(document.getElementById('root')!).render(
   <StrictMode><SiteChrome>{isInquire ? <Inquire /> : <RalHrPage />}</SiteChrome></StrictMode>,
 )

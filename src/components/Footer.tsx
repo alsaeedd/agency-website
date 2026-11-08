@@ -1,11 +1,19 @@
 import logoMain from "../../assets/logo_main.png";
 import "./Footer.css";
+import { useLang, localePath } from "../i18n";
+
+const FOOT_T = {
+  en: { desc: "A small, founder-led team in Bahrain building production-grade software and real systems for GCC founders, SMBs, and enterprise teams. We build your solution as if we literally owned it, and most of the time, you can WhatsApp us before lunch.", local: "Engineered in Bahrain.", touch: "Get in Touch", email: "Email", wa: "WhatsApp", nav: "Navigation", services: "Services", work: "Work", about: "About", insights: "Insights", contact: "Contact", privacy: "Privacy", terms: "Terms", social: "RAL Technologies on social media", rights: "All rights reserved." },
+  ar: { desc: "فريق صغير بقيادة مؤسسيه في البحرين، يبني برمجيات جاهزة للإنتاج وأنظمة حقيقية لمؤسسي الخليج والشركات الصغيرة والمتوسطة وفرق المؤسسات الكبرى. نبني حلّك كأنه مشروعنا نحن، وفي أغلب الأحيان يمكنك مراسلتنا على واتساب قبل الغداء.", local: "صُمم وطُوّر في البحرين.", touch: "تواصل معنا", email: "البريد الإلكتروني", wa: "واتساب", nav: "التنقل", services: "الخدمات", work: "أعمالنا", about: "من نحن", insights: "مقالات", contact: "تواصل", privacy: "الخصوصية", terms: "الشروط", social: "RAL Technologies على وسائل التواصل", rights: "جميع الحقوق محفوظة." },
+};
 
 interface FooterProps {
   onContactClick: () => void;
 }
 
 export default function Footer({ onContactClick }: FooterProps) {
+  const lang = useLang();
+  const L = FOOT_T[lang];
   return (
     <footer className="footer">
       <div className="footer-top-glow" />
@@ -13,25 +21,22 @@ export default function Footer({ onContactClick }: FooterProps) {
         <div className="footer-body">
           <div className="footer-brand">
             <p className="footer-brand-desc">
-              A small, founder-led team in Bahrain building production-grade
-              software and real systems for GCC founders, SMBs, and enterprise
-              teams. We build your solution as if we literally owned it, and
-              most of the time, you can WhatsApp us before lunch.
+              {L.desc}
             </p>
             <p className="footer-local">
-              Engineered in Bahrain.
+              {L.local}
             </p>
           </div>
 
           <div className="footer-col">
-            <span className="footer-col-label">Get in Touch</span>
+            <span className="footer-col-label">{L.touch}</span>
             <div className="footer-contact-list">
               <a
                 href="mailto:info@raltech.dev"
                 className="footer-contact-row"
               >
                 <span className="footer-contact-text">
-                  <span className="footer-contact-type">Email</span>
+                  <span className="footer-contact-type">{L.email}</span>
                   <span className="footer-contact-val">
                     info@raltech.dev
                   </span>
@@ -53,8 +58,8 @@ export default function Footer({ onContactClick }: FooterProps) {
                 className="footer-contact-row"
               >
                 <span className="footer-contact-text">
-                  <span className="footer-contact-type">WhatsApp</span>
-                  <span className="footer-contact-val">+973 3821 8181</span>
+                  <span className="footer-contact-type">{L.wa}</span>
+                  <span className="footer-contact-val" dir="ltr">+973 3821 8181</span>
                 </span>
                 <svg
                   className="footer-arrow"
@@ -70,32 +75,18 @@ export default function Footer({ onContactClick }: FooterProps) {
           </div>
 
           <div className="footer-col">
-            <span className="footer-col-label">Navigation</span>
+            <span className="footer-col-label">{L.nav}</span>
             <nav className="footer-nav">
-              <a href="/services/" className="footer-nav-item">
-                Services
-              </a>
-              <a href="/work/" className="footer-nav-item">
-                Work
-              </a>
-              <a href="/about/" className="footer-nav-item">
-                About
-              </a>
-              <a href="/insights/" className="footer-nav-item">
-                Insights
-              </a>
+              <a href={localePath(lang, "/services/")} className="footer-nav-item">{L.services}</a>
+              <a href={localePath(lang, "/work/")} className="footer-nav-item">{L.work}</a>
+              <a href={localePath(lang, "/about/")} className="footer-nav-item">{L.about}</a>
+              <a href={localePath(lang, "/insights/")} className="footer-nav-item">{L.insights}</a>
               <button
                 onClick={onContactClick}
                 className="footer-nav-item footer-nav-btn"
-              >
-                Contact
-              </button>
-              <a href="/privacy/" className="footer-nav-item">
-                Privacy
-              </a>
-              <a href="/terms/" className="footer-nav-item">
-                Terms
-              </a>
+              >{L.contact}</button>
+              <a href={localePath(lang, "/privacy/")} className="footer-nav-item">{L.privacy}</a>
+              <a href={localePath(lang, "/terms/")} className="footer-nav-item">{L.terms}</a>
             </nav>
           </div>
         </div>
@@ -103,7 +94,7 @@ export default function Footer({ onContactClick }: FooterProps) {
         <div className="footer-bar">
           <img src={logoMain} className="footer-bar-logo" alt="RAL Technologies" />
 
-          <div className="footer-socials" aria-label="RAL Technologies on social media">
+          <div className="footer-socials" aria-label={L.social}>
             <a
               href="https://instagram.com/raltechh"
               target="_blank"
@@ -153,7 +144,7 @@ export default function Footer({ onContactClick }: FooterProps) {
           </div>
 
           <span className="footer-copy">
-            &copy; 2026 RAL Technologies. All rights reserved.
+            &copy; 2026 RAL Technologies. {L.rights}
           </span>
         </div>
       </div>

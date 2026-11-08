@@ -2,6 +2,18 @@ import { useLayoutEffect, useRef } from "react";
 import { gsap } from "gsap";
 import { revealUp } from "../lib/reveal";
 import "./Services.css";
+import { useLang } from "../i18n";
+
+const SVC_T = {
+  en: { eyebrow: "What we build", h1: "Four things we ship.", h2: "In\u2011house, end\u2011to\u2011end.", intro: "No sub-contractors, no hand-offs. The same small team scopes it, builds it, and ships it." },
+  ar: { eyebrow: "ما نبنيه", h1: "أربعة أشياء نُتقنها.", h2: "بفريقنا، من الألف إلى الياء.", intro: "لا مقاولين من الباطن، ولا تسليم بين أطراف. الفريق الصغير نفسه يحدد النطاق، ويبني، ويُطلق." },
+};
+const SVC_AR = [
+  { title: "المواقع", description: "مواقع تسويقية ومتاجر إلكترونية. سريعة التحميل، وتسهّل عليك البيع." },
+  { title: "الأنظمة", description: "أدوات داخلية، ولوحات تحكم، وأنظمة CRM مخصصة. من النوع الذي يُغنيك عن خمسة جداول بيانات." },
+  { title: "التطبيقات", description: "تطبيقات ويب وجوال بأنظمة خلفية حقيقية. تعمل فعليًا، لا مجرد عرض تقديمي." },
+  { title: "الذكاء الاصطناعي", description: "وكلاء أذكياء وسير عمل آلية تنجز بهدوء العمل الذي كان فريقك على وشك التوظيف له." },
+];
 
 interface Service {
   id: number;
@@ -140,6 +152,8 @@ const services: Service[] = [
 ];
 
 export default function Services() {
+  const ar = useLang() === "ar";
+  const t = SVC_T[ar ? "ar" : "en"];
   const sectionRef = useRef<HTMLElement>(null);
   const headerRef = useRef<HTMLDivElement>(null);
   const cardsRef = useRef<(HTMLDivElement | null)[]>([]);
@@ -200,15 +214,14 @@ export default function Services() {
           <span className="eyebrow">
             <span className="eyebrow-num">01</span>
             <span className="eyebrow-rule" aria-hidden="true" />
-            <span>What we build</span>
+            <span>{t.eyebrow}</span>
           </span>
           <h2 className="section-heading">
-            Four things we ship.{" "}
-            <span className="serif-accent">In&#8209;house, end&#8209;to&#8209;end.</span>
+            {t.h1}{" "}
+            <span className="serif-accent">{t.h2}</span>
           </h2>
           <p className="section-intro">
-            No sub-contractors, no hand-offs. The same small team scopes it,
-            builds it, and ships it.
+            {t.intro}
           </p>
         </div>
 
@@ -224,8 +237,8 @@ export default function Services() {
               <div className={`service-card-icon icon-${service.flavor}`}>
                 {service.icon}
               </div>
-              <h3 className="service-card-title">{service.title}</h3>
-              <p className="service-card-desc">{service.description}</p>
+              <h3 className="service-card-title">{(ar ? SVC_AR[i] : service).title}</h3>
+              <p className="service-card-desc">{(ar ? SVC_AR[i] : service).description}</p>
               <span className="service-card-arrow" aria-hidden="true">
                 <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M5 11l6-6" />

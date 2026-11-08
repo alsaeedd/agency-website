@@ -2,6 +2,16 @@ import { useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
 import logoMain from "../../assets/logo_main.png";
 import "./Navbar.css";
+import { useLang, altPath, localePath } from "../i18n";
+
+const NAV_AR: Record<string, string> = {
+  Home: "الرئيسية",
+  Services: "الخدمات",
+  About: "من نحن",
+  Clients: "عملاؤنا",
+  "RAL HR": "RAL HR",
+  "Contact Us": "تواصل معنا",
+};
 
 const navLinks = [
   { href: "#home", text: "Home" },
@@ -32,6 +42,25 @@ interface NavbarProps {
  * purple/violet aesthetic + integrated with our scrollToSection prop.
  */
 export default function Navbar({ onContactClick, scrollToSection, linkBase = "", activeHref, showAtTop = false }: NavbarProps) {
+  const lang = useLang();
+  const ar = lang === "ar";
+  const label = (s: string) => (ar ? NAV_AR[s] ?? s : s);
+  // Same page in the other language; SSR has no location, so start from home.
+  const [alt, setAlt] = useState(ar ? "/" : "/ar/");
+  useEffect(() => setAlt(altPath(location.pathname)), []);
+  const langToggle = (
+    <a
+      className="lang-toggle"
+      href={alt}
+      hrefLang={ar ? "en" : "ar"}
+      aria-label={ar ? "English" : "العربية"}
+      onClick={(e) => { e.currentTarget.href = alt + location.hash; }}
+    >
+      <span className={ar ? undefined : "is-on"} lang="en">EN</span>
+      <span className="lang-sep" aria-hidden="true">/</span>
+      <span className={ar ? "is-on" : undefined} lang="ar">عربي</span>
+    </a>
+  );
   const navRef = useRef<HTMLElement>(null);
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
@@ -134,7 +163,7 @@ export default function Navbar({ onContactClick, scrollToSection, linkBase = "",
       >
         <div className="container">
           <div className="navbar-inner">
-            <a href="/" className="navbar-logo" aria-label="Home">
+            <a href={localePath(lang, "/")} className="navbar-logo" aria-label={label("Home")}>
               <img src={logoMain} alt="" className="navbar-logo-icon" />
             </a>
 
@@ -142,32 +171,33 @@ export default function Navbar({ onContactClick, scrollToSection, linkBase = "",
               {navLinks.map((link) => (
                 <a
                   key={link.href}
-                  href={link.href.startsWith("#") ? linkBase + link.href : link.href}
+                  href={link.href.startsWith("#") ? (linkBase && localePath(lang, linkBase)) + link.href : localePath(lang, link.href)}
                   className={link.href === activeHref ? "is-active" : undefined}
                   aria-current={link.href === activeHref ? "page" : undefined}
-                  data-text={link.text}
+                  data-text={label(link.text)}
                   onClick={(e) => {
                     if (!link.href.startsWith("#") || linkBase) return;
                     e.preventDefault();
                     scrollToSection(link.href);
                   }}
                 >
-                  <span>{link.text}</span>
+                  <span>{label(link.text)}</span>
                 </a>
               ))}
               <button
                 onClick={onContactClick}
-                data-text="Contact Us"
+                data-text={label("Contact Us")}
                 className="navbar-contact-btn"
               >
-                <span>Contact Us</span>
+                <span>{label("Contact Us")}</span>
               </button>
+              {langToggle}
             </nav>
 
             <button
               className={`navbar-hamburger${menuOpen ? " is-open" : ""}`}
               onClick={() => setMenuOpen((open) => !open)}
-              aria-label={menuOpen ? "Close menu" : "Open menu"}
+              aria-label={ar ? (menuOpen ? "إغلاق القائمة" : "فتح القائمة") : menuOpen ? "Close menu" : "Open menu"}
               aria-expanded={menuOpen}
               aria-controls="mobile-menu"
             >
@@ -198,7 +228,7 @@ export default function Navbar({ onContactClick, scrollToSection, linkBase = "",
             {navLinks.map((link) => (
               <a
                 key={link.href}
-                href={link.href.startsWith("#") ? linkBase + link.href : link.href}
+                href={link.href.startsWith("#") ? (linkBase && localePath(lang, linkBase)) + link.href : localePath(lang, link.href)}
                 className={"navbar-mobile-link" + (link.href === activeHref ? " is-active" : "")}
                 aria-current={link.href === activeHref ? "page" : undefined}
                 onClick={(e) => {
@@ -207,7 +237,7 @@ export default function Navbar({ onContactClick, scrollToSection, linkBase = "",
                   handleLinkClick(link.href);
                 }}
               >
-                {link.text}
+                {label(link.text)}
               </a>
             ))}
           </nav>
@@ -216,8 +246,9 @@ export default function Navbar({ onContactClick, scrollToSection, linkBase = "",
             onClick={handleContactClick}
             className="navbar-mobile-contact-btn"
           >
-            Contact Us
+            {label("Contact Us")}
           </button>
+          {langToggle}
         </div>
       </div>
     </>
