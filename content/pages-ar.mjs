@@ -71,7 +71,7 @@ const staticPagesAr = [
   <li>صياغة عروض الأسعار والملخصات ورسائل المتابعة ليراجعها شخص ويرسلها.</li>
   <li>الإجابة عن أسئلة العملاء المتكررة من محتواك المعتمد.</li>
 </ul>
-<p>كتبنا المزيد عن هذا في مقال <a href="/insights/where-ai-automation-pays-off/">أين تحقق أتمتة الذكاء الاصطناعي عائدًا فعليًا للشركات الصغيرة</a> (بالإنجليزية).</p>
+<p>كتبنا المزيد عن هذا في مقال <a href="/ar/insights/where-ai-automation-pays-off/">أين تحقق أتمتة الذكاء الاصطناعي عائدًا فعليًا للشركات الصغيرة</a>.</p>
 
 <h2>كيف يسير المشروع</h2>
 <ol>
@@ -281,7 +281,7 @@ const staticPagesAr = [
 
 <h2>العبها</h2>
 <p><a href="https://letterlock.raltech.dev/">العب LetterLock مجانًا في متصفحك</a>، أو ابحث عن "LetterLock: Hex Trivia" في App Store وGoogle Play. الأدلة: <a href="https://letterlock.raltech.dev/how-to-play.html">طريقة اللعب</a> · <a href="https://letterlock.raltech.dev/tips.html">نصائح</a> · <a href="https://letterlock.raltech.dev/packs.html">الحزم</a> · <a href="https://letterlock.raltech.dev/faq.html">الأسئلة الشائعة</a> · <a href="https://letterlock.raltech.dev/about.html">عن اللعبة</a>.</p>
-<p>وكتبنا أيضًا عن رياضيات اللوحة في مقال <a href="/insights/fair-game-board-hex-maths/">تصميم لوحة لعب عادلة: الرياضيات وراء شبكة LetterLock السداسية</a> (بالإنجليزية).</p>
+<p>وكتبنا أيضًا عن رياضيات اللوحة في مقال <a href="/ar/insights/fair-game-board-hex-maths/">تصميم لوحة لعب عادلة: الرياضيات وراء شبكة LetterLock السداسية</a>.</p>
 `,
   },
 
@@ -312,4 +312,12 @@ const staticPagesAr = [
   },
 ]
 
-export const arPages = [...staticPagesAr]
+// Insights (stage B): the index and 3 articles from content/pages.ar.mjs plus
+// the HR articles from content/articles-hr.ar.mjs. Both use the English paths,
+// so they are prefixed with /ar here.
+import { pagesAr } from './pages.ar.mjs'
+import { hrArticlesAr } from './articles-hr.ar.mjs'
+
+const toAr = (p) => ({ ...p, path: '/ar' + p.path })
+
+export const arPages = [...staticPagesAr, ...[...pagesAr, ...hrArticlesAr].map(toAr)]

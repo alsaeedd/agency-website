@@ -156,9 +156,9 @@ function template(p, lang = 'en') {
   const ld = p.type === 'article'
     ? { '@context': 'https://schema.org', '@type': 'Article', headline: p.title, description: p.description, datePublished: p.published, dateModified: p.updated, mainEntityOfPage: url, author: org, publisher: { ...org, logo: { '@type': 'ImageObject', url: SITE + '/apple-touch-icon.png' } } }
     : { '@context': 'https://schema.org', '@type': 'WebPage', name: p.title, description: p.description, url, isPartOf: { '@type': 'WebSite', name: 'RAL Technologies', url: SITE + '/' } }
-  const byline = p.type === 'article'
-    ? `<p class="byline">By the RAL Technologies team · Published <time datetime="${p.published}">${p.published}</time> · ${p.readMinutes} min read</p>`
-    : ''
+  const byline = p.type !== 'article' ? '' : ar
+    ? `<p class="byline">بقلم فريق RAL Technologies · نُشر في <time datetime="${p.published}" dir="ltr">${p.published}</time> · ${p.readMinutes} دقائق قراءة</p>`
+    : `<p class="byline">By the RAL Technologies team · Published <time datetime="${p.published}">${p.published}</time> · ${p.readMinutes} min read</p>`
   return `<!doctype html>
 <html lang="${lang}"${ar ? ' dir="rtl"' : ''}>
 <head>
@@ -185,7 +185,7 @@ function template(p, lang = 'en') {
 <meta name="twitter:card" content="summary" />
 <meta name="twitter:title" content="${esc(p.title)}" />
 <meta name="twitter:description" content="${esc(p.description)}" />
-<link rel="stylesheet" href="/pages.css" />
+<link rel="stylesheet" href="/pages.css" />${ar ? '\n<link rel="preload" href="/fonts/plex-arabic-600.woff2" as="font" type="font/woff2" crossorigin />' : ''}
 <script type="application/ld+json">${JSON.stringify(ld)}</script>
 </head>
 <body>
