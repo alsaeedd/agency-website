@@ -520,3 +520,27 @@
   #hp-team::-webkit-slider-thumb { transition: none; }
   #hp-team::-moz-range-thumb { transition: none; }
 }
+
+/* ---------- FAQ v3 ----------
+   One answer open at a time (native details name), a smooth open/close where
+   the browser supports it (::details-content + interpolate-size, zero JS),
+   no number badges, so the questions alone carry the scan. */
+.hp-faq summary { grid-template-columns: minmax(0, 1fr) 24px; gap: 20px; padding: 22px 26px; font-weight: 550; letter-spacing: -0.012em; line-height: 1.35; text-wrap: pretty; }
+.hp-faq summary:focus-visible { outline: 2px solid #a78bfa; outline-offset: -2px; border-radius: 20px; }
+.hp-faq summary i { flex: none; transition: transform .45s var(--e); }
+.hp-faq details[open] summary i { transform: rotate(180deg); }
+.hp-faq details[open] summary { color: #fff; }
+.hp-faq details p { padding: 0 64px 26px 26px; font-size: 16px; line-height: 1.7; max-width: 64ch; text-wrap: pretty; }
+.hp-faq details { interpolate-size: allow-keywords; }
+.hp-faq details::details-content { block-size: 0; overflow: clip; opacity: 0; transition: block-size .5s var(--e), opacity .4s var(--e), content-visibility .5s allow-discrete; }
+.hp-faq details[open]::details-content { block-size: auto; opacity: 1; }
+@media (max-width: 600px) {
+  .hp-faq-list { gap: 6px; }
+  .hp-faq details { border-radius: 16px; }
+  .hp-faq summary { gap: 14px; padding: 18px 18px; min-height: 60px; font-size: 16.5px; }
+  .hp-faq summary:focus-visible { border-radius: 16px; }
+  .hp-faq details p { padding: 0 18px 20px; font-size: 15.5px; line-height: 1.65; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hp-faq details::details-content, .hp-faq summary i { transition: none; }
+}

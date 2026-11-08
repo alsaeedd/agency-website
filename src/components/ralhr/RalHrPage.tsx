@@ -160,8 +160,8 @@ function Faq() {
       </div>
       <div className="hp-faq-list">
         {FAQ.map((f, i) => (
-          <details key={f.q} className="hp-in" open={i === 0}>
-            <summary><span className="tnum">{String(i + 1).padStart(2, '0')}</span>{f.q}<i aria-hidden="true" /></summary>
+          <details key={f.q} className="hp-in" open={i === 0} {...{ name: 'hp-faq' }}>
+            <summary>{f.q}<i aria-hidden="true" /></summary>
             <p>{f.a}</p>
           </details>
         ))}
