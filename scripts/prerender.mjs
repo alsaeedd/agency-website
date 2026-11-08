@@ -132,7 +132,7 @@ ${p.body}
     <div>
       <p class="foot-label">Get in touch</p>
       <a href="mailto:info@raltech.dev">info@raltech.dev</a>
-      <a href="https://wa.me/97366386602">WhatsApp +973 6638 6602</a>
+      <a href="https://wa.me/97338218181">WhatsApp +973 3821 8181</a>
       <a href="https://letterlock.raltech.dev/">Play LetterLock</a>
     </div>
   </div>

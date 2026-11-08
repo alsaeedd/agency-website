@@ -38,7 +38,7 @@ Rounds 1 and 2 ran the interactions at 1440 (EN, plus the demo in AR). Final rou
 | Ask RAL typed questions EN + AR: answer streams in (text grows over ~1 s), SIO gives a table, leave balance and overtime (AR) give mini bars, "who is off" gives a table, AR answers dir=rtl | PASS (round 1 timeout was the test: the input has no type attr). Note: "How much is payroll this month?" gets the generic fallback, there is no payroll total intent (product gap, not a bug) |
 | Demo in Arabic: all 6 tabs, dir=rtl, no clipped leaf text at 1440 | PASS |
 | Pricing: 135 people x BD 1/2/3 = 135/270/405, yearly = x12, plan cards match | PASS (no minimums exist in data.ts) |
-| Closing CTA wa.me/97366386602 text reflects team, plan and monthly total | PASS |
+| Closing CTA wa.me/97338218181 text reflects team, plan and monthly total | PASS |
 | Email mailto with subject "RAL HR demo, team of N" | PASS |
 | FAQ open / close (first item open by default) | PASS |
 | Footer links (pages, mailto, wa.me, socials) | PASS |
@@ -47,7 +47,7 @@ Rounds 1 and 2 ran the interactions at 1440 (EN, plus the demo in AR). Final rou
 ## /ral-hr/inquire/
 | Item | Result |
 |---|---|
-| Full flow: team 135, needs, Professional, timing, name/company/phone. Empty name/company keeps step 5 and flags 2 fields. Message composed (BD 270 a month), WhatsApp link wa.me/97366386602?text=..., opens WhatsApp, CTA becomes "Open WhatsApp again", mailto info@raltech.dev subject "RAL HR demo: Gulf Foods W.L.L.". Answers persist across reloads (draft restore) | PASS |
+| Full flow: team 135, needs, Professional, timing, name/company/phone. Empty name/company keeps step 5 and flags 2 fields. Message composed (BD 270 a month), WhatsApp link wa.me/97338218181?text=..., opens WhatsApp, CTA becomes "Open WhatsApp again", mailto info@raltech.dev subject "RAL HR demo: Gulf Foods W.L.L.". Answers persist across reloads (draft restore) | PASS |
 
 ## Layout sweeps (768, 390; EN + AR)
 | Item | Result |
