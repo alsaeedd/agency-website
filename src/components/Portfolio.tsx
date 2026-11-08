@@ -7,6 +7,122 @@ import { revealUp } from "../lib/reveal";
 // /assets/* cache header. A hashed name can't be requested before it exists.
 import letterlockMark from "../assets/letterlock-mark.svg";
 import "./Portfolio.css";
+import { useLang } from "../i18n";
+
+const PF_T = {
+  "en": {
+    "eyebrow": "Selected work",
+    "h1": "Five projects.",
+    "h2": "Five real products.",
+    "intro": "Tap any card to drop into the case study. Or click the URL to see it live, everything here is in production.",
+    "viewAria": "View case study:",
+    "view": "View case study",
+    "close": "Close",
+    "facts": "Project facts",
+    "scope": "Scope",
+    "status": "Status",
+    "live": "Live in production",
+    "builtFrom": "Built from",
+    "bahrain": "Bahrain",
+    "visit": "Visit live site",
+    "built": "What we built",
+    "result": "The result",
+    "client": "Client",
+    "open": "Open {n} live site",
+    "openNew": "Open {n} live site in a new tab"
+  },
+  "ar": {
+    "eyebrow": "أعمال مختارة",
+    "h1": "خمسة مشاريع.",
+    "h2": "خمسة منتجات حقيقية.",
+    "intro": "اضغط على أي بطاقة لتستعرض دراسة الحالة، أو على الرابط لتراه يعمل مباشرة. كل ما هنا يعمل فعليًا.",
+    "viewAria": "استعراض دراسة الحالة:",
+    "view": "استعرض دراسة الحالة",
+    "close": "إغلاق",
+    "facts": "تفاصيل المشروع",
+    "scope": "النطاق",
+    "status": "الحالة",
+    "live": "يعمل الآن",
+    "builtFrom": "صُنع في",
+    "bahrain": "البحرين",
+    "visit": "زيارة الموقع",
+    "built": "ما بنيناه",
+    "result": "النتيجة",
+    "client": "العميل",
+    "open": "فتح موقع {n}",
+    "openNew": "فتح موقع {n} في نافذة جديدة"
+  }
+};
+const PROJECTS_AR = [
+  {
+    "tag": "ضيافة · عضويات",
+    "title": "منصة مطاعم حصرية للأعضاء",
+    "subtitle": "منصة طعام حصرية للأعضاء بمستويات عضوية متدرجة، وتسجيل للفعاليات، وبوابة تعكس روح العلامة التي تخدمها.",
+    "scope": "منصة كاملة، من التصميم إلى الإطلاق",
+    "highlights": [
+      "منصة عضويات متكاملة، من فكرة ضيافة على الورق إلى نشاط تجاري حقيقي يستخدمه أعضاء في أنحاء البحرين.",
+      "عضويات متدرجة مع انضمام سلس، بلا كلمات مرور تتذكرها ولا نماذج مزعجة تعترض طريقك.",
+      "تسجيل مباشر للفعاليات مع توفر المقاعد لحظيًا: احجز مقعدك في ثوانٍ وتصلك التذكرة على بريدك.",
+      "بوابة أعضاء دافئة بطابع تحريري، يدير منها كل عضو ملفه وتذاكره وتجديداته من مكان واحد."
+    ],
+    "outcome": "نشاط عضويات حي يعمل بهدوء في الخلفية، بينما يستمتع الأعضاء بتجربة ضيافة دافئة في الواجهة."
+  },
+  {
+    "tag": "استثمار · شراكات",
+    "title": "حضور رقمي لشركة استشارات متخصصة",
+    "subtitle": "موقع تسويقي فاخر لشركة استشارات في الاستثمار والشراكات مقرها البحرين: التموضع والقيادة والتواصل في واجهة واحدة مصقولة.",
+    "scope": "حضور رقمي، من التصميم إلى الإطلاق",
+    "highlights": [
+      "واجهة افتتاحية سينمائية بحركة مصممة خصيصًا، مع نظام طباعي تحريري راقٍ.",
+      "أقسام مرنة تشمل الخدمات والقيادة ولماذا KGA ودعوة ختامية، يسهل توسيعها مع نمو الشركة.",
+      "ملفات تعريفية للقيادة بطابع تحريري، مع تصوير منسجم مع الهوية وحركة دخول أنيقة.",
+      "مبني للمصداقية: سريع، وسهل الوصول، ونظيف لمحركات البحث، وقابل للفهرسة بالكامل من اليوم الأول."
+    ],
+    "outcome": "حضور استشاري يبعث الثقة قبل أول محادثة، ويحوّل الزوار إلى اتصالات واردة جادة."
+  },
+  {
+    "tag": "مطاعم · أغذية ومشروبات",
+    "title": "صفحة هبوط ثنائية اللغة بحركة سينمائية",
+    "subtitle": "موقع هبوط بالعربية والإنجليزية بتصميم حركي بمستوى الجوائز، صُمم ليجعل الزائر يقول «واو» لحظة تحميل الصفحة.",
+    "scope": "صفحة هبوط بالعربية والإنجليزية",
+    "highlights": [
+      "تجربة بالعربية والإنجليزية مع دعم كامل للكتابة من اليمين إلى اليسار وتبديل سلس بين اللغتين.",
+      "حركة مصممة بعناية بأدوات GSAP وFramer Motion: عمق متحرك، وأقسام مثبتة، وتسلسلات مرتبطة بالتمرير.",
+      "تمرير ناعم بتقنية Lenis بمعدل 120 إطارًا في الثانية، مضبوط ليبقى سلسًا على الجوال أيضًا.",
+      "لوحة ألوان خضراء وذهبية وفية للهوية: الخطوط والتدرجات والتفاعلات الدقيقة كلها منسجمة مع العلامة.",
+      "نسخة ثابتة منشورة على استضافة مشتركة: بلا تكلفة بنية تحتية، وبلا توقف، واستجابة فورية."
+    ],
+    "outcome": "صفحة هبوط تبدو تجربة علامة تجارية أكثر منها موقعًا إلكترونيًا، وهذا تمامًا ما طلبه المؤسسون."
+  },
+  {
+    "tag": "تجارة إلكترونية · تجميعات مخصصة",
+    "title": "تجديد كامل للواجهة، ومُجمّع حواسيب ثلاثي الأبعاد، وافتتاحية سينمائية",
+    "subtitle": "تجديد شامل لمتجر الحواسيب المخصصة في البحرين: افتتاحية سينمائية، ومُجمّع حواسيب ثلاثي الأبعاد، ومتجر يليق أخيرًا بما يبيعه.",
+    "scope": "تجديد كامل + مُجمّع ثلاثي الأبعاد",
+    "highlights": [
+      "افتتاحية سينمائية بحركة مصممة خصيصًا، من النوع الذي يوقف التمرير لحظة تحميل الصفحة.",
+      "مُجمّع حواسيب ثلاثي الأبعاد يركّب فيه العميل جهاز أحلامه قطعة بقطعة، مع تسعير مباشر وخطوات واضحة.",
+      "تجديد بصري شامل: من قالب مستهلك إلى متجر فاخر وفيّ للهوية يشبه المنتجات التي يبيعها.",
+      "متجر أسرع وأكثر ثقة: الموقع الجديد وجهة بحد ذاته، لا مجرد صفحة دفع."
+    ],
+    "outcome": "متجر يليق أخيرًا بالفريق، ومُجمّع حواسيب يحوّل «ربما أشتري شيئًا» إلى «سأبني هذا الجهاز بالضبط»."
+  },
+  {
+    "tag": "ألعاب · تطبيق ويب",
+    "title": "Letterlock، لعبة الحروف والأسئلة",
+    "subtitle": "Letterlock لعبتنا المجانية للأسئلة عبر الإنترنت: فريقان يتنافسان على حجز الحروف على لوحة سداسية لربط ضفتيهما. إعادة ابتكار عادلة وعصرية لمسابقة الحروف التلفزيونية الكلاسيكية.",
+    "scope": "لعبة كاملة، من المحرك إلى الإطلاق",
+    "highlights": [
+      "لوحة سداسية عادلة بالبرهان، يعبر فيها الفريقان العدد نفسه من الحروف: الخلل في الصيغة التلفزيونية الأصلية، مُصلَح برياضيات حقيقية.",
+      "أكثر من 180 حزمة أسئلة وأكثر من 40,000 سؤال بالعربية والإنجليزية: معلومات عامة، وأعلام، وخرائط، وأفلام، وموسيقى، وتمثيل صامت، والمزيد.",
+      "وضع الحفلة يحوّل كل هاتف إلى وحدة تحكم: يضغط اللاعبون الجرس ويجيبون من أجهزتهم بينما تعمل اللوحة على التلفاز.",
+      "حسابات، ورتب خبرة، ولوحات صدارة، وفئات تُفتح بالمستوى تُبقي الفرق عائدة باستمرار، وكلها على خادم سحابي لحظي.",
+      "مجانية في أي متصفح: على الهاتف أو الجهاز اللوحي أو الحاسوب أو تلفاز غرفة المعيشة."
+    ],
+    "outcome": "لعبة احترافية مصقولة بآلاف الأسئلة ولعب جماعي عبر الإنترنت، دليل على أننا نُطلق منتجات لا مجرد مواقع. العبها مجانًا على letterlock.raltech.dev."
+  }
+];
+const fill = (s: string, n: string) => s.replace("{n}", n);
 
 interface Project {
   id: number;
@@ -157,6 +273,7 @@ function ProjectDetail({
   project: Project;
   onClose: () => void;
 }) {
+  const L = PF_T[useLang()];
   const overlayRef = useRef<HTMLDivElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
   const closeRef = useRef<HTMLButtonElement>(null);
@@ -235,7 +352,7 @@ function ProjectDetail({
         className="project-overlay-close"
         onClick={handleClose}
         ref={closeRef}
-        aria-label="Close"
+        aria-label={L.close}
       >
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round">
           <line x1="18" y1="6" x2="6" y2="18" />
@@ -255,21 +372,21 @@ function ProjectDetail({
                 <p className="pd-subtitle">{project.subtitle}</p>
 
                 {/* Fact strip - the 10-second procurement read */}
-                <div className="pd-facts" aria-label="Project facts">
+                <div className="pd-facts" aria-label={L.facts}>
                   <div className="pd-fact">
-                    <span className="pd-fact-label">Scope</span>
+                    <span className="pd-fact-label">{L.scope}</span>
                     <span className="pd-fact-value">{project.scope}</span>
                   </div>
                   <div className="pd-fact">
-                    <span className="pd-fact-label">Status</span>
+                    <span className="pd-fact-label">{L.status}</span>
                     <span className="pd-fact-value pd-fact-live">
                       <span className="live-dot" aria-hidden="true" />
-                      Live in production
+                      {L.live}
                     </span>
                   </div>
                   <div className="pd-fact">
-                    <span className="pd-fact-label">Built from</span>
-                    <span className="pd-fact-value">Bahrain</span>
+                    <span className="pd-fact-label">{L.builtFrom}</span>
+                    <span className="pd-fact-value">{L.bahrain}</span>
                   </div>
                 </div>
 
@@ -280,7 +397,7 @@ function ProjectDetail({
                     target="_blank"
                     rel="noopener noreferrer"
                   >
-                    <span>Visit live site</span>
+                    <span>{L.visit}</span>
                     <ArrowUpRight />
                   </a>
                   <a
@@ -299,7 +416,7 @@ function ProjectDetail({
                   href={project.liveUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  aria-label={`Open ${project.client.name} live site`}
+                  aria-label={fill(L.open, project.client.name)}
                 >
                   <img
                     src={project.client.logo}
@@ -320,7 +437,7 @@ function ProjectDetail({
             <div className="pd-inner">
 
               <div className="pd-section">
-                <span className="pd-section-label">What we built</span>
+                <span className="pd-section-label">{L.built}</span>
                 <div className="pd-features-grid">
                   {project.highlights.map((h, i) => (
                     <div className="pd-feature-card" key={i}>
@@ -337,12 +454,12 @@ function ProjectDetail({
               </div>
 
               <div className="pd-section">
-                <span className="pd-section-label">The result</span>
+                <span className="pd-section-label">{L.result}</span>
                 <p className="pd-outcome">{project.outcome}</p>
               </div>
 
               <div className="pd-section pd-section-last">
-                <span className="pd-section-label">Client</span>
+                <span className="pd-section-label">{L.client}</span>
                 <div className="pd-client-row">
                   <div className="pd-client-logo-wrap">
                     <img src={project.client.logo} alt={project.client.name} loading="lazy" decoding="async" />
@@ -372,6 +489,9 @@ function ProjectDetail({
 }
 
 export default function Portfolio() {
+  const lang = useLang();
+  const L = PF_T[lang];
+  const list = lang === "ar" ? projects.map((p, i) => ({ ...p, ...PROJECTS_AR[i] })) : projects;
   const sectionRef = useRef<HTMLElement>(null);
   const cardsRef = useRef<HTMLDivElement>(null);
   const [activeProject, setActiveProject] = useState<Project | null>(null);
@@ -445,19 +565,18 @@ export default function Portfolio() {
             <span className="eyebrow">
               <span className="eyebrow-num">04</span>
               <span className="eyebrow-rule" aria-hidden="true" />
-              <span>Selected work</span>
+              <span>{L.eyebrow}</span>
             </span>
             <h2 className="section-heading">
-              Five projects.{" "}
-              <span className="serif-accent">Five real products.</span>
+              {L.h1}{" "}
+              <span className="serif-accent">{L.h2}</span>
             </h2>
             <p className="section-intro">
-              Tap any card to drop into the case study. Or click the URL to
-              see it live, everything here is in production.
+              {L.intro}
             </p>
           </div>
           <div className="portfolio-grid" ref={cardsRef}>
-            {projects.map((project) => (
+            {list.map((project) => (
               <article
                 key={project.id}
                 className={`portfolio-card ${project.cardClass}`}
@@ -467,7 +586,7 @@ export default function Portfolio() {
                 onMouseLeave={handleCardLeave}
                 role="button"
                 tabIndex={0}
-                aria-label={`View case study: ${project.title}`}
+                aria-label={`${L.viewAria} ${project.title}`}
                 style={{
                   ["--card-brand" as string]: project.color,
                   ["--card-accent" as string]: project.accent,
@@ -488,7 +607,7 @@ export default function Portfolio() {
                     />
                   </div>
                   <span className="portfolio-card-cue" aria-hidden="true">
-                    <span className="portfolio-card-cue-text">View case study</span>
+                    <span className="portfolio-card-cue-text">{L.view}</span>
                     <span className="portfolio-card-cue-icon">
                       <ArrowUpRight />
                     </span>
@@ -506,7 +625,7 @@ export default function Portfolio() {
                     target="_blank"
                     rel="noopener noreferrer"
                     onClick={(e) => e.stopPropagation()}
-                    aria-label={`Open ${project.client.name} live site in a new tab`}
+                    aria-label={fill(L.openNew, project.client.name)}
                   >
                     <span>{new URL(project.liveUrl).hostname.replace(/^www\./, "")}</span>
                     <ArrowUpRight />

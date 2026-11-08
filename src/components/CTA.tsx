@@ -2,6 +2,28 @@ import { useEffect, useRef } from "react";
 import { gsap } from "gsap";
 import { revealUp, revealWords } from "../lib/reveal";
 import "./CTA.css";
+import { useLang, type Lang } from "../i18n";
+
+const CTA_T = {
+  en: { ...{
+  "title": "So, what're we cooking?",
+  "w": [
+    "So,",
+    "what're",
+    "we",
+    "cooking?"
+  ]
+}, booking: "Now booking", sub: "No formalities needed, we'd genuinely love to hear what you've got in mind. Reach out and let's talk.", btn: "Tell us about it", local: "We're in Bahrain, and probably online right now." },
+  ar: { ...{
+  "title": "إذن، ماذا سنبني معًا؟",
+  "w": [
+    "إذن،",
+    "ماذا",
+    "سنبني",
+    "معًا؟"
+  ]
+}, booking: "نستقبل المشاريع الآن", sub: "لا حاجة للرسميات، يسعدنا حقًا أن نسمع ما يدور في بالك. تواصل معنا ولنتحدث.", btn: "حدّثنا عن فكرتك", local: "نحن في البحرين، وعلى الأغلب متصلون الآن." },
+};
 
 interface CTAProps {
   onContactClick: () => void;
@@ -9,17 +31,19 @@ interface CTAProps {
 
 // Returns "Q3 2026" style label for the NEXT bookable quarter,
 // rolling forward automatically as time passes.
-function getBookingLabel(): string {
+function getBookingLabel(lang: Lang = "en"): string {
   const now = new Date();
   const month = now.getMonth(); // 0-11
   const year = now.getFullYear();
   const currentQuarter = Math.floor(month / 3) + 1; // 1..4
   const nextQuarter = currentQuarter === 4 ? 1 : currentQuarter + 1;
   const nextYear = currentQuarter === 4 ? year + 1 : year;
-  return `Q${nextQuarter} ${nextYear}`;
+  return lang === "ar" ? `الربع ${nextQuarter} من ${nextYear}` : `Q${nextQuarter} ${nextYear}`;
 }
 
 export default function CTA({ onContactClick }: CTAProps) {
+  const lang = useLang();
+  const L = CTA_T[lang];
   const sectionRef = useRef<HTMLElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
 
@@ -80,17 +104,16 @@ export default function CTA({ onContactClick }: CTAProps) {
         <div className="cta-content">
           <span className="chip cta-eyebrow">
             <span className="live-dot" aria-hidden="true" />
-            Now booking · {getBookingLabel()}
+            {L.booking} · {getBookingLabel(lang)}
           </span>
-          <h2 className="cta-title" aria-label="So, what're we cooking?">
-            <span className="wmask"><span className="wmask-in">So,</span></span>{" "}
-            <span className="wmask"><span className="wmask-in">what're</span></span>{" "}
-            <span className="wmask"><span className="wmask-in">we</span></span>{" "}
-            <span className="wmask cta-accent-wmask"><span className="wmask-in serif-accent cta-title-accent">cooking?</span></span>
+          <h2 className="cta-title" aria-label={L.title}>
+            <span className="wmask"><span className="wmask-in">{L.w[0]}</span></span>{" "}
+            <span className="wmask"><span className="wmask-in">{L.w[1]}</span></span>{" "}
+            <span className="wmask"><span className="wmask-in">{L.w[2]}</span></span>{" "}
+            <span className="wmask cta-accent-wmask"><span className="wmask-in serif-accent cta-title-accent">{L.w[3]}</span></span>
           </h2>
           <p className="cta-sub">
-            No formalities needed, we'd genuinely love to hear what you've got
-            in mind. Reach out and let's talk.
+            {L.sub}
           </p>
           <div className="cta-btn-wrap">
             <button
@@ -99,7 +122,7 @@ export default function CTA({ onContactClick }: CTAProps) {
               onClick={onContactClick}
               onMouseMove={handleCtaMove}
             >
-              <span className="btn-cta-large-label">Tell us about it</span>
+              <span className="btn-cta-large-label">{L.btn}</span>
               <span className="btn-cta-large-arrow" aria-hidden="true">
                 <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M4 10h12" />
@@ -108,7 +131,7 @@ export default function CTA({ onContactClick }: CTAProps) {
               </span>
             </button>
             <p className="cta-local">
-              We're in Bahrain, and probably online right now.
+              {L.local}
             </p>
           </div>
         </div>

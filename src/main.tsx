@@ -13,6 +13,8 @@ import '@fontsource/inter/latin-700.css'
 import '@fontsource/newsreader/latin-400-italic.css'
 import '@fontsource/newsreader/latin-500-italic.css'
 import './index.css'
+import './i18n/rtl.css'
+import { LangContext, detectLang } from './i18n'
 import App from './App.tsx'
 import { applyDeviceTierToDocument } from './lib/deviceProfile'
 
@@ -23,6 +25,8 @@ gsap.registerPlugin(ScrollTrigger)
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <App />
+    <LangContext.Provider value={detectLang()}>
+      <App />
+    </LangContext.Provider>
   </StrictMode>,
 )

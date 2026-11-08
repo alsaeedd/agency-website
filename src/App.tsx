@@ -17,6 +17,12 @@ import CursorFollower from "./components/CursorFollower";
 import Contact from "./components/Contact";
 import Preloader from "./components/Preloader";
 import NavLoader from "./components/NavLoader";
+import { useLang } from "./i18n";
+
+const INTERLUDE_T = {
+  en: { e1: "Bahrain · GMT+3", t1a: "Built in Bahrain.", t1b: "Shipped to the world.", s1: "We're a small team from a small island, and proud of both. We do serious work without taking ourselves too seriously, and we build things made to last. Big ambitions, no ego.", e2: "What it feels like to work with us", t2a: "Less ceremony,", t2b: "more shipping.", s2: "No kick-off theater. We sit down and hear you out, then scope it as if it were ours, genuinely invested in whether it works. We get moving fast and iterate from there." },
+  ar: { e1: "البحرين · GMT+3", t1a: "صُنع في البحرين.", t1b: "وانطلق إلى العالم.", s1: "فريق صغير من جزيرة صغيرة، ونفخر بالاثنين. نعمل بجدية دون أن نأخذ أنفسنا بجدية مفرطة، ونبني أشياء صُنعت لتدوم. طموح كبير، بلا غرور.", e2: "كيف يبدو العمل معنا", t2a: "مراسم أقل،", t2b: "وإنجاز أكثر.", s2: "لا اجتماعات استعراضية للانطلاق. نجلس معك ونستمع إليك جيدًا، ثم نحدد النطاق كأن المشروع مشروعنا، ويهمنا فعلًا أن ينجح. نتحرك بسرعة ونطوّر خطوة بخطوة." },
+};
 
 // React.lazy + Suspense was pausing reconciliation on below-fold sections -
 // the chunks downloaded, but Suspense kept the subtrees in "pending" state
@@ -29,6 +35,7 @@ import NavLoader from "./components/NavLoader";
 // curtain lifts. Contact stays its own normal import (modal, always-ready).
 
 function App() {
+  const IL = INTERLUDE_T[useLang()];
   const lenisRef = useRef<Lenis | null>(null);
   const [isContactOpen, setIsContactOpen] = useState(false);
   // Defer non-critical UI chrome (contact circle, custom cursor) past the
@@ -168,20 +175,18 @@ function App() {
           crest
           eyebrow={
             <>
-              <span className="live-dot" aria-hidden="true" /> Bahrain · GMT+3
+              <span className="live-dot" aria-hidden="true" /> {IL.e1}
             </>
           }
           title={
             <>
-              Built in Bahrain. <br />
-              <span className="serif-accent">Shipped to the world.</span>
+              {IL.t1a} <br />
+              <span className="serif-accent">{IL.t1b}</span>
             </>
           }
           sub={
             <>
-              We're a small team from a small island, and proud of both. We do
-              serious work without taking ourselves too seriously, and we build
-              things made to last. Big ambitions, no ego.
+              {IL.s1}
             </>
           }
         />
@@ -191,21 +196,18 @@ function App() {
         <Interlude
           eyebrow={
             <>
-              <span className="live-dot" aria-hidden="true" /> What it feels
-              like to work with us
+              <span className="live-dot" aria-hidden="true" /> {IL.e2}
             </>
           }
           title={
             <>
-              Less ceremony, <br />
-              <span className="serif-accent">more shipping.</span>
+              {IL.t2a} <br />
+              <span className="serif-accent">{IL.t2b}</span>
             </>
           }
           sub={
             <>
-              No kick-off theater. We sit down and hear you out, then scope it
-              as if it were ours, genuinely invested in whether it works. We get
-              moving fast and iterate from there.
+              {IL.s2}
             </>
           }
         />

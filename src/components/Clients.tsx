@@ -2,6 +2,7 @@ import { useEffect, useRef } from "react";
 import { gsap } from "gsap";
 import { revealUp } from "../lib/reveal";
 import "./Clients.css";
+import { useLang } from "../i18n";
 
 type Logo = {
   name: string;
@@ -33,6 +34,7 @@ const trackA = [...rowA, ...rowA, ...rowA];
 const trackB = [...rowB, ...rowB, ...rowB];
 
 function LogoItem({ logo, idx }: { logo: Logo; idx: number }) {
+  const ar = useLang() === "ar";
   const inner = (
     <>
       <img src={logo.src} alt={logo.name} loading="lazy" decoding="async" />
@@ -54,8 +56,8 @@ function LogoItem({ logo, idx }: { logo: Logo; idx: number }) {
       href={logo.href}
       target="_blank"
       rel="noopener noreferrer"
-      aria-label={`Visit ${logo.name}`}
-      title={`Visit ${logo.name}`}
+      aria-label={`${ar ? "زيارة موقع" : "Visit"} ${logo.name}`}
+      title={`${ar ? "زيارة موقع" : "Visit"} ${logo.name}`}
     >
       {inner}
     </a>
@@ -67,6 +69,7 @@ function LogoItem({ logo, idx }: { logo: Logo; idx: number }) {
 }
 
 export default function Clients() {
+  const ar = useLang() === "ar";
   const sectionRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
@@ -91,14 +94,13 @@ export default function Clients() {
           <span className="eyebrow clients-header-anim">
             <span className="eyebrow-num">03</span>
             <span className="eyebrow-rule" aria-hidden="true" />
-            <span>Trusted by</span>
+            <span>{ar ? "وثقوا بنا" : "Trusted by"}</span>
           </span>
           <h2 className="section-heading clients-heading clients-header-anim">
-            Teams that <span className="serif-accent">ship.</span>
+            {ar ? "فرقٌ " : "Teams that "}<span className="serif-accent">{ar ? "تُنجز." : "ship."}</span>
           </h2>
           <p className="section-intro clients-header-anim">
-            From bootstrapped founders to banks, the same care, every brief,
-            every brand.
+            {ar ? "من المؤسسين الذين يبدأون بإمكاناتهم الذاتية إلى البنوك: العناية نفسها في كل مشروع، ولكل علامة." : "From bootstrapped founders to banks, the same care, every brief, every brand."}
           </p>
         </div>
       </div>
