@@ -54,6 +54,15 @@ export default function SiteChrome({ children }: { children: ReactNode }) {
       lenis?.destroy()
     }
   }, [coarse])
+  // Keep the floating contact button off the footer links: hide it while the footer is on screen.
+  useEffect(() => {
+    const foot = document.querySelector('footer.footer')
+    if (!foot || !('IntersectionObserver' in window)) return
+    const root = document.documentElement
+    const io = new IntersectionObserver(([e]) => root.classList.toggle('rh-foot-in', e.isIntersecting))
+    io.observe(foot)
+    return () => { io.disconnect(); root.classList.remove('rh-foot-in') }
+  }, [])
 
   return (
     <>

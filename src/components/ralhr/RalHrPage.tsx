@@ -280,9 +280,22 @@ export default function RalHrPage() {
     if (stage < 1) return
     const el = root.current
     if (!el) return
+    // Direct load with a hash (/ral-hr/#demo): jump once the sections exist, then
+    // realign a few times while late layout above the target settles, until the
+    // visitor scrolls on their own.
     const hash = location.hash.slice(1)
-    if (hash) document.getElementById(hash)?.scrollIntoView()
-    if (calm()) return
+    const timers: number[] = []
+    let user = false
+    const mine = () => { user = true }
+    const evs = ['wheel', 'touchstart', 'keydown', 'pointerdown'] as const
+    if (hash && document.getElementById(hash)) {
+      const align = () => { if (!user) document.getElementById(hash)?.scrollIntoView() }
+      align()
+      evs.forEach((n) => window.addEventListener(n, mine, { passive: true }))
+      ;[400, 1000, 2000].forEach((t) => timers.push(window.setTimeout(align, t)))
+    }
+    const unalign = () => { timers.forEach(clearTimeout); evs.forEach((n) => window.removeEventListener(n, mine)) }
+    if (calm()) return unalign
     const ctx = gsap.context(() => {
       gsap.utils.toArray<HTMLElement>('.hp-rv').forEach((s) => {
         const items = s.querySelectorAll('.hp-in')
@@ -294,7 +307,7 @@ export default function RalHrPage() {
       gsap.from('.hp-cal a', { opacity: 0, duration: 0.9, stagger: 0.12, ease: 'expo.out', scrollTrigger: { trigger: '.hp-cal', start: 'top 85%', once: true } })
       gsap.from('.hp-pings li', { opacity: 0, scale: 0.85, y: 16, duration: 0.8, stagger: 0.15, ease: 'back.out(1.6)', delay: 0.3, scrollTrigger: { trigger: '.hp-phone', start: 'top 72%', once: true } })
     }, el)
-    return () => ctx.revert()
+    return () => { unalign(); ctx.revert() }
   }, [stage])
 
   return (

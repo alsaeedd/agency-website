@@ -1,7 +1,7 @@
 # RAL HR end-to-end checklist
 
 Local run: `npm run build && npx vite preview --port 4675`, Playwright. Status: PASS, FAIL, TODO (not yet run).
-Rounds 1 and 2 ran the interactions at 1440 (EN, plus the demo in AR). The 768 and 390 layout sweeps (EN + AR) are still TODO.
+Rounds 1 and 2 ran the interactions at 1440 (EN, plus the demo in AR). Final round: 768 and 390 layout sweeps (EN + AR) and the demo at 1440/768/390 (EN + AR), preview port 4691.
 
 ## Video tour (/ral-hr/)
 | Item | 1440 | 768 | 390 |
@@ -52,4 +52,26 @@ Rounds 1 and 2 ran the interactions at 1440 (EN, plus the demo in AR). The 768 a
 ## Layout sweeps (768, 390; EN + AR)
 | Item | Result |
 |---|---|
-| No horizontal scroll, no clipped or overlapping text, nothing under the floating contact button or navbar | TODO |
+| No horizontal scroll at 768/390, EN + AR, /ral-hr/, /ral-hr/inquire/, home #ral-hr | PASS |
+| Zero console errors across every sweep and demo run | PASS |
+| /ral-hr/#demo is the interactive demo (video is #app). Direct load lands 88 px below the top at 1440/768, 88-97 px at 390 (3 runs); section index click lands at 88 px. Fix: realign at 0.4/1/2 s while late layout settles, stops once the visitor scrolls | PASS |
+| Floating contact button over footer links at 390 (Work, About, Insights). Fix: hidden while the footer is on screen, /ral-hr/ and /ral-hr/inquire/ | PASS |
+| 390 EN: outlined "09" behind "Friday 9 October". Same decorative watermark (z-index -1) as 01, 14, 25, 31; pill sits on the digit foot by design, text readable | PASS (by design) |
+| Overlap flags inside the demo (Phone/Tablet people list vs headings, Ask source line vs chips, KPI rows vs section h2): rows scrolled inside the device frame, clipped by its scroller. Checked in screenshots | PASS (false positive) |
+| Floating contact button hidden while the demo is on screen (hp-demo-in), incl. 768 AR tablet | PASS |
+
+## Interactive demo (1440, 768, 390; EN + AR; web, tablet, phone)
+| Item | Result |
+|---|---|
+| All 6 tabs open in web and tablet views; phone tab bar has 5 (End of service via the chapter list) | PASS |
+| Ask RAL payroll, EN chip: BD 118,460.000 gross, 7,165.000 deductions, 111,295.000 net, table (BD + share) + 4 department bars | PASS |
+| Ask RAL payroll, AR typed (كم الرواتب هذا الشهر؟): Arabic RTL answer, same totals, 4 bars | PASS |
+| Leave approve ("Approved") and decline ("Declined. Suresh has been told.") | PASS |
+| Payroll steps compute, review, fix, approve, confirm | PASS |
+| End of service slider: gratuity 3,287.125 to 4,715.999 BD after 8 steps | PASS |
+
+## Performance (Playwright, 4x CPU, 390)
+| Item | Result |
+|---|---|
+| /ral-hr/ TBT under 150 ms, 3 runs | TODO (next agent) |
+| Home TBT not worse than main, 3 runs each | TODO (next agent) |
