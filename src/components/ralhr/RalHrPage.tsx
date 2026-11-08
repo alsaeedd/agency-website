@@ -13,7 +13,7 @@ const idle = (f: () => void): number => (typeof requestIdleCallback === 'functio
 const unidle = (id: number) => { if (typeof cancelIdleCallback === 'function') cancelIdleCallback(id); else clearTimeout(id) }
 const words = (t: string) => t.split(' ').flatMap((w, i) => [i ? ' ' : '', <span key={i} className="hp-w"><span>{w}</span></span>])
 
-const INDEX: [string, string][] = [['payday', 'Payday'], ['month', 'A month'], ['demo', 'Full demo'], ['rules', 'The rules'], ['app', 'The app'], ['pricing', 'Pricing'], ['questions', 'Questions'], ['talk', 'Talk to us']]
+const INDEX: [string, string][] = [['payday', 'Payday'], ['month', 'A month'], ['demo', 'Full demo'], ['rules', 'The rules'], ['app', 'The app'], ['pricing', 'Pricing'], ['questions', 'Questions'], ['talk', 'Book a demo']]
 
 // Subtle in-page index (desktop only), never a second header.
 function SectionIndex({ ready }: { ready: boolean }) {
@@ -95,8 +95,7 @@ function Odometer({ value }: { value: number }) {
   )
 }
 
-function Pricing({ team, setTeam }: { team: number; setTeam: (n: number) => void }) {
-  const [plan, setPlan] = useState(1)
+function Pricing({ team, setTeam, plan, setPlan }: { team: number; setTeam: (n: number) => void; plan: number; setPlan: (n: number) => void }) {
   const p = PRICING[plan]
   return (
     <section id="pricing" className="hp-sec hp-rv">
@@ -159,61 +158,84 @@ function Faq() {
 }
 
 const TOPICS = ['The WPS file', 'SIO', 'End of service', 'Arabic for staff', 'Moving from Excel']
-function Closing({ team }: { team: number }) {
+const EMAIL = 'info@raltech.dev'
+const WA_ICON = 'M12 2a10 10 0 00-8.6 15.1L2 22l5-1.3A10 10 0 1012 2zm5.3 14.1c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .2-3.3-.7-2.8-1.1-4.5-3.9-4.7-4.1-.1-.2-1.1-1.5-1.1-2.9s.7-2.1 1-2.4c.3-.3.6-.3.8-.3h.6c.2 0 .4 0 .6.5l.9 2.1c.1.2.1.3 0 .5l-.3.5-.4.4c-.1.1-.3.3-.1.6.2.3.8 1.3 1.7 2.1 1.2 1 2.1 1.3 2.4 1.5.3.1.5.1.6-.1l.9-1c.2-.3.4-.2.6-.1l2 1c.3.1.5.2.5.3.1.2.1.7-.1 1.3z'
+function Closing({ team, plan }: { team: number; plan: number }) {
+  const p = PRICING[plan]
   const [picked, setPicked] = useState<string[]>(['The WPS file', 'Arabic for staff'])
-  const [typed, setTyped] = useState<number | null>(null)
+  const [typing, setTyping] = useState(false)
+  const [sent, setSent] = useState(false)
   const box = useRef<HTMLDivElement>(null)
+  const out = useRef<HTMLSpanElement>(null)
   const list = picked.length ? picked.map((x) => x.toLowerCase().replace('sio', 'SIO').replace('wps', 'WPS').replace('excel', 'Excel').replace('arabic', 'Arabic')).join(', ') : 'getting payroll right'
-  const msg = `Hi RAL, we are a team of ${team} in Bahrain and we would like to see RAL HR on our own payroll. What matters most to us: ${list}.`
+  const monthly = money(team * p.price)
+  const msg = `Hi RAL, I would like to book a RAL HR demo. We are a team of ${team} in Bahrain, looking at the ${p.name} plan (about BD ${monthly} a month). What matters most to us: ${list}.`
+  const msgRef = useRef(msg)
+  msgRef.current = msg
+  const mail = `mailto:${EMAIL}?subject=${encodeURIComponent(`RAL HR demo, team of ${team}`)}&body=${encodeURIComponent(msg)}`
+  // The note types itself once, when the composer is on screen. Text is written
+  // straight to the DOM node, so typing costs no React renders.
   useEffect(() => {
     const el = box.current
     if (!el || calm() || !('IntersectionObserver' in window)) return
-    setTyped(0)
+    setTyping(true)
     let tw: gsap.core.Tween | null = null
     const io = new IntersectionObserver(([e]) => {
       if (!e.isIntersecting) return
       io.disconnect()
       const o = { n: 0 }
-      tw = gsap.to(o, { n: 1, duration: 2.2, ease: 'power1.inOut', delay: 0.3, onUpdate: () => setTyped(o.n), onComplete: () => setTyped(null) })
+      tw = gsap.to(o, { n: 1, duration: 2.2, ease: 'power1.inOut', delay: 0.3,
+        onUpdate: () => { const m = msgRef.current; if (out.current) out.current.textContent = m.slice(0, Math.round(m.length * o.n)) },
+        onComplete: () => setTyping(false) })
     }, { threshold: 0.5 })
     io.observe(el)
     return () => { io.disconnect(); tw?.kill() }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
-  const text = typed === null ? msg : msg.slice(0, Math.round(msg.length * typed))
-  const toggle = (x: string) => setPicked((p) => (p.includes(x) ? p.filter((y) => y !== x) : [...p, x]))
+  useEffect(() => {
+    if (!sent) return
+    const id = window.setTimeout(() => setSent(false), 2600)
+    return () => clearTimeout(id)
+  }, [sent])
+  const toggle = (x: string) => setPicked((q) => (q.includes(x) ? q.filter((y) => y !== x) : [...q, x]))
   return (
     <section id="talk" className="hp-close hp-rv">
       <div className="hp-close-glow" aria-hidden="true" />
       <div className="hp-close-copy">
-        <p className="hp-eyebrow hp-in"><span className="live-dot" aria-hidden="true" /> Your next step</p>
-        <h2 className="hp-in">Let us run your next payday <span className="serif">with you.</span></h2>
-        <p className="hp-in">Send us a WhatsApp. We set up a demo on your own numbers, in your language, and show you the WPS file your bank will see. No slides, no pressure.</p>
-        <ol className="hp-steps hp-in">
-          <li><b>1</b>You message us. The note on the right is already written.</li>
-          <li><b>2</b>We load a demo with your team and your salary structure.</li>
-          <li><b>3</b>Your first payroll runs side by side with your current one.</li>
-        </ol>
+        <h2 className="hp-in">See your own payday <span className="serif">before you pay a single fils.</span></h2>
+        <p className="hp-in">Book a demo on WhatsApp. We load your team and salary structure, run a payday in Arabic and English, and show you the WPS file your bank will see.</p>
+        <dl className="hp-close-sum hp-in" aria-label="Your demo request">
+          <div><dt>Team</dt><dd className="tnum">{team} people</dd></div>
+          <div><dt>Plan</dt><dd>{p.name}</dd></div>
+          <div><dt>Estimate</dt><dd className="tnum">BD {monthly} a month</dd></div>
+          <a href="#pricing">Change</a>
+        </dl>
       </div>
       <div className="hp-wa hp-in" ref={box}>
         <div className="hp-wa-top">
           <span className="hp-wa-av">R</span>
-          <span><b>RAL Technologies</b><small>WhatsApp · +973 6638 6602</small></span>
+          <span><b>RAL Technologies</b><small>WhatsApp, +973 6638 6602</small></span>
           <span className="live-dot" aria-hidden="true" />
         </div>
         <div className="hp-wa-body">
           <p className="hp-wa-in">Hi! Tell us a little about your team and we will take it from there.</p>
-          <p className="hp-wa-out">{text}{typed !== null && <span className="hp-caret" aria-hidden="true" />}</p>
+          <p className="hp-wa-out">{typing ? <><span ref={out} /><span className="hp-caret" aria-hidden="true" /></> : msg}</p>
         </div>
-        <p className="hp-wa-q">What matters most to you?</p>
+        <p className="hp-wa-q">Add what matters most to you</p>
         <div className="hp-wa-topics" role="group" aria-label="What matters most to you">
           {TOPICS.map((x) => <button key={x} type="button" aria-pressed={picked.includes(x)} onClick={() => toggle(x)}>{x}</button>)}
         </div>
-        <a className="hp-wa-send" href={WA + encodeURIComponent(msg)} target="_blank" rel="noopener noreferrer">
-          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a10 10 0 00-8.6 15.1L2 22l5-1.3A10 10 0 1012 2zm5.3 14.1c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .2-3.3-.7-2.8-1.1-4.5-3.9-4.7-4.1-.1-.2-1.1-1.5-1.1-2.9s.7-2.1 1-2.4c.3-.3.6-.3.8-.3h.6c.2 0 .4 0 .6.5l.9 2.1c.1.2.1.3 0 .5l-.3.5-.4.4c-.1.1-.3.3-.1.6.2.3.8 1.3 1.7 2.1 1.2 1 2.1 1.3 2.4 1.5.3.1.5.1.6-.1l.9-1c.2-.3.4-.2.6-.1l2 1c.3.1.5.2.5.3.1.2.1.7-.1 1.3z" /></svg>
-          Send this on WhatsApp
+      </div>
+      <div className="hp-close-act hp-in">
+        <a className={'hp-book' + (sent ? ' sent' : '')} href={WA + encodeURIComponent(msg)} target="_blank" rel="noopener noreferrer" onClick={() => setSent(true)}>
+          <span className="hp-book-sheen" aria-hidden="true" />
+          <span className="hp-book-t"><b>{sent ? 'Opening WhatsApp' : 'Book a demo'}</b><small>On WhatsApp, your message is ready</small></span>
+          <span className="hp-book-i" aria-hidden="true">
+            {sent
+              ? <svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="#f8f8f8" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" /></svg>
+              : <svg viewBox="0 0 24 24"><path d={WA_ICON} /></svg>}
+          </span>
         </a>
-        <a className="hp-wa-alt" href={INQUIRE}>Prefer a short form? Book a demo in two minutes <span aria-hidden="true">→</span></a>
+        <p className="hp-close-alt">Not on WhatsApp? Email <a href={mail}>{EMAIL}</a> or use the <a href={INQUIRE}>two minute form</a>.</p>
       </div>
     </section>
   )
@@ -222,6 +244,7 @@ function Closing({ team }: { team: number }) {
 export default function RalHrPage() {
   const root = useRef<HTMLDivElement>(null)
   const [team, setTeam] = useState(40)
+  const [plan, setPlan] = useState(1)
   // Hero renders first; the rest mounts in an idle slot (SSR renders everything).
   const [stage, setStage] = useState(typeof window === 'undefined' ? 1 : 0)
 
@@ -270,7 +293,7 @@ export default function RalHrPage() {
             <h1 className="hp-h1"><span className="hp-line">{words('Payday in Bahrain,')}</span><span className="hp-line serif">{words('sorted before lunch.')}</span></h1>
             <p className="hp-sub hp-fade">Payroll, SIO, the WPS file and end of service, done right and checked for you. Your team gets an app in Arabic and English. From BD 1 per person a month.</p>
             <div className="hp-ctas hp-fade">
-              <a className="rh-cta" href="#talk">Talk to us<span className="rh-cta-i" aria-hidden="true">↗</span></a>
+              <a className="rh-cta" href="#talk">Book a demo<span className="rh-cta-i" aria-hidden="true">↗</span></a>
               <a className="rh-ghost" href="#pricing">See pricing</a>
             </div>
           </div>
@@ -302,9 +325,9 @@ export default function RalHrPage() {
               </div>
               <VideoTour />
             </section>
-            <Pricing team={team} setTeam={setTeam} />
+            <Pricing team={team} setTeam={setTeam} plan={plan} setPlan={setPlan} />
             <Faq />
-            <Closing team={team} />
+            <Closing team={team} plan={plan} />
           </>
         )}
       </main>

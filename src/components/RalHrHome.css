@@ -553,3 +553,23 @@
   .hrh-btn,
   .hrh-btn-icon { transition: none; }
 }
+
+/* v2: the RAL HR hero window (shared Payday component), full width under the copy. */
+.hrh .hrh-core { display: grid; grid-template-columns: minmax(0, 1fr) auto; grid-template-areas: "eb eb" "title title" "intro offer" "stage stage" "facts facts"; column-gap: clamp(32px, 5vw, 80px); row-gap: 0; align-items: end; }
+.hrh .hrh-copy { display: contents; }
+.hrh .hrh-copy > .eyebrow { grid-area: eb; order: 0; justify-self: start; }
+.hrh .hrh-title { grid-area: title; order: 0; }
+.hrh .hrh-intro { grid-area: intro; order: 0; }
+.hrh .hrh-offer { grid-area: offer; order: 0; margin-top: 0; }
+.hrh .hrh-facts { grid-area: facts; order: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 24px; margin-top: 0; }
+.hrh .hrh-stage { grid-area: stage; order: 0; max-width: none; width: 100%; min-height: 0; margin: clamp(40px, 5vw, 64px) 0 clamp(36px, 4vw, 56px); }
+.hrh-pd { position: relative; }
+.hrh-shell { height: clamp(460px, 44vw, 600px); margin-top: 58px; border-radius: 18px; background: linear-gradient(180deg, #120c20, #0c0715);
+  box-shadow: 0 0 0 1px rgba(209, 196, 233, .16), 0 0 0 7px rgba(22, 14, 39, .7), 0 0 0 8px rgba(209, 196, 233, .1); }
+.hrh .hrh-caption { margin-top: 3rem; }
+@media (max-width: 900px) {
+  .hrh .hrh-core { grid-template-columns: minmax(0, 1fr); grid-template-areas: "eb" "title" "intro" "stage" "facts" "offer"; }
+  .hrh .hrh-facts { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .hrh .hrh-offer { margin-top: 2rem; }
+}
+@media (max-width: 520px) { .hrh .hrh-facts { grid-template-columns: minmax(0, 1fr); } .hrh-shell { height: 640px; } }
