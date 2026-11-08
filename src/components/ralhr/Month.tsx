@@ -46,9 +46,9 @@ function Onboard() {
         <button type="button" aria-pressed={!bh} onClick={() => setBh(false)}>{t("Expat")}</button>
       </div>
       <ul className="mu-checks" aria-live="polite">
-        <li className={cprOk ? 'ok' : 'no'}>{cprOk ? 'CPR looks right' : 'A CPR number has 9 digits'}</li>
-        <li className={ibOk ? 'ok' : 'no'}>{ibOk ? 'Bahrain IBAN, 22 characters' : 'Bahrain IBANs start with BH and have 22 characters'}</li>
-        <li className="ok">{bh ? 'SIO set: 8% from her salary, 18% from you' : 'SIO set: 1% from her salary, 3% from you'}</li>
+        <li className={cprOk ? 'ok' : 'no'}>{cprOk ? t('CPR looks right') : t('A CPR number has 9 digits')}</li>
+        <li className={ibOk ? 'ok' : 'no'}>{ibOk ? t('Bahrain IBAN, 22 characters') : t('Bahrain IBANs start with BH and have 22 characters')}</li>
+        <li className="ok">{bh ? t('SIO set: 8% from her salary, 18% from you') : t('SIO set: 1% from her salary, 3% from you')}</li>
         <li className="ok">{t("30 days annual leave, from her contract")}</li>
       </ul>
     </div>
@@ -65,13 +65,13 @@ function Leave() {
         <p className="mu-k">{t("Leave request")}</p>
         <div className="mu-person"><span className="mu-av">NA</span><span><b>{t("Noor Al Sayed")}</b><small>{t("Site Supervisor, Sitra")}</small></span></div>
         <p className="mu-what"><b>{t("Annual leave, 3 days")}</b><span>{t("Sunday 15 to Tuesday 17 November")}</span></p>
-        <div className="mu-bal"><span>{t("Balance after this")}</span><b className="tnum">{left} of 30 days</b><em><i style={{ width: (left / 30) * 100 + '%' }} /></em></div>
+        <div className="mu-bal"><span>{t("Balance after this")}</span><b className="tnum">{t('{0} of 30 days', left)}</b><em><i style={{ width: (left / 30) * 100 + '%' }} /></em></div>
         {st === 'wait' ? (
           <div className="mu-acts"><button type="button" className="mu-no" onClick={() => setSt('no')}>{t("Decline")}</button><button type="button" className="mu-yes" onClick={() => setSt('ok')}>{t("Approve")}</button></div>
         ) : (
           <div className={'mu-done ' + st} aria-live="polite">
-            <b>{st === 'ok' ? 'Approved' : 'Declined'}</b>
-            <span>{st === 'ok' ? 'Noor gets a notification. HR sees it next.' : 'Noor gets a notification with your reason.'}</span>
+            <b>{st === 'ok' ? t('Approved') : t('Declined')}</b>
+            <span>{st === 'ok' ? t('Noor gets a notification. HR sees it next.') : t('Noor gets a notification with your reason.')}</span>
             <button type="button" onClick={() => setSt('wait')}>{t("Undo")}</button>
           </div>
         )}
@@ -81,9 +81,9 @@ function Leave() {
 }
 
 const QA = [
-  { q: 'When does my work permit expire?', a: 'On 20 November, 12 days from now. HR already has a reminder, so you do not need to do anything yet.', src: 'Your documents' },
-  { q: 'كم يوم إجازة باقي لي؟', a: 'باقي لك 18 يوم إجازة سنوية. آخر إجازة أخذتها كانت في أغسطس.', src: 'Leave balance' },
-  { q: 'abi shahadat ratib lil bank', a: 'تم. طلبت لك شهادة راتب بالإنجليزي للبنك، وبتوصلك في التطبيق خلال يوم عمل.', src: 'Letter requests' },
+  { q: t('When does my work permit expire?'), a: t('On 20 November, 12 days from now. HR already has a reminder, so you do not need to do anything yet.'), src: t('Your documents') },
+  { q: 'كم يوم إجازة باقي لي؟', a: 'باقي لك 18 يوم إجازة سنوية. آخر إجازة أخذتها كانت في أغسطس.', src: t('Leave balance') },
+  { q: 'abi shahadat ratib lil bank', a: 'تم. طلبت لك شهادة راتب بالإنجليزي للبنك، وبتوصلك في التطبيق خلال يوم عمل.', src: t('Letter requests') },
 ]
 const isAr = (s: string) => /[؀-ۿ]/.test(s)
 type Msg = { me: boolean; t: string; src?: string }
@@ -111,7 +111,7 @@ function Ask() {
       <div className="mu-log" aria-live="polite">
         {log.map((m, i) => (
           <p key={i + m.t} className={'mu-msg' + (m.me ? ' me' : '')} dir={isAr(m.t) ? 'rtl' : 'ltr'} lang={isAr(m.t) ? 'ar' : 'en'}>
-            {m.t}{m.src && <small className="mu-src" dir="ltr" lang="en">From: {m.src}</small>}
+            {m.t}{m.src && <small className="mu-src">{t('From')}: <span dir="ltr" lang="en">{m.src}</span></small>}
           </p>
         ))}
         {busy && <p className="mu-msg typing" aria-label={t("Ask RAL is typing")}><i /><i /><i /></p>}
@@ -140,13 +140,13 @@ function Wps() {
   const done = n === COLS.length
   return (
     <div className="mu" ref={ref}>
-      <div className="mu-bar"><b>{t("WPS salary file, October")}</b><span className="tnum">{n}/10 checked</span></div>
-      <ul className="mu-cols">{COLS.map((c, i) => <li key={c} className={i < n ? 'ok' : ''}><i aria-hidden="true">{i < n ? '✓' : ''}</i>{c}</li>)}</ul>
+      <div className="mu-bar"><b>{t("WPS salary file, October")}</b><span className="tnum">{t('{0}/10 checked', n)}</span></div>
+      <ul className="mu-cols">{COLS.map((c, i) => <li key={c} className={i < n ? 'ok' : ''}><i aria-hidden="true">{i < n ? '✓' : ''}</i>{t(c)}</li>)}</ul>
       <div className={'mu-file' + (done ? ' on' : '')}>
         <span className="mu-file-i">{t("TXT")}</span>
-        <span><b>WPS_OCT_2026.txt</b><small>{done ? '98 rows, every one checked. Ready for your bank.' : 'Checking every row…'}</small></span>
+        <span><b>WPS_OCT_2026.txt</b><small>{done ? t('98 rows, every one checked. Ready for your bank.') : t('Checking every row…')}</small></span>
       </div>
-      <button type="button" className="mu-go" onClick={run} disabled={running}>{running ? 'Checking…' : 'Build it again'}</button>
+      <button type="button" className="mu-go" onClick={run} disabled={running}>{running ? 'Checking…' : t('Build it again')}</button>
     </div>
   )
 }
@@ -163,12 +163,12 @@ function Eos() {
         <input type="range" min={1} max={20} step={0.5} value={y} onChange={(e) => setY(+e.target.value)} style={{ backgroundSize: ((y - 1) / 19) * 100 + '% 100%' }} />
       </label>
       <div className="mu-seg" role="group" aria-label={t("Basic salary")}>
-        {[400, 600, 900].map((b) => <button key={b} type="button" aria-pressed={basic === b} onClick={() => setBasic(b)}>BD {b} basic</button>)}
+        {[400, 600, 900].map((b) => <button key={b} type="button" aria-pressed={basic === b} onClick={() => setBasic(b)}>{t('BD {0} basic', b)}</button>)}
       </div>
       <p className="mu-total"><small>{t("End of service due")}</small><b className="tnum">BD {money(r.total, 3)}</b></p>
       <div className="mu-split" aria-hidden="true"><i style={{ width: oldPct + '%' }} /><i /></div>
       <dl className="mu-dl">
-        <div><dt><i className="a" />Before March 2024, {Math.round(r.oldDays)} days</dt><dd className="tnum">BD {money(r.oldAmt, 3)}</dd></div>
+        <div><dt><i className="a" />{t('Before March 2024, {0} days', Math.round(r.oldDays))}</dt><dd className="tnum">BD {money(r.oldAmt, 3)}</dd></div>
         <div><dt><i className="b" />{t("Since March 2024, paid monthly to SIO")}</dt><dd className="tnum">BD {money(r.newAmt, 3)}</dd></div>
       </dl>
     </div>
@@ -185,7 +185,7 @@ function Cal() {
         return (
           <li key={d} className={wd >= 5 ? 'we' : undefined}>
             {ev
-              ? <a href={'#oct-' + String(d).padStart(2, '0')} className={d === 25 ? 'pay' : undefined} aria-label={d + ' October: ' + ev}>{d}<small>{ev}</small></a>
+              ? <a href={'#oct-' + String(d).padStart(2, '0')} className={d === 25 ? 'pay' : undefined} aria-label={d + ' ' + t('October') + ': ' + t(ev)}>{d}<small>{t(ev)}</small></a>
               : <span aria-hidden="true">{d}</span>}
           </li>
         )
@@ -218,19 +218,19 @@ export function Month() {
       </div>
       <div className="hp-rv"><Cal /></div>
       <div className="hp-chs">
-        <Ch n="01" day="Thursday 1 October" title={t("Fatima starts today.")} ui={<Onboard />}>
+        <Ch n="01" day={t("Thursday 1 October")} title={t("Fatima starts today.")} ui={<Onboard />}>
           {t("Add a new starter with her CPR and IBAN. RAL HR checks both as you type, sets up her leave, SIO and WPS details, and her app invite is on her phone before lunch.")}
         </Ch>
-        <Ch n="09" day="Friday 9 October" title={t("Leave, approved from the car park.")} ui={<Leave />}>
+        <Ch n="09" day={t("Friday 9 October")} title={t("Leave, approved from the car park.")} ui={<Leave />}>
           {t("Noor asks for three days off in the app. Her manager taps approve on his phone, HR sees it next, and her balance updates on its own. No forms, no chasing.")}
         </Ch>
-        <Ch n="14" day="Wednesday 14 October" title={t("Questions, answered in Arabic.")} ui={<Ask />}>
+        <Ch n="14" day={t("Wednesday 14 October")} title={t("Questions, answered in Arabic.")} ui={<Ask />}>
           {t("Staff ask the way they talk: Gulf Arabic, English, even Arabizi. Ask RAL answers from your policies and their own records, so HR stops answering the same question ten times a week.")}
         </Ch>
-        <Ch n="25" day="Sunday 25 October" title={t("Payday, and a WPS file your bank accepts.")} ui={<Wps />}>
+        <Ch n="25" day={t("Sunday 25 October")} title={t("Payday, and a WPS file your bank accepts.")} ui={<Wps />}>
           {t("Payroll runs with SIO worked out for every Bahraini and expat. Then RAL HR builds the LMRA salary file and checks all 10 columns on every row. You upload it to your bank as usual. We never touch the money.")}
         </Ch>
-        <Ch n="31" day="Saturday 31 October" title={t("Mahmoud leaves. His gratuity is ready.")} ui={<Eos />}>
+        <Ch n="31" day={t("Saturday 31 October")} title={t("Mahmoud leaves. His gratuity is ready.")} ui={<Eos />}>
           {t("End of service is worked out for you, split between the old rules and the monthly SIO payments that started in March 2024. Slide the years and watch it update.")}
         </Ch>
       </div>

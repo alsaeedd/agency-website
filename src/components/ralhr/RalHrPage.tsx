@@ -44,7 +44,7 @@ function SectionIndex({ ready }: { ready: boolean }) {
   }, [ready])
   return (
     <nav className="hp-index" aria-label={t("On this page")}>
-      {INDEX.map(([id, l]) => <a key={id} href={'#' + id} className={on === id ? 'on' : ''} aria-current={on === id ? 'true' : undefined}><i />{l}</a>)}
+      {INDEX.map(([id, l]) => <a key={id} href={'#' + id} className={on === id ? 'on' : ''} aria-current={on === id ? 'true' : undefined}><i />{t(l)}</a>)}
     </nav>
   )
 }
@@ -89,8 +89,8 @@ function VideoTour() {
             onPlay={() => setPlaying(true)} onPause={() => setPlaying(false)} onClick={toggle} aria-label={t("RAL HR app video tour")} />
         </div>
         <div className="hp-video-ctl">
-          <button type="button" onClick={toggle}>{playing ? 'Pause' : 'Play'}</button>
-          <button type="button" onClick={sound}>{muted ? 'Sound on' : 'Sound off'}</button>
+          <button type="button" onClick={toggle}>{playing ? t('Pause') : t('Play')}</button>
+          <button type="button" onClick={sound}>{muted ? t('Sound on') : t('Sound off')}</button>
         </div>
       </div>
       <ul className="hp-pings" aria-label={t("What staff see in the app")}>
@@ -188,10 +188,10 @@ function Pricing({ team, setTeam, plan, setPlan }: { team: number; setTeam: (n: 
               <input className="hp-team-num tnum" type="text" inputMode="numeric" aria-label={t("Team size, type any number")} value={shown}
                 style={{ width: `calc(${Math.max(shown.length, 1)}ch + 4px)` }} onFocus={(e) => e.target.select()}
                 onChange={(e) => onType(e.target.value)} onBlur={() => setDraft(null)} onKeyDown={(e) => { if (e.key === 'Enter') e.currentTarget.blur() }} />
-             {t(" people")}
-              <span className="hp-team-hint">{team > 300 ? 'Custom team size' : 'More than 300? Tap the number and type yours.'}</span>
+             {' ' + t('people')}
+              <span className="hp-team-hint">{team > 300 ? t('Custom team size') : t('More than 300? Tap the number and type yours.')}</span>
             </p>
-            <input id="hp-team" type="range" min={5} max={300} step={5} value={Math.min(team, 300)} aria-valuetext={team + ' people'}
+            <input id="hp-team" type="range" min={5} max={300} step={5} value={Math.min(team, 300)} aria-valuetext={t('{0} people', team)}
               style={{ backgroundSize: ((Math.min(team, 300) - 5) / 295) * 100 + '% 100%' }} onChange={(e) => { setDraft(null); setTeam(+e.target.value) }} />
             <div className="hp-ticks" aria-hidden="true"><span>5</span><span>100</span><span>200</span><span>300</span></div>
             <div className="hp-presets" role="group" aria-label={t("Quick team sizes")}>
@@ -199,7 +199,7 @@ function Pricing({ team, setTeam, plan, setPlan }: { team: number; setTeam: (n: 
             </div>
           </div>
           <div className="hp-price-out" aria-live="polite">
-            <p className="hp-eq"><span><b className="tnum">{team}</b>{t(" people")}</span><i aria-hidden="true">×</i><span><b className="tnum">{t('BD {0}', p.price)}</b> {t(p.name)}</span><i aria-hidden="true">=</i></p>
+            <p className="hp-eq"><span><b className="tnum">{team}</b>{' ' + t('people')}</span><i aria-hidden="true">×</i><span><b className="tnum">{t('BD {0}', p.price)}</b> {t(p.name)}</span><i aria-hidden="true">=</i></p>
             <p className="hp-big"><small>{t("BD")}</small><Odometer value={team * p.price} /><span>{t("a month")}</span></p>
             <p className="hp-yr">{t('BD {0} a year, plus a one-time setup fee.', money(team * p.price * 12))}</p>
             <p className="hp-day">{t("That is about")} <b className="tnum">{t('{0} fils', Math.round(p.price * 1000 / 30))}</b> {t("per person, per day.")}</p>
@@ -246,12 +246,12 @@ const EMAIL = 'info@raltech.dev'
 const WA_ICON = 'M12 2a10 10 0 00-8.6 15.1L2 22l5-1.3A10 10 0 1012 2zm5.3 14.1c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .2-3.3-.7-2.8-1.1-4.5-3.9-4.7-4.1-.1-.2-1.1-1.5-1.1-2.9s.7-2.1 1-2.4c.3-.3.6-.3.8-.3h.6c.2 0 .4 0 .6.5l.9 2.1c.1.2.1.3 0 .5l-.3.5-.4.4c-.1.1-.3.3-.1.6.2.3.8 1.3 1.7 2.1 1.2 1 2.1 1.3 2.4 1.5.3.1.5.1.6-.1l.9-1c.2-.3.4-.2.6-.1l2 1c.3.1.5.2.5.3.1.2.1.7-.1 1.3z'
 function Closing({ team, plan }: { team: number; plan: number }) {
   const p = PRICING[plan]
-  const [picked, setPicked] = useState<string[]>(['The WPS file', 'Arabic for staff'])
+  const [picked, setPicked] = useState<string[]>(['The WPS file', t('Arabic for staff')])
   const [typing, setTyping] = useState(false)
   const [sent, setSent] = useState(false)
   const box = useRef<HTMLDivElement>(null)
   const out = useRef<HTMLSpanElement>(null)
-  const list = lg() === 'ar' ? (picked.length ? picked.map((x) => t(x)).join('، ') : t('getting payroll right')) : picked.length ? picked.map((x) => x.toLowerCase().replace('sio', 'SIO').replace('wps', 'WPS').replace('excel', 'Excel').replace('arabic', 'Arabic')).join(', ') : 'getting payroll right'
+  const list = lg() === 'ar' ? (picked.length ? picked.map((x) => t(x)).join('، ') : t('getting payroll right')) : picked.length ? picked.map((x) => x.toLowerCase().replace('sio', 'SIO').replace('wps', 'WPS').replace('excel', 'Excel').replace('arabic', 'Arabic')).join(', ') : t('getting payroll right')
   const monthly = money(team * p.price)
   const msg = t('Hi RAL, I would like to book a RAL HR demo. We are a team of {0} in Bahrain, looking at the {1} plan (about BD {2} a month). What matters most to us: {3}.', team, t(p.name), monthly, list)
   const msgRef = useRef(msg)
@@ -288,7 +288,7 @@ function Closing({ team, plan }: { team: number; plan: number }) {
         <h2 className="hp-in">{t("See your own payday")} <span className="serif">{t("before you pay a single fils.")}</span></h2>
         <p className="hp-in">{t("Book a demo on WhatsApp. We load your team and salary structure, run a payday in Arabic and English, and show you the WPS file your bank will see.")}</p>
         <dl className="hp-close-sum hp-in" aria-label={t("Your demo request")}>
-          <div><dt>{t("Team")}</dt><dd className="tnum">{team} people</dd></div>
+          <div><dt>{t("Team")}</dt><dd className="tnum">{t('{0} people', team)}</dd></div>
           <div><dt>{t("Plan")}</dt><dd>{t(p.name)}</dd></div>
           <div><dt>{t("Estimate")}</dt><dd className="tnum">{t('BD {0} a month', monthly)}</dd></div>
           <a href="#pricing">{t("Change")}</a>
@@ -306,11 +306,11 @@ function Closing({ team, plan }: { team: number; plan: number }) {
         </div>
         <p className="hp-wa-q">{t("Add what matters most to you")}</p>
         <div className="hp-wa-topics" role="group" aria-label={t("What matters most to you")}>
-          {TOPICS.map((x) => <button key={x} type="button" aria-pressed={picked.includes(x)} onClick={() => toggle(x)}>{x}</button>)}
+          {TOPICS.map((x) => <button key={x} type="button" aria-pressed={picked.includes(x)} onClick={() => toggle(x)}>{t(x)}</button>)}
         </div>
       </div>
       <div className="hp-close-act hp-in">
-        <a className={'hp-book' + (sent ? ' sent' : '')} href={WA + encodeURIComponent(msg)} target="_blank" rel="noopener noreferrer" onClick={() => setSent(true)}>
+        <a className={'hp-book' + (sent ? t(' sent') : '')} href={WA + encodeURIComponent(msg)} target="_blank" rel="noopener noreferrer" onClick={() => setSent(true)}>
           <span className="hp-book-sheen" aria-hidden="true" />
           <span className="hp-book-t"><b>{sent ? t('Opening WhatsApp') : t('Book a demo')}</b><small>{t("On WhatsApp, your message is ready")}</small></span>
           <span className="hp-book-i" aria-hidden="true">
@@ -388,7 +388,7 @@ export default function RalHrPage() {
         <section id="payday" className="hp-hero">
           <div className="hp-hero-copy">
             <p className="hp-eyebrow hp-fade"><span className="live-dot" aria-hidden="true" /> {t("RAL HR · HR and payroll, made in Bahrain")}</p>
-            <h1 className="hp-h1"><span className="hp-line">{words('Payday in Bahrain,')}</span><span className="hp-line serif">{words('sorted before lunch.')}</span></h1>
+            <h1 className="hp-h1"><span className="hp-line">{words(t('Payday in Bahrain,'))}</span><span className="hp-line serif">{words(t('sorted before lunch.'))}</span></h1>
             <p className="hp-sub hp-fade">{t("Payroll, SIO, the WPS file and end of service, done right and checked for you. Your team gets an app in Arabic and English. From BD 1 per person a month.")}</p>
             <div className="hp-ctas hp-fade">
               <a className="rh-cta" href="#talk">{t("Book a demo")}<span className="rh-cta-i" aria-hidden="true">↗</span></a>

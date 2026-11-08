@@ -457,6 +457,13 @@ export const AR: Record<string, string> = {
   "{0} fils": "{0} فلس",
   "BD {0} a month": "{0} د.ب شهريًا",
   "The operational must-haves.": "الأساسيات التشغيلية.",
+  "October": "أكتوبر",
+  "{0} of 30 days": "{0} من 30 يومًا",
+  "{0}/10 checked": "{0}/10 مُراجَعة",
+  "BD {0} basic": "أساسي {0} د.ب",
+  "Before March 2024, {0} days": "قبل مارس 2024، {0} يومًا",
+  "Run payday again": "شغّل يوم الرواتب مجددًا",
+  "Take the controls": "جرّبه بنفسك",
 }
 
 export const META_AR = {

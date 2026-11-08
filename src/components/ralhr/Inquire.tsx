@@ -13,21 +13,21 @@ const WA = 'https://wa.me/97338218181?text='
 const KEY = 'ralhr-inquire'
 
 const SIZES = [
-  { id: '1 to 10', guess: 8, phrase: 'a team of up to 10' },
-  { id: '11 to 50', guess: 30, phrase: 'between 11 and 50 people' },
-  { id: '51 to 200', guess: 120, phrase: 'between 51 and 200 people' },
-  { id: '200+', guess: 250, phrase: 'over 200 people' },
+  { id: '1 to 10', guess: 8, phrase: t('a team of up to 10') },
+  { id: '11 to 50', guess: 30, phrase: t('between 11 and 50 people') },
+  { id: '51 to 200', guess: 120, phrase: t('between 51 and 200 people') },
+  { id: '200+', guess: 250, phrase: t('over 200 people') },
 ]
 const PLANS = [
   { id: 'Starter', rate: 1, base: 15, line: 'The operational must-haves', has: 'Payroll + WPS, SIO + end of service, leave + attendance, org chart + documents hub, records + expiry alerts, Ask RAL, enforced SSO' },
-  { id: 'Professional', rate: 2, base: 35, line: 'Starter plus the HR department', has: 'Hiring, onboarding, reviews, e-signature, benefits, rosters, travel' },
-  { id: 'Premium', rate: 3, base: 90, line: 'Professional plus the big-company controls', has: 'Analytics export, pay equity, contractors + HSE, fleet, legal hold' },
+  { id: 'Professional', rate: 2, base: 35, line: t('Starter plus the HR department'), has: 'Hiring, onboarding, reviews, e-signature, benefits, rosters, travel' },
+  { id: 'Premium', rate: 3, base: 90, line: t('Professional plus the big-company controls'), has: 'Analytics export, pay equity, contractors + HSE, fleet, legal hold' },
 ]
 const TIMES = [
-  { id: 'This month', phrase: 'hoping to start this month' },
-  { id: 'Next month', phrase: 'hoping to start next month' },
-  { id: 'This quarter', phrase: 'hoping to start this quarter' },
-  { id: 'Just exploring', phrase: 'just exploring for now' },
+  { id: 'This month', phrase: t('hoping to start this month') },
+  { id: 'Next month', phrase: t('hoping to start next month') },
+  { id: 'This quarter', phrase: t('hoping to start this quarter') },
+  { id: 'Just exploring', phrase: t('just exploring for now') },
 ]
 const STEPS = ['Team', 'Needs', 'Plan', 'Timing', 'You']
 const UNSURE = 'unsure'
@@ -60,7 +60,7 @@ const phoneOk = (a: Answers) => !a.phone.trim() || digits(a.phone) >= 7
 
 function compose(a: Answers): string {
   const n = exact(a)
-  const people = n ? `${n} ${n === 1 ? 'person' : 'people'}` : SIZES.find((s) => s.id === a.size)?.phrase || 'a growing team'
+  const people = n ? `${n} ${n === 1 ? 'person' : t('people')}` : SIZES.find((s) => s.id === a.size)?.phrase || 'a growing team'
   const needs = a.modules.length ? '' : ' looking at RAL HR'
   const p = planOf(a.plan)
   const plan = p ? `on the ${p.id} plan` : 'and not sure on the plan yet'
@@ -72,7 +72,7 @@ function compose(a: Answers): string {
   const picks = moduleLines(a.modules)
   const tail: string[] = []
   if (p) tail.push(`Your calculator put that at about ${bd(monthly(headcount(a), p.id))} a month before setup.`)
-  tail.push(a.phone.trim() ? `Could we book a demo? The best number for me is ${a.phone.trim()}.` : 'Could we book a demo?')
+  tail.push(a.phone.trim() ? `Could we book a demo? The best number for me is ${a.phone.trim()}.` : t('Could we book a demo?'))
   return [lines.join(' '), picks, tail.join(' ')].filter(Boolean).join('\n\n')
 }
 
@@ -194,12 +194,12 @@ export default function Inquire({ onClose }: { onClose?: () => void } = {}) {
         ? <header className="rh-top"><a href={localePath(lg(), "/ral-hr/")} className="rh-brand">{t("RAL")} <span>{t("HR")}</span></a><button type="button" className="rh-top-cta iqx-close" onClick={onClose}>{t("Close")}</button></header>
         : <a className="iqx-back" href={localePath(lg(), "/ral-hr/")}><span aria-hidden="true" className="rh-flip">{'\u2190'} </span>{t("Back to RAL HR")}</a>}
       <main className="iq iqx">
-        <div className="iqx-progress" aria-label={step < total ? `Step ${shown} of ${total}` : 'Ready to send'}>
+        <div className="iqx-progress" aria-label={step < total ? `Step ${shown} of ${total}` : t('Ready to send')}>
           <ol>
             {STEPS.map((s, i) => (
               <li key={s} className={i < step ? 'done' : i === step ? 'now' : ''}>
                 <i><b /></i>
-                <button type="button" disabled={i >= step} onClick={() => go(i)} tabIndex={i < step ? 0 : -1}>{s}</button>
+                <button type="button" disabled={i >= step} onClick={() => go(i)} tabIndex={i < step ? 0 : -1}>{t(s)}</button>
               </li>
             ))}
           </ol>
@@ -213,7 +213,7 @@ export default function Inquire({ onClose }: { onClose?: () => void } = {}) {
             <p className="iq-lead" data-rise>{t("Pricing is per employee, so this is the number that matters most.")}</p>
             <div className="iqx-chips" data-rise role="radiogroup" aria-label={t("Team size")}>
               {SIZES.map((s) => (
-                <button key={s.id} type="button" role="radio" aria-checked={a.size === s.id} className={`iqx-chip${a.size === s.id ? ' on' : ''}`} onClick={() => set({ size: s.id, count: '' })}>{s.id}</button>
+                <button key={s.id} type="button" role="radio" aria-checked={a.size === s.id} className={`iqx-chip${a.size === s.id ? ' on' : ''}`} onClick={() => set({ size: s.id, count: '' })}>{t(s.id)}</button>
               ))}
             </div>
             {a.size && (
@@ -222,7 +222,7 @@ export default function Inquire({ onClose }: { onClose?: () => void } = {}) {
                 <input inputMode="numeric" pattern="[0-9]*" placeholder={`About ${SIZES.find((s) => s.id === a.size)?.guess}`} value={a.count} onChange={(e) => set({ count: e.target.value.replace(/\D/g, '').slice(0, 5) })} name="headcount" autoComplete="off" aria-label={t("Exact headcount")} />
               </label>
             )}
-            {err(!a.size, 'Pick the closest range to carry on.')}
+            {err(!a.size, t('Pick the closest range to carry on.'))}
           </>)}
 
           {step === 1 && (<>
@@ -240,12 +240,12 @@ export default function Inquire({ onClose }: { onClose?: () => void } = {}) {
               {PLANS.map((p) => (
                 <button key={p.id} type="button" role="radio" aria-checked={a.plan === p.id} className={`iqx-plan${a.plan === p.id ? ' on' : ''}`} onClick={() => set({ plan: p.id })}>
                   <span className="iqx-plan-head">
-                    <strong>{p.id}</strong>
+                    <strong>{t(p.id)}</strong>
                     {a.modules.length > 0 && p.id === fit && <span className="iqx-fit">Cheapest for your picks</span>}
                   </span>
                   <span className="iqx-plan-price">BD {p.rate}<small> {t("/ employee / month")}</small></span>
-                  <span className="iqx-plan-line">{p.line}</span>
-                  <span className="iqx-plan-has">{p.has}</span>
+                  <span className="iqx-plan-line">{t(p.line)}</span>
+                  <span className="iqx-plan-has">{t(p.has)}</span>
                   <span className="iqx-plan-est">{bd(monthly(n, p.id))} a month for {exact(a) ? '' : 'about '}{n} people</span>
                 </button>
               ))}
@@ -263,7 +263,7 @@ export default function Inquire({ onClose }: { onClose?: () => void } = {}) {
               </>) : <span className="iqx-total-sum">{t("Pick a plan to see your monthly number.")}</span>}
               <span className="iqx-total-fine">{t("Plus a one-time setup fee sized to your company. Final price agreed with you.")}</span>
             </div>
-            {err(!a.plan, 'Choose a plan, or let us help you choose.')}
+            {err(!a.plan, t('Choose a plan, or let us help you choose.'))}
           </>)}
 
           {step === 3 && (<>
@@ -271,11 +271,11 @@ export default function Inquire({ onClose }: { onClose?: () => void } = {}) {
             <h1 tabIndex={-1} data-rise>{t("When would you like")} <em>{t("to start?")}</em></h1>
             <p className="iq-lead" data-rise>{t("It shapes how we plan your setup. Exploring is a perfectly good answer.")}</p>
             <div className="iqx-chips" data-rise role="radiogroup" aria-label={t("Timeline")}>
-              {TIMES.map((t) => (
-                <button key={t.id} type="button" role="radio" aria-checked={a.time === t.id} className={`iqx-chip${a.time === t.id ? ' on' : ''}`} onClick={() => set({ time: t.id })}>{t.id}</button>
+              {TIMES.map((tm) => (
+                <button key={tm.id} type="button" role="radio" aria-checked={a.time === tm.id} className={`iqx-chip${a.time === tm.id ? ' on' : ''}`} onClick={() => set({ time: tm.id })}>{t(tm.id)}</button>
               ))}
             </div>
-            {err(!a.time, 'Pick whichever is closest.')}
+            {err(!a.time, t('Pick whichever is closest.'))}
           </>)}
 
           {step === 4 && (<>
@@ -285,15 +285,15 @@ export default function Inquire({ onClose }: { onClose?: () => void } = {}) {
             <div className="iqx-fields" data-rise>
               <label className={tried && !nameOk(a) ? 'bad' : ''}>{t("Your name")}
                 <input data-autofocus value={a.name} onChange={(e) => set({ name: e.target.value })} name="name" autoComplete="name" placeholder={t("Ahmed")} />
-                {err(!nameOk(a), 'We need a name to say hello.')}
+                {err(!nameOk(a), t('We need a name to say hello.'))}
               </label>
               <label className={tried && !companyOk(a) ? 'bad' : ''}>{t("Company")}
                 <input value={a.company} onChange={(e) => set({ company: e.target.value })} name="company" autoComplete="organization" placeholder={t("Gulf Foods W.L.L.")} />
-                {err(!companyOk(a), 'Which company is this for?')}
+                {err(!companyOk(a), t('Which company is this for?'))}
               </label>
               <label className={tried && !phoneOk(a) ? 'bad' : ''}>{t("Phone")} <small>{t("Optional")}</small>
                 <input type="tel" value={a.phone} onChange={(e) => set({ phone: e.target.value })} name="phone" autoComplete="tel" placeholder={t("+973 3xxx xxxx")} />
-                {err(!phoneOk(a), 'That number looks a little short.')}
+                {err(!phoneOk(a), t('That number looks a little short.'))}
               </label>
             </div>
           </>)}
@@ -324,12 +324,12 @@ export default function Inquire({ onClose }: { onClose?: () => void } = {}) {
               </div>
             )}
             <div className="iqx-send" data-rise>
-              <a className="rh-cta" href={WA + encodeURIComponent(msg)} target="_blank" rel="noopener" aria-disabled={!msg.trim()} onClick={() => setSent(true)}>{sent ? 'Open WhatsApp again' : 'Send on WhatsApp'}<span className="rh-cta-i" aria-hidden="true">↗</span></a>
+              <a className="rh-cta" href={WA + encodeURIComponent(msg)} target="_blank" rel="noopener" aria-disabled={!msg.trim()} onClick={() => setSent(true)}>{sent ? t('Open WhatsApp again') : t('Send on WhatsApp')}<span className="rh-cta-i" aria-hidden="true">↗</span></a>
               <a className="rh-ghost" href={`mailto:info@raltech.dev?subject=${encodeURIComponent(`RAL HR demo${a.company.trim() ? `: ${a.company.trim()}` : ''}`)}&body=${encodeURIComponent(msg)}`}>{t("Email it instead")}</a>
             </div>
             <div className="iq-alt" data-rise>
               <button type="button" className="iq-back" onClick={back}>{t("Back")}</button>
-              <button type="button" onClick={copy}>{copied ? 'Copied' : 'Copy message'}</button>
+              <button type="button" onClick={copy}>{copied ? t('Copied') : t('Copy message')}</button>
               <button type="button" onClick={() => { setMsg(compose(a)); setCopied(false) }}>{t("Reset to my answers")}</button>
             </div>
           </>)}
@@ -340,7 +340,7 @@ export default function Inquire({ onClose }: { onClose?: () => void } = {}) {
             {step > 0 ? <button type="button" className="iq-back" onClick={back}>{t("Back")}</button> : <span />}
             <span className="iqx-enter" aria-hidden="true">{t("press")} <kbd>{t("Enter")}</kbd></span>
             <button type="button" className={`rh-cta iq-next${ok ? '' : ' soft'}`} aria-disabled={!ok} onClick={next}>
-              {step === total - 1 ? 'Preview message' : step === 1 && !a.modules.length ? 'Skip for now' : 'Next'}<span className="rh-cta-i" aria-hidden="true">→</span>
+              {step === total - 1 ? t('Preview message') : step === 1 && !a.modules.length ? t('Skip for now') : t('Next')}<span className="rh-cta-i" aria-hidden="true">→</span>
             </button>
           </div>
         )}

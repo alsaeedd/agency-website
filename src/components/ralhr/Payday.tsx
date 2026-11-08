@@ -131,14 +131,14 @@ export default function Payday({ compact = false, waitForView = false, lite = fa
     <div className={'pd' + (compact ? ' pd--compact' : '')} data-dev={dev} data-step={step}>
       <div className="pd-tools" role="toolbar" aria-label={tr("Demo controls")}>
         {!compact && <div className="pd-seg pd-devs" role="group" aria-label={tr("Device")}>
-          {DEVS.map(([d, l]) => <button key={d} type="button" aria-pressed={dev === d} onClick={() => toDev(d)}>{l}</button>)}
+          {DEVS.map(([d, l]) => <button key={d} type="button" aria-pressed={dev === d} onClick={() => toDev(d)}>{tr(l)}</button>)}
         </div>}
         <div className="pd-seg" role="group" aria-label={tr("Language")}>
           <button type="button" aria-pressed={lang === 'en'} onClick={() => setLang('en')}>{tr("English")}</button>
           <button type="button" lang="ar" aria-pressed={lang === 'ar'} onClick={() => setLang('ar')}>عربي</button>
         </div>
         <button type="button" className={'pd-ctl' + (live ? '' : ' run')} onClick={live ? play : take}>
-          {live ? <><span aria-hidden="true">↻</span> Run payday again</> : <><i aria-hidden="true" /> Take the controls</>}
+          {live ? <><span aria-hidden="true">↻</span> {tr('Run payday again')}</> : <><i aria-hidden="true" /> {tr('Take the controls')}</>}
         </button>
       </div>
 
@@ -208,7 +208,7 @@ export default function Payday({ compact = false, waitForView = false, lite = fa
         </div>
       </div>
       {!compact && <p className={'pd-hint' + (live ? ' on' : '')}>
-        Your turn. Click anyone to open their payslip, switch to <span lang="ar">عربي</span>, or try it on a phone.
+        {isAr() ? <>دورك الآن. اضغط على أي شخص لفتح قسيمة راتبه، أو بدّل إلى <span lang="en">English</span>، أو جرّبه على الهاتف.</> : <>Your turn. Click anyone to open their payslip, switch to <span lang="ar">عربي</span>, or try it on a phone.</>}
       </p>}
     </div>
   )
