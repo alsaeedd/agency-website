@@ -557,3 +557,17 @@
 @media (prefers-reduced-motion: reduce) {
   .hp-faq details::details-content, .hp-faq summary i { transition: none; }
 }
+
+/* Module picker inside the "Built to your requirements" box */
+.hp-fine-cta { border: 0; cursor: pointer; font-family: inherit; min-height: 44px; }
+.hp-fine-cta:focus-visible { outline: 2px solid var(--v); outline-offset: 3px; }
+.hp-fine-chev { width: 7px; height: 7px; margin-left: 4px; border-right: 1.5px solid currentColor; border-bottom: 1.5px solid currentColor; transform: rotate(-45deg); transition: transform .35s cubic-bezier(.19, 1, .22, 1); }
+.hp-fine.open .hp-fine-chev { transform: rotate(-135deg) translate(-2px, -2px); }
+.hp-fine-pick { grid-column: 1 / -1; display: grid; gap: 16px; min-width: 0; }
+.hp-fine-go { display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-end; gap: 12px; }
+.hp-fine-plan { min-height: 44px; padding: 0 18px; border-radius: 999px; border: 1px solid var(--line2); background: none; color: var(--color-text); font: 500 14px/1 Inter, sans-serif; cursor: pointer; transition: border-color .25s; }
+.hp-fine-plan:hover { border-color: var(--v); }
+.hp-fine-plan b { color: var(--v2); font-weight: 600; }
+.hp-fine-plan:focus-visible { outline: 2px solid var(--v); outline-offset: 3px; }
+@media (max-width: 760px) { .hp-fine-go { justify-content: stretch; } .hp-fine-go > * { flex: 1 1 100%; justify-content: center; } }
+@media (prefers-reduced-motion: reduce) { .hp-fine-chev { transition: none; } }

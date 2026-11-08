@@ -5,6 +5,8 @@ import { FAQ, PRICING } from './data'
 import Payday from './Payday'
 import { Month, Rules } from './Month'
 import './RalHrPage.css'
+import ModulePicker from './ModulePicker'
+import { fitTier, STR as MSTR, tierName, toQuery } from './modules'
 
 const Demo = lazy(() => import('./Demo'))
 const INQUIRE = '/ral-hr/inquire/'
@@ -99,6 +101,10 @@ function Odometer({ value }: { value: number }) {
 
 function Pricing({ team, setTeam, plan, setPlan }: { team: number; setTeam: (n: number) => void; plan: number; setPlan: (n: number) => void }) {
   const p = PRICING[plan]
+  const [picking, setPicking] = useState(false)
+  const [mods, setMods] = useState<string[]>([])
+  const fit = fitTier(mods)
+  const showFit = () => { setPlan(fit); document.querySelector('.hp-plans')?.scrollIntoView({ behavior: calm() ? 'auto' : 'smooth', block: 'center' }) }
   const [draft, setDraft] = useState<string | null>(null) // typed text while editing, so the box can be cleared
   const onType = (v: string) => {
     const t = v.replace(/\D/g, '').slice(0, 6)
@@ -150,9 +156,20 @@ function Pricing({ team, setTeam, plan, setPlan }: { team: number; setTeam: (n: 
           </article>
         ))}
       </div>
-      <div className="hp-fine hp-in">
+      <div className={'hp-fine hp-in' + (picking ? ' open' : '')}>
         <p className="hp-fine-lead"><b>Built to your requirements.</b> Every plan is customizable: tell us which modules you need and we set RAL HR up the way your company works.</p>
-        <a className="hp-fine-cta" href="/ral-hr/inquire/">Choose your modules <span aria-hidden="true">→</span></a>
+        <button type="button" className="hp-fine-cta" aria-expanded={picking} aria-controls={picking ? 'hp-pick' : undefined} onClick={() => setPicking((v) => !v)}>
+          {picking ? MSTR.close.en : MSTR.choose.en}<span className="hp-fine-chev" aria-hidden="true" />
+        </button>
+        {picking && (
+          <div className="hp-fine-pick" id="hp-pick">
+            <ModulePicker id="hp-mp" value={mods} onChange={setMods} />
+            <div className="hp-fine-go">
+              {mods.length > 0 && fit !== plan && <button type="button" className="hp-fine-plan" onClick={showFit}>{MSTR.seePlan.en}: <b>{tierName(fit)}</b></button>}
+              <a className="rh-cta" href={INQUIRE + toQuery(mods)}>{mods.length ? MSTR.continue.en : MSTR.continueNone.en}<span className="rh-cta-i" aria-hidden="true">→</span></a>
+            </div>
+          </div>
+        )}
         <ul className="hp-fine-perks">
           <li>Ask RAL in every plan</li>
           <li>Managers and admins at no extra cost</li>

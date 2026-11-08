@@ -3,6 +3,8 @@ import { gsap } from 'gsap'
 import { calm as calmMotion } from './charts'
 import './RalHrPage.css'
 import './Inquire.css'
+import ModulePicker from './ModulePicker'
+import { CATEGORIES, cleanIds, fitTier, fromQuery, STR as MSTR, tierName } from './modules'
 
 const WA = 'https://wa.me/97338218181?text='
 const KEY = 'ralhr-inquire'
@@ -13,8 +15,6 @@ const SIZES = [
   { id: '51 to 200', guess: 120, phrase: 'between 51 and 200 people' },
   { id: '200+', guess: 250, phrase: 'over 200 people' },
 ]
-const MODULES = ['Payroll + WPS', 'SIO + end of service', 'Leave + attendance', 'Ask RAL', 'Documents + expiry alerts', 'Hiring + onboarding', 'Reviews', 'Phone app for staff']
-const PRO_MODULES = ['Hiring + onboarding', 'Reviews']
 const PLANS = [
   { id: 'Starter', rate: 1, base: 15, line: 'The legal must-haves', has: 'Payroll + WPS, SIO + end of service, leave + attendance, org chart + documents hub, records + expiry alerts, Ask RAL' },
   { id: 'Professional', rate: 2, base: 35, line: 'Starter plus the HR department', has: 'Hiring, onboarding, reviews, self-service, e-signature, rosters' },
@@ -35,7 +35,10 @@ const EMPTY: Answers = { size: '', count: '', modules: [], plan: '', time: '', n
 function load(): Answers {
   try {
     const v = { ...EMPTY, ...JSON.parse(sessionStorage.getItem(KEY) || '{}') }
-    return { ...v, modules: Array.isArray(v.modules) ? v.modules : [] }
+    // Picks from the pricing box arrive as ?modules=a,b and join whatever this visitor already chose.
+    const q = fromQuery(window.location.search)
+    if (q.length) window.history.replaceState(null, '', window.location.pathname + window.location.hash)
+    return { ...v, modules: cleanIds([...cleanIds(v.modules), ...q]) }
   } catch { return EMPTY }
 }
 
@@ -47,7 +50,6 @@ const bd = (v: number) => {
   const whole = Math.abs(v - Math.round(v)) < 0.0005
   return `BD ${v.toLocaleString('en-US', { minimumFractionDigits: whole ? 0 : 3, maximumFractionDigits: whole ? 0 : 3 })}`
 }
-const listJoin = (xs: string[]) => xs.length < 2 ? xs.join('') : `${xs.slice(0, -1).join(', ')} and ${xs[xs.length - 1]}`
 const digits = (s: string) => s.replace(/\D/g, '').length
 const nameOk = (a: Answers) => a.name.trim().length > 1
 const companyOk = (a: Answers) => a.company.trim().length > 1
@@ -56,17 +58,29 @@ const phoneOk = (a: Answers) => !a.phone.trim() || digits(a.phone) >= 7
 function compose(a: Answers): string {
   const n = exact(a)
   const people = n ? `${n} ${n === 1 ? 'person' : 'people'}` : SIZES.find((s) => s.id === a.size)?.phrase || 'a growing team'
-  const needs = a.modules.length ? `looking at ${listJoin(a.modules)}` : 'looking at RAL HR'
+  const needs = a.modules.length ? '' : ' looking at RAL HR'
   const p = planOf(a.plan)
   const plan = p ? `on the ${p.id} plan` : 'and not sure on the plan yet'
   const time = TIMES.find((t) => t.id === a.time)?.phrase || 'hoping to start soon'
   const lines = [
     `Hi RAL, I'm ${a.name.trim()} from ${a.company.trim().replace(/\.+$/, '')}.`,
-    `We're ${people}, ${needs} ${plan}, ${time}.`,
+    `We're ${people},${needs} ${plan}, ${time}.`,
   ]
-  if (p) lines.push(`Your calculator put that at about ${bd(monthly(headcount(a), p.id))} a month before setup.`)
-  lines.push(a.phone.trim() ? `Could we book a demo? The best number for me is ${a.phone.trim()}.` : 'Could we book a demo?')
-  return lines.join(' ')
+  const picks = moduleLines(a.modules)
+  const tail: string[] = []
+  if (p) tail.push(`Your calculator put that at about ${bd(monthly(headcount(a), p.id))} a month before setup.`)
+  tail.push(a.phone.trim() ? `Could we book a demo? The best number for me is ${a.phone.trim()}.` : 'Could we book a demo?')
+  return [lines.join(' '), picks, tail.join(' ')].filter(Boolean).join('\n\n')
+}
+
+// Picks grouped by category, one line each, so the WhatsApp message stays readable.
+function moduleLines(ids: string[]): string {
+  if (!ids.length) return ''
+  const rows = CATEGORIES.map((c) => {
+    const on = c.mods.filter((x) => ids.includes(x.id))
+    return on.length ? `- ${c.name.en}: ${on.map((x) => x.name.en + (x.status === 'soon' ? ` (${MSTR.msgSoon.en})` : '')).join(', ')}` : ''
+  }).filter(Boolean)
+  return [`${MSTR.msgHead.en} (${ids.length}):`, ...rows].join('\n')
 }
 
 const useIsoLayoutEffect = typeof window !== 'undefined' ? useLayoutEffect : useEffect
@@ -130,7 +144,6 @@ export default function Inquire({ onClose }: { onClose?: () => void } = {}) {
   }, [msg, step, typing])
 
   const set = (p: Partial<Answers>) => setA((v) => ({ ...v, ...p }))
-  const toggle = (m: string) => set({ modules: a.modules.includes(m) ? a.modules.filter((x) => x !== m) : [...a.modules, m] })
   const valid = [!!a.size, true, !!a.plan, !!a.time, nameOk(a) && companyOk(a) && phoneOk(a)]
   const ok = valid[step] ?? true
 
@@ -164,7 +177,7 @@ export default function Inquire({ onClose }: { onClose?: () => void } = {}) {
   }, [])
 
   const n = headcount(a)
-  const fit = a.modules.some((m) => PRO_MODULES.includes(m)) ? 'Professional' : 'Starter'
+  const fit = tierName(fitTier(a.modules))
   const shown = Math.min(step + 1, total)
   const err = (show: boolean, text: string) => tried && show ? <span className="iqx-err">{text}</span> : null
   const now = new Date()
@@ -211,14 +224,7 @@ export default function Inquire({ onClose }: { onClose?: () => void } = {}) {
             <p className="iqx-eyebrow" data-rise>What hurts today</p>
             <h1 tabIndex={-1} data-rise>What do you <em>need most?</em></h1>
             <p className="iq-lead" data-rise>Pick as many as you like. Not sure yet? Skip it, we'll work it out together.</p>
-            <div className="iqx-mods" data-rise role="group" aria-label="Modules">
-              {MODULES.map((m) => (
-                <button key={m} type="button" aria-pressed={a.modules.includes(m)} className={`iqx-mod${a.modules.includes(m) ? ' on' : ''}`} onClick={() => toggle(m)}>
-                  <span className="iqx-tick" aria-hidden="true"><svg viewBox="0 0 16 16"><path d="M3.5 8.5l3 3 6-7" /></svg></span>{m}
-                </button>
-              ))}
-            </div>
-            <p className="iqx-hint" data-rise>{a.modules.length ? `${a.modules.length} picked` : 'Nothing picked yet, that is fine too'}</p>
+            <div data-rise><ModulePicker id="iq-mp" value={a.modules} onChange={(modules) => set({ modules })} animate={false} /></div>
           </>)}
 
           {step === 2 && (<>
