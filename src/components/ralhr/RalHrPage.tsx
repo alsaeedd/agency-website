@@ -83,9 +83,9 @@ function VideoTour() {
         </div>
       </div>
       <ul className="hp-pings" aria-label="What staff see in the app">
-        <li><i>✓</i><b>Checked in, 07:58</b><span>Inside the site radius, 42 m</span></li>
-        <li><i>✓</i><b>Leave approved, 3 days</b><span>Aisha in HR, one tap</span></li>
-        <li><i>✓</i><b>Payslip ready</b><span lang="ar" dir="rtl">قسيمة راتب أكتوبر جاهزة</span></li>
+        <li><i aria-hidden="true">✓</i><b>Checked in, 07:58</b><span>Inside the site radius, 42 m</span></li>
+        <li><i aria-hidden="true">✓</i><b>Leave approved, 3 days</b><span>Aisha in HR, one tap</span></li>
+        <li><i aria-hidden="true">✓</i><b>Payslip ready</b><span lang="ar" dir="rtl">قسيمة راتب أكتوبر جاهزة</span></li>
       </ul>
     </div>
   )
@@ -119,21 +119,23 @@ function Pricing({ team, setTeam, plan, setPlan }: { team: number; setTeam: (n: 
           <p className="hp-price-team"><b className="tnum">{team}</b> people</p>
           <input id="hp-team" type="range" min={5} max={300} step={5} value={team} aria-valuetext={team + ' people'}
             style={{ backgroundSize: ((team - 5) / 295) * 100 + '% 100%' }} onChange={(e) => setTeam(+e.target.value)} />
+          <div className="hp-ticks" aria-hidden="true"><span>5</span><span>100</span><span>200</span><span>300</span></div>
           <div className="hp-presets" role="group" aria-label="Quick team sizes">
             {[10, 25, 50, 100, 250].map((n) => <button key={n} type="button" aria-pressed={team === n} onClick={() => setTeam(n)}>{n}</button>)}
           </div>
         </div>
         <div className="hp-price-out" aria-live="polite">
-          <p className="hp-k">{team} people × BD {p.price}, {p.name}</p>
+          <p className="hp-eq"><span><b className="tnum">{team}</b> people</span><i aria-hidden="true">×</i><span><b className="tnum">BD {p.price}</b> {p.name}</span><i aria-hidden="true">=</i></p>
           <p className="hp-big"><small>BD</small><Odometer value={team * p.price} /><span>a month</span></p>
-          <p className="hp-yr">BD {money(team * p.price * 12)} a year, plus a one-time setup fee</p>
+          <p className="hp-yr">BD {money(team * p.price * 12)} a year, plus a one-time setup fee.</p>
+          <p className="hp-day">That is about <b className="tnum">{Math.round(p.price * 1000 / 30)} fils</b> per person, per day.</p>
         </div>
       </div>
       <div className="hp-plans">
         {PRICING.map((x, i) => (
           <article key={x.name} className={'hp-plan hp-in' + (i === plan ? ' on' : '')} onClick={() => setPlan(i)}>
             <button type="button" className="hp-plan-pick" aria-pressed={i === plan} onClick={(e) => { e.stopPropagation(); setPlan(i) }}>
-              <b>{x.name}</b>{i === 1 && <em>Most teams</em>}
+              <b>{x.name}</b>{i === 1 && <em>Most teams</em>}<span className="hp-plan-tab-price tnum">BD {x.price}</span>
             </button>
             <p className="hp-plan-price"><b className="tnum">BD {x.price}</b> per person, per month</p>
             <p className="hp-plan-blurb">{x.blurb}</p>
@@ -331,9 +333,14 @@ export default function RalHrPage() {
               <div className="hp-head">
                 <p className="hp-eyebrow hp-in">The app</p>
                 <h2 className="hp-in">In every pocket. <span className="serif">iOS & Android.</span></h2>
-                <p className="hp-in">Check in inside the site radius, ask for leave, read payslips in Arabic, approve requests on the go. An HR app your team will actually open.</p>
+                <p className="hp-in">Staff check in, ask for leave and open payslips in Arabic or English. Managers approve from the same app. No training day needed.</p>
               </div>
               <VideoTour />
+              <ul className="hp-app-notes hp-in" aria-label="App at a glance">
+                <li><b>Check-in that counts</b>Only inside your site radius, with the time on record.</li>
+                <li><b>Arabic or English</b>Each person picks their language. Payslips follow.</li>
+                <li><b>Approvals in one tap</b>Leave and letter requests land with the right manager.</li>
+              </ul>
             </section>
             <Pricing team={team} setTeam={setTeam} plan={plan} setPlan={setPlan} />
             <Faq />
