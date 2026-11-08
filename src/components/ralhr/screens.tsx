@@ -251,7 +251,7 @@ export function PayrollScreen({ s, act, lang, device }: P) {
   const ded = TOTALS.sio + TOTALS.advance
   const stepAt = s.pay === 0 ? 0 : s.pay === 1 ? 1 : s.pay === 2 ? 2 : s.pay === 3 ? 3 : 4
   const rows = ROSTER.slice().sort((a, b) => a.d.localeCompare(b.d) || b.gross - a.gross).slice(0, device === 'phone' ? 6 : 8)
-  const arun = byName('Arun Pillai')
+  const omar = byName('Omar Khatib')
   return (
     <div className="ra-screen ra-pay" ref={ref}>
       <ol className="ra-steps cx" style={{ '--p': stepAt / 4 } as React.CSSProperties}>
@@ -297,10 +297,10 @@ export function PayrollScreen({ s, act, lang, device }: P) {
           <ul>
             <li className="ok cx"><i>✓</i><span>{x('98 CPR numbers match LMRA records', '98 رقمًا شخصيًا مطابقًا لسجلات هيئة تنظيم سوق العمل')}</span></li>
             <li className={(s.ibanFixed ? 'ok' : 'bad') + ' cx'}><i>{s.ibanFixed ? '✓' : '!'}</i>
-              <span>{s.ibanFixed ? x('98 of 98 IBANs pass the check digit', '98 من 98 رقم آيبان صحيح') : x(`${nm(arun, 'en')}: IBAN check digit fails. HR has a newer one.`, `${arun.ar}: رقم الآيبان غير صحيح. لدى الموارد البشرية رقم أحدث.`)}</span>
+              <span>{s.ibanFixed ? x('98 of 98 IBANs pass the check digit', '98 من 98 رقم آيبان صحيح') : x(`${nm(omar, 'en')}: IBAN check digit fails. HR has a newer one.`, `${omar.ar}: رقم الآيبان غير صحيح. لدى الموارد البشرية رقم أحدث.`)}</span>
               {!s.ibanFixed && <button type="button" className="ra-btn sm" data-g="pay-fix" onClick={act.fixIban}>{x('Use HR record', 'استخدم سجل الموارد البشرية')}</button>}</li>
             <li className="ok cx"><i>✓</i><span>{x('Net equals gross minus deductions on every row', 'الصافي يساوي الإجمالي ناقص الاستقطاعات في كل صف')}</span></li>
-            <li className="warn cx"><i>!</i><span>{x("Rajesh Kumar's work permit ends in 12 days. Pay is fine, renewal reminder sent.", 'تصريح عمل راجيش كومار ينتهي خلال 12 يومًا. الراتب سليم، وأُرسل تذكير بالتجديد.')}</span></li>
+            <li className="warn cx"><i>!</i><span>{x("Mahmoud Fathy's work permit ends in 12 days. Pay is fine, renewal reminder sent.", 'تصريح عمل محمود فتحي ينتهي خلال 12 يومًا. الراتب سليم، وأُرسل تذكير بالتجديد.')}</span></li>
             <li className="ok cx"><i>✓</i><span>{x(`BD ${fmt(TOTALS.net - TOTALS.septNet)} more than September (+1.2%), from 2 joiners`, `أكثر من سبتمبر بـ ${fmt(TOTALS.net - TOTALS.septNet)} د.ب (+1.2%) بسبب موظفَين جديدين`)}</span></li>
           </ul>
           <button type="button" className="ra-btn" data-g="pay-approve" disabled={!s.ibanFixed} onClick={act.askApprove}>{s.ibanFixed ? x('Approve payroll', 'اعتماد الرواتب') : x('Fix 1 issue to approve', 'أصلح مشكلة واحدة للاعتماد')}</button>
@@ -426,7 +426,7 @@ export function LeaveScreen({ s, act, lang, device }: P) {
 }
 
 /* ================= End of service ================= */
-const EOS_PEOPLE = ['Rajesh Kumar', 'Suresh Nair', 'Joseph Fernandes', 'Priya Reddy']
+const EOS_PEOPLE = ['Mahmoud Fathy', 'Yasser Abdelrahman', 'Tarek Mansour', 'Rania Haddad']
 export function EosScreen({ s, act, lang }: P) {
   const x = tx(lang)
   const p = ROSTER[s.eosWho]
@@ -467,7 +467,7 @@ export const ASK_CHIPS: { q: string; l: Lang; a: number }[] = [
   { q: 'كم يوم إجازة باقي لنور السيد؟', l: 'ar', a: 1 },
   { q: 'Who is off the week of 15 November?', l: 'en', a: 2 },
   { q: 'shu el overtime kil site hal shahar?', l: 'ar', a: 3 },
-  { q: 'What does Rajesh get at end of service?', l: 'en', a: 4 },
+  { q: 'What does Mahmoud get at end of service?', l: 'en', a: 4 },
 ]
 export function matchAsk(q: string): number {
   const t = q.toLowerCase()
@@ -476,7 +476,7 @@ export function matchAsk(q: string): number {
   if (/noor|نور|balance|رصيد/.test(t)) return 1
   if (/off|week|away|غياب|أسبوع|اسبوع|who/.test(t)) return 2
   if (/overtime|اضافي|إضافي|ساعات/.test(t)) return 3
-  if (/end of service|gratuity|eos|نهاية|مكافأة|rajesh|راجيش/.test(t)) return 4
+  if (/end of service|gratuity|eos|نهاية|مكافأة|mahmoud|محمود/.test(t)) return 4
   if (/leave|إجاز|اجاز/.test(t)) return 1
   return 5
 }
@@ -512,10 +512,10 @@ function answer(a: number, l: Lang, s: DemoState): Ans {
     }
   }
   if (a === 4) {
-    const p = byName('Rajesh Kumar'); const r = endOfService(p.basic, 12.5)
+    const p = byName('Mahmoud Fathy'); const r = endOfService(p.basic, 12.5)
     return {
-      text: x(`If Rajesh Kumar leaves on 30 November after 12.5 years, his end of service is BD ${fmt(r.total)}: BD ${fmt(r.oldAmt)} under Art. 116 for service to February 2024, and BD ${fmt(r.newAmt)} paid through the SIO scheme since.`,
-        `إذا غادر راجيش كومار في 30 نوفمبر بعد 12.5 سنة، فمكافأته ${fmt(r.total)} د.ب: ${fmt(r.oldAmt)} وفق المادة 116 عن الخدمة حتى فبراير 2024، و${fmt(r.newAmt)} عبر نظام التأمينات بعدها.`),
+      text: x(`If Mahmoud Fathy leaves on 30 November after 12.5 years, his end of service is BD ${fmt(r.total)}: BD ${fmt(r.oldAmt)} under Art. 116 for service to February 2024, and BD ${fmt(r.newAmt)} paid through the SIO scheme since.`,
+        `إذا غادر محمود فتحي في 30 نوفمبر بعد 12.5 سنة، فمكافأته ${fmt(r.total)} د.ب: ${fmt(r.oldAmt)} وفق المادة 116 عن الخدمة حتى فبراير 2024، و${fmt(r.newAmt)} عبر نظام التأمينات بعدها.`),
       bars: [[x('Art. 116', 'المادة 116'), r.oldAmt, fmt(r.oldAmt)], [x('SIO scheme', 'نظام التأمينات'), r.newAmt, fmt(r.newAmt)]],
     }
   }

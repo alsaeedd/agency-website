@@ -55,35 +55,36 @@ type Fixed = { en: string; ar: string; d: Dept; r: string; bh: boolean; f?: bool
 const FIXED: Fixed[] = [
   { en: 'Mohammed Kanoo', ar: 'محمد كانو', d: 'fin', r: 'Accountant', bh: true, gross: 1003, cpr: '8907•••41', iban: 'BH67 •••• 0042', joined: 2016, used: 12 },
   { en: 'Fatima Janahi', ar: 'فاطمة جناحي', d: 'hr', r: 'HR Officer', bh: true, f: true, gross: 720, cpr: '9104•••27', iban: 'BH29 •••• 1180', joined: 2019 },
-  { en: 'Rajesh Kumar', ar: 'راجيش كومار', d: 'mnt', r: 'Technician', bh: false, gross: 480, cpr: '7812•••90', iban: 'BH03 •••• 7715', joined: 2014, used: 6 },
+  { en: 'Mahmoud Fathy', ar: 'محمود فتحي', d: 'mnt', r: 'Technician', bh: false, gross: 480, cpr: '7812•••90', iban: 'BH03 •••• 7715', joined: 2014, used: 6 },
   { en: 'Noor Al Sayed', ar: 'نور السيد', d: 'ops', r: 'Site Supervisor', bh: true, f: true, gross: 860, cpr: '9302•••58', iban: 'BH84 •••• 2261', joined: 2020, used: 9 },
-  { en: 'Arun Pillai', ar: 'أرون بيلاي', d: 'mnt', r: 'Electrician', bh: false, gross: 425, cpr: '8203•••15', iban: 'BH51 •••• 3309', joined: 2017 },
-  { en: 'Priya Reddy', ar: 'بريا ريدي', d: 'fin', r: 'Accountant', bh: false, f: true, gross: 690, cpr: '9011•••62', iban: 'BH12 •••• 4470', joined: 2021 },
+  { en: 'Omar Khatib', ar: 'عمر الخطيب', d: 'mnt', r: 'Electrician', bh: false, gross: 425, cpr: '8203•••15', iban: 'BH51 •••• 3309', joined: 2017 },
+  { en: 'Rania Haddad', ar: 'رانيا حداد', d: 'fin', r: 'Accountant', bh: false, f: true, gross: 690, cpr: '9011•••62', iban: 'BH12 •••• 4470', joined: 2021 },
   { en: 'Hassan Kanoo', ar: 'حسن كانو', d: 'ops', r: 'Operations Manager', bh: true, gross: 1240, cpr: '8605•••03', iban: 'BH40 •••• 9934', joined: 2012 },
-  { en: 'Joseph Fernandes', ar: 'جوزيف فرنانديز', d: 'ops', r: 'Driver', bh: false, gross: 395, cpr: '8812•••77', iban: 'BH95 •••• 5108', joined: 2015, used: 14 },
+  { en: 'Tarek Mansour', ar: 'طارق منصور', d: 'ops', r: 'Driver', bh: false, gross: 395, cpr: '8812•••77', iban: 'BH95 •••• 5108', joined: 2015, used: 14 },
   { en: 'Khalid Al Zayani', ar: 'خالد الزياني', d: 'adm', r: 'General Manager', bh: true, joined: 2009 },
   { en: 'Aisha Al Arrayed', ar: 'عائشة العريض', d: 'hr', r: 'HR Manager', bh: true, f: true, joined: 2013 },
   { en: 'Yousif Fakhro', ar: 'يوسف فخرو', d: 'fin', r: 'Finance Manager', bh: true, joined: 2011 },
   { en: 'Maryam Al Mannai', ar: 'مريم المناعي', d: 'mnt', r: 'Maintenance Manager', bh: true, f: true, joined: 2014 },
-  { en: 'Suresh Nair', ar: 'سوريش ناير', d: 'mnt', r: 'HVAC Technician', bh: false, joined: 2018, used: 4 },
-  { en: 'Bilal Hussain', ar: 'بلال حسين', d: 'mnt', r: 'Plumber', bh: false, joined: 2022, used: 11 },
-  { en: 'Maria Santos', ar: 'ماريا سانتوس', d: 'adm', r: 'Receptionist', bh: false, f: true, joined: 2021, used: 8 },
-  { en: 'Imran Khan', ar: 'عمران خان', d: 'ops', r: 'Security Guard', bh: false, joined: 2019 },
-  { en: 'Anil Menon', ar: 'أنيل مينون', d: 'mnt', r: 'Technician', bh: false, joined: 2016 },
+  { en: 'Yasser Abdelrahman', ar: 'ياسر عبدالرحمن', d: 'mnt', r: 'HVAC Technician', bh: false, joined: 2018, used: 4 },
+  { en: 'Hisham Saleh', ar: 'هشام صالح', d: 'mnt', r: 'Plumber', bh: false, joined: 2022, used: 11 },
+  { en: 'Lina Khoury', ar: 'لينا خوري', d: 'adm', r: 'Receptionist', bh: false, f: true, joined: 2021, used: 8 },
+  { en: 'Osman Elamin', ar: 'عثمان الأمين', d: 'ops', r: 'Security Guard', bh: false, joined: 2019 },
+  { en: 'Karim Nassar', ar: 'كريم نصار', d: 'mnt', r: 'Technician', bh: false, joined: 2016 },
   { en: 'Sara Bucheeri', ar: 'سارة بوجيري', d: 'fin', r: 'Payroll Officer', bh: true, f: true, joined: 2020 },
-  { en: 'Joy Mendoza', ar: 'جوي ميندوزا', d: 'ops', r: 'Housekeeping Lead', bh: false, f: true, joined: 2018 },
-  { en: 'Vinod Thomas', ar: 'فينود توماس', d: 'ops', r: 'Driver', bh: false, joined: 2017 },
+  { en: 'Hala Darwish', ar: 'هالة درويش', d: 'ops', r: 'Housekeeping Lead', bh: false, f: true, joined: 2018 },
+  { en: 'Samir Abdelaziz', ar: 'سمير عبدالعزيز', d: 'ops', r: 'Driver', bh: false, joined: 2017 },
 ]
 
 const BH_M: Bi[] = [['Ahmed', 'أحمد'], ['Ali', 'علي'], ['Hussain', 'حسين'], ['Ebrahim', 'إبراهيم'], ['Salman', 'سلمان'], ['Jassim', 'جاسم'], ['Hamad', 'حمد'], ['Abdulla', 'عبدالله'], ['Mahmood', 'محمود'], ['Sayed Hashim', 'السيد هاشم'], ['Isa', 'عيسى'], ['Fawaz', 'فواز']]
 const BH_F: Bi[] = [['Zainab', 'زينب'], ['Hessa', 'حصة'], ['Amina', 'أمينة'], ['Dana', 'دانة'], ['Latifa', 'لطيفة'], ['Mariam', 'مريم'], ['Shaikha', 'شيخة'], ['Reem', 'ريم']]
 const BH_L: Bi[] = [['Al Khaja', 'الخاجة'], ['Al Haddad', 'الحداد'], ['Al Shehabi', 'الشهابي'], ['Al Mahroos', 'المحروس'], ['Al Aali', 'العالي'], ['Al Doseri', 'الدوسري'], ['Al Qassab', 'القصاب'], ['Matar', 'مطر'], ['Al Musawi', 'الموسوي'], ['Bukhammas', 'بوخماس'], ['Al Jishi', 'الجشي'], ['Taqi', 'تقي']]
 const EX: { f: Bi[]; l: Bi[]; w: Bi[] }[] = [
-  { f: [['Sunil', 'سونيل'], ['Manoj', 'مانوج'], ['Ravi', 'رافي'], ['Deepak', 'ديباك'], ['Santhosh', 'سانتوش'], ['Biju', 'بيجو'], ['Prakash', 'براكاش']], w: [['Lakshmi', 'لاكشمي'], ['Anjali', 'أنجالي']], l: [['Varghese', 'فارغيز'], ['Nambiar', 'نامبيار'], ['Sharma', 'شارما'], ['Das', 'داس'], ['Iyer', 'آيير'], ['George', 'جورج'], ['Kurian', 'كوريان']] },
-  { f: [['Asif', 'آصف'], ['Tariq', 'طارق'], ['Usman', 'عثمان'], ['Waqas', 'وقاص'], ['Naveed', 'نويد']], w: [['Sana', 'ثناء']], l: [['Iqbal', 'إقبال'], ['Mahmood', 'محمود'], ['Butt', 'بت'], ['Raza', 'رضا'], ['Akhtar', 'أختر']] },
-  { f: [['Jomar', 'جومار'], ['Carlo', 'كارلو'], ['Mark', 'مارك']], w: [['Rhea', 'ريا'], ['Grace', 'غريس'], ['Liza', 'ليزا']], l: [['Dela Cruz', 'ديلا كروز'], ['Reyes', 'رييس'], ['Bautista', 'باوتيستا'], ['Villanueva', 'فيلانويفا'], ['Ramos', 'راموس']] },
-  { f: [['Rahim', 'رحيم'], ['Shafiqul', 'شفيق'], ['Mizanur', 'ميزان'], ['Kamal', 'كمال']], w: [], l: [['Uddin', 'الدين'], ['Islam', 'إسلام'], ['Rahman', 'رحمن'], ['Hossain', 'حسين']] },
-  { f: [['Ramesh', 'راميش'], ['Bikash', 'بيكاش'], ['Suman', 'سومان']], w: [], l: [['Thapa', 'ثابا'], ['Gurung', 'غورونغ'], ['Rai', 'راي']] },
+  // Arab expats: Egyptian, Jordanian, Lebanese, Sudanese, Syrian. Pool sizes match the old ones so the seeded roster numbers do not move.
+  { f: [['Mostafa', 'مصطفى'], ['Sherif', 'شريف'], ['Walid', 'وليد'], ['Ayman', 'أيمن'], ['Hany', 'هاني'], ['Ashraf', 'أشرف'], ['Tamer', 'تامر']], w: [['Mona', 'منى'], ['Dina', 'دينا']], l: [['Abdelfattah', 'عبدالفتاح'], ['El Masry', 'المصري'], ['Shawky', 'شوقي'], ['Ragab', 'رجب'], ['Soliman', 'سليمان'], ['Zaki', 'زكي'], ['Hegazy', 'حجازي']] },
+  { f: [['Firas', 'فراس'], ['Rami', 'رامي'], ['Zaid', 'زيد'], ['Bashar', 'بشار'], ['Mohannad', 'مهند']], w: [['Ruba', 'ربى']], l: [['Obeidat', 'عبيدات'], ['Haddadin', 'حدادين'], ['Tarawneh', 'الطراونة'], ['Shboul', 'الشبول'], ['Zoubi', 'الزعبي']] },
+  { f: [['Nadim', 'نديم'], ['Fadi', 'فادي'], ['Jad', 'جاد']], w: [['Maya', 'مايا'], ['Rasha', 'رشا'], ['Joumana', 'جمانة']], l: [['Khalil', 'خليل'], ['Saad', 'سعد'], ['Fares', 'فارس'], ['El Hajj', 'الحاج'], ['Abou Jaoude', 'أبو جودة']] },
+  { f: [['Babiker', 'بابكر'], ['Awad', 'عوض'], ['Hamza', 'حمزة'], ['Elsadig', 'الصادق']], w: [], l: [['Osman', 'عثمان'], ['Abdalla', 'عبدالله'], ['Elhassan', 'الحسن'], ['Idris', 'إدريس']] },
+  { f: [['Ghassan', 'غسان'], ['Maher', 'ماهر'], ['Wael', 'وائل']], w: [], l: [['Kayali', 'الكيالي'], ['Halabi', 'الحلبي'], ['Shami', 'الشامي']] },
 ]
 const BANKS: Bi[] = [['NBB', 'الوطني'], ['BBK', 'بي بي كي'], ['KFH', 'بيتك'], ['BisB', 'البحرين الإسلامي'], ['Ahli United', 'الأهلي المتحد']]
 
@@ -177,7 +178,7 @@ function build(): Person[] {
     p.erSio = Math.round(base * (p.bh ? SIO.bhEr : SIO.exEr + (years >= 3 ? SIO.eosLater : SIO.eosNew)))
   }
   const sioAll = out.reduce((a, p) => a + p.sio, 0)
-  const adv = ['Suresh Nair', 'Bilal Hussain', 'Imran Khan', 'Joy Mendoza', 'Vinod Thomas', 'Anil Menon'].map((n) => out.find((p) => p.en === n)!)
+  const adv = ['Yasser Abdelrahman', 'Hisham Saleh', 'Osman Elamin', 'Hala Darwish', 'Samir Abdelaziz', 'Karim Nassar'].map((n) => out.find((p) => p.en === n)!)
   const plan = [95_000, 80_000, 60_000, 55_000, 70_000]
   let left = DED_TARGET - sioAll
   adv.forEach((p, i) => { p.advance = i < plan.length ? plan[i] : left; left -= p.advance })
@@ -226,19 +227,19 @@ export const workDays = (a: number, b: number) => { const o: number[] = []; for 
 export type LeaveReq = { id: string; who: string; kind: Bi; from: number; to: number; note: Bi; stage1: string }
 export const REQUESTS: LeaveReq[] = [
   { id: 'noor', who: 'Noor Al Sayed', kind: ['Annual leave', 'إجازة سنوية'], from: 15, to: 17, note: ['Family wedding in Muharraq', 'حفل زفاف عائلي في المحرق'], stage1: 'Hassan Kanoo' },
-  { id: 'suresh', who: 'Suresh Nair', kind: ['Annual leave', 'إجازة سنوية'], from: 22, to: 30, note: ['Flight home to Kochi, ticket attached', 'رحلة إلى كوتشي، التذكرة مرفقة'], stage1: 'Maryam Al Mannai' },
-  { id: 'maria', who: 'Maria Santos', kind: ['Annual leave', 'إجازة سنوية'], from: 4, to: 5, note: ['Passport renewal at the embassy', 'تجديد الجواز في السفارة'], stage1: 'Khalid Al Zayani' },
-  { id: 'bilal', who: 'Bilal Hussain', kind: ['Emergency leave', 'إجازة طارئة'], from: 2, to: 2, note: ['Family matter', 'ظرف عائلي'], stage1: 'Maryam Al Mannai' },
+  { id: 'yasser', who: 'Yasser Abdelrahman', kind: ['Annual leave', 'إجازة سنوية'], from: 22, to: 30, note: ['Flight home to Khartoum, ticket attached', 'رحلة إلى الخرطوم، التذكرة مرفقة'], stage1: 'Maryam Al Mannai' },
+  { id: 'lina', who: 'Lina Khoury', kind: ['Annual leave', 'إجازة سنوية'], from: 4, to: 5, note: ['Passport renewal at the embassy', 'تجديد الجواز في السفارة'], stage1: 'Khalid Al Zayani' },
+  { id: 'hisham', who: 'Hisham Saleh', kind: ['Emergency leave', 'إجازة طارئة'], from: 2, to: 2, note: ['Family matter', 'ظرف عائلي'], stage1: 'Maryam Al Mannai' },
 ]
 // Leave already approved this month, shown on the calendar.
 export const BOOKED: { who: string; from: number; to: number }[] = [
-  { who: 'Anil Menon', from: 1, to: 5 },
-  { who: 'Vinod Thomas', from: 8, to: 12 },
-  { who: 'Imran Khan', from: 16, to: 19 },
+  { who: 'Karim Nassar', from: 1, to: 5 },
+  { who: 'Samir Abdelaziz', from: 8, to: 12 },
+  { who: 'Osman Elamin', from: 16, to: 19 },
   { who: 'Sara Bucheeri', from: 18, to: 19 },
-  { who: 'Joy Mendoza', from: 23, to: 26 },
-  { who: 'Arun Pillai', from: 25, to: 29 },
-  { who: 'Rajesh Kumar', from: 26, to: 26 },
+  { who: 'Hala Darwish', from: 23, to: 26 },
+  { who: 'Omar Khatib', from: 25, to: 29 },
+  { who: 'Mahmoud Fathy', from: 26, to: 26 },
 ]
 export const MIN_COVER: Record<Dept, number> = { ops: 33, mnt: 24, fin: 6, sal: 6, adm: 7, it: 4, hr: 3 }
 
@@ -250,15 +251,15 @@ export const ATTENDANCE = {
 }
 export const FEED: { who: string; what: Bi; site: number; at: string }[] = [
   { who: 'Fatima Janahi', what: ['checked in', 'سجّلت الحضور'], site: 0, at: '07:02' },
-  { who: 'Arun Pillai', what: ['checked in', 'سجّل الحضور'], site: 1, at: '06:48' },
-  { who: 'Joseph Fernandes', what: ['checked in', 'سجّل الحضور'], site: 0, at: '07:10' },
-  { who: 'Rajesh Kumar', what: ['checked in late', 'سجّل الحضور متأخرًا'], site: 2, at: '07:24' },
-  { who: 'Bilal Hussain', what: ['checked in', 'سجّل الحضور'], site: 2, at: '06:55' },
+  { who: 'Omar Khatib', what: ['checked in', 'سجّل الحضور'], site: 1, at: '06:48' },
+  { who: 'Tarek Mansour', what: ['checked in', 'سجّل الحضور'], site: 0, at: '07:10' },
+  { who: 'Mahmoud Fathy', what: ['checked in late', 'سجّل الحضور متأخرًا'], site: 2, at: '07:24' },
+  { who: 'Hisham Saleh', what: ['checked in', 'سجّل الحضور'], site: 2, at: '06:55' },
 ]
 export const EXPIRING: { who: string; what: Bi; days: number }[] = [
-  { who: 'Rajesh Kumar', what: ['Work permit', 'تصريح العمل'], days: 12 },
-  { who: 'Suresh Nair', what: ['Residence permit', 'الإقامة'], days: 27 },
-  { who: 'Imran Khan', what: ['Passport', 'جواز السفر'], days: 84 },
+  { who: 'Mahmoud Fathy', what: ['Work permit', 'تصريح العمل'], days: 12 },
+  { who: 'Yasser Abdelrahman', what: ['Residence permit', 'الإقامة'], days: 27 },
+  { who: 'Osman Elamin', what: ['Passport', 'جواز السفر'], days: 84 },
 ]
 
 /* ---------- end of service ---------- */
