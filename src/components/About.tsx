@@ -4,6 +4,17 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import logoMain from "../../assets/logo_main.png";
 import { isWeakDevice } from "../lib/reveal";
 import "./About.css";
+import { useLang } from "../i18n";
+
+const ABOUT_AR = {
+  eyebrow: "من نحن",
+  heading: "باختصار.",
+  paragraphs: [
+    "انطلقنا في 2025، بعد أن رأينا أصدقاء كثيرين يدفعون مبالغ طائلة مقابل برمجيات لم تُسلَّم قط، أو سُلِّمت معطوبة.",
+    "فبنينا الشركة التي تمنّينا لو وجدناها حين احتجناها: متابعة أسبوعية عبر قنوات حقيقية، وكود يمكنك قراءته فعلًا، وفاتورة تطابق عرض السعر.",
+  ],
+  quote: "نبني حلّك كأنه مشروعنا نحن، حرفيًا.",
+};
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -26,6 +37,7 @@ const splitToWords = (text: string) =>
   );
 
 export default function About() {
+  const ar = useLang() === "ar";
   const sectionRef = useRef<HTMLElement>(null);
   const logoRef = useRef<HTMLDivElement>(null);
   const auraRef = useRef<HTMLDivElement>(null);
@@ -130,7 +142,7 @@ export default function About() {
         <span className="eyebrow about-eyebrow">
           <span className="eyebrow-num">02</span>
           <span className="eyebrow-rule" aria-hidden="true" />
-          <span>Who we are</span>
+          <span>{ar ? ABOUT_AR.eyebrow : "Who we are"}</span>
         </span>
 
         <div className="about-logo-wrap" ref={logoRef}>
@@ -141,10 +153,10 @@ export default function About() {
         {/* No per-word masks here - the heading's purple glow would get
             clipped into visible rectangles at each word boundary. It
             rises as one piece instead. */}
-        <h2 className="about-heading">The short version.</h2>
+        <h2 className="about-heading">{ar ? ABOUT_AR.heading : "The short version."}</h2>
 
         <div className="about-body">
-          {paragraphs.map((p, i) => (
+          {(ar ? ABOUT_AR.paragraphs : paragraphs).map((p, i) => (
             <p key={i} className="about-para">
               {splitToWords(p)}
             </p>
@@ -153,7 +165,7 @@ export default function About() {
 
         {/* The line everything else hangs off - set in the founder's hand */}
         <blockquote className="about-quote">
-          <p>{PULL_QUOTE}</p>
+          <p>{ar ? ABOUT_AR.quote : PULL_QUOTE}</p>
         </blockquote>
       </div>
     </section>

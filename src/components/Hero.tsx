@@ -2,6 +2,7 @@ import { useEffect, useRef } from "react";
 import { gsap } from "gsap";
 import bhCoatOfArms from "../../assets/bh-coat-of-arms.svg";
 import "./Hero.css";
+import { useLang } from "../i18n";
 
 interface HeroProps {
   onContactClick: () => void;
@@ -9,7 +10,7 @@ interface HeroProps {
   onExploreRalHr?: () => void;
 }
 
-const tickerItems = [
+const TICKER_EN = [
   "Custom software",
   "Event-driven backends",
   "Production deploys",
@@ -20,7 +21,7 @@ const tickerItems = [
   "End-to-end",
 ];
 
-const CYCLE_WORDS = [
+const CYCLE_EN = [
   "revenue.",
   "pipelines.",
   "margins.",
@@ -28,7 +29,28 @@ const CYCLE_WORDS = [
 ];
 
 // Split a phrase into <word><letter><letter></word> structure so words stay together but letters animate.
-const buildPhrase = (text: string, accentClass?: string): JSX.Element[] => {
+const HERO_T = {
+  en: {
+    newBadge: "New", long: ", HR and payroll for Bahrain", short: ", payroll for Bahrain",
+    aria: "Elite software and AI that scales your revenue.", line1: "Elite software & AI", line2: "that scales your ",
+    sub: "We take your idea from a conversation to a complete product running in production. And we build it like we own it.",
+    cta: "Build your dream project", see: "See the work", s1: "Brands shipped for", n2: "~2h", s2: "Avg reply time",
+    s3: "In-house, end-to-end", scroll: "scroll", year: "RAL · MMXXVI", ticker: TICKER_EN, cycle: CYCLE_EN,
+  },
+  ar: {
+    newBadge: "جديد", long: "، الموارد البشرية والرواتب للبحرين", short: "، الرواتب للبحرين",
+    aria: "برمجيات وذكاء اصطناعي من الطراز الأول تُنمّي إيراداتك.", line1: "برمجيات وذكاء اصطناعي", line2: "تُنمّي ",
+    sub: "نأخذ فكرتك من أول حديث إلى منتج متكامل يعمل فعليًا بين أيدي عملائك. ونبنيه كأنه مشروعنا نحن.",
+    cta: "ابنِ مشروع أحلامك", see: "شاهد أعمالنا", s1: "علامة تجارية عملنا معها", n2: "ساعتان", s2: "متوسط وقت الرد",
+    s3: "فريقنا، من الفكرة حتى الإطلاق", scroll: "مرّر", year: "RAL · 2026",
+    ticker: ["برمجيات مخصصة", "أنظمة خلفية تستجيب للأحداث", "إطلاق فعلي على بيئة الإنتاج", "أنظمة CRM حقيقية", "البحرين · GMT+3", "نرد خلال ساعتين تقريبًا", "بقيادة المؤسسين", "من الفكرة حتى الإطلاق"],
+    cycle: ["إيراداتك.", "صفقاتك.", "أرباحك.", "إنتاجيتك."],
+  },
+};
+
+// Arabic letters join, so in Arabic each word animates as one piece
+// (splitting into per-letter spans would break the script's shaping).
+const buildPhrase = (text: string, accentClass?: string, whole = false): JSX.Element[] => {
   return text.split(/(\s+)/).map((token, wi) => {
     if (token === "") return <span key={`w-${wi}`} />;
     if (/^\s+$/.test(token)) {
@@ -36,7 +58,7 @@ const buildPhrase = (text: string, accentClass?: string): JSX.Element[] => {
     }
     return (
       <span key={`w-${wi}`} className="hero-word">
-        {token.split("").map((char, ci) => (
+        {(whole ? [token] : token.split("")).map((char, ci) => (
           <span key={`c-${wi}-${ci}`} className="hero-letter">
             <span
               className={`hero-letter-in ${accentClass ?? ""}`}
@@ -52,6 +74,11 @@ const buildPhrase = (text: string, accentClass?: string): JSX.Element[] => {
 };
 
 export default function Hero({ onContactClick, onExploreRalHr }: HeroProps) {
+  const lang = useLang();
+  const ar = lang === "ar";
+  const t = HERO_T[lang];
+  const tickerItems = t.ticker;
+  const CYCLE_WORDS = t.cycle;
   const sectionRef = useRef<HTMLElement>(null);
   const ctaRef = useRef<HTMLButtonElement>(null);
   const auroraRef = useRef<HTMLDivElement>(null);
@@ -211,7 +238,7 @@ export default function Hero({ onContactClick, onExploreRalHr }: HeroProps) {
 
       gsap.fromTo(
         ".hero-year",
-        { opacity: 0, x: 40 },
+        { opacity: 0, x: ar ? -40 : 40 },
         { opacity: 1, x: 0, duration: 1.4, ease: "expo.out", delay: 0.95 },
       );
     }, sectionRef);
@@ -302,7 +329,7 @@ export default function Hero({ onContactClick, onExploreRalHr }: HeroProps) {
 
       <div className="hero-year" aria-hidden="true">
         <span className="hero-year-line" />
-        <span className="hero-year-text">RAL · MMXXVI</span>
+        <span className="hero-year-text">{t.year}</span>
         <span className="hero-year-line" />
       </div>
 
@@ -318,12 +345,12 @@ export default function Hero({ onContactClick, onExploreRalHr }: HeroProps) {
             }
           }}
         >
-          <span className="hero-label-new">New</span>
+          <span className="hero-label-new">{t.newBadge}</span>
           <img src={bhCoatOfArms} alt="" className="hero-label-crest" />
           <span>
             RAL HR
-            <span className="hero-label-long">, HR and payroll for Bahrain</span>
-            <span className="hero-label-short">, payroll for Bahrain</span>
+            <span className="hero-label-long">{t.long}</span>
+            <span className="hero-label-short">{t.short}</span>
           </span>
           <span className="hero-label-arrow" aria-hidden="true">→</span>
         </a>
@@ -331,27 +358,26 @@ export default function Hero({ onContactClick, onExploreRalHr }: HeroProps) {
         <h1
           className="hero-title"
           ref={titleRef}
-          aria-label="Elite software and AI that scales your revenue."
+          aria-label={t.aria}
         >
           <span className="hero-title-line">
-            {buildPhrase("Elite software & AI")}
+            {buildPhrase(t.line1, undefined, ar)}
           </span>
           <span className="hero-title-line">
-            {buildPhrase("that scales your ")}
+            {buildPhrase(t.line2, undefined, ar)}
             <span className="hero-cycler" ref={cyclerRef}>
               {/* in-flow, invisible: sets the wrapper's natural width + baseline
                   so the two absolute layers sit where inline text would */}
-              <span className="hero-cycler-sizer" aria-hidden="true">revenue.</span>
+              <span className="hero-cycler-sizer" aria-hidden="true">{CYCLE_WORDS[0]}</span>
               {/* two layers crossfade simultaneously - no blank gap */}
-              <span className="hero-cycler-word hero-title-accent" aria-hidden="true">revenue.</span>
+              <span className="hero-cycler-word hero-title-accent" aria-hidden="true">{CYCLE_WORDS[0]}</span>
               <span className="hero-cycler-word hero-title-accent" aria-hidden="true" />
             </span>
           </span>
         </h1>
 
         <p className="hero-sub" data-hero-anim>
-          We take your idea from a conversation to a complete product running
-          in production. And we build it like we own it.
+          {t.sub}
         </p>
 
         <div className="hero-cta-row" data-hero-anim>
@@ -362,7 +388,7 @@ export default function Hero({ onContactClick, onExploreRalHr }: HeroProps) {
             onMouseMove={handleCtaMove}
             onMouseLeave={handleCtaLeave}
           >
-            <span className="hero-cta-label">Build your dream project</span>
+            <span className="hero-cta-label">{t.cta}</span>
             <span className="hero-cta-arrow" aria-hidden="true">
               <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M4 10h12" />
@@ -371,7 +397,7 @@ export default function Hero({ onContactClick, onExploreRalHr }: HeroProps) {
             </span>
           </button>
           <a href="#portfolio" className="hero-cta-secondary">
-            <span>See the work</span>
+            <span>{t.see}</span>
             <span aria-hidden="true" className="hero-cta-secondary-arrow">↗</span>
           </a>
         </div>
@@ -379,17 +405,17 @@ export default function Hero({ onContactClick, onExploreRalHr }: HeroProps) {
         <div className="hero-stats" data-hero-anim>
           <div className="hero-stat">
             <span className="hero-stat-num">12+</span>
-            <span className="hero-stat-label">Brands shipped for</span>
+            <span className="hero-stat-label">{t.s1}</span>
           </div>
           <span className="hero-stat-divider" aria-hidden="true" />
           <div className="hero-stat">
-            <span className="hero-stat-num">~2h</span>
-            <span className="hero-stat-label">Avg reply time</span>
+            <span className="hero-stat-num">{t.n2}</span>
+            <span className="hero-stat-label">{t.s2}</span>
           </div>
           <span className="hero-stat-divider" aria-hidden="true" />
           <div className="hero-stat">
             <span className="hero-stat-num">100%</span>
-            <span className="hero-stat-label">In-house, end-to-end</span>
+            <span className="hero-stat-label">{t.s3}</span>
           </div>
         </div>
       </div>
@@ -407,7 +433,7 @@ export default function Hero({ onContactClick, onExploreRalHr }: HeroProps) {
 
       <div className="hero-scrollcue" aria-hidden="true" data-hero-anim>
         <span className="hero-scrollcue-line" />
-        <span className="hero-scrollcue-text">scroll</span>
+        <span className="hero-scrollcue-text">{t.scroll}</span>
       </div>
     </section>
   );
