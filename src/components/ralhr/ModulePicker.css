@@ -37,7 +37,7 @@
 .mp-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 8px; }
 
 /* Module toggle */
-.mp-mod { position: relative; display: flex; align-items: flex-start; gap: 12px; min-height: 44px; padding: 13px 14px; border-radius: 14px; border: 1px solid var(--mp-line); background: rgba(12, 7, 21, .45); color: var(--color-text); text-align: left; font: inherit; cursor: pointer; transition: border-color .25s, background .25s, transform .2s; }
+.mp-mod { position: relative; display: flex; align-items: flex-start; gap: 12px; min-height: 44px; padding: 13px 14px; border-radius: 14px; border: 1px solid var(--mp-line); background: rgba(12, 7, 21, .45); color: var(--color-text); text-align: start; font: inherit; cursor: pointer; transition: border-color .25s, background .25s, transform .2s; }
 .mp-mod:hover { border-color: var(--mp-line2); background: rgba(43, 27, 61, .45); }
 .mp-mod:active { transform: scale(.985); }
 .mp-mod.on { border-color: var(--mp-v); background: rgba(167, 139, 250, .12); }
