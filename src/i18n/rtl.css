@@ -62,3 +62,7 @@ html[dir="rtl"] :is(.pd-outcome, .pd-client-note) {
   padding-left: 0; border-left: 0;
   padding-inline-start: 1.5rem; border-inline-start: 2px solid var(--pd-accent, rgba(167, 139, 250, 0.6));
 }
+
+/* Tiny tracked uppercase eyebrows (0.6-0.7rem) read fine in Latin caps but
+   shrink to near illegible in Arabic, which has no capitals. Bump them. */
+html[lang="ar"] :is(.about-sig-text, .chip, .contact-eyebrow, .eyebrow, .foot-label, .footer-col-label, .footer-contact-type, .hero-label, .hero-scrollcue-text, .hero-stat-label, .pd-fact-label, .pd-section-label, .pd-tag, .portfolio-card-tag) { font-size: 0.8rem; }
