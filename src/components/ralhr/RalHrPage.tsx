@@ -18,7 +18,7 @@ const TOP = 6
 function waText(plan: number, team: number, mods: string[]) {
   const x = PRICING[plan]
   const lines = [MSTR.waHi[lg()], '', `${MSTR.waPlan[lg()]}: ${t(x.name)} (${t('BD {0}', x.price)} ${MSTR.waPer[lg()]})`, `${MSTR.waTeam[lg()]}: ${team} ${MSTR.waPeople[lg()]}`, `${MSTR.waPrice[lg()]}: ${t('BD {0}', money(team * x.price))} ${MSTR.waMonth[lg()]}`]
-  const rows = CATEGORIES.map((c) => { const on = c.mods.filter((m) => mods.includes(m.id)); return on.length ? `- ${c.name[lg()]}: ${on.map((m) => m.name[lg()] + (m.status === 'soon' ? ` (${MSTR.msgSoon[lg()]})` : '')).join(', ')}` : '' }).filter(Boolean)
+  const rows = CATEGORIES.map((c) => { const on = c.mods.filter((m) => mods.includes(m.id)); return on.length ? `- ${c.name[lg()]}: ${on.map((m) => m.name[lg()]).join(lg() === 'ar' ? '، ' : ', ')}` : '' }).filter(Boolean)
   if (rows.length) lines.push('', `${MSTR.msgHead[lg()]} (${mods.length}):`, ...rows)
   return lines.join('\n')
 }
@@ -70,7 +70,7 @@ function VideoTour() {
   const src = '/assets/ral-hr/ralhr-tour.mp4'
   useEffect(() => {
     const v = ref.current
-    if (!v || !('IntersectionObserver' in window)) return
+    if (!v || !('IntersectionObserver' in window)) return // no video on Arabic
     const nav = navigator as Navigator & { connection?: { saveData?: boolean } }
     const auto = !calm() && !nav.connection?.saveData
     const io = new IntersectionObserver(([e]) => {
@@ -81,22 +81,24 @@ function VideoTour() {
   }, [])
   const toggle = () => { const v = ref.current; if (!v) return; if (!v.src) v.src = src; if (v.paused) v.play().catch(() => {}); else v.pause() }
   const sound = () => { const v = ref.current; if (v) { v.muted = !v.muted; setMuted(v.muted); if (v.paused) v.play().catch(() => {}) } }
+  // The tour video is English only, so Arabic shows a still of the Arabic payroll screen.
+  const ar = lg() === 'ar'
   return (
     <div className="hp-vt hp-in">
       <div className="hp-phone">
         <div className="hp-vframe">
-          <video ref={ref} poster="/assets/ral-hr/ralhr-tour-poster.webp" width={720} height={1280} muted playsInline loop preload="none"
-            onPlay={() => setPlaying(true)} onPause={() => setPlaying(false)} onClick={toggle} aria-label={t("RAL HR app video tour")} />
+          {ar ? <img src="/assets/ral-hr/ralhr-tour-poster-ar.jpg" width={686} height={1220} loading="lazy" decoding="async" alt={t("RAL HR app video tour")} /> : <video ref={ref} poster="/assets/ral-hr/ralhr-tour-poster.webp" width={720} height={1280} muted playsInline loop preload="none"
+            onPlay={() => setPlaying(true)} onPause={() => setPlaying(false)} onClick={toggle} aria-label={t("RAL HR app video tour")} />}
         </div>
-        <div className="hp-video-ctl">
+        {!ar && <div className="hp-video-ctl">
           <button type="button" onClick={toggle}>{playing ? t('Pause') : t('Play')}</button>
           <button type="button" onClick={sound}>{muted ? t('Sound on') : t('Sound off')}</button>
-        </div>
+        </div>}
       </div>
       <ul className="hp-pings" aria-label={t("What staff see in the app")}>
         <li><i aria-hidden="true">✓</i><b>{t("Checked in, 07:58")}</b><span>{t("Inside the site radius, 42 m")}</span></li>
         <li><i aria-hidden="true">✓</i><b>{t("Leave approved, 3 days")}</b><span>{t("Aisha in HR, one tap")}</span></li>
-        <li><i aria-hidden="true">✓</i><b>{t("Payslip ready")}</b><span lang="ar" dir="rtl">قسيمة راتب أكتوبر جاهزة</span></li>
+        <li><i aria-hidden="true">✓</i><b>{t("Payslip ready")}</b>{lg() === 'ar' ? <span>صافي 922.760 د.ب، أُرسل إلى بنكك</span> : <span lang="ar" dir="rtl">قسيمة راتب أكتوبر جاهزة</span>}</li>
       </ul>
     </div>
   )
@@ -167,10 +169,10 @@ function Pricing({ team, setTeam, plan, setPlan }: { team: number; setTeam: (n: 
                   <p className="hp-plan-price"><b className="tnum">{t('BD {0}', x.price)}</b> {t("per person, per month")}</p>
                   <p className="hp-plan-blurb">{t(x.blurb)}</p>
                   {i > 0 && <p className="hp-plan-plus">{(i === 1 ? MSTR.plusStarter : MSTR.plusPro)[lg()]}</p>}
-                  <ul>{shownMods.map((m) => <li key={m.id}>{m.name[lg()]}{m.status === 'soon' && <span className="hp-plan-soon">{MSTR.soonTag[lg()]}</span>}</li>)}</ul>
+                  <ul>{shownMods.map((m) => <li key={m.id}>{m.name[lg()]}</li>)}</ul>
                   {list.length > TOP && (
                     <button type="button" className="hp-plan-more" aria-expanded={all} onClick={(e) => { e.stopPropagation(); setOpen(all ? null : i) }}>
-                      {all ? MSTR.less[lg()] : `+ ${list.length - TOP} ${MSTR.more[lg()]}`}
+                      {all ? MSTR.less[lg()] : <><bdi className="tnum">+{list.length - TOP}</bdi> {MSTR.more[lg()]}</>}
                     </button>
                   )}
                 </article>
