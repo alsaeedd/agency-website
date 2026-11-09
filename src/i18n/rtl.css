@@ -55,7 +55,7 @@ html[dir="rtl"] .btn-cta-submit svg { scale: -1 1; }
 /* Contact modal: close button and sidebar divider swap sides. */
 html[dir="rtl"] .contact-close { right: auto; left: 1.75rem; }
 html[dir="rtl"] .contact-sidebar::after { right: auto; left: 0; }
-@media (max-width: 768px) { html[dir="rtl"] .contact-close { right: auto; left: 1.25rem; } }
+@media (max-width: 640px) { html[dir="rtl"] .contact-close { right: auto; left: 1.25rem; } }
 
 /* Project detail quotes: accent rule on the start edge. */
 html[dir="rtl"] :is(.pd-outcome, .pd-client-note) {
