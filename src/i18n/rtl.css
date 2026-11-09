@@ -34,3 +34,31 @@ html[dir="rtl"] :is(.hero-ticker-item, .client-logo) { direction: rtl; }
 .lang-toggle .is-on { color: var(--color-text); font-weight: 700; }
 .lang-toggle .lang-sep { opacity: 0.45; }
 .navbar-mobile-content .lang-toggle { font-size: 1.125rem; margin-top: 1.5rem; justify-content: center; }
+
+/* ===== RTL layout fixes (physical left/right rules from the LTR CSS) ===== */
+/* Burger sits at the far end of the bar, not glued to the logo. */
+html[dir="rtl"] .navbar-hamburger { margin-left: 0; margin-inline-start: auto; }
+
+/* Hero word cycler: Arabic has no italic, and words anchor to the start edge. */
+html[lang="ar"] .hero-cycler { font-style: normal; text-align: start; }
+html[dir="rtl"] .hero-cycler-word { left: auto; right: 0; }
+
+/* Footer links align to the reading edge and nudge the reading way. */
+html[dir="rtl"] .footer-nav-item { text-align: start; }
+html[dir="rtl"] .footer-nav-item:hover { transform: translateX(-5px); }
+
+/* Hover nudges on wrappers whose icon is mirrored inside them. */
+html[dir="rtl"] .hero-cta:hover .hero-cta-arrow { transform: translateX(-5px); }
+html[dir="rtl"] .btn-cta-large:hover .btn-cta-large-arrow { transform: translateX(-4px); }
+html[dir="rtl"] .btn-cta-submit svg { scale: -1 1; }
+
+/* Contact modal: close button and sidebar divider swap sides. */
+html[dir="rtl"] .contact-close { right: auto; left: 1.75rem; }
+html[dir="rtl"] .contact-sidebar::after { right: auto; left: 0; }
+@media (max-width: 768px) { html[dir="rtl"] .contact-close { right: auto; left: 1.25rem; } }
+
+/* Project detail quotes: accent rule on the start edge. */
+html[dir="rtl"] :is(.pd-outcome, .pd-client-note) {
+  padding-left: 0; border-left: 0;
+  padding-inline-start: 1.5rem; border-inline-start: 2px solid var(--pd-accent, rgba(167, 139, 250, 0.6));
+}
