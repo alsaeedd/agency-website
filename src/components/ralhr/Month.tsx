@@ -146,7 +146,7 @@ function Wps() {
         <span className="mu-file-i">{t("TXT")}</span>
         <span><b>WPS_OCT_2026.txt</b><small>{done ? t('98 rows, every one checked. Ready for your bank.') : t('Checking every row…')}</small></span>
       </div>
-      <button type="button" className="mu-go" onClick={run} disabled={running}>{running ? 'Checking…' : t('Build it again')}</button>
+      <button type="button" className="mu-go" onClick={run} disabled={running}>{running ? t('Checking…') : t('Build it again')}</button>
     </div>
   )
 }
@@ -165,11 +165,11 @@ function Eos() {
       <div className="mu-seg" role="group" aria-label={t("Basic salary")}>
         {[400, 600, 900].map((b) => <button key={b} type="button" aria-pressed={basic === b} onClick={() => setBasic(b)}>{t('BD {0} basic', b)}</button>)}
       </div>
-      <p className="mu-total"><small>{t("End of service due")}</small><b className="tnum">BD {money(r.total, 3)}</b></p>
+      <p className="mu-total"><small>{t("End of service due")}</small><b className="tnum">{t('BD {0}', money(r.total, 3))}</b></p>
       <div className="mu-split" aria-hidden="true"><i style={{ width: oldPct + '%' }} /><i /></div>
       <dl className="mu-dl">
-        <div><dt><i className="a" />{t('Before March 2024, {0} days', Math.round(r.oldDays))}</dt><dd className="tnum">BD {money(r.oldAmt, 3)}</dd></div>
-        <div><dt><i className="b" />{t("Since March 2024, paid monthly to SIO")}</dt><dd className="tnum">BD {money(r.newAmt, 3)}</dd></div>
+        <div><dt><i className="a" />{t('Before March 2024, {0} days', Math.round(r.oldDays))}</dt><dd className="tnum">{t('BD {0}', money(r.oldAmt, 3))}</dd></div>
+        <div><dt><i className="b" />{t("Since March 2024, paid monthly to SIO")}</dt><dd className="tnum">{t('BD {0}', money(r.newAmt, 3))}</dd></div>
       </dl>
     </div>
   )

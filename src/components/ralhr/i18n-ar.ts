@@ -219,6 +219,7 @@ export const AR: Record<string, string> = {
   'hoping to start this month': 'ونأمل أن نبدأ هذا الشهر',
   'hoping to start next month': 'ونأمل أن نبدأ الشهر القادم',
   'hoping to start this quarter': 'ونأمل أن نبدأ هذا الربع',
+  'hoping to start shortly': 'ونأمل أن نبدأ في أقرب وقت',
   'just exploring for now': 'ونستكشف فقط في الوقت الحالي',
   'Pick whichever is closest.': 'اختر الأقرب.',
 
@@ -354,6 +355,7 @@ export const AR: Record<string, string> = {
   'Days worked': 'أيام العمل',
   '98 rows, every one checked. Ready for your bank.': '98 صفًا، كلها مُراجَعة. جاهز لبنكك.',
   'Checking every row…': 'جاري فحص كل صف…',
+  'Checking…': 'جاري الفحص…',
   'Build it again': 'أعد إنشاءه',
 
   // ---------- Month: end of service ----------

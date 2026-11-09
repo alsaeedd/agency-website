@@ -1,11 +1,11 @@
 import { useEffect, useRef, useState } from 'react'
 import { ralHrLang as lg } from './t'
 import { gsap } from 'gsap'
-import { ALL_MODS, CATEGORIES, fitTier, STR, tierName, type Status } from './modules'
+import { ALL_MODS, CATEGORIES, fitTier, STR, tierName, type Badge } from './modules'
 import './ModulePicker.css'
 
 const calm = () => typeof window === 'undefined' || window.matchMedia('(prefers-reduced-motion: reduce)').matches
-const STATUSES: Status[] = ['live', 'demo', 'soon']
+const STATUSES: Badge[] = ['live', 'demo']
 
 type Props = { value: string[]; onChange: (ids: string[]) => void; animate?: boolean; id?: string }
 
@@ -79,7 +79,7 @@ export default function ModulePicker({ value, onChange, animate = true, id = 'mp
                         <small>{x.note[lg()]}</small>
                         <span className="mp-meta">
                           <span className={'mp-tier t' + x.tier}>{STR.inPlan[lg()]} {tierName(x.tier)}</span>
-                          <span className={'mp-st mp-st-' + x.status}><i aria-hidden="true" />{STR.status[x.status][lg()]}</span>
+                          {x.status !== 'next' && <span className={'mp-st mp-st-' + x.status}><i aria-hidden="true" />{STR.status[x.status as Badge][lg()]}</span>}
                         </span>
                       </span>
                     </button>

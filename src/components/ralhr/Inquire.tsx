@@ -64,7 +64,7 @@ function compose(a: Answers): string {
   const needs = a.modules.length ? '' : ' looking at RAL HR'
   const p = planOf(a.plan)
   const plan = p ? `on the ${p.id} plan` : 'and not sure on the plan yet'
-  const time = TIMES.find((t) => t.id === a.time)?.phrase || 'hoping to start soon'
+  const time = TIMES.find((t) => t.id === a.time)?.phrase || t('hoping to start shortly')
   const lines = [
     `Hi RAL, I'm ${a.name.trim()} from ${a.company.trim().replace(/\.+$/, '')}.`,
     `We're ${people},${needs} ${plan}, ${time}.`,
@@ -81,7 +81,7 @@ function moduleLines(ids: string[]): string {
   if (!ids.length) return ''
   const rows = CATEGORIES.map((c) => {
     const on = c.mods.filter((x) => ids.includes(x.id))
-    return on.length ? `- ${c.name[lg()]}: ${on.map((x) => x.name[lg()] + (x.status === 'soon' ? ` (${MSTR.msgSoon[lg()]})` : '')).join(', ')}` : ''
+    return on.length ? `- ${c.name[lg()]}: ${on.map((x) => x.name[lg()]).join(', ')}` : ''
   }).filter(Boolean)
   return [`${MSTR.msgHead[lg()]} (${ids.length}):`, ...rows].join('\n')
 }

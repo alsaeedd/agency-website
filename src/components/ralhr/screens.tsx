@@ -131,7 +131,7 @@ export function HomeScreen({ s, act, lang }: P) {
               <li key={f.who}><Av p={p} /><span><b>{nm(p, lang)}</b> {lang === 'ar' ? f.what[1] : f.what[0]}<small>{lang === 'ar' ? SITES[f.site][1] : SITES[f.site][0]}</small></span><time className="tnum">{f.at}</time></li>
             ) })}
           </ul>
-          <h3 className="ra-sub">{x('Documents expiring', 'وثائق تنتهي قريبًا')}</h3>
+          <h3 className="ra-sub">{x('Documents expiring', 'وثائق تقترب من الانتهاء')}</h3>
           <ul className="ra-exp">
             {EXPIRING.map((e) => <li key={e.who}><span><b>{nm(e.who, lang)}</b><small>{lang === 'ar' ? e.what[1] : e.what[0]}</small></span><em className={e.days < 30 ? 'warn' : ''}>{x(`${e.days} days`, `${e.days} يومًا`)}</em></li>)}
           </ul>

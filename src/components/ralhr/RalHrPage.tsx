@@ -18,7 +18,7 @@ const TOP = 6
 function waText(plan: number, team: number, mods: string[]) {
   const x = PRICING[plan]
   const lines = [MSTR.waHi[lg()], '', `${MSTR.waPlan[lg()]}: ${t(x.name)} (${t('BD {0}', x.price)} ${MSTR.waPer[lg()]})`, `${MSTR.waTeam[lg()]}: ${team} ${MSTR.waPeople[lg()]}`, `${MSTR.waPrice[lg()]}: ${t('BD {0}', money(team * x.price))} ${MSTR.waMonth[lg()]}`]
-  const rows = CATEGORIES.map((c) => { const on = c.mods.filter((m) => mods.includes(m.id)); return on.length ? `- ${c.name[lg()]}: ${on.map((m) => m.name[lg()] + (m.status === 'soon' ? ` (${MSTR.msgSoon[lg()]})` : '')).join(', ')}` : '' }).filter(Boolean)
+  const rows = CATEGORIES.map((c) => { const on = c.mods.filter((m) => mods.includes(m.id)); return on.length ? `- ${c.name[lg()]}: ${on.map((m) => m.name[lg()]).join(', ')}` : '' }).filter(Boolean)
   if (rows.length) lines.push('', `${MSTR.msgHead[lg()]} (${mods.length}):`, ...rows)
   return lines.join('\n')
 }
@@ -167,10 +167,10 @@ function Pricing({ team, setTeam, plan, setPlan }: { team: number; setTeam: (n: 
                   <p className="hp-plan-price"><b className="tnum">{t('BD {0}', x.price)}</b> {t("per person, per month")}</p>
                   <p className="hp-plan-blurb">{t(x.blurb)}</p>
                   {i > 0 && <p className="hp-plan-plus">{(i === 1 ? MSTR.plusStarter : MSTR.plusPro)[lg()]}</p>}
-                  <ul>{shownMods.map((m) => <li key={m.id}>{m.name[lg()]}{m.status === 'soon' && <span className="hp-plan-soon">{MSTR.soonTag[lg()]}</span>}</li>)}</ul>
+                  <ul>{shownMods.map((m) => <li key={m.id}>{m.name[lg()]}</li>)}</ul>
                   {list.length > TOP && (
                     <button type="button" className="hp-plan-more" aria-expanded={all} onClick={(e) => { e.stopPropagation(); setOpen(all ? null : i) }}>
-                      {all ? MSTR.less[lg()] : `+ ${list.length - TOP} ${MSTR.more[lg()]}`}
+                      {all ? MSTR.less[lg()] : <><bdi className="tnum">+{list.length - TOP}</bdi> {MSTR.more[lg()]}</>}
                     </button>
                   )}
                 </article>

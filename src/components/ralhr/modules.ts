@@ -6,7 +6,9 @@ import { PRICING } from './data'
 import { isAr } from './t'
 
 export type T = { en: string; ar: string }
-export type Status = 'live' | 'demo' | 'soon'
+export type Status = 'live' | 'demo' | 'next'
+/** Statuses that show a badge; 'next' modules render as plain modules. */
+export type Badge = 'live' | 'demo'
 /** Index into PRICING: 0 Starter, 1 Professional, 2 Premium. */
 export type Tier = 0 | 1 | 2
 export type Mod = { id: string; name: T; note: T; tier: Tier; status: Status }
@@ -25,8 +27,8 @@ export const CATEGORIES: Cat[] = [
       m('settlement', t('Final settlement', 'التسوية النهائية'), t('Leavers paid out to the article', 'مستحقات المغادرين حسب مواد القانون'), 0, 'live'),
       m('bahrainisation', t('Bahrainisation report', 'تقرير البحرنة'), t('Your quota figure, ready for LMRA', 'نسبة البحرنة جاهزة لهيئة تنظيم سوق العمل'), 0, 'live'),
       m('journals', t('Accounting journal export', 'تصدير القيود المحاسبية'), t('Xero, QuickBooks, Zoho and Odoo files', 'ملفات Xero وQuickBooks وZoho وOdoo'), 1, 'live'),
-      m('acct-sync', t('Live accounting sync', 'ربط مباشر مع المحاسبة'), t('Post journals straight to your books', 'ترحيل القيود مباشرة إلى حساباتكم'), 2, 'soon'),
-      m('multi-currency', t('Multi-currency payroll', 'رواتب بعدة عملات'), t('Pay staff in their own currency', 'صرف الراتب بعملة كل موظف'), 2, 'soon'),
+      m('acct-sync', t('Live accounting sync', 'ربط مباشر مع المحاسبة'), t('Post journals straight to your books', 'ترحيل القيود مباشرة إلى حساباتكم'), 2, 'next'),
+      m('multi-currency', t('Multi-currency payroll', 'رواتب بعدة عملات'), t('Pay staff in their own currency', 'صرف الراتب بعملة كل موظف'), 2, 'next'),
     ],
   },
   {
@@ -36,8 +38,8 @@ export const CATEGORIES: Cat[] = [
       m('attendance', t('Attendance + phone check-in', 'الحضور والتسجيل من الجوال'), t('GPS and site radius, overtime counted', 'تحديد الموقع ونطاق العمل، مع احتساب الإضافي'), 0, 'live'),
       m('rostering', t('Rosters + open shifts', 'جداول المناوبات والورديات المفتوحة'), t('Plan the week, publish, swap', 'خطط الأسبوع وانشره وبدّل الورديات'), 1, 'live'),
       m('travel', t('Business travel', 'سفر العمل'), t('Trip requests, approvals and per diems', 'طلبات السفر والموافقات والبدل اليومي'), 1, 'live'),
-      m('hourly-leave', t('Hourly leave', 'الاستئذان بالساعات'), t('Short permissions within a day', 'استئذان قصير خلال اليوم'), 0, 'soon'),
-      m('selfie', t('Selfie check-in', 'تسجيل الحضور بصورة'), t('Photo proof at the punch', 'صورة تثبت الحضور عند التسجيل'), 1, 'soon'),
+      m('hourly-leave', t('Hourly leave', 'الاستئذان بالساعات'), t('Short permissions within a day', 'استئذان قصير خلال اليوم'), 0, 'next'),
+      m('selfie', t('Selfie check-in', 'تسجيل الحضور بصورة'), t('Photo proof at the punch', 'صورة تثبت الحضور عند التسجيل'), 1, 'next'),
     ],
   },
   {
@@ -90,9 +92,9 @@ export const CATEGORIES: Cat[] = [
       m('audit', t('Audit log', 'سجل التدقيق'), t('Every change, who and when', 'كل تغيير، من قام به ومتى'), 0, 'live'),
       m('analytics', t('Analytics export', 'تصدير التحليلات'), t('Every report to Excel', 'كل تقرير إلى Excel'), 2, 'demo'),
       m('legal-hold', t('Legal hold + retention', 'الحفظ القانوني والاحتفاظ'), t('Freeze records for a case', 'تجميد السجلات لقضية قائمة'), 2, 'demo'),
-      m('sso', t('Enforced single sign-on', 'الدخول الموحد الإلزامي'), t('Microsoft and Google login', 'الدخول بحساب Microsoft أو Google'), 0, 'soon'),
-      m('two-factor', t('Two-factor login', 'الدخول بخطوتين'), t('A second step for every staff login', 'خطوة تحقق إضافية لكل دخول'), 0, 'soon'),
-      m('erp', t('ERP integration', 'الربط مع نظام ERP'), t('Two-way sync with your ERP', 'مزامنة باتجاهين مع نظام ERP'), 2, 'soon'),
+      m('sso', t('Enforced single sign-on', 'الدخول الموحد الإلزامي'), t('Microsoft and Google login', 'الدخول بحساب Microsoft أو Google'), 0, 'next'),
+      m('two-factor', t('Two-factor login', 'الدخول بخطوتين'), t('A second step for every staff login', 'خطوة تحقق إضافية لكل دخول'), 0, 'next'),
+      m('erp', t('ERP integration', 'الربط مع نظام ERP'), t('Two-way sync with your ERP', 'مزامنة باتجاهين مع نظام ERP'), 2, 'next'),
     ],
   },
 ]
@@ -113,12 +115,11 @@ export const fromQuery = (search: string) => cleanIds((new URLSearchParams(searc
 export const toQuery = (ids: string[]) => ids.length ? `?${QS}=${ids.join(',')}` : ''
 
 export const STR = {
-  status: { live: t('Live', 'متاح الآن'), demo: t('In the demo', 'في العرض التجريبي'), soon: t('Coming soon', 'قريباً') } as Record<Status, T>,
+  status: { live: t('Live', 'متاح الآن'), demo: t('In the demo', 'في العرض التجريبي') } as Record<Badge, T>,
   statusHelp: {
     live: t('Running for clients today', 'يعمل لدى عملائنا اليوم'),
     demo: t('Built, try it in the full demo', 'جاهز، جرّبه في العرض التجريبي الكامل'),
-    soon: t('On the roadmap, pick it to tell us you want it', 'ضمن خطتنا القادمة، اختره ليصلنا اهتمامك'),
-  } as Record<Status, T>,
+  } as Record<Badge, T>,
   statusKey: t('Status key', 'دليل الحالات'),
   selectAll: t('Select all', 'تحديد الكل'),
   clearCat: t('Clear', 'إلغاء'),
@@ -149,7 +150,6 @@ export const STR = {
   plusPro: t('Everything in Professional, plus', 'كل ما في الاحترافية، بالإضافة إلى'),
   more: t('more', 'أخرى'),
   less: t('Show less', 'عرض أقل'),
-  soonTag: t('Soon', 'قريباً'),
   book: t('Book a demo', 'احجز عرضاً تجريبياً'),
   bookNote: t('Opens WhatsApp with your plan, team and price filled in.', 'يفتح واتساب ورسالتك جاهزة بالباقة والفريق والسعر.'),
   guided: t('Prefer a guided form?', 'تفضل نموذجاً بخطوات؟'),
@@ -162,5 +162,4 @@ export const STR = {
   waMonth: t('a month, plus a one-time setup fee', 'شهرياً، مع رسوم تجهيز لمرة واحدة'),
   waPer: t('per person, per month', 'للموظف شهرياً'),
   msgHead: t('Modules we are interested in', 'الوحدات التي نهتم بها'),
-  msgSoon: t('coming soon', 'قريباً'),
 }
