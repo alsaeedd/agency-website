@@ -9,6 +9,7 @@ import './Inquire.css'
 import ModulePicker from './ModulePicker'
 import { CATEGORIES, cleanIds, fitTier, fromQuery, STR as MSTR } from './modules'
 import { PRICING } from './data'
+import { pingInterest, withRef } from './attr'
 
 const WA = 'https://wa.me/97338218181?text='
 const KEY = 'ralhr-inquire'
@@ -41,7 +42,7 @@ function load(): Answers {
     const v = { ...EMPTY, ...JSON.parse(sessionStorage.getItem(KEY) || '{}') }
     // Picks from the pricing box arrive as ?modules=a,b and join whatever this visitor already chose.
     const q = fromQuery(window.location.search)
-    if (q.length) window.history.replaceState(null, '', window.location.pathname + window.location.hash)
+    if (q.length) { const u = new URL(window.location.href); u.searchParams.delete('modules'); window.history.replaceState(null, '', u.pathname + u.search + u.hash) }
     return { ...v, modules: cleanIds([...cleanIds(v.modules), ...q]) }
   } catch { return EMPTY }
 }
@@ -325,8 +326,8 @@ export default function Inquire({ onClose }: { onClose?: () => void } = {}) {
               </div>
             )}
             <div className="iqx-send" data-rise>
-              <a className="rh-cta" href={WA + encodeURIComponent(msg)} target="_blank" rel="noopener" aria-disabled={!msg.trim()} onClick={() => setSent(true)}>{sent ? t('Open WhatsApp again') : t('Send on WhatsApp')}<span className="rh-cta-i" aria-hidden="true">↗</span></a>
-              <a className="rh-ghost" href={`mailto:info@raltech.dev?subject=${encodeURIComponent(`RAL HR demo${a.company.trim() ? `: ${a.company.trim()}` : ''}`)}&body=${encodeURIComponent(msg)}`}>{t("Email it instead")}</a>
+              <a className="rh-cta" href={WA + encodeURIComponent(withRef(msg))} target="_blank" rel="noopener" aria-disabled={!msg.trim()} onClick={() => { setSent(true); pingInterest('inquire') }}>{sent ? t('Open WhatsApp again') : t('Send on WhatsApp')}<span className="rh-cta-i" aria-hidden="true">↗</span></a>
+              <a className="rh-ghost" href={`mailto:info@raltech.dev?subject=${encodeURIComponent(`RAL HR demo${a.company.trim() ? `: ${a.company.trim()}` : ''}`)}&body=${encodeURIComponent(withRef(msg))}`}>{t("Email it instead")}</a>
             </div>
             <div className="iq-alt" data-rise>
               <button type="button" className="iq-back" onClick={back}>{t("Back")}</button>

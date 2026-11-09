@@ -10,6 +10,7 @@ import { Month, Rules } from './Month'
 import './RalHrPage.css'
 import ModulePicker from './ModulePicker'
 import { CATEGORIES, fitTier, STR as MSTR, tierName, toQuery, type Tier } from './modules'
+import { pingInterest, withRef } from './attr'
 
 // Plan cards list their own tier's modules, top six first; Professional and Premium build on the tier below.
 const PLAN_MODS = ([0, 1, 2] as Tier[]).map((tier) => CATEGORIES.flatMap((c) => c.mods).filter((x) => x.tier === tier))
@@ -88,7 +89,7 @@ function VideoTour() {
       <div className="hp-phone">
         <div className="hp-vframe">
           {ar ? <img src="/assets/ral-hr/ralhr-tour-poster-ar.jpg" width={686} height={1220} loading="lazy" decoding="async" alt={t("RAL HR app video tour")} /> : <video ref={ref} poster="/assets/ral-hr/ralhr-tour-poster.webp" width={720} height={1280} muted playsInline loop preload="none"
-            onPlay={() => setPlaying(true)} onPause={() => setPlaying(false)} onClick={toggle} aria-label={t("RAL HR app video tour")} />}
+            onPlay={() => { setPlaying(true); pingInterest('video') }} onPause={() => setPlaying(false)} onClick={toggle} aria-label={t("RAL HR app video tour")} />}
         </div>
         {!ar && <div className="hp-video-ctl">
           <button type="button" onClick={toggle}>{playing ? t('Pause') : t('Play')}</button>
@@ -258,7 +259,7 @@ function Closing({ team, plan }: { team: number; plan: number }) {
   const msg = t('Hi RAL, I would like to book a RAL HR demo. We are a team of {0} in Bahrain, looking at the {1} plan (about BD {2} a month). What matters most to us: {3}.', team, t(p.name), monthly, list)
   const msgRef = useRef(msg)
   msgRef.current = msg
-  const mail = `mailto:${EMAIL}?subject=${encodeURIComponent(`RAL HR demo, team of ${team}`)}&body=${encodeURIComponent(msg)}`
+  const mail = `mailto:${EMAIL}?subject=${encodeURIComponent(`RAL HR demo, team of ${team}`)}&body=${encodeURIComponent(withRef(msg))}`
   // The note types itself once, when the composer is on screen. Text is written
   // straight to the DOM node, so typing costs no React renders.
   useEffect(() => {
@@ -312,7 +313,7 @@ function Closing({ team, plan }: { team: number; plan: number }) {
         </div>
       </div>
       <div className="hp-close-act hp-in">
-        <a className={'hp-book' + (sent ? t(' sent') : '')} href={WA + encodeURIComponent(msg)} target="_blank" rel="noopener noreferrer" onClick={() => setSent(true)}>
+        <a className={'hp-book' + (sent ? t(' sent') : '')} href={WA + encodeURIComponent(withRef(msg))} target="_blank" rel="noopener noreferrer" onClick={() => { setSent(true); pingInterest('book') }}>
           <span className="hp-book-sheen" aria-hidden="true" />
           <span className="hp-book-t"><b>{sent ? t('Opening WhatsApp') : t('Book a demo')}</b><small>{t("On WhatsApp, your message is ready")}</small></span>
           <span className="hp-book-i" aria-hidden="true">

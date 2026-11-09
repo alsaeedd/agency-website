@@ -16,9 +16,11 @@ import { applyDeviceTierToDocument } from '../lib/deviceProfile'
 import RalHrPage from '../components/ralhr/RalHrPage'
 import Inquire from '../components/ralhr/Inquire'
 import SiteChrome from '../components/ralhr/SiteChrome'
+import { captureAttr } from '../components/ralhr/attr'
 
 // One entry for both RAL HR pages; the prerendered HTML is replaced by the
 // client render (same no-hydration pattern as the homepage).
+captureAttr()
 applyDeviceTierToDocument()
 gsap.registerPlugin(ScrollTrigger)
 const isInquire = /^(\/ar)?\/ral-hr\/inquire/.test(window.location.pathname)
