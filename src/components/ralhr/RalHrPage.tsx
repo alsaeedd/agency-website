@@ -18,7 +18,7 @@ const TOP = 6
 function waText(plan: number, team: number, mods: string[]) {
   const x = PRICING[plan]
   const lines = [MSTR.waHi[lg()], '', `${MSTR.waPlan[lg()]}: ${t(x.name)} (${t('BD {0}', x.price)} ${MSTR.waPer[lg()]})`, `${MSTR.waTeam[lg()]}: ${team} ${MSTR.waPeople[lg()]}`, `${MSTR.waPrice[lg()]}: ${t('BD {0}', money(team * x.price))} ${MSTR.waMonth[lg()]}`]
-  const rows = CATEGORIES.map((c) => { const on = c.mods.filter((m) => mods.includes(m.id)); return on.length ? `- ${c.name[lg()]}: ${on.map((m) => m.name[lg()]).join(', ')}` : '' }).filter(Boolean)
+  const rows = CATEGORIES.map((c) => { const on = c.mods.filter((m) => mods.includes(m.id)); return on.length ? `- ${c.name[lg()]}: ${on.map((m) => m.name[lg()]).join(lg() === 'ar' ? '، ' : ', ')}` : '' }).filter(Boolean)
   if (rows.length) lines.push('', `${MSTR.msgHead[lg()]} (${mods.length}):`, ...rows)
   return lines.join('\n')
 }
@@ -98,7 +98,7 @@ function VideoTour() {
       <ul className="hp-pings" aria-label={t("What staff see in the app")}>
         <li><i aria-hidden="true">✓</i><b>{t("Checked in, 07:58")}</b><span>{t("Inside the site radius, 42 m")}</span></li>
         <li><i aria-hidden="true">✓</i><b>{t("Leave approved, 3 days")}</b><span>{t("Aisha in HR, one tap")}</span></li>
-        <li><i aria-hidden="true">✓</i><b>{t("Payslip ready")}</b><span lang="ar" dir="rtl">قسيمة راتب أكتوبر جاهزة</span></li>
+        <li><i aria-hidden="true">✓</i><b>{t("Payslip ready")}</b>{lg() === 'ar' ? <span>صافي 922.760 د.ب، أُرسل إلى بنكك</span> : <span lang="ar" dir="rtl">قسيمة راتب أكتوبر جاهزة</span>}</li>
       </ul>
     </div>
   )

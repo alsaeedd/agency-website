@@ -1,17 +1,20 @@
-# HANDOFF: fix/ralhr-uiux-ar2 (RAL HR UI/UX, round 2)
+# HANDOFF: fix/ralhr-uiux-ar3 (RAL HR UI/UX, round 3)
 
-Builds on fix/ralhr-uiux-ar (7312b70, 99321aa). See that branch's HANDOFF for round 1.
+Builds on fix/ralhr-uiux-ar2 (2549699). See earlier branches' HANDOFF for rounds 1 and 2.
 
 ## Done (committed)
-- Emoji hunt: src/components/ralhr has NO real emoji in code. Only text glyphs (check marks, CTA arrows, the Payday "run again" arrow). The emoji the owner saw are baked into the English app tour video/poster (hourglass, clock, alert icons, English payroll screen) shown in the "In every pocket / iOS & Android" phone.
-- Arabic pages now show a still of the Arabic payroll screen in that phone (public/assets/ral-hr/ralhr-tour-poster-ar.jpg, 686x1220, captured from the AR hero demo). The English video and its Play/Sound buttons are not rendered on AR. EN is unchanged.
-- Pricing on AR: the plan price chip now reads "2 د.ب" (number first) and the big total reads "80 د.ب شهريًا" right to left (number, currency, period), so "شهريًا" no longer sits against the number. Equation order is people x price = total.
-- `grep -rniE "soon|قريب" src/components/ralhr` is empty.
-- AR mobile 390: 0 console errors, no horizontal scroll on /ar/ral-hr/.
+- Payslip ready ping on AR: subline is now "صافي 922.760 د.ب، أُرسل إلى بنكك" (EN keeps the Arabic proof line).
+- Inquire WhatsApp message is fully Arabic on AR (was English template literals). Module list uses Arabic comma on AR (inquire + pricing card message).
+- Inquire plan step on AR: plan line, feature list, "BD x", per-plan estimate, live total sum, "starts at" note, fit badge now translated.
+- Bug: the "Cheapest for your picks" badge and plan preselect never worked on AR (tierName returned the Arabic name, compared with the English id). Now uses PRICING[...].name.
+- Untranslated "Ready" count, headcount placeholder "About N", progress aria-label: now t().
+- RTL hover on CTA arrow circle undid the mirror (rotate overrode scaleX). Added RTL hover rule in RalHrPage.css.
+- Verified (vite preview, Playwright): AR inquire at 390 and 1440 and EN at 390, all 5 steps, validation messages Arabic, inputs rtl, step indicator right to left, Back on right / Next on left with mirrored arrow, module select/deselect (2 on), custom headcount 37, href wa.me/97338218181 with Arabic text.
+- 0 console errors, no horizontal scroll, no offscreen text on all 4 pages at 390 and 1440.
+- 1440 section pass AR + EN looked fine (sheets in scratchpad r3-ar1440a/b, r3-en1440a/b, r3-ar390a/b).
+- `grep -rniE "soon|قريب" src/components/ralhr` empty.
 
 ## Left / not done
-- Proper Arabic app tour video (record one from the AR demo in phone mode) to replace the still on AR.
-- Desktop 1440x900 section-by-section visual pass of all 4 pages (AR + EN) not done.
-- AR inquire flow automated click-through stalled: the Next button is disabled on a step that needs text input (name/company). Needs a manual run filling the fields, then check the wa.me/97338218181 Arabic message at 390 and 1440.
-- The "Payslip ready" ping on AR shows two near-identical Arabic lines (title + hardcoded Arabic subtitle). Consider a different AR subtitle.
+- Arabic app tour video (still image on AR for now).
+- EN 1440 and AR 390 contact sheets were generated but not reviewed closely (budget).
 - Shared footer RTL issues (other agent).

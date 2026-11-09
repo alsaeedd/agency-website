@@ -267,6 +267,20 @@ export const AR: Record<string, string> = {
   'Your calculator put that at about {0} a month before setup.': 'وحسب الحاسبة، التكلفة حوالي {0} شهريًا قبل رسوم الإعداد.',
   'Could we book a demo? The best number for me is {0}.': 'هل يمكننا حجز عرض تجريبي؟ أفضل رقم للتواصل معي هو {0}.',
   'Could we book a demo?': 'هل يمكننا حجز عرض تجريبي؟',
+  "We're {0}, {1}, {2}.": 'نحن {0}، {1}، {2}.',
+  'a growing team': 'فريق ينمو',
+  'and not sure on the plan yet': 'ولم نحدد الباقة بعد',
+  'Ready': 'جاهزة',
+  'The operational must-haves': 'الأساسيات التشغيلية',
+  'Payroll + WPS, SIO + end of service, leave + attendance, org chart + documents hub, records + expiry alerts, Ask RAL, enforced SSO':
+    'الرواتب + WPS، التأمينات + نهاية الخدمة، الإجازات + الحضور، الهيكل التنظيمي + مركز المستندات، السجلات + تنبيهات الانتهاء، Ask RAL، SSO إلزامي',
+  'Hiring, onboarding, reviews, e-signature, benefits, rosters, travel': 'التوظيف، استقبال الموظفين الجدد، تقييمات الأداء، التوقيع الإلكتروني، المزايا، جداول المناوبات، السفر',
+  'Analytics export, pay equity, contractors + HSE, fleet, legal hold': 'تصدير التحليلات، عدالة الأجور، المقاولون + الصحة والسلامة، الأسطول، الحفظ القانوني',
+  'Cheapest for your picks': 'الأرخص لاختياراتك',
+  '{0} a month for {1} people': '{0} شهريًا لـ {1} شخص',
+  '{0} a month for about {1} people': '{0} شهريًا لحوالي {1} شخص',
+  'About {0} people': 'حوالي {0} شخص',
+  '{0} starts at {1} a month.': 'باقة {0} تبدأ من {1} شهريًا.',
 
   // ---------- Month: timeline ----------
   'A month with RAL HR': 'شهر مع RAL HR',

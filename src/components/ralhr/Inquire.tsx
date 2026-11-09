@@ -7,7 +7,8 @@ import { calm as calmMotion } from './charts'
 import './RalHrPage.css'
 import './Inquire.css'
 import ModulePicker from './ModulePicker'
-import { CATEGORIES, cleanIds, fitTier, fromQuery, STR as MSTR, tierName } from './modules'
+import { CATEGORIES, cleanIds, fitTier, fromQuery, STR as MSTR } from './modules'
+import { PRICING } from './data'
 
 const WA = 'https://wa.me/97338218181?text='
 const KEY = 'ralhr-inquire'
@@ -51,7 +52,7 @@ const planOf = (id: string) => PLANS.find((p) => p.id === id)
 const monthly = (n: number, id: string) => { const p = planOf(id); return p ? Math.max(n * p.rate, p.base) : 0 }
 const bd = (v: number) => {
   const whole = Math.abs(v - Math.round(v)) < 0.0005
-  return `BD ${v.toLocaleString('en-US', { minimumFractionDigits: whole ? 0 : 3, maximumFractionDigits: whole ? 0 : 3 })}`
+  return t('BD {0}', v.toLocaleString('en-US', { minimumFractionDigits: whole ? 0 : 3, maximumFractionDigits: whole ? 0 : 3 }))
 }
 const digits = (s: string) => s.replace(/\D/g, '').length
 const nameOk = (a: Answers) => a.name.trim().length > 1
@@ -60,19 +61,19 @@ const phoneOk = (a: Answers) => !a.phone.trim() || digits(a.phone) >= 7
 
 function compose(a: Answers): string {
   const n = exact(a)
-  const people = n ? `${n} ${n === 1 ? 'person' : t('people')}` : SIZES.find((s) => s.id === a.size)?.phrase || 'a growing team'
-  const needs = a.modules.length ? '' : ' looking at RAL HR'
+  const people = n ? t(n === 1 ? '{0} person' : '{0} people', n) : SIZES.find((s) => s.id === a.size)?.phrase || t('a growing team')
+  const needs = a.modules.length ? '' : t('looking at RAL HR')
   const p = planOf(a.plan)
-  const plan = p ? `on the ${p.id} plan` : 'and not sure on the plan yet'
+  const plan = p ? t('on the {0} plan', t(p.id)) : t('and not sure on the plan yet')
   const time = TIMES.find((t) => t.id === a.time)?.phrase || t('hoping to start shortly')
   const lines = [
-    `Hi RAL, I'm ${a.name.trim()} from ${a.company.trim().replace(/\.+$/, '')}.`,
-    `We're ${people},${needs} ${plan}, ${time}.`,
+    t("Hi RAL, I'm {0} from {1}.", a.name.trim(), a.company.trim().replace(/\.+$/, '')),
+    needs ? t("We're {0}, {1} {2}, {3}.", people, needs, plan, time) : t("We're {0}, {1}, {2}.", people, plan, time),
   ]
   const picks = moduleLines(a.modules)
   const tail: string[] = []
-  if (p) tail.push(`Your calculator put that at about ${bd(monthly(headcount(a), p.id))} a month before setup.`)
-  tail.push(a.phone.trim() ? `Could we book a demo? The best number for me is ${a.phone.trim()}.` : t('Could we book a demo?'))
+  if (p) tail.push(t('Your calculator put that at about {0} a month before setup.', bd(monthly(headcount(a), p.id))))
+  tail.push(a.phone.trim() ? t('Could we book a demo? The best number for me is {0}.', a.phone.trim()) : t('Could we book a demo?'))
   return [lines.join(' '), picks, tail.join(' ')].filter(Boolean).join('\n\n')
 }
 
@@ -81,7 +82,7 @@ function moduleLines(ids: string[]): string {
   if (!ids.length) return ''
   const rows = CATEGORIES.map((c) => {
     const on = c.mods.filter((x) => ids.includes(x.id))
-    return on.length ? `- ${c.name[lg()]}: ${on.map((x) => x.name[lg()]).join(', ')}` : ''
+    return on.length ? `- ${c.name[lg()]}: ${on.map((x) => x.name[lg()]).join(lg() === 'ar' ? '، ' : ', ')}` : ''
   }).filter(Boolean)
   return [`${MSTR.msgHead[lg()]} (${ids.length}):`, ...rows].join('\n')
 }
@@ -159,7 +160,7 @@ export default function Inquire({ onClose }: { onClose?: () => void } = {}) {
       if (!calmMotion()) { setTyping(true); window.setTimeout(() => setTyping(false), 1100) }
     }
     // Arriving at the plan step with picks and no plan: start on the cheapest plan that covers them.
-    if (step === 1 && !a.plan && a.modules.length) set({ plan: tierName(fitTier(a.modules)) })
+    if (step === 1 && !a.plan && a.modules.length) set({ plan: PRICING[fitTier(a.modules)].name })
     go(step + 1)
   }
   const back = () => { if (step > 0) go(step - 1) }
@@ -182,7 +183,7 @@ export default function Inquire({ onClose }: { onClose?: () => void } = {}) {
   }, [])
 
   const n = headcount(a)
-  const fit = tierName(fitTier(a.modules))
+  const fit = PRICING[fitTier(a.modules)].name
   const shown = Math.min(step + 1, total)
   const err = (show: boolean, text: string) => tried && show ? <span className="iqx-err">{text}</span> : null
   const now = new Date()
@@ -194,7 +195,7 @@ export default function Inquire({ onClose }: { onClose?: () => void } = {}) {
         ? <header className="rh-top"><a href={localePath(lg(), "/ral-hr/")} className="rh-brand">{t("RAL")} <span>{t("HR")}</span></a><button type="button" className="rh-top-cta iqx-close" onClick={onClose}>{t("Close")}</button></header>
         : <a className="iqx-back" href={localePath(lg(), "/ral-hr/")}><span aria-hidden="true" className="rh-flip">{'\u2190'} </span>{t("Back to RAL HR")}</a>}
       <main className="iq iqx">
-        <div className="iqx-progress" aria-label={step < total ? `Step ${shown} of ${total}` : t('Ready to send')}>
+        <div className="iqx-progress" aria-label={step < total ? t('Step {0} of {1}', shown, total) : t('Ready to send')}>
           <ol>
             {STEPS.map((s, i) => (
               <li key={s} className={i < step ? 'done' : i === step ? 'now' : ''}>
@@ -203,7 +204,7 @@ export default function Inquire({ onClose }: { onClose?: () => void } = {}) {
               </li>
             ))}
           </ol>
-          <span className="iqx-count">{step < total ? `${shown} / ${total}` : 'Ready'}</span>
+          <span className="iqx-count">{step < total ? `${shown} / ${total}` : t('Ready')}</span>
         </div>
 
         <div ref={stage} className="iqx-stage" key={step}>
@@ -219,7 +220,7 @@ export default function Inquire({ onClose }: { onClose?: () => void } = {}) {
             {a.size && (
               <label className="iqx-exact" data-rise>
                 <span>{t("Know the exact number?")} <small>{t("Optional, it sharpens the estimate.")}</small></span>
-                <input inputMode="numeric" pattern="[0-9]*" placeholder={`About ${SIZES.find((s) => s.id === a.size)?.guess}`} value={a.count} onChange={(e) => set({ count: e.target.value.replace(/\D/g, '').slice(0, 5) })} name="headcount" autoComplete="off" aria-label={t("Exact headcount")} />
+                <input inputMode="numeric" pattern="[0-9]*" placeholder={t('About {0}', SIZES.find((s) => s.id === a.size)?.guess ?? '')} value={a.count} onChange={(e) => set({ count: e.target.value.replace(/\D/g, '').slice(0, 5) })} name="headcount" autoComplete="off" aria-label={t("Exact headcount")} />
               </label>
             )}
             {err(!a.size, t('Pick the closest range to carry on.'))}
@@ -241,12 +242,12 @@ export default function Inquire({ onClose }: { onClose?: () => void } = {}) {
                 <button key={p.id} type="button" role="radio" aria-checked={a.plan === p.id} className={`iqx-plan${a.plan === p.id ? ' on' : ''}`} onClick={() => set({ plan: p.id })}>
                   <span className="iqx-plan-head">
                     <strong>{t(p.id)}</strong>
-                    {a.modules.length > 0 && p.id === fit && <span className="iqx-fit">Cheapest for your picks</span>}
+                    {a.modules.length > 0 && p.id === fit && <span className="iqx-fit">{t("Cheapest for your picks")}</span>}
                   </span>
-                  <span className="iqx-plan-price">BD {p.rate}<small> {t("/ employee / month")}</small></span>
+                  <span className="iqx-plan-price">{t('BD {0}', p.rate)}<small> {t("/ employee / month")}</small></span>
                   <span className="iqx-plan-line">{t(p.line)}</span>
                   <span className="iqx-plan-has">{t(p.has)}</span>
-                  <span className="iqx-plan-est">{bd(monthly(n, p.id))} a month for {exact(a) ? '' : 'about '}{n} people</span>
+                  <span className="iqx-plan-est">{t(exact(a) ? '{0} a month for {1} people' : '{0} a month for about {1} people', bd(monthly(n, p.id)), n)}</span>
                 </button>
               ))}
               <button type="button" role="radio" aria-checked={a.plan === UNSURE} className={`iqx-plan iqx-plan-unsure${a.plan === UNSURE ? ' on' : ''}`} onClick={() => set({ plan: UNSURE })}>
@@ -257,9 +258,9 @@ export default function Inquire({ onClose }: { onClose?: () => void } = {}) {
             <div className={`iqx-total${planOf(a.plan) ? ' live' : ''}`} data-rise aria-live="polite">
               <span className="iqx-total-label"><i aria-hidden="true" />{t("Live estimate")}</span>
               {planOf(a.plan) ? (<>
-                <span className="iqx-total-sum">{exact(a) ? '' : 'About '}{n} people <span aria-hidden="true">×</span> BD {planOf(a.plan)!.rate}</span>
+                <span className="iqx-total-sum">{t(exact(a) ? '{0} people' : 'About {0} people', n)} <span aria-hidden="true">×</span> {t('BD {0}', planOf(a.plan)!.rate)}</span>
                 <span className="iqx-total-val"><Estimate value={monthly(n, a.plan)} /><small> {t("/ month")}</small></span>
-                {n * planOf(a.plan)!.rate < planOf(a.plan)!.base && <span className="iqx-total-note">{a.plan} starts at {bd(planOf(a.plan)!.base)} a month.</span>}
+                {n * planOf(a.plan)!.rate < planOf(a.plan)!.base && <span className="iqx-total-note">{t('{0} starts at {1} a month.', t(a.plan), bd(planOf(a.plan)!.base))}</span>}
               </>) : <span className="iqx-total-sum">{t("Pick a plan to see your monthly number.")}</span>}
               <span className="iqx-total-fine">{t("Plus a one-time setup fee sized to your company. Final price agreed with you.")}</span>
             </div>
