@@ -608,7 +608,8 @@ html[dir="rtl"] .od, html[dir="rtl"] .hp-eq b, html[dir="rtl"] .tnum { direction
 /* Arabic reads "2 د.ب" and "80 د.ب شهريًا": number first, then the currency, then the period. */
 html[dir="rtl"] .hp-eq b.tnum { direction: rtl; }
 html[dir="rtl"] .hp-big .od { order: -1; }
-html[dir="rtl"] .rh-flip, html[dir="rtl"] .rh-cta-i { display: inline-block; transform: scaleX(-1); }
+html[dir="rtl"] .rh-flip { display: inline-block; transform: scaleX(-1); }
+html[dir="rtl"] .rh-cta-i { transform: scaleX(-1); }
 html[dir="rtl"] .rh-cta:hover .rh-cta-i { transform: scaleX(-1) rotate(45deg); }
 html[dir="rtl"] .rh-cta { padding: 8px 22px 8px 8px; }
 html[dir="rtl"] .hp-book { padding: 10px 30px 10px 10px; }
