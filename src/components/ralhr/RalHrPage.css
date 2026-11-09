@@ -196,7 +196,7 @@
 /* Video tour: the frame is sized to the video (9:16) so nothing is ever cropped; controls sit below, off the burned-in text. */
 .hp-phone { grid-column: 2; display: flex; flex-direction: column; align-items: center; gap: 14px; width: min(340px, 80vw); }
 .hp-vframe { width: 100%; padding: 6px; border-radius: 22px; background: #07040d; box-shadow: 0 0 0 1px rgba(209, 196, 233, .2), 0 60px 120px -40px rgba(120, 50, 220, .6); }
-.hp-vframe video { display: block; width: 100%; height: auto; aspect-ratio: 9 / 16; object-fit: contain; border-radius: 16px; background: #120b1f; cursor: pointer; }
+.hp-vframe video, .hp-vframe img { display: block; width: 100%; height: auto; aspect-ratio: 9 / 16; object-fit: contain; border-radius: 16px; background: #120b1f; cursor: pointer; }
 .hp-video-ctl { display: flex; gap: 8px; }
 .hp-video-ctl button { border: 1px solid rgba(209, 196, 233, .18); padding: 8px 16px; border-radius: 999px; background: rgba(22, 14, 39, .8); font-size: 12px; font-weight: 600; cursor: pointer; }
 .hp-pings { grid-column: 3; list-style: none; padding: 0; display: grid; gap: 12px; max-width: 300px; }
@@ -605,6 +605,9 @@
 /* RTL (Arabic /ar/ral-hr/ pages): numbers, the odometer and the price
    equation stay left-to-right; directional arrows mirror; pill paddings swap. */
 html[dir="rtl"] .od, html[dir="rtl"] .hp-eq b, html[dir="rtl"] .tnum { direction: ltr; unicode-bidi: isolate; }
+/* Arabic reads "2 د.ب" and "80 د.ب شهريًا": number first, then the currency, then the period. */
+html[dir="rtl"] .hp-eq b.tnum { direction: rtl; }
+html[dir="rtl"] .hp-big .od { order: -1; }
 html[dir="rtl"] .rh-flip, html[dir="rtl"] .rh-cta-i { display: inline-block; transform: scaleX(-1); }
 html[dir="rtl"] .rh-cta { padding: 8px 22px 8px 8px; }
 html[dir="rtl"] .hp-book { padding: 10px 30px 10px 10px; }

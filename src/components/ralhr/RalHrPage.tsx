@@ -70,7 +70,7 @@ function VideoTour() {
   const src = '/assets/ral-hr/ralhr-tour.mp4'
   useEffect(() => {
     const v = ref.current
-    if (!v || !('IntersectionObserver' in window)) return
+    if (!v || !('IntersectionObserver' in window)) return // no video on Arabic
     const nav = navigator as Navigator & { connection?: { saveData?: boolean } }
     const auto = !calm() && !nav.connection?.saveData
     const io = new IntersectionObserver(([e]) => {
@@ -81,17 +81,19 @@ function VideoTour() {
   }, [])
   const toggle = () => { const v = ref.current; if (!v) return; if (!v.src) v.src = src; if (v.paused) v.play().catch(() => {}); else v.pause() }
   const sound = () => { const v = ref.current; if (v) { v.muted = !v.muted; setMuted(v.muted); if (v.paused) v.play().catch(() => {}) } }
+  // The tour video is English only, so Arabic shows a still of the Arabic payroll screen.
+  const ar = lg() === 'ar'
   return (
     <div className="hp-vt hp-in">
       <div className="hp-phone">
         <div className="hp-vframe">
-          <video ref={ref} poster="/assets/ral-hr/ralhr-tour-poster.webp" width={720} height={1280} muted playsInline loop preload="none"
-            onPlay={() => setPlaying(true)} onPause={() => setPlaying(false)} onClick={toggle} aria-label={t("RAL HR app video tour")} />
+          {ar ? <img src="/assets/ral-hr/ralhr-tour-poster-ar.jpg" width={686} height={1220} loading="lazy" decoding="async" alt={t("RAL HR app video tour")} /> : <video ref={ref} poster="/assets/ral-hr/ralhr-tour-poster.webp" width={720} height={1280} muted playsInline loop preload="none"
+            onPlay={() => setPlaying(true)} onPause={() => setPlaying(false)} onClick={toggle} aria-label={t("RAL HR app video tour")} />}
         </div>
-        <div className="hp-video-ctl">
+        {!ar && <div className="hp-video-ctl">
           <button type="button" onClick={toggle}>{playing ? t('Pause') : t('Play')}</button>
           <button type="button" onClick={sound}>{muted ? t('Sound on') : t('Sound off')}</button>
-        </div>
+        </div>}
       </div>
       <ul className="hp-pings" aria-label={t("What staff see in the app")}>
         <li><i aria-hidden="true">✓</i><b>{t("Checked in, 07:58")}</b><span>{t("Inside the site radius, 42 m")}</span></li>
