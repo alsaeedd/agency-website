@@ -13,7 +13,7 @@ const CONTACT_T = {
     "we",
     "cooking?"
   ]
-}, dialog: "Contact RAL Technologies", close: "Close", social: "RAL Technologies on social media", side: "Let's build something great.", sideDesc: "Two quick details and we'll pick this up on WhatsApp.", ok: "Off to WhatsApp.", okDesc: "Your message is prefilled. Just hit send on the chat that opened. If WhatsApp didn't pop up, use the button below.", manual: "Open WhatsApp manually", subtitle: "Three lines, then we move to WhatsApp.", interested: "I'm interested in", name: "Your name", namePh: "What should we call you?", notes: "Project notes", notesPh: "A few lines on what you're building, the goal, or anything you have in mind...", submit: "Continue on WhatsApp", handoff: "WhatsApp opens with your message prefilled. Just hit send on your end.", waHi: "Hi RAL Technologies, I'd like to chat about a project.", waName: "Name:", waLooking: "Looking for:", waNotes: "Project notes:", waSent: "Sent from raltech.dev", sep: ", " },
+}, dialog: "Contact RAL Technologies", close: "Close", social: "RAL Technologies on social media", side: "Let's build something great.", sideDesc: "Two quick details and we'll pick this up on WhatsApp.", ok: "Off to WhatsApp.", okDesc: "Your message is prefilled. Just hit send on the chat that opened. If WhatsApp didn't pop up, use the button below.", manual: "Open WhatsApp manually", subtitle: "Three lines, then we move to WhatsApp.", interested: "I'm interested in", name: "Your name", namePh: "What should we call you?", notes: "Project notes", notesPh: "A few lines on what you're building, the goal, or anything you have in mind...", submit: "Continue on WhatsApp", handoff: "WhatsApp opens with your message prefilled. Just hit send on your end.", waHi: "Hi RAL Technologies, I'd like to chat about a project.", waName: "Name:", waLooking: "Looking for:", waNotes: "Project notes:", waSent: "Sent from raltech.dev", emailAlt: "Prefer email? Send it by email instead", backWa: "Back to WhatsApp", email: "Your email", emailPh: "Where should we reply?", phone: "Phone (optional)", phonePh: "In case a quick call is easier", sendEmail: "Send message", sending: "Sending...", emailNote: "Goes straight to info@raltech.dev. We reply within a day.", sentTitle: "Message sent.", sentPre: "We'll reply to ", sentPost: " within a day.", errTitle: "That didn't go through.", errDesc: "Try again, or reach us directly:", errMail: "Email us", errWa: "WhatsApp us", mailSubject: "Project inquiry", sep: ", " },
   ar: { ...{
   "title": "إذن، ماذا سنبني معًا؟",
   "w": [
@@ -22,7 +22,7 @@ const CONTACT_T = {
     "سنبني",
     "معًا؟"
   ]
-}, dialog: "تواصل مع RAL Technologies", close: "إغلاق", social: "RAL Technologies على وسائل التواصل", side: "لنبنِ شيئًا رائعًا.", sideDesc: "تفصيلان سريعان، ثم نكمل الحديث على واتساب.", ok: "إلى واتساب.", okDesc: "رسالتك جاهزة مسبقًا. اضغط إرسال في المحادثة التي فُتحت. وإن لم يظهر واتساب، استخدم الزر أدناه.", manual: "افتح واتساب يدويًا", subtitle: "ثلاثة أسطر، ثم ننتقل إلى واتساب.", interested: "أنا مهتم بـ", name: "اسمك", namePh: "بماذا نناديك؟", notes: "تفاصيل المشروع", notesPh: "بضعة أسطر عمّا تبنيه، أو هدفك، أو أي فكرة في بالك...", submit: "أكمل على واتساب", handoff: "يُفتح واتساب ورسالتك جاهزة. فقط اضغط إرسال.", waHi: "مرحبًا RAL Technologies، أودّ الحديث عن مشروع.", waName: "الاسم:", waLooking: "أبحث عن:", waNotes: "تفاصيل المشروع:", waSent: "أُرسلت من raltech.dev", sep: "، " },
+}, dialog: "تواصل مع RAL Technologies", close: "إغلاق", social: "RAL Technologies على وسائل التواصل", side: "لنبنِ شيئًا رائعًا.", sideDesc: "تفصيلان سريعان، ثم نكمل الحديث على واتساب.", ok: "إلى واتساب.", okDesc: "رسالتك جاهزة مسبقًا. اضغط إرسال في المحادثة التي فُتحت. وإن لم يظهر واتساب، استخدم الزر أدناه.", manual: "افتح واتساب يدويًا", subtitle: "ثلاثة أسطر، ثم ننتقل إلى واتساب.", interested: "أنا مهتم بـ", name: "اسمك", namePh: "بماذا نناديك؟", notes: "تفاصيل المشروع", notesPh: "بضعة أسطر عمّا تبنيه، أو هدفك، أو أي فكرة في بالك...", submit: "أكمل على واتساب", handoff: "يُفتح واتساب ورسالتك جاهزة. فقط اضغط إرسال.", waHi: "مرحبًا RAL Technologies، أودّ الحديث عن مشروع.", waName: "الاسم:", waLooking: "أبحث عن:", waNotes: "تفاصيل المشروع:", waSent: "أُرسلت من raltech.dev", emailAlt: "تفضّل البريد؟ أرسلها عبر البريد الإلكتروني", backWa: "العودة إلى واتساب", email: "بريدك الإلكتروني", emailPh: "أين نرسل ردّنا؟", phone: "الهاتف (اختياري)", phonePh: "إن كانت مكالمة سريعة أسهل", sendEmail: "أرسل الرسالة", sending: "جارٍ الإرسال...", emailNote: "تصل مباشرة إلى info@raltech.dev. نرد خلال يوم.", sentTitle: "تم إرسال رسالتك.", sentPre: "سنرد على ", sentPost: " خلال يوم.", errTitle: "لم تُرسل الرسالة.", errDesc: "حاول مرة أخرى، أو تواصل معنا مباشرة:", errMail: "راسلنا بالبريد", errWa: "راسلنا على واتساب", mailSubject: "استفسار عن مشروع", sep: "، " },
 };
 
 const services = [
@@ -49,6 +49,13 @@ export default function Contact({ isOpen, onClose }: ContactProps) {
   const [showSuccess, setShowSuccess] = useState(false);
   const [waUrl, setWaUrl] = useState("");
   const [isVisible, setIsVisible] = useState(false);
+  const [mode, setMode] = useState<"whatsapp" | "email">("whatsapp");
+  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
+  const [honey, setHoney] = useState("");
+  const [sendState, setSendState] = useState<"idle" | "sending" | "error">("idle");
+  const [sentTo, setSentTo] = useState("");
+  const emailFieldsRef = useRef<HTMLDivElement>(null);
   const overlayRef = useRef<HTMLDivElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
@@ -195,6 +202,11 @@ export default function Contact({ isOpen, onClose }: ContactProps) {
     const tl = gsap.timeline({
       onComplete: () => {
         setIsVisible(false);
+        if (sentTo) {
+          setSentTo("");
+          setMode("whatsapp");
+          resetForm();
+        }
         isClosingRef.current = false;
         document.body.style.overflow = "";
         onClose();
@@ -217,7 +229,20 @@ export default function Contact({ isOpen, onClose }: ContactProps) {
         { opacity: 0, duration: 0.4, ease: "power3.in" },
         "-=0.3",
       );
-  }, [onClose]);
+  }, [onClose, sentTo]);
+
+  useEffect(() => {
+    if (mode !== "email" || !emailFieldsRef.current) return;
+    const els = emailFieldsRef.current.querySelectorAll(".contact-section");
+    const tween = gsap.fromTo(
+      els,
+      { y: 16, opacity: 0 },
+      { y: 0, opacity: 1, duration: 0.5, ease: "power3.out", stagger: 0.1 },
+    );
+    return () => {
+      tween.kill();
+    };
+  }, [mode]);
 
   useEffect(() => {
     if (!isVisible) return;
@@ -251,6 +276,42 @@ export default function Contact({ isOpen, onClose }: ContactProps) {
     setName("");
     setMessage("");
     setWaUrl("");
+    setEmail("");
+    setPhone("");
+    setSendState("idle");
+  };
+
+  const payload = (channel: "whatsapp" | "email") =>
+    JSON.stringify({
+      name: name.trim(),
+      email: email.trim(),
+      phone: phone.trim(),
+      services: selectedServices,
+      message: message.trim(),
+      lang,
+      channel,
+      website: honey,
+    });
+
+  const mailtoUrl = () =>
+    `mailto:info@raltech.dev?subject=${encodeURIComponent(`${L.mailSubject}: ${name.trim()}`)}&body=${encodeURIComponent(message.trim())}`;
+
+  const handleEmailSubmit = async () => {
+    if (sendState === "sending") return;
+    setSendState("sending");
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: payload("email"),
+      });
+      const out = (await res.json().catch(() => ({}))) as { ok?: boolean };
+      if (!res.ok || !out.ok) throw new Error("send failed");
+      setSentTo(email.trim());
+      setSendState("idle");
+    } catch {
+      setSendState("error");
+    }
   };
 
   const buildWhatsAppUrl = () => {
@@ -278,10 +339,26 @@ export default function Contact({ isOpen, onClose }: ContactProps) {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!isFormValid) return;
+    if (mode === "email") {
+      if (isEmailValid) void handleEmailSubmit();
+      return;
+    }
 
     const url = buildWhatsAppUrl();
     setWaUrl(url);
     window.open(url, "_blank", "noopener,noreferrer");
+
+    // Fire-and-forget copy by email, so we have their details even if they never hit send.
+    try {
+      fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: payload("whatsapp"),
+        keepalive: true,
+      }).catch(() => {});
+    } catch {
+      /* never block the WhatsApp handoff */
+    }
 
     setShowSuccess(true);
     successTimerRef.current = setTimeout(() => {
@@ -292,6 +369,7 @@ export default function Contact({ isOpen, onClose }: ContactProps) {
   };
 
   const isFormValid = name.trim() !== "" && message.trim() !== "";
+  const isEmailValid = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email.trim());
 
   if (!isVisible) return null;
 
@@ -427,7 +505,22 @@ export default function Contact({ isOpen, onClose }: ContactProps) {
 
         <div className="contact-scroll" data-lenis-prevent>
           <div className="contact-container" ref={contentRef}>
-            {showSuccess ? (
+            {sentTo ? (
+              <div className="contact-success">
+                <div className="contact-success-icon">
+                  <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                    <rect x="2" y="4" width="16" height="12" rx="2" />
+                    <path d="M2 7l8 5 8-5" />
+                  </svg>
+                </div>
+                <div className="contact-success-header">{L.sentTitle}</div>
+                <p>
+                  {L.sentPre}
+                  <span dir="ltr" className="contact-sent-to">{sentTo}</span>
+                  {L.sentPost}
+                </p>
+              </div>
+            ) : showSuccess ? (
               <div className="contact-success">
                 <div className="contact-success-icon contact-success-icon-wa">
                   <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
@@ -528,6 +621,100 @@ export default function Contact({ isOpen, onClose }: ContactProps) {
                     </div>
                   </div>
 
+                  <div className="contact-hp" aria-hidden="true">
+                    <label>
+                      Website
+                      <input
+                        type="text"
+                        name="website"
+                        tabIndex={-1}
+                        autoComplete="off"
+                        value={honey}
+                        onChange={(e) => setHoney(e.target.value)}
+                      />
+                    </label>
+                  </div>
+
+                  {mode === "email" && (
+                    <div className="contact-email-fields" ref={emailFieldsRef}>
+                      <div className="contact-section">
+                        <span className="contact-eyebrow">{L.email}</span>
+                        <div className="contact-input">
+                          <input
+                            type="email"
+                            name="email"
+                            dir="ltr"
+                            placeholder={L.emailPh}
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            autoComplete="email"
+                            maxLength={254}
+                            required
+                          />
+                          <div className="contact-input-line" />
+                        </div>
+                      </div>
+                      <div className="contact-section">
+                        <span className="contact-eyebrow">{L.phone}</span>
+                        <div className="contact-input">
+                          <input
+                            type="tel"
+                            name="phone"
+                            dir="ltr"
+                            placeholder={L.phonePh}
+                            value={phone}
+                            onChange={(e) => setPhone(e.target.value)}
+                            autoComplete="tel"
+                            maxLength={40}
+                          />
+                          <div className="contact-input-line" />
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  {mode === "email" ? (
+                  <div className="contact-submit-section">
+                    <button
+                      type="submit"
+                      className="btn-cta-submit btn-cta-email"
+                      disabled={!isFormValid || !isEmailValid || sendState === "sending"}
+                      aria-busy={sendState === "sending"}
+                    >
+                      {sendState === "sending" ? (
+                        <span className="contact-spinner" aria-hidden="true" />
+                      ) : (
+                        <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                    <rect x="2" y="4" width="16" height="12" rx="2" />
+                    <path d="M2 7l8 5 8-5" />
+                  </svg>
+                      )}
+                      <span>{sendState === "sending" ? L.sending : L.sendEmail}</span>
+                    </button>
+                    {sendState === "error" ? (
+                      <div className="contact-send-error" role="alert">
+                        <strong>{L.errTitle}</strong> {L.errDesc}{" "}
+                        <a href={mailtoUrl()}>{L.errMail}</a>
+                        {" · "}
+                        <a href={buildWhatsAppUrl()} target="_blank" rel="noopener noreferrer">
+                          {L.errWa}
+                        </a>
+                      </div>
+                    ) : (
+                      <p className="contact-handoff-note">{L.emailNote}</p>
+                    )}
+                    <button
+                      type="button"
+                      className="contact-alt-link"
+                      onClick={() => {
+                        setMode("whatsapp");
+                        setSendState("idle");
+                      }}
+                    >
+                      {L.backWa}
+                    </button>
+                  </div>
+                  ) : (
                   <div className="contact-submit-section">
                     <button
                       type="submit"
@@ -542,7 +729,15 @@ export default function Contact({ isOpen, onClose }: ContactProps) {
                     <p className="contact-handoff-note">
                       {L.handoff}
                     </p>
+                    <button
+                      type="button"
+                      className="contact-alt-link"
+                      onClick={() => setMode("email")}
+                    >
+                      {L.emailAlt}
+                    </button>
                   </div>
+                  )}
                 </form>
               </>
             )}
