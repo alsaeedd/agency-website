@@ -876,3 +876,93 @@
     padding: 0.6rem 1.1rem;
   }
 }
+
+/* ── Email option (secondary to WhatsApp) ── */
+.contact-hp {
+  position: absolute;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+.contact-email-fields {
+  display: contents;
+}
+
+.contact-alt-link {
+  background: none;
+  border: 0;
+  padding: 0.25rem 0;
+  font: inherit;
+  font-size: 0.8125rem;
+  color: var(--color-text-secondary);
+  opacity: 0.75;
+  cursor: pointer;
+  text-decoration: underline;
+  text-decoration-color: rgba(209, 196, 233, 0.3);
+  text-underline-offset: 4px;
+  transition: opacity 0.25s ease, text-decoration-color 0.25s ease;
+}
+
+.contact-alt-link:hover {
+  opacity: 1;
+  text-decoration-color: #a78bfa;
+}
+
+.btn-cta-email {
+  min-width: 220px;
+}
+
+.btn-cta-email svg {
+  width: 16px;
+  height: 16px;
+}
+
+.btn-cta-email:disabled[aria-busy="true"] {
+  opacity: 0.6;
+  cursor: progress;
+}
+
+@keyframes contact-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.contact-spinner {
+  position: relative;
+  z-index: 1;
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  border: 2px solid currentColor;
+  border-right-color: transparent;
+  animation: contact-spin 0.7s linear infinite;
+}
+
+.contact-send-error {
+  font-size: 0.8125rem;
+  line-height: 1.6;
+  max-width: 420px;
+  color: var(--color-text-secondary);
+  padding: 0.75rem 1rem;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 120, 140, 0.35);
+  background: rgba(255, 90, 120, 0.06);
+}
+
+.contact-send-error strong {
+  color: var(--color-text);
+  font-weight: 600;
+}
+
+.contact-send-error a {
+  color: #a78bfa;
+  text-underline-offset: 3px;
+}
+
+.contact-sent-to {
+  color: var(--color-text);
+  font-weight: 500;
+}

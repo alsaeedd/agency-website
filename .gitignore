@@ -61,3 +61,4 @@ coverage/
 # Agent session scratch (screenshots, scripts)
 .agents/
 dist-ssr/
+.dev.vars
