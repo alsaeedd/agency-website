@@ -68,6 +68,7 @@ function VideoTour() {
   const ref = useRef<HTMLVideoElement>(null)
   const [playing, setPlaying] = useState(false)
   const [muted, setMuted] = useState(true)
+  const user = useRef(false) // set by a real click, so autoplay never counts as interest
   const src = '/assets/ral-hr/ralhr-tour.mp4'
   useEffect(() => {
     const v = ref.current
@@ -80,8 +81,8 @@ function VideoTour() {
     io.observe(v)
     return () => io.disconnect()
   }, [])
-  const toggle = () => { const v = ref.current; if (!v) return; if (!v.src) v.src = src; if (v.paused) v.play().catch(() => {}); else v.pause() }
-  const sound = () => { const v = ref.current; if (v) { v.muted = !v.muted; setMuted(v.muted); if (v.paused) v.play().catch(() => {}) } }
+  const toggle = () => { user.current = true; const v = ref.current; if (!v) return; if (!v.src) v.src = src; if (v.paused) v.play().catch(() => {}); else v.pause() }
+  const sound = () => { user.current = true; const v = ref.current; if (v) { v.muted = !v.muted; setMuted(v.muted); if (v.paused) v.play().catch(() => {}) } }
   // The tour video is English only, so Arabic shows a still of the Arabic payroll screen.
   const ar = lg() === 'ar'
   return (
@@ -89,7 +90,7 @@ function VideoTour() {
       <div className="hp-phone">
         <div className="hp-vframe">
           {ar ? <img src="/assets/ral-hr/ralhr-tour-poster-ar.jpg" width={686} height={1220} loading="lazy" decoding="async" alt={t("RAL HR app video tour")} /> : <video ref={ref} poster="/assets/ral-hr/ralhr-tour-poster.webp" width={720} height={1280} muted playsInline loop preload="none"
-            onPlay={() => { setPlaying(true); pingInterest('video') }} onPause={() => setPlaying(false)} onClick={toggle} aria-label={t("RAL HR app video tour")} />}
+            onPlay={() => { setPlaying(true); if (user.current) pingInterest('video') }} onPause={() => setPlaying(false)} onClick={toggle} aria-label={t("RAL HR app video tour")} />}
         </div>
         {!ar && <div className="hp-video-ctl">
           <button type="button" onClick={toggle}>{playing ? t('Pause') : t('Play')}</button>
