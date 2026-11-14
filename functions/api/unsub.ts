@@ -3,7 +3,7 @@
 // POST /api/unsub?lid=...&t=...  (body List-Unsubscribe=One-Click) -> 200
 // POST /api/unsub?lid=...&t=...&web=1  (the confirm button) -> done page
 // t = hex HMAC-SHA256(lid, UNSUB_SECRET). ?dry=1 verifies and looks up only.
-import { type Env, findLead, hmacHex, patchLead, safeEqual, validLid } from '../_lib/twenty'
+import { type Env, hmacHex, lookup, safeEqual, unsubscribe, validLid } from '../_lib/crm'
 
 const page = (title: string, body: string, status = 200, extra = '') => new Response(`<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex"><title>${title} | RAL Technologies</title>
 <style>body{margin:0;min-height:100vh;display:grid;place-items:center;background:#2B1B3D;color:#D1C4E9;font:16px/1.6 Inter,system-ui,sans-serif;padding:16px;box-sizing:border-box}main{max-width:440px;text-align:center}h1{color:#fff;font-weight:600;font-size:26px;margin:0 0 12px}a{color:#fff}button{font:inherit;font-weight:600;background:#D1C4E9;color:#2B1B3D;border:0;border-radius:8px;padding:12px 24px;cursor:pointer}</style></head>
@@ -21,11 +21,11 @@ async function handle(request: Request, env: Env, isPost: boolean): Promise<Resp
   if (!env.UNSUB_SECRET || !validLid(lid) || !/^[0-9a-f]{64}$/.test(t)) return bad()
   if (!safeEqual(t, await hmacHex(env.UNSUB_SECRET, lid))) return bad()
   try {
-    const lead = await findLead(env, lid)
+    const lead = await lookup(env, lid)
     if (!isPost && !dry) return page('Unsubscribe from RAL HR emails?', 'Press the button and we will stop emailing you about RAL HR.', 200,
       `<form method="post" action="/api/unsub?lid=${encodeURIComponent(lid)}&amp;t=${t}&amp;web=1"><button type="submit">Unsubscribe</button></form>`)
-    if (dry) return Response.json({ ok: true, dry: true, found: !!lead, id: lead?.id || null }, { headers: { 'cache-control': 'no-store' } })
-    if (lead) await patchLead(env, lead.id, { emailStatus: 'UNSUBSCRIBED', outreachStatus: 'DO_NOT_CONTACT' })
+    if (dry) return Response.json({ ok: true, dry: true, found: lead.found, id: lead.id }, { headers: { 'cache-control': 'no-store' } })
+    if (lead.found) await unsubscribe(env, lid, lead)
   } catch {
     return !html
       ? new Response('try again', { status: 502 })
