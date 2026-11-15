@@ -4,6 +4,7 @@
 // articles themselves live in content/articles-hr.ar.mjs.
 
 import { hrArticlesAr } from './articles-hr.ar.mjs'
+import { guideCardsAr } from './guides/index.mjs'
 
 const arHref = (p) => (p.startsWith('/ar/') ? p : `/ar${p}`)
 
@@ -45,6 +46,10 @@ ${hrCards}
     <h2><a href="/ar/insights/fair-game-board-hex-maths/">تصميم لوحة لعب عادلة: الرياضيات وراء شبكة LetterLock السداسية</a></h2>
     <p>لماذا لا يمكن أن تنتهي لعبة على لوحة سداسية بالتعادل، وكيف منحنا الفريقين مسارات متساوية الطول، وكيف نختبر اكتشاف الفوز حتى لا تعلن اللعبة فائزًا خاطئًا أبدًا.</p>
   </li>
+</ul>
+<h2 class="guides-head">أدلة مرجعية</h2>
+<ul class="cards">
+${guideCardsAr}
 </ul>
 <p>هل تودّ أن نتحدث عن أي من هذه المواضيع لشركتك؟ <a href="/ar/contact/">تواصل معنا</a>.</p>
 `,

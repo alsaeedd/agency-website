@@ -317,7 +317,8 @@ const staticPagesAr = [
 // so they are prefixed with /ar here.
 import { pagesAr } from './pages.ar.mjs'
 import { hrArticlesAr } from './articles-hr.ar.mjs'
+import { guidesAr } from './guides/index.mjs'
 
 const toAr = (p) => ({ ...p, path: '/ar' + p.path })
 
-export const arPages = [...staticPagesAr, ...[...pagesAr, ...hrArticlesAr].map(toAr)]
+export const arPages = [...staticPagesAr, ...[...pagesAr, ...hrArticlesAr, ...guidesAr].map(toAr)]

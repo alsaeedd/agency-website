@@ -26,7 +26,15 @@ export const AR_PATHS = [
   "/insights/hr-document-expiry-tracking/",
   "/insights/ai-assistant-for-hr/",
   "/insights/choosing-an-hr-system-bahrain/",
-  "/insights/website-for-local-business-bahrain/"
+  "/insights/website-for-local-business-bahrain/",
+  "/insights/bahrain-annual-leave-public-holidays/",
+  "/insights/overtime-rules-bahrain/",
+  "/insights/end-of-service-gratuity-bahrain/",
+  "/insights/lmra-work-permit-lifecycle/",
+  "/insights/payroll-month-end-checklist/",
+  "/insights/new-hire-onboarding-checklist-bahrain/",
+  "/insights/choosing-a-custom-software-vendor/",
+  "/insights/automating-workflows-with-ai-safely/"
 ];
 
 const bare = (p: string) => p.split("#")[0].split("?")[0];

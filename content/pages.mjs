@@ -13,6 +13,7 @@ import { readFileSync } from 'node:fs'
 const privacyBody = readFileSync(new URL('./privacy-body.html', import.meta.url), 'utf8')
 const termsBody = readFileSync(new URL('./terms-body.html', import.meta.url), 'utf8')
 import { hrArticles } from './articles-hr.mjs'
+import { guidesEn, guideCardsEn } from './guides/index.mjs'
 
 const hrCards = hrArticles
   .map((a) => `  <li>
@@ -324,6 +325,10 @@ ${hrCards}
     <p>Why a hex board can never draw, how we gave both teams paths of equal length, and how we test win detection so the game never names the wrong winner.</p>
   </li>
 </ul>
+<h2 class="guides-head">Reference guides</h2>
+<ul class="cards">
+${guideCardsEn}
+</ul>
 <p>Want to talk about any of these for your own business? <a href="/contact/">Get in touch</a>.</p>
 `,
   },
@@ -514,6 +519,7 @@ ${hrCards}
   },
 
   ...hrArticles,
+  ...guidesEn,
 
   // ── Terms ───────────────────────────────────────────────────────────────
   {

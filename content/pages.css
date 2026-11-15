@@ -69,3 +69,11 @@ html[lang="ar"] body *{letter-spacing:0!important;font-style:normal}
 html[lang="ar"] :is(h1,h2,h3){line-height:1.4}
 html[lang="ar"] :is(.eyebrow,.chip){font-size:0.82rem}
 .lang-toggle{opacity:.85}
+
+/* Tables in long-form guides: scroll inside the wrapper, never the page. */
+.table-wrap { overflow-x: auto; margin: 1.25rem 0; border: 1px solid var(--border); border-radius: 12px; -webkit-overflow-scrolling: touch; }
+.table-wrap table { width: 100%; border-collapse: collapse; font-size: 0.95rem; min-width: 480px; }
+.table-wrap th, .table-wrap td { padding: 0.6rem 0.8rem; text-align: start; vertical-align: top; border-bottom: 1px solid var(--border); }
+.table-wrap th { background: var(--surface); font-weight: 600; }
+.table-wrap tr:last-child td { border-bottom: 0; }
+.guides-head { margin-top: 2.5rem; }
