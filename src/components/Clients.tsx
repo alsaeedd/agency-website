@@ -22,6 +22,7 @@ const logos: Logo[] = [
   { name: "Palm & Plate", src: "/assets/palmnplate.png",    className: "logo-palmnplate", href: "https://www.palmandplate.com" },
   { name: "EarningSync",  src: "/assets/earningsync.png",   className: "logo-earningsync", href: "https://www.earningsync.com" },
   { name: "CustomPC",     src: "/assets/custompc.png",      className: "logo-custompc", href: "https://www.custompcbh.com" },
+  { name: "Shfeek",       src: "/assets/shfeek.png",        className: "logo-shfeek" },
 ];
 
 // Split logos roughly in half for two distinct rows

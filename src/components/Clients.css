@@ -260,6 +260,7 @@
 .logo-knightsgate img    { transform: scale(0.95); }
 .logo-yellowsports img   { transform: scale(0.92); border-radius: 10px; }
 .logo-custompc img       { transform: scale(0.95); }
+.logo-shfeek img         { transform: scale(1.2); }
 
 /* When linked & hovered, neutralize the grayscale on Palm & Plate so brand color flashes in */
 .logo-palmnplate.is-linked:hover img,
